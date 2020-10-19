@@ -1,0 +1,68 @@
+﻿using ItemAPI;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace GlaurungItems.Items
+{
+    class Neuralyzer: PlayerItem
+    {
+		public static void Init()
+		{
+			string text = "Neuralyzer";
+			string resourcePath = "GlaurungItems/Resources/neuralyzer";
+			GameObject gameObject = new GameObject(text);
+			Neuralyzer item = gameObject.AddComponent<Neuralyzer>();
+			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
+			string shortDesc = "Flashy Thing";
+			string longDesc = "This was brought to the Gungeon bya strange man in a black suit. \n \n" +
+				"After being used too many times, it only erase the memories of the targets for 5 seconds after which they regain their composure.";
+			item.SetupItem(shortDesc, longDesc, "gl");
+			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 500f);
+			item.quality = ItemQuality.C;
+		}
+
+		protected override void DoEffect(PlayerController user)
+		{
+			this.StartEffect(user);
+			base.StartCoroutine(ItemBuilder.HandleDuration(this, this.duration, user, new Action<PlayerController>(this.EndEffect)));
+		}
+
+		private void StartEffect(PlayerController user)
+		{
+			if(user && user.CurrentRoom != null && user.CurrentRoom.GetActiveEnemies(0) != null)
+            {
+
+				Projectile projectile = ((Gun)ETGMod.Databases.Items[481]).DefaultModule.chargeProjectiles[0].Projectile;
+				GameObject gameObject = SpawnManager.SpawnProjectile(projectile.gameObject, user.CenterPosition, Quaternion.Euler(0f, 0f, 0f), true);
+				Projectile flash = gameObject.GetComponent<Projectile>();
+				flash.SetOwnerSafe(user, "Player");
+				flash.Shooter = user.specRigidbody;
+				flash.Owner = user;
+				flash.baseData.damage = 0f;
+				flash.baseData.force = 0f;
+
+				List<AIActor> enemies = user.CurrentRoom.GetActiveEnemies(0);
+				foreach (AIActor enemy in enemies)
+                {
+					enemy.CanTargetPlayers = false;
+                }
+            }
+		}
+
+		private void EndEffect(PlayerController user)
+		{
+			if (user.CurrentRoom != null && user.IsInCombat && user.CurrentRoom.GetActiveEnemies(0) != null)
+			{
+				List<AIActor> enemies = user.CurrentRoom.GetActiveEnemies(0);
+				foreach (AIActor enemy in enemies)
+				{
+					enemy.CanTargetPlayers = true;
+				}
+			}
+		}
+
+		private float duration = 5f;
+
+	}
+}
