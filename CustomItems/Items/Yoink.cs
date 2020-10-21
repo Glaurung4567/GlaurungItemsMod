@@ -15,7 +15,7 @@ namespace GlaurungItems.Items
 		public static void Init()
 		{
 			string text = "Yoink";
-			string resourcePath = "GlaurungItems/Resources/acme_crate";
+			string resourcePath = "GlaurungItems/Resources/yoink";
 			GameObject gameObject = new GameObject(text);
 			Yoink item = gameObject.AddComponent<Yoink>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
@@ -40,7 +40,7 @@ namespace GlaurungItems.Items
 					//EnemyAPITools.DebugInformation(yoinkTarget.behaviorSpeculator);
 					foreach (AttackBehaviorBase attackBehav in yoinkTarget.behaviorSpeculator.AttackBehaviors)
 					{
-						Tools.Print(attackBehav.GetType(), "ffffff", true);
+						//Tools.Print(attackBehav.GetType(), "ffffff", true);
 						if (attackBehav is AttackBehaviorGroup)
 						{
 							foreach (AttackBehaviorGroup.AttackGroupItem item in (attackBehav as AttackBehaviorGroup).AttackBehaviors)

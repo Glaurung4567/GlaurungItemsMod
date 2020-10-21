@@ -123,5 +123,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\banishing_bullets.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\yoink.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -33,6 +33,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.numberOfShotsInClip = 1;
             gun.SetBaseMaxAmmo(75);
             gun.gunClass = GunClass.CHARGE;
+            gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(37) as Gun).muzzleFlashEffects;
 
             gun.quality = PickupObject.ItemQuality.B;
 
@@ -71,7 +72,7 @@ namespace GlaurungItems.Items
                         var rollBomb = PickupObjectDatabase.GetById(567).GetComponent<FireVolleyOnRollItem>();
                         ProjectileModule projectileModule = rollBomb.ModVolley.projectiles[0];
                         Projectile currentProjectile = projectileModule.GetCurrentProjectile();
-                        ExplosionData miniExplosionData = currentProjectile.GetComponent<ExplosiveModifier>().explosionData;                        
+                        ExplosionData miniExplosionData = currentProjectile.GetComponent<ExplosiveModifier>().explosionData.CopyExplosionData();                        
                         miniExplosionData.damage = 5f;
                         miniExplosionData.damageRadius = 1.5f;
                         miniExplosionData.doForce = false;
@@ -81,7 +82,6 @@ namespace GlaurungItems.Items
 
                         component.Shooter = player.specRigidbody;
                         component.transform.parent = gun.barrelOffset;
-                        Tools.Print(gun.muzzleFlashEffects.effects.Length, "ffffff", true);
                     }
                     this.GunConsumeAmmo();
                 }
@@ -91,7 +91,7 @@ namespace GlaurungItems.Items
                     if (component != null)
                     {
                         ExplosiveModifier component2 = component.GetComponent<ExplosiveModifier>();
-                        ExplosionData defaultSafeSmallExplosionData = GameManager.Instance.Dungeon.sharedSettingsPrefab.DefaultSmallExplosionData;
+                        ExplosionData defaultSafeSmallExplosionData = GameManager.Instance.Dungeon.sharedSettingsPrefab.DefaultSmallExplosionData.CopyExplosionData();
                         this.playerSafeSmallExplosion.effect = defaultSafeSmallExplosionData.effect;
                         this.playerSafeSmallExplosion.ignoreList = defaultSafeSmallExplosionData.ignoreList;
                         this.playerSafeSmallExplosion.ss = defaultSafeSmallExplosionData.ss;
@@ -177,7 +177,11 @@ namespace GlaurungItems.Items
             GameObject gameObject = SpawnManager.SpawnProjectile(grenade.gameObject, player.sprite.WorldCenter, Quaternion.Euler(0f, 0f, (player.CurrentGun == null) ? 0f : player.CurrentGun.CurrentAngle), true);
             Projectile projectile = gameObject.GetComponent<Projectile>();
             Destroy(projectile.gameObject.GetComponent<BounceProjModifier>());
+            projectile.ChangeColor(0f, Color.grey);
             player.DoPostProcessProjectile(projectile); // to make projectiles affected by the player modifiers (by spapi)
+            //Tools.Print(gun.muzzleFlashEffects.effects.Length, "ffffff", true);
+            //gun.muzzleFlashEffects.effects[0].SpawnAtPosition(player.AimCenter, (player.CurrentGun == null) ? 0f : player.CurrentGun.CurrentAngle, player.transform);
+
             return projectile;
         }
 

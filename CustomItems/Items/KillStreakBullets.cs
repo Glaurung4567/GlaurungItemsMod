@@ -7,10 +7,8 @@ using UnityEngine;
 
 namespace GlaurungItems.Items
 {
-	// Token: 0x0200004B RID: 75
 	internal class KillStreakBullets: PassiveItem
 	{
-		// Token: 0x06000174 RID: 372 RVA: 0x0000B634 File Offset: 0x00009834
 		public static void Init()
 		{
 			string name = "Kill Streak Bullets";

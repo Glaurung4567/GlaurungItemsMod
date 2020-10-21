@@ -261,10 +261,6 @@ namespace GlaurungItems.Items
             //AkSoundEngine.PostEvent("Play_MUS_Dungeon_State_Winner", base.gameObject);
         }
 
-
-
-
-
         public override void Update()
         {
             if (this.combatStarted && !this.combatEnded && !this.isInCoop)
