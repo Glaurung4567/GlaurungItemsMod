@@ -102,7 +102,6 @@ namespace GlaurungItems.Items
             player.OnRoomClearEvent += this.OnLeaveCombat;
         }
 
-        // Token: 0x0600040C RID: 1036 RVA: 0x000034D8 File Offset: 0x000016D8
         protected override void OnPostDrop(PlayerController user)
         {
             user.OnRoomClearEvent -= this.OnLeaveCombat;

@@ -3,6 +3,7 @@ using System.Linq;
 using EnemyAPI;
 using GlaurungItems.Items;
 using ItemAPI;
+using Items;
 
 namespace GlaurungItems
 {
@@ -47,6 +48,9 @@ namespace GlaurungItems
                 LooseCannon.Add();
                 BanishingBullets.Init();
                 Yoink.Init();
+
+                GunDeadArmyStronghold.Init();
+                Chainer.Add();
 
                 //my own items modif based on cel's modif of the gilded hydra
                 AddModifGungeonItems.Init();

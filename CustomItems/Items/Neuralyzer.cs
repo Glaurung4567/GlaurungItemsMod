@@ -30,6 +30,7 @@ namespace GlaurungItems.Items
 
 		private void StartEffect(PlayerController user)
 		{
+			wasUsed = true;
 			if(user && user.CurrentRoom != null && user.CurrentRoom.GetActiveEnemies(0) != null)
             {
 
@@ -50,9 +51,14 @@ namespace GlaurungItems.Items
             }
 		}
 
+		public override bool CanBeUsed(PlayerController user)
+		{
+			return user.IsInCombat;
+		}
+
 		private void EndEffect(PlayerController user)
 		{
-			if (user.CurrentRoom != null && user.IsInCombat && user.CurrentRoom.GetActiveEnemies(0) != null)
+			if (wasUsed && user.CurrentRoom != null && user.IsInCombat && user.CurrentRoom.GetActiveEnemies(0) != null)
 			{
 				List<AIActor> enemies = user.CurrentRoom.GetActiveEnemies(0);
 				foreach (AIActor enemy in enemies)
@@ -60,9 +66,16 @@ namespace GlaurungItems.Items
 					enemy.CanTargetPlayers = true;
 				}
 			}
+			wasUsed = false;
+		}
+
+		protected override void OnPreDrop(PlayerController user)
+		{
+			EndEffect(user);
 		}
 
 		private float duration = 5f;
+		private bool wasUsed = false;
 
 	}
 }

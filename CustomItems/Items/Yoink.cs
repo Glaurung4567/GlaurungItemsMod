@@ -99,6 +99,7 @@ namespace GlaurungItems.Items
 				//Tools.Print("yoink shop", "ffffff", true);
 				user.SetIsStealthed(true, "Yoink");
 				user.SetCapableOfStealing(true, "Yoink", null);
+				isYoinkingShop = true;
 				base.StartCoroutine(ItemBuilder.HandleDuration(this, 5f, user, new Action<PlayerController>(this.EndShopYoinking)));
 
 			}
@@ -197,6 +198,7 @@ namespace GlaurungItems.Items
         {
 			user.SetIsStealthed(false, "Yoink");
 			user.SetCapableOfStealing(false, "Yoink", null);
+			isYoinkingShop = false;
 		}
 
 		private bool CanYoinkChest(Chest chest)
@@ -238,6 +240,11 @@ namespace GlaurungItems.Items
 		protected override void OnPreDrop(PlayerController user)
 		{
 			user.OnRoomClearEvent -= this.OnLeaveCombat;
+            if (isYoinkingShop)
+            {
+				EndShopYoinking(user);
+
+			}
 			base.OnPreDrop(user);
 		}
 
@@ -247,6 +254,7 @@ namespace GlaurungItems.Items
 		}
 
 		private List<AIActor> yoinkedTargets = new List<AIActor>();
+		private bool isYoinkingShop = false;
 	}
 
     public class ShootZeroProjectilesBulletScript : Script // This BulletScript is just a modified version of the script BulletManShroomed, which you can find with dnSpy.

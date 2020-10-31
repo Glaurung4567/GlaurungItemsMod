@@ -25,7 +25,7 @@ namespace GlaurungItems.Items
 			string shortDesc = "Where could this lead ?";
 			string longDesc = "This old and worn map covered by cryptic inscriptions along with symbols of the Abbey of the True Gun radiates a powerful and sinister magical aura." +
                 " It smells of rewards, trickeries and dangers.";
-            item.AddPassiveStatModifier(PlayerStats.StatType.AdditionalItemCapacity, 2f, StatModifier.ModifyMethod.ADDITIVE);
+            item.AddPassiveStatModifier(PlayerStats.StatType.AdditionalItemCapacity, 1f, StatModifier.ModifyMethod.ADDITIVE);
             item.SetupItem(shortDesc, longDesc, "gl");
             item.quality = ItemQuality.B;
 		}

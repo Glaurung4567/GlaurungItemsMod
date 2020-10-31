@@ -182,6 +182,26 @@ namespace GlaurungItems.Items
 
         public override DebrisObject Drop(PlayerController player)
 		{
+			if (kills <= 0 && firstKillStreakBoostActive)
+			{
+				firstKillStreakBoostActive = false;
+
+				this.AddPassiveStatModifier(PlayerStats.StatType.Damage, -firstKillStreakBoostAmount, StatModifier.ModifyMethod.ADDITIVE);
+				if (secondKillStreakBoostActive)
+				{
+					secondKillStreakBoostActive = false;
+					this.AddPassiveStatModifier(PlayerStats.StatType.ReloadSpeed, -secondKillStreakBoostAmount, StatModifier.ModifyMethod.ADDITIVE);
+
+				}
+				if (thirdKillStreakBoostActive)
+				{
+					thirdKillStreakBoostActive = false;
+					this.AddPassiveStatModifier(PlayerStats.StatType.MovementSpeed, -thirdKillStreakBoostAmount, StatModifier.ModifyMethod.ADDITIVE);
+
+				}
+				PlayerController owner = base.Owner;
+				owner.stats.RecalculateStats(owner, false);
+			}
 			player.PostProcessProjectile -= this.PostProcessProjectile;
 			player.PostProcessBeamTick -= this.PostProcessBeamTick;
 			player.OnRoomClearEvent -= this.OnLeaveCombat;

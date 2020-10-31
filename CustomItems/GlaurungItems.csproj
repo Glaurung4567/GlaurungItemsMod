@@ -75,6 +75,7 @@
     <Compile Include="ItemAPI\FakePrefab\FakePrefab.cs" />
     <Compile Include="ItemAPI\FakePrefab\FakePrefabHooks.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
+    <Compile Include="Items\GunDeadArmyStronghold.cs" />
     <Compile Include="Items\LooseCanon.cs" />
     <Compile Include="Items\BanishingBullets.cs" />
     <Compile Include="Items\BerserkerRoar.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Items\HowlOfTheJammed.cs" />
     <Compile Include="Items\JosephsLastResort.cs" />
     <Compile Include="Items\KillStreakBullets.cs" />
+    <Compile Include="Items\old\Chainer.cs" />
     <Compile Include="Items\old\KillStreakGun.cs" />
     <Compile Include="Items\Neuralyzer.cs" />
     <Compile Include="Items\Overhealer.cs" />

@@ -38,7 +38,7 @@ namespace GlaurungItems.Items
 		{
 			if (user && user.CurrentRoom != null && user.CurrentRoom.GetActiveEnemies(0) != null)
 			{
-				AkSoundEngine.PostEvent("Play_VO_dragun_death_01", base.gameObject);
+				AkSoundEngine.PostEvent("Play_BOSS_bulletbros_anger_01", base.gameObject);
 				rageInstanceVFX = user.PlayEffectOnActor(this.RageOverheadVFX, new Vector3(0f, 1.375f, 0f), true, true, false);
 				base.StartCoroutine(this.EndRageVFX(user));
 
@@ -67,7 +67,7 @@ namespace GlaurungItems.Items
 
 		private IEnumerator EndRageVFX(PlayerController player)
         {
-			yield return new WaitForSeconds(2f);
+			yield return new WaitForSeconds(1f);
 			rageInstanceVFX.GetComponent<tk2dSpriteAnimator>().PlayAndDestroyObject("rage_face_vfx_out", null);
 			rageInstanceVFX = null;
 			yield break;

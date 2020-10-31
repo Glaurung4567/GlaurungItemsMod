@@ -55,6 +55,12 @@ namespace GlaurungItems.Items
 			}
 		}
 
+		protected override void OnPreDrop(PlayerController user)
+        {
+			EndEffect(user);
+		}
+
+
 		private float duration = 7f;
 		private bool wasActivated = false;
 	}
