@@ -81,7 +81,10 @@ namespace GlaurungItems.Items
         {
 			foreach (AIActor holder in spawnedChainHolders)
 			{
-				holder.EraseFromExistence(true);
+				if(holder != null)
+                {
+					holder.EraseFromExistence(true);
+				}
 			}
 			spawnedChainHolders = new List<AIActor>();
 		}
@@ -115,6 +118,7 @@ namespace GlaurungItems.Items
 				aiactor.aiShooter.ToggleGunAndHandRenderers(false, "chainer enemy with invisible gun");
                 aiactor.procedurallyOutlined = false;
                 aiactor.CorpseObject = null;
+				aiactor.SetResistance(EffectResistanceType.None, 1);
                 aiactor.ImmuneToAllEffects = true;
                 aiactor.SetIsFlying(true, "I'm a bullet too!");
 				aiactor.ToggleShadowVisiblity(false);
@@ -128,6 +132,11 @@ namespace GlaurungItems.Items
 
                 aiactor.IsHarmlessEnemy = true;
                 aiactor.IgnoreForRoomClear = true;
+				aiactor.PreventAutoKillOnBossDeath = true;
+
+				aiactor.ManualKnockbackHandling = true;
+				aiactor.knockbackDoer.SetImmobile(true, "Chainer");
+				aiactor.PreventFallingInPitsEver = true;
 
                 //aiactor.HandleReinforcementFallIntoRoom(0f); //don't use this if you want your mob to be invisible
                 aiactor.gameObject.AddComponent<CompanionController>();
@@ -150,6 +159,7 @@ namespace GlaurungItems.Items
 					
                     bulletBank.OnProjectileCreated = (Action<Projectile>)Delegate.Combine(bulletBank.OnProjectileCreated, new Action<Projectile>(Chainer.OnPostProcessProjectile));
                 }
+				aiactor.aiShooter.AimAtPoint(owner.AimCenter);
 				aiactor.aiShooter.ShootBulletScript(new CustomBulletScriptSelector(typeof(Chain1)));
 
 				spawnedChainHolders.Add(aiactor);
