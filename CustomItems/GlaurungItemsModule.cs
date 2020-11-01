@@ -38,6 +38,7 @@ namespace GlaurungItems
                 ShamblesGun.Add();
                 Neuralyzer.Init();
                 HowlOfTheJammed.Init();
+                Chainer.Add();
                 RaiseDead.Init();
                 Overhealer.Add();
                 HighPriestSecretMap.Init();
@@ -50,7 +51,6 @@ namespace GlaurungItems
                 Yoink.Init();
 
                 GunDeadArmyStronghold.Init();
-                Chainer.Add();
 
                 //my own items modif based on cel's modif of the gilded hydra
                 AddModifGungeonItems.Init();

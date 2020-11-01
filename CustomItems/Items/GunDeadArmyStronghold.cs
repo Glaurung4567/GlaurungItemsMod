@@ -23,7 +23,7 @@ namespace GlaurungItems.Items
 			string longDesc = "";
 			item.AddPassiveStatModifier(PlayerStats.StatType.AdditionalItemCapacity, 1f, StatModifier.ModifyMethod.ADDITIVE);
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.quality = ItemQuality.B;
+			item.quality = ItemQuality.EXCLUDED;
 		}
 
 		protected override void DoEffect(PlayerController user)
@@ -43,8 +43,6 @@ namespace GlaurungItems.Items
 		protected IEnumerator HandleTransitionToFallbackCombatRoom(RoomHandler sourceRoom)
 		{
 			Dungeon d = GameManager.Instance.Dungeon;
-
-
 
 			Tools.Print("tes", "ffffff", true);
 

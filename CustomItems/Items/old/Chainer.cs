@@ -29,7 +29,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.angleVariance = 0f;
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
-            gun.reloadTime = 3f;
+            gun.reloadTime = 2.2f;
             gun.DefaultModule.cooldownTime = 1f;
             gun.DefaultModule.numberOfShotsInClip = 5;
             gun.SetBaseMaxAmmo(75);
@@ -134,8 +134,8 @@ namespace GlaurungItems.Items
                 aiactor.IgnoreForRoomClear = true;
 				aiactor.PreventAutoKillOnBossDeath = true;
 
-				aiactor.ManualKnockbackHandling = true;
-				aiactor.knockbackDoer.SetImmobile(true, "Chainer");
+				aiactor.ManualKnockbackHandling = true; //dunno if this is useful
+				aiactor.knockbackDoer.SetImmobile(true, "Chainer"); // from the TetherBehavior to prevent the companion from being pushed by explosions
 				aiactor.PreventFallingInPitsEver = true;
 
                 //aiactor.HandleReinforcementFallIntoRoom(0f); //don't use this if you want your mob to be invisible
@@ -148,17 +148,25 @@ namespace GlaurungItems.Items
 				{
 					aiactor.healthHaver.PreventAllDamage = true;
 				}
+
+				if (aiactor.bulletBank != null)
+				{
+					AIBulletBank bulletBank = aiactor.bulletBank;
+					bulletBank.OnProjectileCreated = (Action<Projectile>)Delegate.Combine(bulletBank.OnProjectileCreated, new Action<Projectile>(Chainer.OnPostProcessProjectile));
+				}
 				if (aiactor.aiShooter != null)
 				{
 					AIShooter aiShooter = aiactor.aiShooter;
 					aiShooter.PostProcessProjectile = (Action<Projectile>)Delegate.Combine(aiShooter.PostProcessProjectile, new Action<Projectile>(Chainer.OnPostProcessProjectile));
 				}
-				if (aiactor.bulletBank != null)
-                {
-                    AIBulletBank bulletBank = aiactor.bulletBank;
-					
-                    bulletBank.OnProjectileCreated = (Action<Projectile>)Delegate.Combine(bulletBank.OnProjectileCreated, new Action<Projectile>(Chainer.OnPostProcessProjectile));
-                }
+
+				ChainCompanionisedEnemyBulletModifiers companionisedBullets = aiactor.gameObject.GetOrAddComponent<ChainCompanionisedEnemyBulletModifiers>();
+				companionisedBullets.jammedDamageMultiplier = 2f;
+				companionisedBullets.TintBullets = false;
+				companionisedBullets.TintColor = Color.grey;
+				companionisedBullets.baseBulletDamage = 2f;
+
+				// to make the companion shoot once
 				aiactor.aiShooter.AimAtPoint(owner.AimCenter);
 				aiactor.aiShooter.ShootBulletScript(new CustomBulletScriptSelector(typeof(Chain1)));
 
@@ -171,40 +179,10 @@ namespace GlaurungItems.Items
             }
         }
 
-        private static void OnPostProcessProjectile(Projectile proj)
-        {
-            proj.specRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Combine(proj.specRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(Chainer.HandlePreCollision));
-            proj.TreatedAsNonProjectileForChallenge = true;
-			proj.ImmuneToBlanks = true;
-			proj.ImmuneToSustainedBlanks = true; //don't work
-			proj.ChangeTintColorShader(0, Color.grey);
-			proj.baseData.damage *= 6f;
-            proj.collidesWithPlayer = false;
-            proj.UpdateCollisionMask();
-        }
-
-        // from https://github.com/Nevernamed22/OnceMoreIntoTheBreach/blob/master/MakingAnItem/PromethianBullets.cs
-        private static void HandlePreCollision(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, SpeculativeRigidbody otherRigidbody, PixelCollider otherPixelCollider)
-        {
-            bool flag = otherRigidbody && otherRigidbody.healthHaver && otherRigidbody.aiActor && otherRigidbody.aiActor.CompanionOwner;
-            if (flag)
-            {
-                float damage = myRigidbody.projectile.baseData.damage;
-                myRigidbody.projectile.baseData.damage = 0f;
-                GameManager.Instance.StartCoroutine(Chainer.ChangeProjectileDamage(myRigidbody.projectile, damage));
-            }
-        }
-
-        private static IEnumerator ChangeProjectileDamage(Projectile bullet, float oldDamage)
-        {
-            yield return new WaitForSeconds(0.1f);
-            bool flag = bullet != null;
-            if (flag)
-            {
-                bullet.baseData.damage = oldDamage;
-            }
-            yield break;
-        }
+		private static void OnPostProcessProjectile(Projectile proj)
+		{
+			proj.AdjustPlayerProjectileTint(Color.grey, 0);
+		}
 
 		public override void OnPostFired(PlayerController player, Gun gun)
 		{
@@ -247,7 +225,62 @@ namespace GlaurungItems.Items
 		private List<AIActor> spawnedChainHolders = new List<AIActor>();
     }
 
+	/// <summary>
+	/// from NN https://github.com/Nevernamed22/OnceMoreIntoTheBreach/blob/master/MakingAnItem/KalibersEye.cs 
+	/// </summary>
+	public class ChainCompanionisedEnemyBulletModifiers : BraveBehaviour //----------------------------------------------------------------------------------------------
+	{
+		public ChainCompanionisedEnemyBulletModifiers()
+		{
+			this.baseBulletDamage = 10f;
+			this.TintBullets = false;
+			this.TintColor = Color.grey;
+			this.jammedDamageMultiplier = 2f;
+		}
+		public void Start()
+		{
+			enemy = base.aiActor;
+			AIBulletBank bulletBank2 = enemy.bulletBank;
+			foreach (AIBulletBank.Entry bullet in bulletBank2.Bullets)
+			{
+				bullet.BulletObject.GetComponent<Projectile>().BulletScriptSettings.preventPooling = true;
+			}
+			if (enemy.aiShooter != null)
+			{
+				AIShooter aiShooter = enemy.aiShooter;
+				aiShooter.PostProcessProjectile = (Action<Projectile>)Delegate.Combine(aiShooter.PostProcessProjectile, new Action<Projectile>(this.PostProcessSpawnedEnemyProjectiles));
+			}
 
+			if (enemy.bulletBank != null)
+			{
+				AIBulletBank bulletBank = enemy.bulletBank;
+				bulletBank.OnProjectileCreated = (Action<Projectile>)Delegate.Combine(bulletBank.OnProjectileCreated, new Action<Projectile>(this.PostProcessSpawnedEnemyProjectiles));
+			}
+		}
+		private void PostProcessSpawnedEnemyProjectiles(Projectile proj)
+		{
+			//if (TintBullets) { proj.AdjustPlayerProjectileTint(this.TintColor, 0); }
+			if (enemy != null)
+			{
+				if (enemy.aiActor != null)
+				{
+					proj.TreatedAsNonProjectileForChallenge = true;
+					proj.ImmuneToBlanks = true;
+					proj.ImmuneToSustainedBlanks = true; //don't work
+					proj.baseData.damage *= 1f;
+					if (enemy.aiActor.IsBlackPhantom) { proj.baseData.damage = baseBulletDamage * jammedDamageMultiplier; }
+				}
+			}
+			else { ETGModConsole.Log("Shooter is NULL"); }
+		}
+
+		private AIActor enemy;
+		public float baseBulletDamage;
+		public float jammedDamageMultiplier;
+		public bool TintBullets;
+		public Color TintColor;
+
+	}
 
 	/// <summary>
 	/// from ShotgunExecutionerChain1

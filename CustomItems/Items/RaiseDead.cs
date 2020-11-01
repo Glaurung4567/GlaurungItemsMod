@@ -103,6 +103,13 @@ namespace GlaurungItems.Items
                     AIShooter aiShooter = aiactor.aiShooter;
                     aiShooter.PostProcessProjectile = (Action<Projectile>)Delegate.Combine(aiShooter.PostProcessProjectile, new Action<Projectile>(RaiseDead.OnPostProcessProjectile));
                 }
+
+                
+                CompanionisedEnemyBulletModifiers companionisedBullets = aiactor.gameObject.GetOrAddComponent<CompanionisedEnemyBulletModifiers>();
+                companionisedBullets.jammedDamageMultiplier = 2f;
+                companionisedBullets.TintBullets = false;
+                companionisedBullets.baseBulletDamage = 10f;
+                
             }
             catch (Exception e)
             {
