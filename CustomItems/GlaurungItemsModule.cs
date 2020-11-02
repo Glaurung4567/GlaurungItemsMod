@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using EnemyAPI;
 using GlaurungItems.Items;
 using ItemAPI;
 using Items;
+using MonoMod.RuntimeDetour;
 
 namespace GlaurungItems
 {
@@ -54,7 +56,7 @@ namespace GlaurungItems
 
                 //my own items modif based on cel's modif of the gilded hydra
                 AddModifGungeonItems.Init();
-                
+
                 // synergies
                 GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
                 {

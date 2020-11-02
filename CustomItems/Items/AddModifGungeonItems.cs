@@ -21,9 +21,9 @@
             gun1.quality = PickupObject.ItemQuality.D;
             gun1.SetBaseMaxAmmo(300);
             gun1.ammo = 300;
-            Gun gun2 = PickupObjectDatabase.GetById(227) as Gun;
+            PickupObject gun2 = PickupObjectDatabase.GetById(227);
             gun2.quality = PickupObject.ItemQuality.C;
-            PassiveItem item1 = PickupObjectDatabase.GetById(473) as PassiveItem; // hidden compartment
+            PickupObject item1 = PickupObjectDatabase.GetById(473); // hidden compartment
             item1.quality = PickupObject.ItemQuality.C;
         }
     }

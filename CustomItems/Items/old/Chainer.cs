@@ -1,4 +1,5 @@
 ﻿using Brave.BulletScript;
+using Dungeonator;
 using EnemyAPI;
 using Gungeon;
 using ItemAPI;
@@ -79,6 +80,7 @@ namespace GlaurungItems.Items
 
 		private void RemoveHolders()
         {
+			roomWhereThisWasFired = null;
 			foreach (AIActor holder in spawnedChainHolders)
 			{
 				if(holder != null)
@@ -92,6 +94,10 @@ namespace GlaurungItems.Items
 		public override void PostProcessProjectile(Projectile projectile)
         {
             SpawnChainCompanion(this.Player, projectile);
+			if(roomWhereThisWasFired == null && gun.CurrentOwner && (gun.CurrentOwner as PlayerController).CurrentRoom != null)
+            {
+				roomWhereThisWasFired = (gun.CurrentOwner as PlayerController).CurrentRoom;
+            }
         }
 
         private void SpawnChainCompanion(PlayerController owner, Projectile projectile)
@@ -198,7 +204,6 @@ namespace GlaurungItems.Items
 			base.Update();
 			if (gun.CurrentOwner)
 			{
-
 				if (!gun.PreventNormalFireAudio)
 				{
 					this.gun.PreventNormalFireAudio = true;
@@ -207,6 +212,10 @@ namespace GlaurungItems.Items
 				{
 					this.HasReloaded = true;
 				}
+				if(roomWhereThisWasFired != null && gun.CurrentOwner is PlayerController && (gun.CurrentOwner as PlayerController).CurrentRoom != roomWhereThisWasFired)
+                {
+					RemoveHolders();
+                }
 			}
 		}
 
@@ -223,6 +232,7 @@ namespace GlaurungItems.Items
 
 		public static float playerGunCurrentAngle = 0f;
 		private List<AIActor> spawnedChainHolders = new List<AIActor>();
+		private RoomHandler roomWhereThisWasFired = null;
     }
 
 	/// <summary>
@@ -267,7 +277,7 @@ namespace GlaurungItems.Items
 					proj.TreatedAsNonProjectileForChallenge = true;
 					proj.ImmuneToBlanks = true;
 					proj.ImmuneToSustainedBlanks = true; //don't work
-					proj.baseData.damage *= 1f;
+					proj.baseData.damage *= 2f;
 					if (enemy.aiActor.IsBlackPhantom) { proj.baseData.damage = baseBulletDamage * jammedDamageMultiplier; }
 				}
 			}
