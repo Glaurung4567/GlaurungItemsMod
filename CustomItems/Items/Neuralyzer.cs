@@ -15,7 +15,7 @@ namespace GlaurungItems.Items
 			Neuralyzer item = gameObject.AddComponent<Neuralyzer>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
 			string shortDesc = "Flashy Thing";
-			string longDesc = "This was brought to the Gungeon bya strange man in a black suit. \n \n" +
+			string longDesc = "This was brought to the Gungeon by a strange man in a black suit. \n \n" +
 				"After being used too many times, it only erase the memories of the targets for 5 seconds after which they regain their composure.";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 500f);

@@ -653,6 +653,10 @@ namespace ItemAPI
 				"2e6223e42e574775b56c6349921f42cb"
 			},
 			{
+				"dragun",
+				"465da2bb086a4a88a803f79fe3a27677"
+			},
+			{
 				"marines_past_imp",
 				"a9cc6a4e9b3d46ea871e70a03c9f77d4"
 			},

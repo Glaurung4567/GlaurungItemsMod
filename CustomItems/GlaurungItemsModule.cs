@@ -52,7 +52,9 @@ namespace GlaurungItems
                 BanishingBullets.Init();
                 Yoink.Init();
 
-                GunDeadArmyStronghold.Init();
+                BulletScriptGun.Add();
+
+                //GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra
                 AddModifGungeonItems.Init();

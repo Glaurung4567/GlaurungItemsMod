@@ -124,7 +124,6 @@ namespace GlaurungItems.Items
 				aiactor.aiShooter.ToggleGunAndHandRenderers(false, "chainer enemy with invisible gun");
                 aiactor.procedurallyOutlined = false;
                 aiactor.CorpseObject = null;
-				aiactor.SetResistance(EffectResistanceType.None, 1);
                 aiactor.ImmuneToAllEffects = true;
                 aiactor.SetIsFlying(true, "I'm a bullet too!");
 				aiactor.ToggleShadowVisiblity(false);
@@ -140,7 +139,6 @@ namespace GlaurungItems.Items
                 aiactor.IgnoreForRoomClear = true;
 				aiactor.PreventAutoKillOnBossDeath = true;
 
-				aiactor.ManualKnockbackHandling = true; //dunno if this is useful
 				aiactor.knockbackDoer.SetImmobile(true, "Chainer"); // from the TetherBehavior to prevent the companion from being pushed by explosions
 				aiactor.PreventFallingInPitsEver = true;
 
@@ -277,14 +275,24 @@ namespace GlaurungItems.Items
 					proj.TreatedAsNonProjectileForChallenge = true;
 					proj.ImmuneToBlanks = true;
 					proj.ImmuneToSustainedBlanks = true; //don't work
-					proj.baseData.damage *= 2f;
-					if (enemy.aiActor.IsBlackPhantom) { proj.baseData.damage = baseBulletDamage * jammedDamageMultiplier; }
+					proj.baseData.damage *= 4f;
+					GameManager.Instance.StartCoroutine(ChainCompanionisedEnemyBulletModifiers.ChangeProjectileDamage(proj));
+
+					//if (enemy.aiActor.IsBlackPhantom) { proj.baseData.damage = baseBulletDamage * jammedDamageMultiplier; }
 				}
 			}
 			else { ETGModConsole.Log("Shooter is NULL"); }
 		}
 
-		private AIActor enemy;
+        private static IEnumerator ChangeProjectileDamage(Projectile proj)
+        {
+			yield return new WaitForSeconds(1f);
+			proj.baseData.damage *= 4f;
+			yield break;
+			throw new NotImplementedException();
+        }
+
+        private AIActor enemy;
 		public float baseBulletDamage;
 		public float jammedDamageMultiplier;
 		public bool TintBullets;
@@ -412,7 +420,7 @@ namespace GlaurungItems.Items
 				return this.has_stopped;
 			}
 
-			// to prevent the chain from disapering
+			// to prevent the chain from disappearing
 			public void HasStoppedSet(bool value)
 			{
 				//this.has_stopped = value;
@@ -438,54 +446,39 @@ namespace GlaurungItems.Items
 				yield break;
 			}
 
-			// Token: 0x06000BCF RID: 3023 RVA: 0x000373D0 File Offset: 0x000355D0
 			private void OnCollision(CollisionData collision)
 			{
-                //try{
-					bool flag = collision.collisionType == CollisionData.CollisionType.TileMap;
-					SpeculativeRigidbody otherRigidbody = collision.OtherRigidbody;
-					if (otherRigidbody)
-					{
-						flag = (otherRigidbody.majorBreakable || otherRigidbody.PreventPiercing || (!otherRigidbody.gameActor && !otherRigidbody.minorBreakable));
-					}
-					if (flag)
-					{
-						base.Position = collision.MyRigidbody.UnitCenter + PhysicsEngine.PixelToUnit(collision.NewPixelsToMove);
-						this.Speed = 0f;
-						this.HasStoppedSet(true);
-						PhysicsEngine.PostSliceVelocity = new Vector2?(new Vector2(0f, 0f));
-						SpeculativeRigidbody specRigidbody = this.Projectile.specRigidbody;
-						specRigidbody.OnCollision = (Action<CollisionData>)Delegate.Remove(specRigidbody.OnCollision, new Action<CollisionData>(this.OnCollision));
-					}
-					else
-					{
-						PhysicsEngine.PostSliceVelocity = new Vector2?(collision.MyRigidbody.Velocity);
-					}
-				/*}
-				catch (Exception e)
+				bool flag = collision.collisionType == CollisionData.CollisionType.TileMap;
+				SpeculativeRigidbody otherRigidbody = collision.OtherRigidbody;
+				if (otherRigidbody)
 				{
-					Tools.PrintException(e);
-				}*/
-				
+					flag = (otherRigidbody.majorBreakable || otherRigidbody.PreventPiercing || (!otherRigidbody.gameActor && !otherRigidbody.minorBreakable));
+				}
+				if (flag)
+				{
+					base.Position = collision.MyRigidbody.UnitCenter + PhysicsEngine.PixelToUnit(collision.NewPixelsToMove);
+					this.Speed = 0f;
+					this.HasStoppedSet(true);
+					PhysicsEngine.PostSliceVelocity = new Vector2?(new Vector2(0f, 0f));
+					SpeculativeRigidbody specRigidbody = this.Projectile.specRigidbody;
+					specRigidbody.OnCollision = (Action<CollisionData>)Delegate.Remove(specRigidbody.OnCollision, new Action<CollisionData>(this.OnCollision));
+				}
+				else
+				{
+					PhysicsEngine.PostSliceVelocity = new Vector2?(collision.MyRigidbody.Velocity);
+				}
 			}
 
-			// Token: 0x06000BD0 RID: 3024 RVA: 0x000374DC File Offset: 0x000356DC
 			public override void OnBulletDestruction(Bullet.DestroyType destroyType, SpeculativeRigidbody hitRigidbody, bool preventSpawningProjectiles)
 			{
-                //try { 
-					if (this.Projectile)
-					{
-						SpeculativeRigidbody specRigidbody = this.Projectile.specRigidbody;
-						specRigidbody.OnCollision = (Action<CollisionData>)Delegate.Remove(specRigidbody.OnCollision, new Action<CollisionData>(this.OnCollision));
-					}
-					this.HasStoppedSet(true);
-				/*}catch (Exception e)
+				if (this.Projectile)
 				{
-					Tools.PrintException(e);
-				}*/
+					SpeculativeRigidbody specRigidbody = this.Projectile.specRigidbody;
+					specRigidbody.OnCollision = (Action<CollisionData>)Delegate.Remove(specRigidbody.OnCollision, new Action<CollisionData>(this.OnCollision));
+				}
+				this.HasStoppedSet(true);
 			}
 
-			// Token: 0x04000CA8 RID: 3240
 			private Chain1 m_parentScript;
 		}
 	}
