@@ -76,6 +76,11 @@
     <Compile Include="ItemAPI\FakePrefab\FakePrefabHooks.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
     <Compile Include="Items\BulletScriptGun.cs" />
+    <Compile Include="Items\ItemParts\BulletScriptGunAngryBookBasicAttack2.cs" />
+    <Compile Include="Items\ItemParts\BulletScriptGunBulletShotgunManBlueBasicAttack1.cs" />
+    <Compile Include="Items\ItemParts\BulletScriptGunChancebulonBouncingRing1.cs" />
+    <Compile Include="Items\ItemParts\BulletScriptGunChancebulonDice1.cs" />
+    <Compile Include="Items\ItemParts\BulletScriptGunHighPriestFaceShoot1.cs" />
     <Compile Include="Items\ItemParts\ShootZeroProjectilesBulletScript.cs" />
     <Compile Include="Items\old\GunDeadArmyStronghold.cs" />
     <Compile Include="Items\LooseCanon.cs" />

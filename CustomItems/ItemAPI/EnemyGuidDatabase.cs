@@ -813,6 +813,26 @@ namespace ItemAPI
 				"8817ab9de885424d9ba83455ead5ffef"
 			},
 			{
+				"high_priest",
+				"6c43fddfd401456c916089fdd1c99b1c"
+			},
+			{
+				"resourceful_rat",
+				"6868795625bd46f3ae3e4377adce288b"
+			},
+			{
+				"resourceful_rat_mech",
+				"4d164ba3f62648809a4a82c90fc22cae"
+			},
+			{
+				"black_stache",
+				"8b913eea3d174184be1af362d441910d"
+			},
+			{
+				"last_human",
+				"880bbe4ce1014740ba6b4e2ea521e49d"
+			},
+			{
 				"metal_cube_guy",
 				"ba928393c8ed47819c2c5f593100a5bc"
 			},
