@@ -94,6 +94,7 @@ namespace GlaurungItems.Items
 		public override void OnPostFired(PlayerController player, Gun gun)
 		{
 			gun.PreventNormalFireAudio = true;
+			//AkSoundEngine.PostEvent("Play_ENV_time_shatter_01", GameManager.Instance.gameObject);
 			//AkSoundEngine.PostEvent("Play_OBJ_heart_heal_01", gameObject);
 		}
 		private bool HasReloaded;
@@ -207,7 +208,7 @@ namespace GlaurungItems.Items
         {
 			List<AIBulletBank.Entry>  bullets = aiactor.bulletBank.Bullets;
 			var bulletScriptSelected = new CustomBulletScriptSelector(typeof(ShootZeroProjectilesBulletScript));
-			int randomSelect = 19;//Random.Range(16, 18);
+			int randomSelect = 21;//Random.Range(16, 18);
 			bulletsDamageMultiplier = 1;
 
 			switch (randomSelect)
@@ -307,11 +308,21 @@ namespace GlaurungItems.Items
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunPhaseSpiderWeb1));
 					bulletsDamageMultiplier = 6f;
 					break;
+				case 20:
+					bullets = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["treadnaught"]).bulletBank.Bullets;
+					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunTankTreaderScatterShot1));
+					bulletsDamageMultiplier = 10f;
+					break;
+				case 21:  // ! break the game if with cutting room mod !
+					bullets = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["shotgrub"]).bulletBank.Bullets;
+					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunShotgrubManAttack1));
+					bulletsDamageMultiplier = 10f;
+					break;
+				case 22:
+					break;
 				default:
-					//shotgrub
-					//spider
 
-					break;//MushroomGuySmallWaft1
+					break;
 
 					//meh
 					/*AngryBookBasicAttack1*/
@@ -327,6 +338,7 @@ namespace GlaurungItems.Items
 					/* DraGunSpotlight1 */
 					/*MetalGearRatMissiles1*/
 					/*MetalGearRatLaserBullets1*/
+					/*BossFinalBulletAgunimLightning1*/
 			}
 			aiactor.bulletBank.Bullets = bullets;
 			if (aiactor.bulletBank != null)
@@ -381,5 +393,8 @@ namespace GlaurungItems.Items
 		private static float bulletsDamageMultiplier = 1f;
 		private List<AIActor> spawnedChainHolders = new List<AIActor>();
 		private RoomHandler roomWhereThisWasFired = null;
+
+		private GameObject TentacleVFX;
+
 	}
 }

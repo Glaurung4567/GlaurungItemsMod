@@ -841,6 +841,14 @@ namespace ItemAPI
 				"8d441ad4e9924d91b6070d5b3438d066"
 			},
 			{
+				"treadnaught",
+				"fa76c8cfdf1c4a88b55173666b4bc7fb"
+			},
+			{
+				"agunim",
+				"2ccaa1b7ae10457396a1796decda9cf6"
+			},
+			{
 				"metal_cube_guy",
 				"ba928393c8ed47819c2c5f593100a5bc"
 			},

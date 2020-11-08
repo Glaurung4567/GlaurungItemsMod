@@ -86,6 +86,8 @@
     <Compile Include="Items\ItemParts\BulletScriptGunGunNutCone.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunHighPriestFaceShoot1.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunPhaseSpiderWeb1.cs" />
+    <Compile Include="Items\ItemParts\BulletScriptGunShotgrubManAttack1.cs" />
+    <Compile Include="Items\ItemParts\BulletScriptGunTankTreaderScatterShot1.cs" />
     <Compile Include="Items\ItemParts\ShootZeroProjectilesBulletScript.cs" />
     <Compile Include="Items\old\GunDeadArmyStronghold.cs" />
     <Compile Include="Items\LooseCanon.cs" />
