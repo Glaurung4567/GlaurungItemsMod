@@ -17,7 +17,6 @@ namespace GlaurungItems.Items
 			this.aimDirection = value;
 		}
 
-		// Token: 0x060004AD RID: 1197 RVA: 0x0001558C File Offset: 0x0001378C
 		protected override IEnumerator Top()
 		{
 			this.EndOnBlank = true;

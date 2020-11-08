@@ -77,10 +77,15 @@
     <Compile Include="Items\AddModifGungeonItems.cs" />
     <Compile Include="Items\BulletScriptGun.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunAngryBookBasicAttack2.cs" />
+    <Compile Include="Items\ItemParts\BulletScriptGunBirdEggVomit2.cs" />
+    <Compile Include="Items\ItemParts\BulletScriptGunBossFinalGuideSword1.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunBulletShotgunManBlueBasicAttack1.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunChancebulonBouncingRing1.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunChancebulonDice1.cs" />
+    <Compile Include="Items\ItemParts\BulletScriptGunGatlingGullFanSpray1.cs" />
+    <Compile Include="Items\ItemParts\BulletScriptGunGunNutCone.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunHighPriestFaceShoot1.cs" />
+    <Compile Include="Items\ItemParts\BulletScriptGunPhaseSpiderWeb1.cs" />
     <Compile Include="Items\ItemParts\ShootZeroProjectilesBulletScript.cs" />
     <Compile Include="Items\old\GunDeadArmyStronghold.cs" />
     <Compile Include="Items\LooseCanon.cs" />

@@ -833,6 +833,14 @@ namespace ItemAPI
 				"880bbe4ce1014740ba6b4e2ea521e49d"
 			},
 			{
+				"gatling_gull",
+				"ec6b674e0acd4553b47ee94493d66422"
+			},
+			{
+				"dr_wolfs_monster",
+				"8d441ad4e9924d91b6070d5b3438d066"
+			},
+			{
 				"metal_cube_guy",
 				"ba928393c8ed47819c2c5f593100a5bc"
 			},
