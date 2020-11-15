@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ItemAPI\AdvancedStringDB.cs" />
+    <Compile Include="ItemAPI\AdvancedTransformGunSynergyProcessor .cs" />
     <Compile Include="ItemAPI\CompanionBuilder.cs" />
     <Compile Include="ItemAPI\CustomSynergies.cs" />
     <Compile Include="ItemAPI\EnemyAPI\Hooks.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="Items\ItemParts\BulletScriptGunPhaseSpiderWeb1.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunShotgrubManAttack1.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunTankTreaderScatterShot1.cs" />
+    <Compile Include="Items\ItemParts\BulletScriptGunWallMimicSlam1.cs" />
     <Compile Include="Items\ItemParts\ShootZeroProjectilesBulletScript.cs" />
     <Compile Include="Items\old\GunDeadArmyStronghold.cs" />
     <Compile Include="Items\LooseCanon.cs" />

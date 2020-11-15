@@ -73,11 +73,11 @@ namespace GlaurungItems.Items
 			newRoom.CompletelyPreventLeaving = true;
 
 			Vector2 oldPlayerPosition = GameManager.Instance.BestActivePlayer.transform.position.XY();
-			Vector2 newPlayerPosition = newRoom.Epicenter.ToVector2() + new Vector2(0f, -3f);
-			Pixelator.Instance.FadeToColor(0.25f, Color.white, true, 0.125f);
+			Vector2 newPlayerPosition = newRoom.Epicenter.ToVector2() + new Vector2(0f, -5f);
 			Pathfinder.Instance.InitializeRegion(d.data, newRoom.area.basePosition, newRoom.area.dimensions);
 
-			yield return new WaitForSeconds(2f);
+			yield return new WaitForSeconds(1f);
+			Pixelator.Instance.FadeToColor(0.25f, Color.white, true, 0.125f);
 			GameManager.Instance.BestActivePlayer.WarpToPoint(newPlayerPosition, false, false);
 			if (GameManager.Instance.CurrentGameType == GameManager.GameType.COOP_2_PLAYER)
 			{
@@ -89,12 +89,12 @@ namespace GlaurungItems.Items
 				GameManager.Instance.AllPlayers[i].WarpFollowersToPlayer(false);
 				GameManager.Instance.AllPlayers[i].WarpCompanionsToPlayer(false);
 			}
-			yield return new WaitForSeconds(2f);
 
 			yield return this.StartCoroutine(this.HandleCombatWaves(d, newRoom));
 			newRoom.CompletelyPreventLeaving = false;
+			yield return new WaitForSeconds(3f);
 			Pixelator.Instance.FadeToColor(0.25f, Color.white, true, 0.125f);
-			GameManager.Instance.MainCameraController.SetManualControl(false, false);
+			//GameManager.Instance.MainCameraController.SetManualControl(false, false);
 			GameManager.Instance.BestActivePlayer.WarpToPoint(oldPlayerPosition, false, false);
 			if (GameManager.Instance.CurrentGameType == GameManager.GameType.COOP_2_PLAYER)
 			{
@@ -107,27 +107,31 @@ namespace GlaurungItems.Items
 		protected IEnumerator HandleCombatWaves(Dungeon d, RoomHandler newRoom)
 		{
 
-				int numEnemiesToSpawn = UnityEngine.Random.Range(1, 3 + 1);
-				for (int i = 0; i < numEnemiesToSpawn; i++)
+			/*int numEnemiesToSpawn = UnityEngine.Random.Range(1, 3 + 1);
+			for (int i = 0; i < numEnemiesToSpawn; i++)
+			{
+				//newRoom.AddSpecificEnemyToRoomProcedurally(d.GetWeightedProceduralEnemy().enemyGuid, true, null);
+			}*/
+			AIActor bunkerLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["bunker"]);
+			IntVector2? intVector = new IntVector2?((this.LastOwner.CenterPosition + new Vector2(-5f, 5f)).ToIntVector2(VectorConversions.Floor));
+			AIActor aiactor = AIActor.Spawn(bunkerLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
+			aiactor.HasBeenEngaged = true;
+
+			yield return new WaitForSeconds(3f);
+			while (newRoom.GetActiveEnemiesCount(RoomHandler.ActiveEnemyType.RoomClear) > 0)
+			{
+				yield return new WaitForSeconds(1f);
+			}
+			if (newRoom.GetActiveEnemiesCount(RoomHandler.ActiveEnemyType.All) > 0)
+			{
+				List<AIActor> activeEnemies = newRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
+				for (int j = 0; j < activeEnemies.Count; j++)
 				{
-					newRoom.AddSpecificEnemyToRoomProcedurally(d.GetWeightedProceduralEnemy().enemyGuid, true, null);
-				}
-				yield return new WaitForSeconds(3f);
-				while (newRoom.GetActiveEnemiesCount(RoomHandler.ActiveEnemyType.RoomClear) > 0)
-				{
-					yield return new WaitForSeconds(1f);
-				}
-				if (newRoom.GetActiveEnemiesCount(RoomHandler.ActiveEnemyType.All) > 0)
-				{
-					List<AIActor> activeEnemies = newRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
-					for (int j = 0; j < activeEnemies.Count; j++)
+					if (activeEnemies[j].IsNormalEnemy)
 					{
-						if (activeEnemies[j].IsNormalEnemy)
-						{
-							activeEnemies[j].EraseFromExistence(false);
-						}
+						activeEnemies[j].EraseFromExistence(false);
 					}
-				
+				}	
 			}
 			yield break;
 		}

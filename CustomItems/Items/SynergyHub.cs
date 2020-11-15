@@ -78,5 +78,22 @@ namespace GlaurungItems.Items
                 this.bonusSynergies = new List<CustomSynergyType>();
             }
         }
+
+        public class SSTGunSynergy : AdvancedSynergyEntry
+        {
+            // Token: 0x0600022C RID: 556 RVA: 0x00015230 File Offset: 0x00013430
+            public SSTGunSynergy()
+            {
+                this.NameKey = "Big Exploding Pew Pew !";
+                this.MandatoryItemIDs = new List<int>
+                {
+                    299,
+                    301
+                };
+                this.IgnoreLichEyeBullets = false;
+                this.statModifiers = new List<StatModifier>(0);
+                this.bonusSynergies = new List<CustomSynergyType>();
+            }
+        }
     }
 }

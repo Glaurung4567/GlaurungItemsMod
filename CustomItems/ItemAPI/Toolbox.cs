@@ -176,7 +176,6 @@ namespace ItemAPI
 			}
 		}
 
-		// Token: 0x060003E0 RID: 992 RVA: 0x0002CABC File Offset: 0x0002ACBC
 		public static void SetProjectileSpriteRight(this Projectile proj, string name, int pixelWidth, int pixelHeight, bool lightened = true, tk2dBaseSprite.Anchor anchor = 0, int? overrideColliderPixelWidth = null, int? overrideColliderPixelHeight = null, int? overrideColliderOffsetX = null, int? overrideColliderOffsetY = null, Projectile overrideProjectileToCopyFrom = null)
 		{
 			try
@@ -192,7 +191,6 @@ namespace ItemAPI
 			}
 		}
 
-		// Token: 0x060003E3 RID: 995 RVA: 0x0002CFD4 File Offset: 0x0002B1D4
 		public static void ConstructOffsetsFromAnchor(this tk2dSpriteDefinition def, tk2dBaseSprite.Anchor anchor, Vector2 scale)
 		{
 			float num = 0f;
@@ -241,7 +239,6 @@ namespace ItemAPI
 			def.untrimmedBoundsDataExtents += new Vector3(x, y, 0f);
 		}
 
-		// Token: 0x060003E4 RID: 996 RVA: 0x0002D084 File Offset: 0x0002B284
 		public static tk2dSpriteDefinition SetupDefinitionForProjectileSprite(string name, int id, int pixelWidth, int pixelHeight, bool lightened = true, int? overrideColliderPixelWidth = null, int? overrideColliderPixelHeight = null, int? overrideColliderOffsetX = null, int? overrideColliderOffsetY = null, Projectile overrideProjectileToCopyFrom = null)
 		{
 			bool flag = overrideColliderPixelWidth == null;
@@ -291,7 +288,6 @@ namespace ItemAPI
 			return tk2dSpriteDefinition;
 		}
 
-		// Token: 0x060003DD RID: 989 RVA: 0x0002C604 File Offset: 0x0002A804
 		public static tk2dSpriteDefinition CopyDefinitionFrom(this tk2dSpriteDefinition other)
 		{
 			tk2dSpriteDefinition tk2dSpriteDefinition = new tk2dSpriteDefinition();
@@ -592,7 +588,55 @@ namespace ItemAPI
 			}
 		}
 
-		// Token: 0x060003EE RID: 1006 RVA: 0x0002D7AC File Offset: 0x0002B9AC
+		// by spapi
+		public static void RemovePickupFromLootTables(this PickupObject po)
+		{
+			WeightedGameObject go1 = GameManager.Instance.RewardManager.GunsLootTable.defaultItemDrops.FindWeightedGameObjectInCollection(po);
+			if (go1 != null)
+			{
+				GameManager.Instance.RewardManager.GunsLootTable.defaultItemDrops.elements.Remove(go1);
+			}
+			WeightedGameObject go2 = GameManager.Instance.RewardManager.ItemsLootTable.defaultItemDrops.FindWeightedGameObjectInCollection(po);
+			if (go2 != null)
+			{
+				GameManager.Instance.RewardManager.ItemsLootTable.defaultItemDrops.elements.Remove(go2);
+			}
+		}
+
+		public static WeightedGameObject FindWeightedGameObjectInCollection(this WeightedGameObjectCollection collection, PickupObject po)
+		{
+			WeightedGameObject go = collection.FindWeightedGameObjectInCollection(po.PickupObjectId);
+			if (go == null)
+			{
+				go = collection.FindWeightedGameObjectInCollection(po.gameObject);
+			}
+			return go;
+		}
+
+		public static WeightedGameObject FindWeightedGameObjectInCollection(this WeightedGameObjectCollection collection, int id)
+		{
+			foreach (WeightedGameObject go in collection.elements)
+			{
+				if (go.pickupId == id)
+				{
+					return go;
+				}
+			}
+			return null;
+		}
+
+		public static WeightedGameObject FindWeightedGameObjectInCollection(this WeightedGameObjectCollection collection, GameObject obj)
+		{
+			foreach (WeightedGameObject go in collection.elements)
+			{
+				if (go.gameObject == obj)
+				{
+					return go;
+				}
+			}
+			return null;
+		}
+
 		public static ExplosionData CopyExplosionData(this ExplosionData other)
 		{
 			ExplosionData explosionData = new ExplosionData();

@@ -251,7 +251,7 @@ namespace GlaurungItems.Items
 			AIBulletBank bulletBank2 = enemy.bulletBank;
 			foreach (AIBulletBank.Entry bullet in bulletBank2.Bullets)
 			{
-				bullet.BulletObject.GetComponent<Projectile>().BulletScriptSettings.preventPooling = true;
+				//bullet.BulletObject.GetComponent<Projectile>().BulletScriptSettings.preventPooling = true;
 			}
 			if (enemy.aiShooter != null)
 			{

@@ -54,7 +54,7 @@ namespace GlaurungItems
 
                 BulletScriptGun.Add();
 
-                //GunDeadArmyStronghold.Init();
+                GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra
                 AddModifGungeonItems.Init();
@@ -80,6 +80,15 @@ namespace GlaurungItems
                 AdvancedDualWieldSynergyProcessor advancedDualWieldSynergyProcessor = Toolbox.GetGunById(520).gameObject.AddComponent<AdvancedDualWieldSynergyProcessor>();
                 advancedDualWieldSynergyProcessor.SynergyNameToCheck = "Landing Hate";
                 advancedDualWieldSynergyProcessor.PartnerGunID = ETGMod.Databases.Items["shambles"].PickupObjectId;
+
+                GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
+                {
+                    new SynergyHub.SSTGunSynergy()
+                }).ToArray<AdvancedSynergyEntry>();
+                AdvancedTransformGunSynergyProcessor synergyProcessor = (PickupObjectDatabase.GetById(299) as Gun).gameObject.AddComponent<AdvancedTransformGunSynergyProcessor>();
+                synergyProcessor.NonSynergyGunId = 299;
+                synergyProcessor.SynergyGunId = 747;
+                synergyProcessor.SynergyToCheck = "Big Exploding Pew Pew !";
 
                 setup = true;
             }
