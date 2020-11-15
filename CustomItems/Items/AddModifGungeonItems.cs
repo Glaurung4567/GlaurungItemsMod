@@ -31,8 +31,6 @@ namespace GlaurungItems.Items
 
             PickupObject gun3 = PickupObjectDatabase.GetById(299);
             gun3.quality = PickupObject.ItemQuality.D;
-            gun3.SetShortDescription("Gun of the hero");
-            gun3.SetName("Super Space Turtle's Gun");
             
             PickupObject gun4 = PickupObjectDatabase.GetById(747); //high_dragunfire+unknown
             gun4.quality = PickupObject.ItemQuality.EXCLUDED;
