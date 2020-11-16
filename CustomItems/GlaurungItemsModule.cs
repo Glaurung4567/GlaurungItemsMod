@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using EnemyAPI;
@@ -6,6 +7,8 @@ using GlaurungItems.Items;
 using ItemAPI;
 using Items;
 using MonoMod.RuntimeDetour;
+using UnityEngine;
+using Ionic.Zip;
 
 namespace GlaurungItems
 {
@@ -17,6 +20,31 @@ namespace GlaurungItems
 
         public override void Init()
         {
+            AdvancedGameStatsManager.AdvancedGameSave = new SaveManager.SaveType
+            {
+                filePattern = "Slot{0}.glaurungSave",
+                encrypted = true,
+                backupCount = 3,
+                backupPattern = "Slot{0}.glaurungBackup.{1}",
+                backupMinTimeMin = 45,
+                legacyFilePattern = "glaurungGameStatsSlot{0}.txt"
+            };
+            for (int i = 0; i < 3; i++)
+            {
+                SaveManager.SaveSlot saveSlot = (SaveManager.SaveSlot)i;
+                Toolbox.SafeMove(Path.Combine(SaveManager.OldSavePath, string.Format(AdvancedGameStatsManager.AdvancedGameSave.legacyFilePattern, saveSlot)), Path.Combine(SaveManager.OldSavePath,
+                    string.Format(AdvancedGameStatsManager.AdvancedGameSave.filePattern, saveSlot)), false);
+                Toolbox.SafeMove(Path.Combine(SaveManager.OldSavePath, string.Format(AdvancedGameStatsManager.AdvancedGameSave.filePattern, saveSlot)), Path.Combine(SaveManager.OldSavePath,
+                    string.Format(AdvancedGameStatsManager.AdvancedGameSave.filePattern, saveSlot)), false);
+                Toolbox.SafeMove(Toolbox.PathCombine(SaveManager.SavePath, "01", string.Format(AdvancedGameStatsManager.AdvancedGameSave.filePattern, saveSlot)), Path.Combine(SaveManager.SavePath,
+                    string.Format(AdvancedGameStatsManager.AdvancedGameSave.filePattern, saveSlot)), true);
+            }
+            Hook mainMenuAwakeHook = new Hook(
+                typeof(MainMenuFoyerController).GetMethod("InitializeMainMenu", BindingFlags.Public | BindingFlags.Instance),
+                typeof(GlaurungItems).GetMethod("MainMenuAwakeHook")
+            );
+            //Toolbox.specialeverything = this.LoadAssetBundleFromLiterallyAnywhere();
+            AdvancedGameStatsManager.Init();
         }
 
         public override void Start()
@@ -31,9 +59,11 @@ namespace GlaurungItems
             {
                 GlaurungItems.Strings = new AdvancedStringDB();
                 Tools.Init();
+                Toolbox.Init();
                 ItemBuilder.Init();
                 Hooks.Init();
                 EnemyAPITools.Init();
+                SpecialFoyerShops.DoSetup();
 
                 GlaurungItems.Strings.Enemies.Set("#LOW_PRIEST", "Low Priest");
 
@@ -59,7 +89,9 @@ namespace GlaurungItems
                 //my own items modif based on cel's modif of the gilded hydra
                 AddModifGungeonItems.Init();
 
-                // synergies
+                SpecialFoyerShops.AddBaseMetaShopTier(ETGMod.Databases.Items["Chainer"].PickupObjectId, 10, ETGMod.Databases.Items["Shambles"].PickupObjectId, 25, ETGMod.Databases.Items["Yoink"].PickupObjectId, 75);
+
+                // synergies 
                 GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
                 {
                     new SynergyHub.KlobbeCogSynergy()
@@ -71,6 +103,10 @@ namespace GlaurungItems
                 GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
                 {
                     new SynergyHub.RaiseDeadSkusketSynergy()
+                }).ToArray<AdvancedSynergyEntry>();
+                GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
+                {
+                    new SynergyHub.BulletScriptGunSynergy1()
                 }).ToArray<AdvancedSynergyEntry>();
 
                 GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
@@ -106,5 +142,13 @@ namespace GlaurungItems
         public override void Exit()
         {
         }
+
+        public static void MainMenuAwakeHook(Action<MainMenuFoyerController> orig, MainMenuFoyerController self)
+        {
+            orig(self);
+            self.VersionLabel.Text = self.VersionLabel.Text + " | " + Version;
+        }
+
+        public static string Version = "v0.0";
     }
 }

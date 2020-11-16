@@ -90,7 +90,7 @@ namespace GlaurungItems.Items
             advancedDualWieldSynergyProcessor.SynergyNameToCheck = "Landing Hate";
             advancedDualWieldSynergyProcessor.PartnerGunID = 520;
             ETGMod.Databases.Items.Add(gun, null, "ANY");
-
+            Toolbox.SetupUnlockOnCustomFlag(gun, CustomDungeonFlags.ITEMSPECIFIC_SHAMBLES, true);
         }
 
         public void OnProjectileHitEnemy(Projectile proj, SpeculativeRigidbody enemy, bool fatal)

@@ -51,7 +51,9 @@ namespace GlaurungItems.Items
             //projectile.SetProjectileSpriteRight("build_projectile", 5, 5);
 
             ETGMod.Databases.Items.Add(gun, null, "ANY");
-        }
+			Toolbox.SetupUnlockOnCustomFlag(gun, CustomDungeonFlags.ITEMSPECIFIC_CHAINER, true);
+
+		}
 
 		protected override void OnPickup(PlayerController player)
 		{

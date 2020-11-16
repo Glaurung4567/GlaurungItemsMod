@@ -38,6 +38,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Documents\Programming\Gungeon\Dependencies\Assembly-CSharp.Base.mm.dll</HintPath>
     </Reference>
+    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Ionic.Zip.dll</HintPath>
+    </Reference>
     <Reference Include="MonoMod.RuntimeDetour">
       <HintPath>..\..\..\..\..\Desktop\Code stuff\Mod The Gungeon\Gungeon\Dependencies\MonoMod.RuntimeDetour.dll</HintPath>
     </Reference>
@@ -65,6 +69,9 @@
     <Reference Include="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ItemAPI\SaveSpAPI\AdvancedDungeonPrerequisite .cs" />
+    <Compile Include="ItemAPI\SaveSpAPI\AdvancedGameStats.cs" />
+    <Compile Include="ItemAPI\SaveSpAPI\AdvancedGameStatsManager.cs" />
     <Compile Include="ItemAPI\AdvancedStringDB.cs" />
     <Compile Include="ItemAPI\AdvancedTransformGunSynergyProcessor .cs" />
     <Compile Include="ItemAPI\CompanionBuilder.cs" />
@@ -75,6 +82,10 @@
     <Compile Include="ItemAPI\EnemyGuidDatabase.cs" />
     <Compile Include="ItemAPI\FakePrefab\FakePrefab.cs" />
     <Compile Include="ItemAPI\FakePrefab\FakePrefabHooks.cs" />
+    <Compile Include="ItemAPI\SaveSpAPI\CustomGungeonFlags.cs" />
+    <Compile Include="ItemAPI\SaveSpAPI\CustomGungoFlagsComparer.cs" />
+    <Compile Include="ItemAPI\SaveSpAPI\LoadHelper.cs" />
+    <Compile Include="ItemAPI\SpecialFoyerShop.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
     <Compile Include="Items\GunjuringEncyclopedia.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunAngryBookBasicAttack2.cs" />
@@ -83,6 +94,7 @@
     <Compile Include="Items\ItemParts\BulletScriptGunBulletShotgunManBlueBasicAttack1.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunChancebulonBouncingRing1.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunChancebulonDice1.cs" />
+    <Compile Include="Items\ItemParts\BulletScriptGunDraGunRocket2.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunGatlingGullFanSpray1.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunGunNutCone.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunHighPriestFaceShoot1.cs" />

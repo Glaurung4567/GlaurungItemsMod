@@ -1,6 +1,7 @@
 ﻿using Brave.BulletScript;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -13,6 +14,9 @@ namespace ItemAPI
 		public static void Init()
 		{
 			AssetBundle assetBundle = ResourceManager.LoadAssetBundle("shared_auto_001");
+			AssetBundle assetBundle2 = ResourceManager.LoadAssetBundle("shared_auto_002");
+			shared_auto_001 = assetBundle;
+			shared_auto_002 = assetBundle2;
 			string text = "assets/data/goops/water goop.asset";
 			GoopDefinition goopDefinition;
 			try
@@ -224,7 +228,103 @@ namespace ItemAPI
 			def.MakeOffset(new Vector2(num, num2));
 		}
 
-		// Token: 0x060003E2 RID: 994 RVA: 0x0002CED0 File Offset: 0x0002B0D0
+		public static AssetBundle specialeverything;
+		public static AssetBundle shared_auto_002;
+		public static AssetBundle shared_auto_001;
+
+		public static void SafeMove(string oldPath, string newPath, bool allowOverwritting = false)
+		{
+			if (File.Exists(oldPath) && (allowOverwritting || !File.Exists(newPath)))
+			{
+				string contents = SaveManager.ReadAllText(oldPath);
+				try
+				{
+					SaveManager.WriteAllText(newPath, contents);
+				}
+				catch (Exception ex)
+				{
+					Debug.LogErrorFormat("Failed to move {0} to {1}: {2}", new object[]
+					{
+					oldPath,
+					newPath,
+					ex
+					});
+					return;
+				}
+				try
+				{
+					File.Delete(oldPath);
+				}
+				catch (Exception ex2)
+				{
+					Debug.LogErrorFormat("Failed to delete old file {0}: {1}", new object[]
+					{
+					oldPath,
+					newPath,
+					ex2
+					});
+					return;
+				}
+				if (File.Exists(oldPath + ".bak"))
+				{
+					File.Delete(oldPath + ".bak");
+				}
+			}
+		}
+
+		public static string PathCombine(string a, string b, string c)
+		{
+			return Path.Combine(Path.Combine(a, b), c);
+		}
+
+		public static void SetupUnlockOnCustomFlag(this PickupObject self, CustomDungeonFlags flag, bool requiredFlagValue)
+		{
+			EncounterTrackable encounterTrackable = self.encounterTrackable;
+			if (encounterTrackable.prerequisites == null)
+			{
+				encounterTrackable.prerequisites = new DungeonPrerequisite[1];
+				encounterTrackable.prerequisites[0] = new AdvancedDungeonPrerequisite
+				{
+					advancedPrerequisiteType = AdvancedDungeonPrerequisite.AdvancedPrerequisiteType.CUSTOM_FLAG,
+					requireCustomFlag = requiredFlagValue,
+					customFlagToCheck = flag
+				};
+			}
+			else
+			{
+				encounterTrackable.prerequisites = encounterTrackable.prerequisites.Concat(new DungeonPrerequisite[] { new AdvancedDungeonPrerequisite
+				{
+					advancedPrerequisiteType = AdvancedDungeonPrerequisite.AdvancedPrerequisiteType.CUSTOM_FLAG,
+					requireCustomFlag = requiredFlagValue,
+					customFlagToCheck = flag
+				}}).ToArray();
+			}
+			EncounterDatabaseEntry databaseEntry = EncounterDatabase.GetEntry(encounterTrackable.EncounterGuid);
+			if (!string.IsNullOrEmpty(databaseEntry.ProxyEncounterGuid))
+			{
+				databaseEntry.ProxyEncounterGuid = "";
+			}
+			if (databaseEntry.prerequisites == null)
+			{
+				databaseEntry.prerequisites = new DungeonPrerequisite[1];
+				databaseEntry.prerequisites[0] = new AdvancedDungeonPrerequisite
+				{
+					advancedPrerequisiteType = AdvancedDungeonPrerequisite.AdvancedPrerequisiteType.CUSTOM_FLAG,
+					requireCustomFlag = requiredFlagValue,
+					customFlagToCheck = flag
+				};
+			}
+			else
+			{
+				databaseEntry.prerequisites = databaseEntry.prerequisites.Concat(new DungeonPrerequisite[] { new AdvancedDungeonPrerequisite
+				{
+					advancedPrerequisiteType = AdvancedDungeonPrerequisite.AdvancedPrerequisiteType.CUSTOM_FLAG,
+					requireCustomFlag = requiredFlagValue,
+					customFlagToCheck = flag
+				}}).ToArray();
+			}
+		}
+
 		public static void MakeOffset(this tk2dSpriteDefinition def, Vector2 offset)
 		{
 			float x = offset.x;
@@ -397,13 +497,11 @@ namespace ItemAPI
 			return PickupObjectDatabase.GetById(id) as Gun;
 		}
 
-		// Token: 0x060003ED RID: 1005 RVA: 0x0002D790 File Offset: 0x0002B990
 		public static Gun GetGunById(int id)
 		{
 			return Toolbox.GetGunById((PickupObjectDatabase)null, id);
 		}
 
-		// Token: 0x060003FA RID: 1018 RVA: 0x0002E2A4 File Offset: 0x0002C4A4
 		public static void SetupUnlockOnEncounter(this PickupObject self, string guid, DungeonPrerequisite.PrerequisiteOperation operation, int comparisonValue)
 		{
 			EncounterTrackable encounterTrackable = self.encounterTrackable;

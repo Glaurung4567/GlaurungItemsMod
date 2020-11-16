@@ -37,6 +37,7 @@ namespace GlaurungItems.Items
 
 			gun.quality = PickupObject.ItemQuality.A;
 
+
 			gun.muzzleFlashEffects = null;
 
 			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
@@ -163,7 +164,6 @@ namespace GlaurungItems.Items
 				aiactor.ImmuneToAllEffects = true;
 				aiactor.SetIsFlying(true, "I'm a bullet too!");
 
-
 				aiactor.CanTargetEnemies = false;
 				aiactor.CanTargetPlayers = false;
 				aiactor.CompanionOwner = owner;
@@ -206,7 +206,12 @@ namespace GlaurungItems.Items
 		{
 			List<AIBulletBank.Entry> bullets = aiactor.bulletBank.Bullets;
 			var bulletScriptSelected = new CustomBulletScriptSelector(typeof(ShootZeroProjectilesBulletScript));
-			int randomSelect = Random.Range(1, 26);
+			int lastOption = 16;
+			if((this.Owner as PlayerController).PlayerHasActiveSynergy("Who's da Boss now ?"))
+            {
+				lastOption = 26;
+			}
+			int randomSelect = Random.Range(1, lastOption);
 			string enemyGuid;
 			bulletsDamageMultiplier = 1;
 
@@ -362,6 +367,12 @@ namespace GlaurungItems.Items
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(ResourcefulRatSpinFire1));
 					bulletsDamageMultiplier = 6f;
 					break;
+				/*case 26: //do a first projectile dmg *
+					enemyGuid = EnemyGuidDatabase.Entries["dragun_advanced"];
+					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
+					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunDraGunRocket2));
+					bulletsDamageMultiplier = 6f;
+					break;*/
 				default:
 
 					break;

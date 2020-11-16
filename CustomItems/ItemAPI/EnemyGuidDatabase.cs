@@ -849,6 +849,10 @@ namespace ItemAPI
 				"2ccaa1b7ae10457396a1796decda9cf6"
 			},
 			{
+				"dragun_advanced",
+				"05b8afe0b6cc4fffa9dc6036fa24c8ec"
+			},
+			{
 				"metal_cube_guy",
 				"ba928393c8ed47819c2c5f593100a5bc"
 			},

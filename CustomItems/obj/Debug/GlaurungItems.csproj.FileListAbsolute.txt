@@ -13,7 +13,6 @@ C:\Users\Eliott L\source\repos\GlaurungItems\CustomItems\bin\Debug\UnityEngine.U
 C:\Users\Eliott L\source\repos\GlaurungItems\CustomItems\bin\Debug\Assembly-CSharp-firstpass.dll
 C:\Users\Eliott L\source\repos\GlaurungItems\CustomItems\bin\Debug\UnityEngine.UI.dll
 C:\Users\Eliott L\source\repos\GlaurungItems\CustomItems\bin\Debug\UnityEngine.ScreenCaptureModule.dll
-C:\Users\Eliott L\source\repos\GlaurungItems\CustomItems\bin\Debug\Ionic.Zip.dll
 C:\Users\Eliott L\source\repos\GlaurungItems\CustomItems\bin\Debug\YamlDotNet.dll
 C:\Users\Eliott L\source\repos\GlaurungItems\CustomItems\bin\Debug\Newtonsoft.Json.dll
 C:\Users\Eliott L\source\repos\GlaurungItems\CustomItems\bin\Debug\UnityEngine.SharedInternalsModule.dll
