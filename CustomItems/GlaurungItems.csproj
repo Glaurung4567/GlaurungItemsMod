@@ -76,7 +76,7 @@
     <Compile Include="ItemAPI\FakePrefab\FakePrefab.cs" />
     <Compile Include="ItemAPI\FakePrefab\FakePrefabHooks.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
-    <Compile Include="Items\BulletScriptGun.cs" />
+    <Compile Include="Items\GunjuringEncyclopedia.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunAngryBookBasicAttack2.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunBirdEggVomit2.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunBossFinalGuideSword1.cs" />
