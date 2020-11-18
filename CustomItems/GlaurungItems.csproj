@@ -87,6 +87,7 @@
     <Compile Include="ItemAPI\SaveSpAPI\LoadHelper.cs" />
     <Compile Include="ItemAPI\SpecialFoyerShop.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
+    <Compile Include="Items\ChronoBreaker.cs" />
     <Compile Include="Items\GunjuringEncyclopedia.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunAngryBookBasicAttack2.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunBirdEggVomit2.cs" />

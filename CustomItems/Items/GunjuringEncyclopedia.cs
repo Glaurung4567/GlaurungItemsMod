@@ -18,7 +18,7 @@ namespace GlaurungItems.Items
 			Game.Items.Rename("outdated_gun_mods:gunjuring_encyclopedia", "gl:gunjuring_encyclopedia");
 			gun.gameObject.AddComponent<BulletScriptGun>();
 			gun.SetShortDescription("Janky");
-			gun.SetLongDescription("WIP");
+			gun.SetLongDescription("A book used by one of the few ArchGunjurers. \n \nIt fires random attack patterns from different Gundead.");
 			gun.SetupSprite(null, "book_idle_001", 8);
 			gun.SetAnimationFPS(gun.shootAnimation, 12);
 			GunExt.SetAnimationFPS(gun, gun.reloadAnimation, 12);
@@ -49,7 +49,7 @@ namespace GlaurungItems.Items
 			projectile.baseData.damage = 0f;
 			projectile.baseData.speed *= 0.001f;
 			projectile.baseData.force = 0f;
-			projectile.baseData.range *= 0.001f;
+			projectile.baseData.range *= 0.000f;
 			//projectile.transform.parent = gun.barrelOffset;
 			//projectile.SetProjectileSpriteRight("build_projectile", 5, 5);
 
@@ -125,6 +125,11 @@ namespace GlaurungItems.Items
 				base.OnReloadPressed(player, gun, bSOMETHING);
 				AkSoundEngine.PostEvent("Play_UI_page_turn_01", base.gameObject);
 				RemoveHolders();
+				if((this.Owner as PlayerController).HasPassiveItem(500))
+                {
+					SpawnBulletCompanion(this.Player, null);
+					roomWhereThisWasFired = (gun.CurrentOwner as PlayerController).CurrentRoom;
+				}
 			}
 		}
 
@@ -175,7 +180,7 @@ namespace GlaurungItems.Items
 				aiactor.PreventAutoKillOnBossDeath = true;
 
 				aiactor.ManualKnockbackHandling = true; //dunno if this is useful
-				aiactor.knockbackDoer.SetImmobile(true, "Chainer"); // from the TetherBehavior to prevent the companion from being pushed by explosions
+				aiactor.knockbackDoer.SetImmobile(true, "Gunjuring Encyclopedia"); // from the TetherBehavior to prevent the companion from being pushed by explosions
 				aiactor.PreventFallingInPitsEver = true;
 
 				//aiactor.HandleReinforcementFallIntoRoom(0f); //don't use this if you want your mob to be invisible
@@ -194,7 +199,10 @@ namespace GlaurungItems.Items
 				SelectGunAttack(aiactor); //to fire once
 
 				spawnedChainHolders.Add(aiactor);
-				projectile.DieInAir();
+                if (projectile)
+                {
+					projectile.DieInAir();
+				}
 			}
 			catch (Exception e)
 			{

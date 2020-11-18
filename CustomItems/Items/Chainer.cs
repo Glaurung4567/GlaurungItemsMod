@@ -78,6 +78,11 @@ namespace GlaurungItems.Items
         {
             base.OnReload(player, gun);
 			RemoveHolders();
+			if ((this.Owner as PlayerController).HasPassiveItem(500))
+			{
+				SpawnChainCompanion(this.Player, null);
+				roomWhereThisWasFired = (gun.CurrentOwner as PlayerController).CurrentRoom;
+			}
 		}
 
 		private void RemoveHolders()
@@ -177,8 +182,11 @@ namespace GlaurungItems.Items
 				aiactor.aiShooter.ShootBulletScript(new CustomBulletScriptSelector(typeof(Chain1)));
 
 				spawnedChainHolders.Add(aiactor);
-				projectile.DieInAir();
-            }
+                if (projectile)
+                {
+					projectile.DieInAir();
+				}
+			}
             catch (Exception e)
             {
                 Tools.PrintException(e);
@@ -309,7 +317,7 @@ namespace GlaurungItems.Items
 	{
 		protected override IEnumerator Top()
 		{
-			this.EndOnBlank = true;
+			//this.EndOnBlank = true;
 			Chain1.HandBullet handBullet = null;
 			handBullet = this.FireVolley(0, (float)(20 + 5));
 			while (!handBullet.IsEnded && !handBullet.HasStoppedGet())

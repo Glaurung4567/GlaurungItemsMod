@@ -15,7 +15,7 @@ namespace GlaurungItems.Items
 			GameObject gameObject = new GameObject(text);
 			RaiseDead raiseDead = gameObject.AddComponent<RaiseDead>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
-			string shortDesc = "Arise minions !";
+			string shortDesc = "Arise, minions !";
 			string longDesc = "This spell animates some of the corpses of dead bullet kin buried in the ground of the gungeon and make them crave for the flesh of their kin." +
 				"Be cautious though, if none of them are in sight you might become their next meal...";
 			raiseDead.SetupItem(shortDesc, longDesc, "gl");
