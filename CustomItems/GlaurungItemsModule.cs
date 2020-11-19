@@ -83,8 +83,9 @@ namespace GlaurungItems
                 Yoink.Init();
                 BulletScriptGun.Add();
 
-                ChronoBreaker.Init();
-                GunDeadArmyStronghold.Init();
+                BlinkbackDevice.Init();
+                OzzieHelm.Init();
+                //GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra
                 AddModifGungeonItems.Init();

@@ -1,4 +1,5 @@
-﻿using ItemAPI;
+﻿using Dungeonator;
+using ItemAPI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,30 +7,45 @@ using UnityEngine;
 
 namespace GlaurungItems.Items
 {
-    class ChronoBreaker : PlayerItem
+    class BlinkbackDevice : PlayerItem
     {
 
 		public static void Init()
 		{
-			string text = "ChronoBreaker";
+			string text = "Blinkback Device";
 			string resourcePath = "GlaurungItems/Resources/acme_crate";
 			GameObject gameObject = new GameObject(text);
-			ChronoBreaker item = gameObject.AddComponent<ChronoBreaker>();
+			BlinkbackDevice item = gameObject.AddComponent<BlinkbackDevice>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
-			string shortDesc = "WIP";
-			string longDesc = "WIP";
+			string shortDesc = "Where was I ?";
+			string longDesc = "Let the user come back where he was 2-3 seconds ago. \n \n" +
+				"Used by a famous Chronomancer who wanted to find the Gun That Can Kill The Past, not for fixing a mistake, but to explore the Time Stream as a whole.";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.SetCooldownType(ItemBuilder.CooldownType.Timed, cooldown);
-			item.quality = ItemQuality.C;
+			item.SetCooldownType(ItemBuilder.CooldownType.Damage, cooldown);
+			item.quality = ItemQuality.A;
 		}
 
         protected override void DoEffect(PlayerController user)
         {
             base.DoEffect(user);
-            if (!timeAfterImgsActive)
+
+			if (!timeAfterImgsActive)
             {
+				//Play_OBJ_time_zone_01
+				//Play_ITM_Table_Time_Freeze_01
+				//Play_OBJ_time_bell_01
+
+				//Play_OBJ_teleport_arrive_01
+				//Play_OBJ_teleport_activate_01
+				//Play_OBJ_teleport_depart_01
+				//Play_ENM_beholster_teleport_01
+				//Play_ENM_beholster_teleport_02
+				AkSoundEngine.PostEvent("Play_OBJ_time_zone_01", gameObject);
+
 				SpriteBuilder.AddComponent(user.gameObject, timeAfterImgs);
-				playerPositionsDuringActivation = new List<Vector2>();
+				playerPositionsDuringActivation = new List<Vector3>();
+				playerHealthValuesDuringActivation = new List<float>();
+				playerArmorValuesDuringActivation = new List<float>();
 				timeAfterImgsActive = true;
             }
             else
@@ -48,31 +64,69 @@ namespace GlaurungItems.Items
 					AttemptToWarpPlayer(user, playerPositionsDuringActivationLength - numberOfPreviousSteps);
 				}
 				timeAfterImgsActive = false;
-				playerPositionsDuringActivation = new List<Vector2>();
+				playerPositionsDuringActivation = new List<Vector3>();
+				playerHealthValuesDuringActivation = new List<float>();
+				playerArmorValuesDuringActivation = new List<float>();
 			}
-
 		}
 
 		private void AttemptToWarpPlayer(PlayerController user, int index)
-        {
+		{
 			Vector2 pos = playerPositionsDuringActivation[index];
-			if (
-				user.IsValidPlayerPosition(pos) && 
-				(!user.IsInCombat || (user.IsInCombat && user.CurrentRoom.ContainsPosition(pos.ToIntVector2()) ))
-			)
-            {
+			//if ( user.IsValidPlayerPosition(pos))
+			//{
+			if (!user.IsInCombat || (user.IsInCombat && user.CurrentRoom.ContainsPosition(pos.ToIntVector2())))
+			{
+				AkSoundEngine.PostEvent("Play_ITM_Table_Time_Freeze_01", gameObject);
 				user.WarpToPoint(playerPositionsDuringActivation[index]);
+				user.healthHaver.ForceSetCurrentHealth(playerHealthValuesDuringActivation[index]);
+				user.healthHaver.Armor = playerArmorValuesDuringActivation[index];
 			}
+			/*else if (user.IsInCombat && !user.CurrentRoom.ContainsPosition(pos.ToIntVector2()))
+			{
+				RoomHandler handler = user.CurrentRoom;
+				handler.UnsealRoom();
+				user.WarpToPoint(playerPositionsDuringActivation[index]);
+				handler.visibility = RoomHandler.VisibilityStatus.OBSCURED;
+				handler.ResetPredefinedRoomLikeDarkSouls();
+				//this.LastOwner.RespawnInPreviousRoom(false, PlayerController.EscapeSealedRoomStyle.TELEPORTER, true, null);
+			}*/
+			//}
 		}
+
+		public override bool CanBeUsed(PlayerController user)
+		{
+			return !user.IsDodgeRolling;
+		}
+
+
+		protected override void OnPreDrop(PlayerController user)
+		{
+			timeAfterImgsActive = false;
+			if (user.gameObject.GetComponent<ImprovedAfterImage>() != null)
+			{
+				Destroy(user.gameObject.GetComponent<ImprovedAfterImage>());
+			}
+			playerPositionsDuringActivation = new List<Vector3>();
+			playerHealthValuesDuringActivation = new List<float>();
+			playerArmorValuesDuringActivation = new List<float>();
+			base.OnPreDrop(user);
+		}
+
+		
 
         public override void Update()
         {
             base.Update();
-            if (timeAfterImgsActive)
+            if (timeAfterImgsActive && this.LastOwner)
             {
-				playerPositionsDuringActivation.Add(this.LastOwner.CenterPosition);
-            }
-        }
+				playerPositionsDuringActivation.Add(this.LastOwner.transform.position);
+				playerHealthValuesDuringActivation.Add(this.LastOwner.healthHaver.GetCurrentHealth());
+				playerArmorValuesDuringActivation.Add(this.LastOwner.healthHaver.Armor);
+
+				//Play_OBJ_time_zone_01
+			}
+		}
 
         protected override void AfterCooldownApplied(PlayerController user)
 		{
@@ -83,17 +137,25 @@ namespace GlaurungItems.Items
 			this.CurrentDamageCooldown = Mathf.Min(CurrentDamageCooldown, cooldown);
 		}
 
-		private static float cooldown = 5f;
-		private static int numberOfPreviousSteps = 75;
+		private static float cooldown = 750f;
+		private static int numberOfPreviousSteps = 150;
 		private bool timeAfterImgsActive;
-		private List<Vector2> playerPositionsDuringActivation;
+		private List<Vector3> playerPositionsDuringActivation;
+		private List<float> playerHealthValuesDuringActivation;
+		private List<float> playerArmorValuesDuringActivation;
+
 		private readonly ImprovedAfterImage timeAfterImgs = new ImprovedAfterImage
 		{
 			dashColor = Color.green,
-			spawnShadows = true
+			spawnShadows = true,
+			shadowLifetime = 2.1f
 		};
 	}
 
+
+	//---------------------------------------------------------------------------------------------------------------------------
+	
+	
 	public class ImprovedAfterImage : BraveBehaviour
 	{
 		public ImprovedAfterImage()
@@ -108,7 +170,7 @@ namespace GlaurungItems.Items
 			this.IsRandomShader = false;
 			this.spawnShadows = true;
 			this.shadowTimeDelay = 0.1f;
-			this.shadowLifetime = 1.5f;
+			this.shadowLifetime = 0.6f;
 			this.minTranslation = 0.2f;
 			this.maxEmission = 800f;
 			this.minEmission = 100f;

@@ -87,7 +87,7 @@
     <Compile Include="ItemAPI\SaveSpAPI\LoadHelper.cs" />
     <Compile Include="ItemAPI\SpecialFoyerShop.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
-    <Compile Include="Items\ChronoBreaker.cs" />
+    <Compile Include="Items\BlinkbackDevice.cs" />
     <Compile Include="Items\GunjuringEncyclopedia.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunAngryBookBasicAttack2.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunBirdEggVomit2.cs" />
@@ -117,6 +117,7 @@
     <Compile Include="Items\old\KillStreakGun.cs" />
     <Compile Include="Items\Neuralyzer.cs" />
     <Compile Include="Items\Overhealer.cs" />
+    <Compile Include="Items\OzzieHelm.cs" />
     <Compile Include="Items\ShamblesGun.cs" />
     <Compile Include="Items\RaiseDead.cs" />
     <Compile Include="Items\SynergyHub.cs" />

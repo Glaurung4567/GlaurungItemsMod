@@ -58,6 +58,7 @@ namespace GlaurungItems.Items
 		protected override void OnPreDrop(PlayerController user)
         {
 			EndEffect(user);
+			base.OnPreDrop(user);
 		}
 
 

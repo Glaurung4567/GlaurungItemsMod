@@ -11,8 +11,7 @@ using Random = UnityEngine.Random;
 
 namespace GlaurungItems.Items
 {
-    // a lot of this code is from Bl4ck_hunter N'Kuhana's Invitation item which i tweaked a bit to remove the bugs, 
-    // if he want me to remove this item i have no problem with it
+    // a lot of this code is from Bl4ck_hunter N'Kuhana's Invitation item which i tweaked a bit to remove the bugs
     class HighPriestSecretMap : PlayerItem
     {
 		public static void Init()

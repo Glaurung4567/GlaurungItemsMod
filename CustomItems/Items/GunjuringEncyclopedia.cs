@@ -415,20 +415,6 @@ namespace GlaurungItems.Items
 			aiactor.aiShooter.ShootBulletScript(bulletScriptSelected);
 		}
 
-		private bool HasBeenEncounteredEnough(string guid, int nb)
-		{
-			List<DungeonPrerequisite> enemyPrereq = new List<DungeonPrerequisite>();
-			enemyPrereq.Add(new DungeonPrerequisite
-			{
-				prerequisiteType = DungeonPrerequisite.PrerequisiteType.ENCOUNTER_OR_FLAG,
-				prerequisiteOperation = DungeonPrerequisite.PrerequisiteOperation.GREATER_THAN,
-				encounteredObjectGuid = guid,
-				requiredNumberOfEncounters = 10000
-			});
-			Tools.Print(DungeonPrerequisite.CheckConditionsFulfilled(enemyPrereq), "ffffff", true);
-			return DungeonPrerequisite.CheckConditionsFulfilled(enemyPrereq);
-		}
-
 		private static void OnPostProcessProjectile(Projectile proj)
 		{
 			//proj.AdjustPlayerProjectileTint(Color.yellow, 0);
