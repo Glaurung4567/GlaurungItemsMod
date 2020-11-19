@@ -11,4 +11,4 @@ Added the gunjuring encyclopedia
 
 Added custom items to breach shops (courtesy of SpApi)
 
-Added chronobreaker
+Added blinkback device and Ozzie Helm
