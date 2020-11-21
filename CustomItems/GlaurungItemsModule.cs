@@ -64,6 +64,7 @@ namespace GlaurungItems
                 Hooks.Init();
                 EnemyAPITools.Init();
                 SpecialFoyerShops.DoSetup();
+                SpecialBlankModificationItem.InitHooks();
 
                 GlaurungItems.Strings.Enemies.Set("#LOW_PRIEST", "Low Priest");
 
@@ -85,6 +86,7 @@ namespace GlaurungItems
 
                 BlinkbackDevice.Init();
                 OzzieHelm.Init();
+                AmmoletOfWonder.Init();
                 //GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra
