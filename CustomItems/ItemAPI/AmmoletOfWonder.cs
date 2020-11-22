@@ -4,6 +4,7 @@ using ItemAPI;
 using Dungeonator;
 using Random = UnityEngine.Random;
 using System.Collections;
+using EnemyAPI;
 
 namespace GlaurungItems.Items
 {
@@ -28,13 +29,13 @@ namespace GlaurungItems.Items
         {
             List<AIActor> activeEnemies = GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(centerPoint.ToIntVector2(VectorConversions.Round)).GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
 
-            int randomSelect = Random.Range(6, 7);
+            int randomSelect = Random.Range(11, 12);
             Tools.Print(randomSelect, "ffffff", true);
             switch (randomSelect)
             {
                 case 1:
                     GameActorEffect greenFire = (PickupObjectDatabase.GetById(722) as Gun).DefaultModule.projectiles[0].fireEffect;
-                    ApplyEffectOnEnnemies(centerPoint, activeEnemies, greenFire);
+                    ApplyEffectOnEnnemies(activeEnemies, greenFire);
                     break;
                 case 2:
                     string enemyGuid = EnemyGuidDatabase.Entries["rat_candle"];
@@ -60,7 +61,6 @@ namespace GlaurungItems.Items
                         insideUnitCircle.y = -Mathf.Abs(insideUnitCircle.y);
                         component.Trigger(insideUnitCircle.ToVector3ZUp(1.5f) * UnityEngine.Random.Range(0.5f, 2f), 0.5f, 0f);
                     }
-
                     if (activeEnemies != null)
                     {
                         for (int j = 0; j < activeEnemies.Count; j++)
@@ -79,11 +79,51 @@ namespace GlaurungItems.Items
                                     new Vector3(globalSparksForce, globalSparksForce, globalSparksForce), 15f, 0.5f, null, (globalSparksOverrideLifespan <= 0f) ? null : new float?(globalSparksOverrideLifespan), 
                                     new Color?(Color.cyan), GlobalSparksDoer.SparksType.SOLID_SPARKLES);
                             }
-                            actor.HasBeenGlittered = true;
                         }
                     }
                     break;
+                case 7: //slow effect
+                    Gun gun = ETGMod.Databases.Items["triple_crossbow"] as Gun;
+                    GameActorSpeedEffect gameActorSpeedEffect = gun.DefaultModule.projectiles[0].speedEffect;
+                    gameActorSpeedEffect.duration = 4f;
+                    ApplyEffectOnEnnemies(activeEnemies, gameActorSpeedEffect);
+                    break;
+                case 8://debuff on enemies
+                    AIActorDebuffEffect debuffEffect = null;
+                    foreach (AttackBehaviorBase attackBehaviour in EnemyDatabase.GetOrLoadByGuid((PickupObjectDatabase.GetById(492) as CompanionItem).CompanionGuid).behaviorSpeculator.AttackBehaviors)
+                    {
+                        if (attackBehaviour is WolfCompanionAttackBehavior)
+                        {
+                            debuffEffect = (attackBehaviour as WolfCompanionAttackBehavior).EnemyDebuff;
+                        }
+                    }
+                    ApplyEffectOnEnnemies(activeEnemies, debuffEffect);
+                    break;
+                case 9://buff enemies
+                    AIActor aiactor = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["aged_gunsinger"]);
+                    AttackBehaviorGroup attackBehaviorGroup = (aiactor.behaviorSpeculator.AttackBehaviors[0] as AttackBehaviorGroup);
+                    BuffEnemiesBehavior buffBehavior = (attackBehaviorGroup.AttackBehaviors[0].Behavior as BuffEnemiesBehavior);
+                    AIActorBuffEffect buffEffect = buffBehavior.buffEffect;
+                    buffEffect.AffectsEnemies = true;
+                    buffEffect.duration = 10f;
+                    //user.ApplyEffect(buffEffect);
+                    ApplyEffectOnEnnemies(activeEnemies, buffEffect);
+                    break;
+                case 10://buff player
+                    AIActor aiactor2 = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["aged_gunsinger"]);
+                    AttackBehaviorGroup attackBehaviorGroup2 = (aiactor2.behaviorSpeculator.AttackBehaviors[0] as AttackBehaviorGroup);
+                    BuffEnemiesBehavior buffBehavior2 = (attackBehaviorGroup2.AttackBehaviors[0].Behavior as BuffEnemiesBehavior);
+                    AIActorBuffEffect buffEffect2 = buffBehavior2.buffEffect;
+                    buffEffect2.AffectsEnemies = false;
+                    buffEffect2.AffectsPlayers = true;
+                    buffEffect2.duration = 10f;
+                    user.ApplyEffect(buffEffect2);
+                    break;
+                case 11:
+                    GameActorCheeseEffect gameActorCheeseEffect = (PickupObjectDatabase.GetById(626) as Gun).DefaultModule.projectiles[0].cheeseEffect;
+                    ApplyEffectOnEnnemies(activeEnemies, gameActorCheeseEffect, 1, Random.Range(1,5));
 
+                    break;
                 default:
                     break;
                 
@@ -99,18 +139,22 @@ namespace GlaurungItems.Items
             yield break;
         }
 
-        private void ApplyEffectOnEnnemies(Vector2 centerPoint, List<AIActor> activeEnemies, GameActorEffect effect, float chanceToActivate = 1)
+        private void ApplyEffectOnEnnemies(List<AIActor> activeEnemies, GameActorEffect effect, 
+            float chanceToActivate = 1, int numberOfTimeToApplyEffect = 1)
         {
             if (activeEnemies != null)
             {
-                for (int j = 0; j < activeEnemies.Count; j++)
+                for (int i = 0; i < numberOfTimeToApplyEffect; i++)
                 {
-                    if(UnityEngine.Random.value <= chanceToActivate)
+                    for (int j = 0; j < activeEnemies.Count; j++)
                     {
-                        AIActor aiactor = activeEnemies[j];
-                        if (aiactor != null) 
-                        { 
-                            aiactor.ApplyEffect(effect);
+                        if (UnityEngine.Random.value <= chanceToActivate)
+                        {
+                            AIActor aiactor = activeEnemies[j];
+                            if (aiactor != null)
+                            {
+                                aiactor.ApplyEffect(effect);
+                            }
                         }
                     }
                 }
