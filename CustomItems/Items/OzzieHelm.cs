@@ -13,14 +13,14 @@ namespace GlaurungItems.Items
 		public static void Init()
 		{
 			string name = "Ozzie 'Helm'";
-			string resourcePath = "GlaurungItems/Resources/acme_crate";
+			string resourcePath = "GlaurungItems/Resources/ozzie_helm";
 			GameObject gameObject = new GameObject(name);
 			OzzieHelm item = gameObject.AddComponent<OzzieHelm>();
 			ItemBuilder.AddSpriteToObject(name, resourcePath, gameObject);
 			string shortDesc = "Gah !";
 			string longDesc = "A really sturdy underpant which can be used as a helm, though it's not advised as it come which confusing side effects.";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.quality = PickupObject.ItemQuality.D;
+			item.quality = PickupObject.ItemQuality.C;
 			item.AddPassiveStatModifier(PlayerStats.StatType.Accuracy, 0.3f, StatModifier.ModifyMethod.ADDITIVE);
 			item.AddPassiveStatModifier(PlayerStats.StatType.Coolness, -2f, StatModifier.ModifyMethod.ADDITIVE);
 			item.AddPassiveStatModifier(PlayerStats.StatType.DodgeRollDistanceMultiplier, -1.2f, StatModifier.ModifyMethod.MULTIPLICATIVE);
@@ -53,6 +53,7 @@ namespace GlaurungItems.Items
 			float num = Random.Range(0f, 1f);
 			if(num <= 0.15f)
             {
+				AkSoundEngine.PostEvent("Play_ITM_Crisis_Stone_Shield_01", gameObject);
 				args.ModifiedDamage = 0;
 			}
 		}

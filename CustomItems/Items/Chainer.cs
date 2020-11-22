@@ -132,6 +132,7 @@ namespace GlaurungItems.Items
                 aiactor.procedurallyOutlined = false;
                 aiactor.CorpseObject = null;
                 aiactor.ImmuneToAllEffects = true;
+				aiactor.behaviorSpeculator.ImmuneToStun = true;
                 aiactor.SetIsFlying(true, "I'm a bullet too!");
 				aiactor.ToggleShadowVisiblity(false);
 				aiactor.HasShadow = false;

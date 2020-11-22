@@ -325,7 +325,6 @@ namespace GlaurungItems.Items
 
     public class BulletStunModifier : MonoBehaviour
     {
-        // Token: 0x06000355 RID: 853 RVA: 0x00020685 File Offset: 0x0001E885
         public BulletStunModifier()
         {
             this.chanceToStun = 0f;
@@ -333,7 +332,6 @@ namespace GlaurungItems.Items
             this.doVFX = true;
         }
 
-        // Token: 0x06000356 RID: 854 RVA: 0x000206AC File Offset: 0x0001E8AC
         private void Start()
         {
             this.m_projectile = base.GetComponent<Projectile>();
@@ -345,22 +343,18 @@ namespace GlaurungItems.Items
             }
         }
 
-        // Token: 0x06000357 RID: 855 RVA: 0x00020703 File Offset: 0x0001E903
         private void ApplyStun(Projectile bullet, SpeculativeRigidbody enemy, bool fatal)
         {
             enemy.behaviorSpeculator.Stun(this.stunLength, this.doVFX);
         }
 
-        // Token: 0x0400013C RID: 316
         private Projectile m_projectile;
 
         // Token: 0x0400013D RID: 317
         public float chanceToStun;
 
-        // Token: 0x0400013E RID: 318
         public bool doVFX;
 
-        // Token: 0x0400013F RID: 319
         public float stunLength;
     }
 }

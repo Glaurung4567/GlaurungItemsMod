@@ -13,7 +13,7 @@ namespace GlaurungItems.Items
 		public static void Init()
 		{
 			string text = "Blinkback Device";
-			string resourcePath = "GlaurungItems/Resources/acme_crate";
+			string resourcePath = "GlaurungItems/Resources/blinkback_device";
 			GameObject gameObject = new GameObject(text);
 			BlinkbackDevice item = gameObject.AddComponent<BlinkbackDevice>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
@@ -34,12 +34,9 @@ namespace GlaurungItems.Items
 				//Play_OBJ_time_zone_01
 				//Play_ITM_Table_Time_Freeze_01
 				//Play_OBJ_time_bell_01
-
 				//Play_OBJ_teleport_arrive_01
 				//Play_OBJ_teleport_activate_01
 				//Play_OBJ_teleport_depart_01
-				//Play_ENM_beholster_teleport_01
-				//Play_ENM_beholster_teleport_02
 				AkSoundEngine.PostEvent("Play_OBJ_time_zone_01", gameObject);
 
 				SpriteBuilder.AddComponent(user.gameObject, timeAfterImgs);

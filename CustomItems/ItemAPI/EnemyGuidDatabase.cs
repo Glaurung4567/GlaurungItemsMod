@@ -853,6 +853,10 @@ namespace ItemAPI
 				"05b8afe0b6cc4fffa9dc6036fa24c8ec"
 			},
 			{
+				"helicopter_agunim",
+				"41ee1c8538e8474a82a74c4aff99c712"
+			},
+			{
 				"metal_cube_guy",
 				"ba928393c8ed47819c2c5f593100a5bc"
 			},

@@ -160,5 +160,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\yoink.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ammolet_of_wonder.png" />
+    <EmbeddedResource Include="Resources\blinkback_device.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ozzie_helm.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

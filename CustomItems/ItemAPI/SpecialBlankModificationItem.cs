@@ -20,11 +20,11 @@ namespace ItemAPI
             orig(self, bmi, centerPoint, user);
             if (bmi is SpecialBlankModificationItem)
             {
-                (bmi as SpecialBlankModificationItem).OnBlank(centerPoint, user);
+                (bmi as SpecialBlankModificationItem).OnBlank(self, centerPoint, user);
             }
         }
 
-        protected virtual void OnBlank(Vector2 centerPoint, PlayerController user)
+        protected virtual void OnBlank(SilencerInstance silencerInstance, Vector2 centerPoint, PlayerController user)
         {
 
         }

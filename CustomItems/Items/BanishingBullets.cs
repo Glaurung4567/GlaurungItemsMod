@@ -84,6 +84,7 @@ namespace GlaurungItems.Items
 			if (enemy != null)
 			{
 				AIActor aiActor = enemy.aiActor;
+				//Tools.Print(aiActor.EnemyGuid, "ffffff", true);
 				CheckIfCanBeBanished(aiActor, !fatal);
 			}
 		}
