@@ -122,6 +122,7 @@
     <Compile Include="Items\OzzieHelm.cs" />
     <Compile Include="Items\ShamblesGun.cs" />
     <Compile Include="Items\RaiseDead.cs" />
+    <Compile Include="Items\StrangePotion.cs" />
     <Compile Include="Items\SynergyHub.cs" />
     <Compile Include="ItemAPI\AdvancedDualWieldSynergyProcessor.cs" />
     <Compile Include="ItemAPI\AdvancedGunBehavior.cs" />

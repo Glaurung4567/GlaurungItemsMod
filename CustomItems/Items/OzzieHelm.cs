@@ -18,7 +18,7 @@ namespace GlaurungItems.Items
 			OzzieHelm item = gameObject.AddComponent<OzzieHelm>();
 			ItemBuilder.AddSpriteToObject(name, resourcePath, gameObject);
 			string shortDesc = "Gah !";
-			string longDesc = "A really sturdy underpant which can be used as a helm, though it's not advised as it come which confusing side effects.";
+			string longDesc = "A really sturdy underpant which can be used as a helm, though it's not advised as it come which confusing side effects...";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.quality = PickupObject.ItemQuality.C;
 			item.AddPassiveStatModifier(PlayerStats.StatType.Accuracy, 0.3f, StatModifier.ModifyMethod.ADDITIVE);

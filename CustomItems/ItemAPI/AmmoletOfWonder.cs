@@ -23,13 +23,31 @@ namespace GlaurungItems.Items
             ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.AdditionalBlanksPerFloor, 1, StatModifier.ModifyMethod.ADDITIVE);
             item.quality = ItemQuality.B;
             item.BlankStunTime = 0;
+
+            AssetBundle assetBundle = ResourceManager.LoadAssetBundle("shared_auto_001");
+            AmmoletOfWonder.goopDefs = new List<GoopDefinition>();
+            foreach (string text in AmmoletOfWonder.goops)
+            {
+                GoopDefinition goopDefinition;
+                try
+                {
+                    GameObject gameObject = assetBundle.LoadAsset(text) as GameObject;
+                    goopDefinition = gameObject.GetComponent<GoopDefinition>();
+                }
+                catch
+                {
+                    goopDefinition = (assetBundle.LoadAsset(text) as GoopDefinition);
+                }
+                goopDefinition.name = text.Replace("assets/data/goops/", "").Replace(".asset", "");
+                AmmoletOfWonder.goopDefs.Add(goopDefinition);
+            }
         }
 
         protected override void OnBlank(SilencerInstance silencerInstance, Vector2 centerPoint, PlayerController user)
         {
             List<AIActor> activeEnemies = GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(centerPoint.ToIntVector2(VectorConversions.Round)).GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
 
-            int randomSelect = Random.Range(11, 12);
+            int randomSelect = Random.Range(25, 29);
             Tools.Print(randomSelect, "ffffff", true);
             switch (randomSelect)
             {
@@ -122,12 +140,163 @@ namespace GlaurungItems.Items
                 case 11:
                     GameActorCheeseEffect gameActorCheeseEffect = (PickupObjectDatabase.GetById(626) as Gun).DefaultModule.projectiles[0].cheeseEffect;
                     ApplyEffectOnEnnemies(activeEnemies, gameActorCheeseEffect, 1, Random.Range(1,5));
-
+                    break;
+                case 12://debuff on player
+                    AIActorDebuffEffect debuffEffect2 = null;
+                    foreach (AttackBehaviorBase attackBehaviour in EnemyDatabase.GetOrLoadByGuid((PickupObjectDatabase.GetById(492) as CompanionItem).CompanionGuid).behaviorSpeculator.AttackBehaviors)
+                    {
+                        if (attackBehaviour is WolfCompanionAttackBehavior)
+                        {
+                            debuffEffect2 = (attackBehaviour as WolfCompanionAttackBehavior).EnemyDebuff;
+                        }
+                    }
+                    debuffEffect2.AffectsPlayers = true;
+                    user.ApplyEffect(debuffEffect2);
+                    break;
+                case 13:
+                    string enemyGuid2 = EnemyGuidDatabase.Entries["chicken"];
+                    SummonActors(user, enemyGuid2);
+                    break;
+                case 14:
+                    string enemyGuid3 = EnemyGuidDatabase.Entries["poopulons_corn"];
+                    SummonActors(user, enemyGuid3);//snake
+                    break;
+                case 15:
+                    string enemyGuid4 = EnemyGuidDatabase.Entries["snake"];
+                    SummonActors(user, enemyGuid4);
+                    break;
+                case 16:
+                    string enemyGuid5 = EnemyGuidDatabase.Entries["rat"];
+                    SummonActors(user, enemyGuid5);
+                    break;
+                case 17:
+                    string enemyGuid6 = EnemyGuidDatabase.Entries["red_caped_bullet_kin"];
+                    SummonActors(user, enemyGuid6, 1);
+                    break;
+                case 18:
+                    FleePlayerData fleeData = new FleePlayerData();
+                    fleeData.Player = user;
+                    fleeData.StartDistance = 100f;
+                    if (activeEnemies != null)
+                    {
+                        for (int j = 0; j < activeEnemies.Count; j++)
+                        {
+                            AIActor actor = activeEnemies[j];
+                            if(actor.behaviorSpeculator != null)
+                            {
+                                actor.behaviorSpeculator.FleePlayerData = fleeData;
+                            }
+                        }
+                    }
+                    break;
+                case 19:
+                    if (activeEnemies != null)
+                    {
+                        for (int j = 0; j < activeEnemies.Count; j++)
+                        {
+                            AIActor actor = activeEnemies[j];
+                            if (actor.behaviorSpeculator != null)
+                            {
+                                actor.behaviorSpeculator.Stun(3f);
+                            }
+                        }
+                    }
+                    break;
+                case 20:
+                    user.RespawnInPreviousRoom(false, PlayerController.EscapeSealedRoomStyle.TELEPORTER, true, null);
+                    break;
+                case 21:
+                    if (activeEnemies != null)
+                    {
+                        for (int j = 0; j < activeEnemies.Count; j++)
+                        {
+                            AIActor actor = activeEnemies[j];
+                            if (actor.IsBlackPhantom)
+                            {
+                                actor.UnbecomeBlackPhantom();
+                            }
+                            else if(actor.healthHaver && !actor.healthHaver.IsBoss && !actor.IsBlackPhantom)
+                            {
+                                actor.BecomeBlackPhantom();
+                            }
+                        }
+                    }
+                    break;
+                case 22:
+                    if (activeEnemies != null)
+                    {
+                        for (int j = 0; j < activeEnemies.Count; j++)
+                        {
+                            AIActor actor = activeEnemies[j];
+                            if (!actor.IsFlying && !actor.healthHaver.IsBoss)
+                            {
+                                actor.SetIsFlying(true, "ammolet of wonder");
+                            }
+                        }
+                    }
+                    break;
+                case 23:
+                    //from https://github.com/SpecialAPI/SpecialItemPack/blob/2d321b45c267602e4cc3b47cd656fe3cd6273bba/TableTechChaos.cs#L499
+                    this.BreakStealth(user);
+                    user.OnItemStolen += this.BreakStealthOnSteal;
+                    user.ChangeSpecialShaderFlag(1, 1f);
+                    user.healthHaver.OnDamaged += this.OnDamaged;
+                    user.SetIsStealthed(true, "ammolet of wonder");
+                    user.SetCapableOfStealing(true, "ammolet of wonder", null);
+                    GameManager.Instance.StartCoroutine(this.Unstealthy());
+                    break;
+                case 24:
+                    GameActorEffect iceEffect = (PickupObjectDatabase.GetById(402) as Gun).DefaultModule.projectiles[0].freezeEffect;
+                    ApplyEffectOnEnnemies(activeEnemies, iceEffect, 1, Random.Range(2, 5));
+                    break;
+                case 25:
+                    GameActorEffect fireEffect = (PickupObjectDatabase.GetById(125) as Gun).DefaultModule.projectiles[0].fireEffect;
+                    ApplyEffectOnEnnemies(activeEnemies, fireEffect);
+                    break;
+                case 26:
+                    string enemyGuid7 = EnemyGuidDatabase.Entries["dragun_egg_slimeguy"];
+                    SummonActors(user, enemyGuid7);
+                    break;
+                case 27:
+                    DeadlyDeadlyGoopManager.GetGoopManagerForGoopType(AmmoletOfWonder.goopDefs[0]).TimedAddGoopCircle(user.sprite.WorldBottomCenter, Random.Range(0.5f, 3f), goopDuration);
+                    break;
+                case 28:
+                    DeadlyDeadlyGoopManager.GetGoopManagerForGoopType(AmmoletOfWonder.goopDefs[1]).TimedAddGoopCircle(user.sprite.WorldBottomCenter, Random.Range(0.5f, 3f), goopDuration);
                     break;
                 default:
                     break;
                 
             }
+        }
+
+        private IEnumerator Unstealthy()
+        {
+            PlayerController player = base.Owner;
+            yield return new WaitForSeconds(0.15f);
+            player.OnDidUnstealthyAction += this.BreakStealth;
+            yield break;
+        }
+
+        private void OnDamaged(float resultValue, float maxValue, CoreDamageTypes damageTypes, DamageCategory damageCategory, Vector2 damageDirection)
+        {
+            PlayerController owner = base.Owner;
+            this.BreakStealth(owner);
+        }
+
+        private void BreakStealthOnSteal(PlayerController arg1, ShopItemController arg2)
+        {
+            this.BreakStealth(arg1);
+        }
+
+        private void BreakStealth(PlayerController player)
+        {
+            player.ChangeSpecialShaderFlag(1, 0f);
+            player.OnItemStolen -= this.BreakStealthOnSteal;
+            player.SetIsStealthed(false, "ammolet of wonder");
+            player.healthHaver.OnDamaged -= this.OnDamaged;
+            player.SetCapableOfStealing(false, "ammolet of wonder", null);
+            player.OnDidUnstealthyAction -= this.BreakStealth;
+            AkSoundEngine.PostEvent("Play_ENM_wizardred_appear_01", base.gameObject);
         }
 
         private IEnumerator RecursiveBlank(Vector2 centerPoint, PlayerController user)
@@ -184,5 +353,13 @@ namespace GlaurungItems.Items
             "Global VFX/Confetti_Yellow_001",
             "Global VFX/Confetti_Green_001"
         };
-}
+
+        private static string[] goops = new string[]
+        {
+            "assets/data/goops/water goop.asset",
+            "assets/data/goops/poison goop.asset"
+        };
+        private static List<GoopDefinition> goopDefs;
+        private static float goopDuration = 0.75f;
+    }
 }
