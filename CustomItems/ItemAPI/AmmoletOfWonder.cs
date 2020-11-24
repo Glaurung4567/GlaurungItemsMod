@@ -18,36 +18,18 @@ namespace GlaurungItems.Items
             var item = obj.AddComponent<AmmoletOfWonder>();
             ItemBuilder.AddSpriteToObject(itemName, resourceName, obj);
             string shortDesc = "Many Things";
-            string longDesc = "WIP";
+            string longDesc = "Trigger a random effect when a blank is activated. \n \n";
             ItemBuilder.SetupItem(item, shortDesc, longDesc, "gl");
             ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.AdditionalBlanksPerFloor, 1, StatModifier.ModifyMethod.ADDITIVE);
             item.quality = ItemQuality.B;
             item.BlankStunTime = 0;
-
-            AssetBundle assetBundle = ResourceManager.LoadAssetBundle("shared_auto_001");
-            AmmoletOfWonder.goopDefs = new List<GoopDefinition>();
-            foreach (string text in AmmoletOfWonder.goops)
-            {
-                GoopDefinition goopDefinition;
-                try
-                {
-                    GameObject gameObject = assetBundle.LoadAsset(text) as GameObject;
-                    goopDefinition = gameObject.GetComponent<GoopDefinition>();
-                }
-                catch
-                {
-                    goopDefinition = (assetBundle.LoadAsset(text) as GoopDefinition);
-                }
-                goopDefinition.name = text.Replace("assets/data/goops/", "").Replace(".asset", "");
-                AmmoletOfWonder.goopDefs.Add(goopDefinition);
-            }
         }
 
         protected override void OnBlank(SilencerInstance silencerInstance, Vector2 centerPoint, PlayerController user)
         {
             List<AIActor> activeEnemies = GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(centerPoint.ToIntVector2(VectorConversions.Round)).GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
 
-            int randomSelect = Random.Range(25, 29);
+            int randomSelect = Random.Range(39, 41);
             Tools.Print(randomSelect, "ffffff", true);
             switch (randomSelect)
             {
@@ -258,14 +240,124 @@ namespace GlaurungItems.Items
                     SummonActors(user, enemyGuid7);
                     break;
                 case 27:
-                    DeadlyDeadlyGoopManager.GetGoopManagerForGoopType(AmmoletOfWonder.goopDefs[0]).TimedAddGoopCircle(user.sprite.WorldBottomCenter, Random.Range(0.5f, 3f), goopDuration);
+                    SpawnGoop(user, EasyGoopDefinitions.PoisonDef);
                     break;
                 case 28:
-                    DeadlyDeadlyGoopManager.GetGoopManagerForGoopType(AmmoletOfWonder.goopDefs[1]).TimedAddGoopCircle(user.sprite.WorldBottomCenter, Random.Range(0.5f, 3f), goopDuration);
+                    SpawnGoop(user, EasyGoopDefinitions.WaterGoop);
+                    break;
+                case 29:
+                    SpawnGoop(user, EasyGoopDefinitions.OilDef);
+                    break;
+                case 30:
+                    SpawnGoop(user, EasyGoopDefinitions.CharmGoopDef);
+                    break;
+                case 31:
+                    SpawnGoop(user, EasyGoopDefinitions.CheeseDef);
+                    break;
+                case 32:
+                    SpawnGoop(user, EasyGoopDefinitions.WebGoop);
+                    break;
+                case 33:
+                    SpawnGoop(user, EasyGoopDefinitions.BlobulonGoopDef);
+                    break;
+                case 34:
+                    SpawnGoop(user, EasyGoopDefinitions.WaterGoop, true);
+                    break;
+                case 35:
+                    SpawnGoop(user, EasyGoopDefinitions.GreenFireDef);
+                    break;
+                case 36:
+                    SpawnGoop(user, EasyGoopDefinitions.FireDef);
+                    break;
+                case 37:
+                    GameActorEffect charmEffect = (PickupObjectDatabase.GetById(379) as Gun).DefaultModule.projectiles[0].charmEffect;
+                    ApplyEffectOnEnnemies(activeEnemies, charmEffect);
+                    break;
+                case 38:
+                    if (activeEnemies != null)
+                    {
+                        for (int j = 0; j < activeEnemies.Count; j++)
+                        {
+                            AIActor actor = activeEnemies[j];
+                            if (!actor.IsHarmlessEnemy)
+                            {
+                                actor.IsHarmlessEnemy = true;
+                                actor.IsWorthShootingAt = false;
+                            }
+                        }
+                    }
+                    break;
+                case 39:
+                    if(user.CurrentRoom != null)
+                    {
+                        IntVector2 randomVisibleClearSpot2 = user.CurrentRoom.GetRandomVisibleClearSpot(2, 2);
+                        if (user.IsValidPlayerPosition(randomVisibleClearSpot2.ToCenterVector2()))
+                        {
+                            user.WarpToPoint(randomVisibleClearSpot2.ToCenterVector2(), true);
+                        }
+                    }
+                    break;
+                case 40:
+                    StatModifier statModifier = new StatModifier();
+                    statModifier.statToBoost = PlayerStats.StatType.TarnisherClipCapacityMultiplier;
+                    statModifier.amount = -0.15f;
+                    statModifier.modifyType = StatModifier.ModifyMethod.ADDITIVE;
+                    user.ownerlessStatModifiers.Add(statModifier);
+                    user.stats.RecalculateStats(user, true);
+                    user.PlayEffectOnActor((GameObject)ResourceCache.Acquire("Global VFX/VFX_Tarnisher_Effect"), new Vector3(0f, 0.5f, 0f), true, false, false);
+                    if (user.carriedConsumables != null)
+                    {
+                        user.carriedConsumables.ForceUpdateUI();
+                    }
+                    break;
+                case 41:
+                    if (activeEnemies != null)
+                    {
+                        for (int j = 0; j < activeEnemies.Count; j++)
+                        {
+                            AIActor actor = activeEnemies[j];
+                            if (actor.healthHaver != null)
+                            {
+                                MindControlEffect orAddComponent = GameObjectExtensions.GetOrAddComponent<MindControlEffect>(actor.gameObject);
+                                orAddComponent.owner = user;
+                            }
+                        }
+                    }
+
                     break;
                 default:
+                    this.BlankForceMultiplier = 0;
+                    base.StartCoroutine(this.ResetBlankModifierStats());
                     break;
-                
+                    //slow time
+                    //tp player
+                    //set on fire ko
+                    //IsEthereal ko
+
+            }
+        }
+
+        private IEnumerator ResetBlankModifierStats()
+        {
+            yield return new WaitForSeconds(0.2f);
+            this.BlankForceMultiplier = 1f;
+            this.BlankDamage = 20f;
+            this.BlankDamageRadius = 10f;
+            yield break;
+        }
+
+        private void SpawnGoop(PlayerController user, GoopDefinition goop, bool freeze = false, bool electrify = false)
+        {
+            float radius = Random.Range(1.5f, 4f);
+            Vector2 position = user.sprite.WorldBottomCenter;
+            DeadlyDeadlyGoopManager.GetGoopManagerForGoopType(goop).TimedAddGoopCircle(position, radius, Random.Range(0.5f, 2f));
+            if (freeze)
+            {
+                DeadlyDeadlyGoopManager.FreezeGoopsCircle(position, radius);
+            }
+            if (electrify)
+            {
+                DeadlyDeadlyGoopManager.ElectrifyGoopsLine(position, position, radius);
             }
         }
 
@@ -353,13 +445,5 @@ namespace GlaurungItems.Items
             "Global VFX/Confetti_Yellow_001",
             "Global VFX/Confetti_Green_001"
         };
-
-        private static string[] goops = new string[]
-        {
-            "assets/data/goops/water goop.asset",
-            "assets/data/goops/poison goop.asset"
-        };
-        private static List<GoopDefinition> goopDefs;
-        private static float goopDuration = 0.75f;
     }
 }

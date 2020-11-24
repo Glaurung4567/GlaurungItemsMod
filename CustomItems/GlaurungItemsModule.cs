@@ -65,6 +65,8 @@ namespace GlaurungItems
                 EnemyAPITools.Init();
                 SpecialFoyerShops.DoSetup();
                 SpecialBlankModificationItem.InitHooks();
+                EasyGoopDefinitions.DefineDefaultGoops();
+
 
                 GlaurungItems.Strings.Enemies.Set("#LOW_PRIEST", "Low Priest");
 

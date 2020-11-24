@@ -32,8 +32,9 @@ namespace GlaurungItems.Items
             PickupObject gun3 = PickupObjectDatabase.GetById(299);
             gun3.quality = PickupObject.ItemQuality.D;
             
-            PickupObject gun4 = PickupObjectDatabase.GetById(747); //high_dragunfire+unknown
+            Gun gun4 = PickupObjectDatabase.GetById(747) as Gun; //high_dragunfire+unknown
             gun4.quality = PickupObject.ItemQuality.EXCLUDED;
+            gun4.DefaultModule.projectiles[0].baseData.damage *= 0.3f;
 
             PickupObject item1 = PickupObjectDatabase.GetById(473); // hidden compartment
             item1.quality = PickupObject.ItemQuality.C;

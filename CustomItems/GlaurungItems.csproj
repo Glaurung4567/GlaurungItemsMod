@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ItemAPI\AmmoletOfWonder.cs" />
+    <Compile Include="ItemAPI\EasyGoopDefinition.cs" />
     <Compile Include="ItemAPI\SaveSpAPI\AdvancedDungeonPrerequisite .cs" />
     <Compile Include="ItemAPI\SaveSpAPI\AdvancedGameStats.cs" />
     <Compile Include="ItemAPI\SaveSpAPI\AdvancedGameStatsManager.cs" />
