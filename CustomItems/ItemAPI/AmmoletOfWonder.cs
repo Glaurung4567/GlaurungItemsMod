@@ -29,7 +29,7 @@ namespace GlaurungItems.Items
         {
             List<AIActor> activeEnemies = GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(centerPoint.ToIntVector2(VectorConversions.Round)).GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
 
-            int randomSelect = Random.Range(39, 41);
+            int randomSelect = Random.Range(41, 45);
             Tools.Print(randomSelect, "ffffff", true);
             switch (randomSelect)
             {
@@ -109,31 +109,35 @@ namespace GlaurungItems.Items
                     //user.ApplyEffect(buffEffect);
                     ApplyEffectOnEnnemies(activeEnemies, buffEffect);
                     break;
-                case 10://buff player
-                    AIActor aiactor2 = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["aged_gunsinger"]);
-                    AttackBehaviorGroup attackBehaviorGroup2 = (aiactor2.behaviorSpeculator.AttackBehaviors[0] as AttackBehaviorGroup);
-                    BuffEnemiesBehavior buffBehavior2 = (attackBehaviorGroup2.AttackBehaviors[0].Behavior as BuffEnemiesBehavior);
-                    AIActorBuffEffect buffEffect2 = buffBehavior2.buffEffect;
-                    buffEffect2.AffectsEnemies = false;
-                    buffEffect2.AffectsPlayers = true;
-                    buffEffect2.duration = 10f;
-                    user.ApplyEffect(buffEffect2);
+                case 10:
+                    if (activeEnemies != null)
+                    {
+                        for (int j = 0; j < activeEnemies.Count; j++)
+                        {
+                            AIActor actor = activeEnemies[j];
+                            if (actor.behaviorSpeculator != null)
+                            {
+                                actor.RegisterOverrideColor(Color.red, "AoW");
+                            }
+                        }
+                    }
                     break;
                 case 11:
                     GameActorCheeseEffect gameActorCheeseEffect = (PickupObjectDatabase.GetById(626) as Gun).DefaultModule.projectiles[0].cheeseEffect;
                     ApplyEffectOnEnnemies(activeEnemies, gameActorCheeseEffect, 1, Random.Range(1,5));
                     break;
-                case 12://debuff on player
-                    AIActorDebuffEffect debuffEffect2 = null;
-                    foreach (AttackBehaviorBase attackBehaviour in EnemyDatabase.GetOrLoadByGuid((PickupObjectDatabase.GetById(492) as CompanionItem).CompanionGuid).behaviorSpeculator.AttackBehaviors)
+                case 12:
+                    if (activeEnemies != null)
                     {
-                        if (attackBehaviour is WolfCompanionAttackBehavior)
+                        for (int j = 0; j < activeEnemies.Count; j++)
                         {
-                            debuffEffect2 = (attackBehaviour as WolfCompanionAttackBehavior).EnemyDebuff;
+                            AIActor actor = activeEnemies[j];
+                            if (actor.behaviorSpeculator != null)
+                            {
+                                actor.RegisterOverrideColor(Color.green, "AoW");
+                            }
                         }
                     }
-                    debuffEffect2.AffectsPlayers = true;
-                    user.ApplyEffect(debuffEffect2);
                     break;
                 case 13:
                     string enemyGuid2 = EnemyGuidDatabase.Entries["chicken"];
@@ -323,16 +327,53 @@ namespace GlaurungItems.Items
                             }
                         }
                     }
-
                     break;
-                    //						enemy.RegisterOverrideColor(Color.red, "Anger");
+                case 42:
+                    if (activeEnemies != null)
+                    {
+                        for (int j = 0; j < activeEnemies.Count; j++)
+                        {
+                            AIActor actor = activeEnemies[j];
+                            if (actor.behaviorSpeculator != null)
+                            {
+                                actor.RegisterOverrideColor(Color.white, "AoW");
+                            }
+                        }
+                    }
+                    break;
+                case 43:
+                    if (activeEnemies != null)
+                    {
+                        for (int j = 0; j < activeEnemies.Count; j++)
+                        {
+                            AIActor actor = activeEnemies[j];
+                            if (actor.behaviorSpeculator != null)
+                            {
+                                actor.RegisterOverrideColor(Color.blue, "AoW");
+                            }
+                        }
+                    }
+                    break;
+                case 44:
+                    if (activeEnemies != null)
+                    {
+                        for (int j = 0; j < activeEnemies.Count; j++)
+                        {
+                            AIActor actor = activeEnemies[j];
+                            if (actor.behaviorSpeculator != null)
+                            {
+                                actor.RegisterOverrideColor(Color.gray, "AoW");
+                            }
+                        }
+                    }
+                    break;
 
                 default:
                     this.BlankForceMultiplier = 0;
                     base.StartCoroutine(this.ResetBlankModifierStats());
                     break;
                     //slow time
-                    //color player
+                    //color player (red/green/white/blue/gray)
                     //change size
                     //set on fire ko
                     //IsEthereal ko

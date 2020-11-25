@@ -84,8 +84,8 @@ namespace GlaurungItems
                 LooseCannon.Add();
                 BanishingBullets.Init();
                 Yoink.Init();
-                BulletScriptGun.Add();
 
+                BulletScriptGun.Add();
                 BlinkbackDevice.Init();
                 OzzieHelm.Init();
                 AmmoletOfWonder.Init();

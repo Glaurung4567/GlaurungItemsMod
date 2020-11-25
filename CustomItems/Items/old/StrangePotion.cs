@@ -10,11 +10,11 @@ namespace GlaurungItems.Items
 {
     class StrangePotion : PlayerItem
 	{
-
+		// do not use, it f* up the player health if RecalculateStats is called (dropping a gun)
 		public static void Init()
 		{
 			string text = "Strange Potion";
-			string resourcePath = "GlaurungItems/Resources/acme_crate";
+			string resourcePath = "GlaurungItems/Resources/neuralyzer";
 			GameObject gameObject = new GameObject(text);
 			StrangePotion item = gameObject.AddComponent<StrangePotion>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
@@ -40,9 +40,11 @@ namespace GlaurungItems.Items
 					}
 				}
 				debuffEffect2.AffectsPlayers = true;
+				debuffEffect2.KeepHealthPercentage = false;
 				user.ApplyEffect(debuffEffect2);
+				user.stats.RecalculateStats(user, true);
 			}
-            else
+			else
             {
 				AIActor aiactor2 = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["aged_gunsinger"]);
 				AttackBehaviorGroup attackBehaviorGroup2 = (aiactor2.behaviorSpeculator.AttackBehaviors[0] as AttackBehaviorGroup);
@@ -50,8 +52,10 @@ namespace GlaurungItems.Items
 				AIActorBuffEffect buffEffect2 = buffBehavior2.buffEffect;
 				buffEffect2.AffectsEnemies = false;
 				buffEffect2.AffectsPlayers = true;
+				buffEffect2.KeepHealthPercentage = false;
 				buffEffect2.duration = 10f;
 				user.ApplyEffect(buffEffect2);
+				user.stats.RecalculateStats(user, true);
 			}
 		}
 	}
