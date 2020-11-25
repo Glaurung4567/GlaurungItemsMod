@@ -18,7 +18,7 @@ namespace GlaurungItems.Items
             var item = obj.AddComponent<AmmoletOfWonder>();
             ItemBuilder.AddSpriteToObject(itemName, resourceName, obj);
             string shortDesc = "Many Things";
-            string longDesc = "Trigger a random effect when a blank is activated. \n \n";
+            string longDesc = "Trigger a random effect when a blank is activated. \n \nImbued with the different energies present in the Gungeon, it makes blanks more unpredictable.";
             ItemBuilder.SetupItem(item, shortDesc, longDesc, "gl");
             ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.AdditionalBlanksPerFloor, 1, StatModifier.ModifyMethod.ADDITIVE);
             item.quality = ItemQuality.B;
@@ -325,12 +325,15 @@ namespace GlaurungItems.Items
                     }
 
                     break;
+                    //						enemy.RegisterOverrideColor(Color.red, "Anger");
+
                 default:
                     this.BlankForceMultiplier = 0;
                     base.StartCoroutine(this.ResetBlankModifierStats());
                     break;
                     //slow time
-                    //tp player
+                    //color player
+                    //change size
                     //set on fire ko
                     //IsEthereal ko
 

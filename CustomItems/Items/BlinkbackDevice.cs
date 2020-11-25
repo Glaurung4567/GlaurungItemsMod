@@ -145,7 +145,7 @@ namespace GlaurungItems.Items
 		{
 			dashColor = Color.green,
 			spawnShadows = true,
-			shadowLifetime = 2.1f
+			shadowLifetime = 2.3f
 		};
 	}
 
