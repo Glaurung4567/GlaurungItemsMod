@@ -121,6 +121,7 @@
     <Compile Include="Items\Neuralyzer.cs" />
     <Compile Include="Items\Overhealer.cs" />
     <Compile Include="Items\OzzieHelm.cs" />
+    <Compile Include="Items\SappingBullets.cs" />
     <Compile Include="Items\ShamblesGun.cs" />
     <Compile Include="Items\RaiseDead.cs" />
     <Compile Include="Items\old\StrangePotion.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="ItemAPI\ItemBuilder.cs" />
     <Compile Include="ItemAPI\ResourceExtractor.cs" />
     <Compile Include="ItemAPI\SpriteBuilder.cs" />
+    <Compile Include="Items\VladofGun.cs" />
     <Compile Include="Items\Yoink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools.cs" />

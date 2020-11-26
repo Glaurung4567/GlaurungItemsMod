@@ -9,7 +9,7 @@ namespace Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("Kill Streak", "killstreak");
+            Gun gun = ETGMod.Databases.Items.NewGun("Kill Streak", "jpxfrd");
             Game.Items.Rename("outdated_gun_mods:kill_streak", "gl:kill_streak");
             gun.gameObject.AddComponent<KillStreakGun>();
             gun.SetShortDescription("WIP");

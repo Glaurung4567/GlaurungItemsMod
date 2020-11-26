@@ -30,6 +30,7 @@ namespace GlaurungItems.Items
 			GameManager.Instance.OnNewLevelFullyLoaded += this.RechargePerFloor;
 			player.PostProcessProjectile += this.PostProcessProjectile;
 			player.PostProcessBeamTick += this.PostProcessBeamTick;
+			player.OnRoomClearEvent += this.OnLeaveCombat;
 		}
 
 		public override DebrisObject Drop(PlayerController player)
@@ -37,6 +38,7 @@ namespace GlaurungItems.Items
 			GameManager.Instance.OnNewLevelFullyLoaded -= this.RechargePerFloor;
 			player.PostProcessProjectile -= this.PostProcessProjectile;
 			player.PostProcessBeamTick -= this.PostProcessBeamTick;
+			player.OnRoomClearEvent -= this.OnLeaveCombat;
 			return base.Drop(player);
 		}
 
@@ -45,8 +47,15 @@ namespace GlaurungItems.Items
 			GameManager.Instance.OnNewLevelFullyLoaded -= this.RechargePerFloor;
 			base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
 			base.Owner.PostProcessBeamTick -= this.PostProcessBeamTick;
+			base.Owner.OnRoomClearEvent -= this.OnLeaveCombat;
 			base.OnDestroy();
 		}
+
+		private void OnLeaveCombat(PlayerController user)
+		{
+			targetForBanishing = new List<AIActor>();
+		}
+
 		private void PostProcessProjectile(Projectile projectile, float Chance)
 		{
 			PlayerController owner = base.Owner;

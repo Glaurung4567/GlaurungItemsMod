@@ -21,7 +21,7 @@ namespace GlaurungItems.Items
             string longDesc = "Trigger a random effect when a blank is activated. \n \nImbued with the different energies present in the Gungeon, it makes blanks more unpredictable.";
             ItemBuilder.SetupItem(item, shortDesc, longDesc, "gl");
             ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.AdditionalBlanksPerFloor, 1, StatModifier.ModifyMethod.ADDITIVE);
-            item.quality = ItemQuality.B;
+            item.quality = ItemQuality.C;
             item.BlankStunTime = 0;
         }
 
@@ -29,7 +29,7 @@ namespace GlaurungItems.Items
         {
             List<AIActor> activeEnemies = GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(centerPoint.ToIntVector2(VectorConversions.Round)).GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
 
-            int randomSelect = Random.Range(41, 45);
+            int randomSelect = Random.Range(1, 45);
             Tools.Print(randomSelect, "ffffff", true);
             switch (randomSelect)
             {
