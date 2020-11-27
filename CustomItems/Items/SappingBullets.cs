@@ -156,7 +156,7 @@ namespace GlaurungItems.Items
 
 		private void Update()
 		{
-			if(it == 0)// || it%60 == 0)
+			if(it == 0 || it%90 == 0)
             {
 				//Tools.Print(m_aiActor, "ffffff", true);
 				//Tools.Print(m_aiActor.IsOverPit, "ffffff", true);
@@ -176,8 +176,24 @@ namespace GlaurungItems.Items
 						if(goopManager.IsPositionInGoop(m_aiActor.transform.position))
                         {
 							Tools.Print("apply", "ffffff", true);
-							
-							goopManager.DoGoopEffect(m_aiActor, m_aiActor.transform.PositionVector2().ToIntVector2());
+							if(goopManager.goopDefinition != null)
+                            {
+								GoopDefinition goop = goopManager.goopDefinition;
+								if (goop.AppliesCharm && goop.CharmModifierEffect != null)
+                                {
+									m_aiActor.ApplyEffect(goop.CharmModifierEffect);
+                                }
+								if (goop.AppliesDamageOverTime && goop.HealthModifierEffect != null)
+								{
+									m_aiActor.ApplyEffect(goop.HealthModifierEffect);
+								}
+								if (goop.fireEffect != null)
+								{
+									m_aiActor.ApplyEffect(goop.fireEffect);
+								}
+							}
+							//don't seem to work on flying enemies for pools like poison goop
+							//goopManager.DoGoopEffect(m_aiActor, m_aiActor.transform.PositionVector2().ToIntVector2());
                         }
 						
 
