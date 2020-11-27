@@ -16,8 +16,8 @@ namespace GlaurungItems.Items
 			GameObject gameObject = new GameObject(name);
 			SappingBullets item = gameObject.AddComponent<SappingBullets>();
 			ItemBuilder.AddSpriteToObject(name, resourcePath, gameObject);
-			string shortDesc = "Not so tough now, are ya ? Are ya ?";
-			string longDesc = "";
+			string shortDesc = "Not so tough now, are ya ?";
+			string longDesc = "Sap the defenses of enemies";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.quality = PickupObject.ItemQuality.A;
 		}
@@ -60,7 +60,7 @@ namespace GlaurungItems.Items
 
 		private void PostProcessBeamTick(BeamController beam, SpeculativeRigidbody hitRigidBody, float tickrate)
 		{
-			float procChance = 0.3f; //This is your proc-chance, 
+			float procChance = 1f; //This is your proc-chance, 
 			AIActor aiactor = hitRigidBody.aiActor;
 			if (!aiactor)
 			{
@@ -114,14 +114,15 @@ namespace GlaurungItems.Items
                 {
 					target.SetIsFlying(false, "Sapping Bullets");
 					target.Update();
-					//target.FallingProhibited = false;
-					target.specRigidbody.Reinitialize();
-					target.specRigidbody.RecheckTriggers = true;
 					Tools.Print("ouech", "ffffff", true);
-					target.gameObject.AddComponent<AffectedByTheGroundHandler>();
+                    if (target.IsFlying)
+                    {
+						target.gameObject.AddComponent<AffectedByTheGroundHandler>();
+					}
 				}
 
 				/*----------------------------------------------------------*/
+				Tools.Print("*----------------------------------------------------------*", "ffffff", true);
 				Tools.Print(target.GetResistanceForEffectType(EffectResistanceType.Poison), "ffffff", true);
 				Tools.Print(target.GetResistanceForEffectType(EffectResistanceType.Fire), "ffffff", true);
 				Tools.Print(target.GetResistanceForEffectType(EffectResistanceType.Freeze), "ffffff", true);
@@ -155,16 +156,35 @@ namespace GlaurungItems.Items
 
 		private void Update()
 		{
-			if(it == 0)
+			if(it == 0)// || it%60 == 0)
             {
-				Tools.Print(m_aiActor, "ffffff", true);
-				if(m_aiActor.ParentRoom != null)
+				//Tools.Print(m_aiActor, "ffffff", true);
+				//Tools.Print(m_aiActor.IsOverPit, "ffffff", true);
+				if(m_aiActor && m_aiActor.healthHaver && !m_aiActor.healthHaver.IsBoss 
+					&& m_aiActor.healthHaver.IsAlive && m_aiActor.IsOverPit)
                 {
+					m_aiActor.ForceFall();
+                }
+				if(m_aiActor && m_aiActor.ParentRoom != null && m_aiActor.ParentRoom.RoomGoops.Count > 0)
+                {
+					List<DeadlyDeadlyGoopManager> goopManagers = m_aiActor.ParentRoom.RoomGoops;
 					Tools.Print(m_aiActor.ParentRoom.GetNearestCellToPosition(m_aiActor.transform.position), "ffffff", true);
 					Tools.Print(m_aiActor.ParentRoom.RoomGoops.Count, "ffffff", true);
-                }
-				it++;
+					foreach(DeadlyDeadlyGoopManager goopManager in goopManagers)
+                    {
+						Tools.Print("lalala", "ffffff", true);
+						if(goopManager.IsPositionInGoop(m_aiActor.transform.position))
+                        {
+							Tools.Print("apply", "ffffff", true);
+							
+							goopManager.DoGoopEffect(m_aiActor, m_aiActor.transform.PositionVector2().ToIntVector2());
+                        }
+						
+
+					}
+				}
             }
+			it++;
 		}
 
 		private int it = 0;
