@@ -88,17 +88,6 @@ namespace GlaurungItems.Items
         {
             if (!sappedTargets.Contains(target))
             {
-				Tools.Print(target.GetResistanceForEffectType(EffectResistanceType.Poison), "ffffff", true);
-				Tools.Print(target.GetResistanceForEffectType(EffectResistanceType.Fire), "ffffff", true);
-				Tools.Print(target.GetResistanceForEffectType(EffectResistanceType.Freeze), "ffffff", true);
-				Tools.Print(target.GetResistanceForEffectType(EffectResistanceType.Charm), "ffffff", true);
-				Tools.Print(target.GetResistanceForEffectType(EffectResistanceType.None), "ffffff", true);
-				Tools.Print(target.ImmuneToAllEffects, "ffffff", true);
-				Tools.Print(target.behaviorSpeculator.ImmuneToStun, "ffffff", true);
-				Tools.Print(target.IsFlying, "ffffff", true);
-				Tools.Print(target.FallingProhibited, "ffffff", true);
-				/*----------------------------------------------------------*/
-
 				if (target.behaviorSpeculator != null && target.behaviorSpeculator.ImmuneToStun)
                 {
 					target.behaviorSpeculator.ImmuneToStun = false;
@@ -120,21 +109,7 @@ namespace GlaurungItems.Items
 						target.gameObject.AddComponent<AffectedByTheGroundHandler>();
 					}
 				}
-
-				/*----------------------------------------------------------*/
-				Tools.Print("*----------------------------------------------------------*", "ffffff", true);
-				Tools.Print(target.GetResistanceForEffectType(EffectResistanceType.Poison), "ffffff", true);
-				Tools.Print(target.GetResistanceForEffectType(EffectResistanceType.Fire), "ffffff", true);
-				Tools.Print(target.GetResistanceForEffectType(EffectResistanceType.Freeze), "ffffff", true);
-				Tools.Print(target.GetResistanceForEffectType(EffectResistanceType.Charm), "ffffff", true);
-				Tools.Print(target.GetResistanceForEffectType(EffectResistanceType.None), "ffffff", true);
-				Tools.Print(target.ImmuneToAllEffects, "ffffff", true);
-				Tools.Print(target.behaviorSpeculator.ImmuneToStun, "ffffff", true);
-				Tools.Print(target.IsFlying, "ffffff", true);
-				Tools.Print(target.FallingProhibited, "ffffff", true);
-
 				sappedTargets.Add(target);
-
 			}
         }
 
@@ -158,8 +133,6 @@ namespace GlaurungItems.Items
 		{
 			if(it == 0 || it%90 == 0)
             {
-				//Tools.Print(m_aiActor, "ffffff", true);
-				//Tools.Print(m_aiActor.IsOverPit, "ffffff", true);
 				if(m_aiActor && m_aiActor.healthHaver && !m_aiActor.healthHaver.IsBoss 
 					&& m_aiActor.healthHaver.IsAlive && m_aiActor.IsOverPit)
                 {
@@ -168,14 +141,15 @@ namespace GlaurungItems.Items
 				if(m_aiActor && m_aiActor.ParentRoom != null && m_aiActor.ParentRoom.RoomGoops.Count > 0)
                 {
 					List<DeadlyDeadlyGoopManager> goopManagers = m_aiActor.ParentRoom.RoomGoops;
-					Tools.Print(m_aiActor.ParentRoom.GetNearestCellToPosition(m_aiActor.transform.position), "ffffff", true);
-					Tools.Print(m_aiActor.ParentRoom.RoomGoops.Count, "ffffff", true);
+					//int i = 0;
 					foreach(DeadlyDeadlyGoopManager goopManager in goopManagers)
                     {
-						Tools.Print("lalala", "ffffff", true);
-						if(goopManager.IsPositionInGoop(m_aiActor.transform.position))
+						//Tools.Print(i, "ffffff", true);
+						//i++;
+						if (goopManager.IsPositionInGoop(m_aiActor.transform.position))
                         {
-							Tools.Print("apply", "ffffff", true);
+							//Tools.Print("apply", "ffffff", true);
+							
 							if(goopManager.goopDefinition != null)
                             {
 								GoopDefinition goop = goopManager.goopDefinition;
@@ -187,10 +161,24 @@ namespace GlaurungItems.Items
 								{
 									m_aiActor.ApplyEffect(goop.HealthModifierEffect);
 								}
-								if (goop.fireEffect != null)
+								if (goop.AppliesCheese && goop.CheeseModifierEffect != null)
+								{
+									m_aiActor.ApplyEffect(goop.CheeseModifierEffect);
+								}
+								if (goop.AppliesSpeedModifier && goop.SpeedModifierEffect != null)
+								{
+									m_aiActor.ApplyEffect(goop.SpeedModifierEffect);
+								}
+								if(goop.goopDamageTypeInteractions.Count > 0)
+                                {
+
+                                }
+								//always on
+								/*if (goop.fireBurnsEnemies && goop.fireEffect != null)
 								{
 									m_aiActor.ApplyEffect(goop.fireEffect);
-								}
+								}*/
+
 							}
 							//don't seem to work on flying enemies for pools like poison goop
 							//goopManager.DoGoopEffect(m_aiActor, m_aiActor.transform.PositionVector2().ToIntVector2());
