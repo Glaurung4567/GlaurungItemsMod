@@ -1,5 +1,6 @@
 ﻿using ItemAPI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -103,7 +104,6 @@ namespace GlaurungItems.Items
                 {
 					target.SetIsFlying(false, "Sapping Bullets");
 					target.Update();
-					Tools.Print("ouech", "ffffff", true);
                     if (target.IsFlying)
                     {
 						target.gameObject.AddComponent<AffectedByTheGroundHandler>();
@@ -121,7 +121,6 @@ namespace GlaurungItems.Items
 	{
 		public AffectedByTheGroundHandler()
 		{
-
 		}
 
 		private void Awake()
@@ -131,7 +130,7 @@ namespace GlaurungItems.Items
 
 		private void Update()
 		{
-			if(it == 0 || it%90 == 0)
+			if(it == 0 || it%30 == 0)
             {
 				if(m_aiActor && m_aiActor.healthHaver && !m_aiActor.healthHaver.IsBoss 
 					&& m_aiActor.healthHaver.IsAlive && m_aiActor.IsOverPit)
@@ -149,7 +148,6 @@ namespace GlaurungItems.Items
 						if (goopManager.IsPositionInGoop(m_aiActor.transform.position))
                         {
 							//Tools.Print("apply", "ffffff", true);
-							
 							if(goopManager.goopDefinition != null)
                             {
 								GoopDefinition goop = goopManager.goopDefinition;
@@ -169,10 +167,75 @@ namespace GlaurungItems.Items
 								{
 									m_aiActor.ApplyEffect(goop.SpeedModifierEffect);
 								}
-								if(goop.goopDamageTypeInteractions.Count > 0)
+                                if (goop.CanBeElectrified)
                                 {
+									Tools.Print("bzzt", "ffffff", true);
 
-                                }
+									string enemyGuid = EnemyGuidDatabase.Entries["bullet_kin"];
+									AIActor orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["bullet_kin"]);
+
+									Vector2 positionVector = m_aiActor.sprite.WorldBottomCenter;
+									AIActor aiactor = AIActor.Spawn(orLoadByGuid.aiActor, positionVector, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(positionVector.ToIntVector2()), true, AIActor.AwakenAnimationType.Default, true);
+
+
+									// to prevent the aiActor from moving
+									aiactor.behaviorSpeculator.MovementBehaviors = EnemyDatabase.GetOrLoadByGuid("b08ec82bef6940328c7ecd9ffc6bd16c").behaviorSpeculator.MovementBehaviors;
+									aiactor.behaviorSpeculator.TargetBehaviors = EnemyDatabase.GetOrLoadByGuid("b08ec82bef6940328c7ecd9ffc6bd16c").behaviorSpeculator.TargetBehaviors;
+									aiactor.behaviorSpeculator.OtherBehaviors = EnemyDatabase.GetOrLoadByGuid("b08ec82bef6940328c7ecd9ffc6bd16c").behaviorSpeculator.OtherBehaviors;
+									aiactor.behaviorSpeculator.AttackBehaviors = EnemyDatabase.GetOrLoadByGuid("b08ec82bef6940328c7ecd9ffc6bd16c").behaviorSpeculator.AttackBehaviors;
+									//EnemyAPI.EnemyAPITools.DebugInformation(aiactor.behaviorSpeculator); //EnemyGuidDatabase.Entries["bullet_kin"]
+
+									aiactor.sprite.renderer.enabled = false; // to make the companion invisible
+									aiactor.aiShooter.ToggleGunAndHandRenderers(false, "Sapping Bullet Electrified Goop");
+									aiactor.procedurallyOutlined = false;
+									aiactor.CorpseObject = null;
+									aiactor.behaviorSpeculator.ImmuneToStun = true;
+									//aiactor.SetIsFlying(true, "I'm a bullet too!");
+									aiactor.ToggleShadowVisiblity(false);
+									aiactor.HasShadow = false;
+
+									aiactor.CanTargetEnemies = false;
+									aiactor.CanTargetPlayers = false;
+									aiactor.CompanionOwner = GameManager.Instance.PrimaryPlayer;
+									aiactor.HitByEnemyBullets = false;
+									PhysicsEngine.Instance.RegisterOverlappingGhostCollisionExceptions(aiactor.specRigidbody, null, false);
+
+									aiactor.IsHarmlessEnemy = true;
+									aiactor.IgnoreForRoomClear = true;
+									aiactor.PreventAutoKillOnBossDeath = true;
+
+									aiactor.knockbackDoer.SetImmobile(true, "Chainer"); // from the TetherBehavior to prevent the companion from being pushed by explosions
+									aiactor.PreventFallingInPitsEver = true;
+									aiactor.ImmuneToAllEffects = true;
+
+									aiactor.SetResistance(EffectResistanceType.Fire, 1f);
+									aiactor.SetResistance(EffectResistanceType.Poison, 1f);
+									aiactor.SetResistance(EffectResistanceType.Freeze, 1f);
+									aiactor.SetResistance(EffectResistanceType.Charm, 1f);
+									aiactor.healthHaver.SetHealthMaximum(1000f);
+									aiactor.healthHaver.ForceSetCurrentHealth(1000f);
+									aiactor.healthHaver.forcePreventVictoryMusic = true;
+
+									//aiactor.HandleReinforcementFallIntoRoom(0f); //don't use this if you want your mob to be invisible
+									aiactor.gameObject.AddComponent<CompanionController>();
+									CompanionController component = aiactor.gameObject.GetComponent<CompanionController>();
+									component.CanInterceptBullets = false;
+									component.Initialize(GameManager.Instance.PrimaryPlayer);
+
+									base.StartCoroutine(CheckIfPoolIsElectrified(aiactor));
+								}
+								/*if(goop.goopDamageTypeInteractions.Count > 0)
+                                {
+									List<GoopDefinition.GoopDamageTypeInteraction> tys = goop.goopDamageTypeInteractions;
+									foreach(GoopDefinition.GoopDamageTypeInteraction ty in tys)
+                                    {
+                                        if (ty.electrifiesGoop)
+                                        {
+											Tools.Print(ty.electrifiesGoop, "ffffff", true);
+                                        }
+                                    }
+								}*/
+
 								//always on
 								/*if (goop.fireBurnsEnemies && goop.fireEffect != null)
 								{
@@ -189,6 +252,38 @@ namespace GlaurungItems.Items
 				}
             }
 			it++;
+		}
+
+        private IEnumerator CheckIfPoolIsElectrified(AIActor aiactor)
+        {
+			yield return new WaitForSeconds(0.05f);
+			if (aiactor && aiactor.healthHaver && aiactor.healthHaver.IsAlive && aiactor.healthHaver.GetCurrentHealth() < aiactor.healthHaver.GetMaxHealth())
+			{
+				base.StartCoroutine(ElectrifyPeskyFlyingLittleShit());
+			}
+			aiactor.EraseFromExistence(true);
+			yield break;
+        }
+
+        private IEnumerator ElectrifyPeskyFlyingLittleShit()
+        {
+			yield return null;
+			float t = 0.5f;
+            while (t > 0)
+            {
+				Electify();
+				t -= BraveTime.DeltaTime;
+			}
+			yield break;
+		}
+
+		private void Electify()
+        {
+			if (m_aiActor && m_aiActor.healthHaver && m_aiActor.healthHaver.IsAlive)
+			{
+				m_aiActor.healthHaver.ApplyDamage(1f, Vector2.zero, "Sapping Bullet Electrified Goop", CoreDamageTypes.Electric, DamageCategory.Normal,
+					true, null, true);
+			}
 		}
 
 		private int it = 0;

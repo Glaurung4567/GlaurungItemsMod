@@ -123,6 +123,7 @@ namespace GlaurungItems.Items
                 IntVector2? intVector = new IntVector2?((user.CenterPosition + new Vector2(-2f, 0f)).ToIntVector2(VectorConversions.Floor));
                 AIActor aiactor = AIActor.Spawn(lowPriestLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Spawn, true);
                 aiactor.healthHaver.OnDeath += this.EndFight;
+                aiactor.healthHaver.forcePreventVictoryMusic = true;
                 if (this.isInCoop)
                 {
                     aiactor.BecomeBlackPhantom();

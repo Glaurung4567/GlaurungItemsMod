@@ -18,7 +18,7 @@ namespace GlaurungItems.Items
             Game.Items.Rename("outdated_gun_mods:chainer", "gl:chainer");
             gun.gameObject.AddComponent<Chainer>();
             gun.SetShortDescription("Free Blocks");
-            gun.SetLongDescription("Fires a volley of odd link shaped bullets which together act like the chain arms of executioners. \n \nThis weapon is fairly recent and was made in the Gungeon." +
+            gun.SetLongDescription("Fires a volley of odd link-shaped bullets which together act like the chain arms of executioners. \n \nThis weapon is fairly recent and was made in the Gungeon." +
 				" Weirdly enough it has the same weaknesses as the Gundead bullets...");
             gun.SetupSprite(null, "chainer_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);

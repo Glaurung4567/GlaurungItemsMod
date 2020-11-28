@@ -64,6 +64,7 @@ namespace GlaurungItems.Items
                 this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
             }
             Tools.Print(this.gun.DefaultModule.shootStyle, "ffffff", true);
+
             base.OnReload(player, gun);
         }
 
