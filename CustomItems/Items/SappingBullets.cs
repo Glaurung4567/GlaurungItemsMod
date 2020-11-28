@@ -13,7 +13,7 @@ namespace GlaurungItems.Items
 		public static void Init()
 		{
 			string name = "Sapping Bullets";
-			string resourcePath = "GlaurungItems/Resources/banishing_bullets";
+			string resourcePath = "GlaurungItems/Resources/sapping_bullets.png";
 			GameObject gameObject = new GameObject(name);
 			SappingBullets item = gameObject.AddComponent<SappingBullets>();
 			ItemBuilder.AddSpriteToObject(name, resourcePath, gameObject);
@@ -22,7 +22,7 @@ namespace GlaurungItems.Items
 				"Created by a powerful wizard specialized in elemental magics who became fed up with all the enemies who resisted his various attacks " +
 				"(he had a bad memory so he didn't remember which enemy was weak to which type of magic...).";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.quality = PickupObject.ItemQuality.A;
+			item.quality = PickupObject.ItemQuality.B;
 		}
 
 		public override void Pickup(PlayerController player)
@@ -193,7 +193,6 @@ namespace GlaurungItems.Items
 									aiactor.procedurallyOutlined = false;
 									aiactor.CorpseObject = null;
 									aiactor.behaviorSpeculator.ImmuneToStun = true;
-									//aiactor.SetIsFlying(true, "I'm a bullet too!");
 									aiactor.ToggleShadowVisiblity(false);
 									aiactor.HasShadow = false;
 
@@ -262,7 +261,7 @@ namespace GlaurungItems.Items
 			yield return new WaitForSeconds(0.05f);
 			if (aiactor && aiactor.healthHaver && aiactor.healthHaver.IsAlive && aiactor.healthHaver.GetCurrentHealth() < aiactor.healthHaver.GetMaxHealth())
 			{
-				Tools.Print("bzzt", "ffffff", true);
+				//Tools.Print("bzzt", "ffffff", true);
 				base.StartCoroutine(ElectrifyPeskyFlyingLittleShit());
 			}
 			aiactor.EraseFromExistence(true);
