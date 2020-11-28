@@ -18,7 +18,9 @@ namespace GlaurungItems.Items
 			SappingBullets item = gameObject.AddComponent<SappingBullets>();
 			ItemBuilder.AddSpriteToObject(name, resourcePath, gameObject);
 			string shortDesc = "Not so tough now, are ya ?";
-			string longDesc = "Sap the defenses of enemies";
+			string longDesc = "Sap most of the defenses of enemies when a bullet hit. \n \n" +
+				"Created by a powerful wizard specialized in elemental magics who became fed up with all the enemies who resisted his various attacks " +
+				"(he had a bad memory so he didn't remember which enemy was weak to which type of magic...).";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.quality = PickupObject.ItemQuality.A;
 		}
@@ -117,6 +119,8 @@ namespace GlaurungItems.Items
 		private static List<AIActor> sappedTargets = new List<AIActor>();
 	}
 
+	/*---------------------------------------------------------------------------------------------*/
+
 	public class AffectedByTheGroundHandler : MonoBehaviour
 	{
 		public AffectedByTheGroundHandler()
@@ -137,7 +141,8 @@ namespace GlaurungItems.Items
                 {
 					m_aiActor.ForceFall();
                 }
-				if(m_aiActor && m_aiActor.ParentRoom != null && m_aiActor.ParentRoom.RoomGoops.Count > 0)
+
+				if(m_aiActor && m_aiActor.healthHaver && m_aiActor.healthHaver.IsAlive && m_aiActor.ParentRoom != null && m_aiActor.ParentRoom.RoomGoops.Count > 0)
                 {
 					List<DeadlyDeadlyGoopManager> goopManagers = m_aiActor.ParentRoom.RoomGoops;
 					//int i = 0;
@@ -169,8 +174,6 @@ namespace GlaurungItems.Items
 								}
                                 if (goop.CanBeElectrified)
                                 {
-									Tools.Print("bzzt", "ffffff", true);
-
 									string enemyGuid = EnemyGuidDatabase.Entries["bullet_kin"];
 									AIActor orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["bullet_kin"]);
 
@@ -259,6 +262,7 @@ namespace GlaurungItems.Items
 			yield return new WaitForSeconds(0.05f);
 			if (aiactor && aiactor.healthHaver && aiactor.healthHaver.IsAlive && aiactor.healthHaver.GetCurrentHealth() < aiactor.healthHaver.GetMaxHealth())
 			{
+				Tools.Print("bzzt", "ffffff", true);
 				base.StartCoroutine(ElectrifyPeskyFlyingLittleShit());
 			}
 			aiactor.EraseFromExistence(true);
@@ -271,13 +275,13 @@ namespace GlaurungItems.Items
 			float t = 0.5f;
             while (t > 0)
             {
-				Electify();
+				Electrify();
 				t -= BraveTime.DeltaTime;
 			}
 			yield break;
 		}
 
-		private void Electify()
+		private void Electrify()
         {
 			if (m_aiActor && m_aiActor.healthHaver && m_aiActor.healthHaver.IsAlive)
 			{
