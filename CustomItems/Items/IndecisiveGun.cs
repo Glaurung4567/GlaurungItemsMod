@@ -26,12 +26,12 @@ namespace GlaurungItems.Items
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 0.5f;
-            gun.DefaultModule.burstShotCount = 5;
-            gun.DefaultModule.burstCooldownTime = 0.01f;
+            gun.DefaultModule.burstShotCount = 3;
+            gun.DefaultModule.burstCooldownTime = 0.02f;
             gun.DefaultModule.cooldownTime = 0.2f;
-            gun.DefaultModule.numberOfShotsInClip = 8;
+            gun.DefaultModule.numberOfShotsInClip = 6;
             gun.DefaultModule.preventFiringDuringCharge = true;
-            gun.SetBaseMaxAmmo(300);
+            gun.SetBaseMaxAmmo(500);
 
             gun.quality = PickupObject.ItemQuality.EXCLUDED;
 
@@ -46,12 +46,13 @@ namespace GlaurungItems.Items
             projectile.baseData.force *= 1f;
             projectile.baseData.range *= 3f;
             projectile.transform.parent = gun.barrelOffset;
-            //projectile.SetProjectileSpriteRight("build_projectile", 5, 5);
 
             Projectile projectile2 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(748) as Gun).DefaultModule.projectiles[0]);
             projectile2.gameObject.SetActive(false);
             FakePrefab.MarkAsFakePrefab(projectile2.gameObject);
             UnityEngine.Object.DontDestroyOnLoad(projectile2);
+
+            projectile2.baseData.damage *= 1;
             ProjectileModule.ChargeProjectile chargeProj = new ProjectileModule.ChargeProjectile
             {
                 Projectile = projectile2,
@@ -64,31 +65,51 @@ namespace GlaurungItems.Items
 
         public override void OnReload(PlayerController player, Gun gun)
         {
-            Tools.Print("reload", "ffffff", true);
             if (this.gun.DefaultModule.shootStyle == ProjectileModule.ShootStyle.SemiAutomatic)
             {
                 this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Automatic;
                 this.gun.DefaultModule.cooldownTime = 0.1f;
+                this.gun.DefaultModule.numberOfShotsInClip = 40;
+                if (player.carriedConsumables != null)
+                {
+                    player.carriedConsumables.ForceUpdateUI();
+                }
             }
+
             else if (this.gun.DefaultModule.shootStyle == ProjectileModule.ShootStyle.Automatic)
             {
                 this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Burst;
+                this.gun.DefaultModule.cooldownTime = 0.2f;
+                this.gun.DefaultModule.numberOfShotsInClip = 24;
+                if (player.carriedConsumables != null)
+                {
+                    player.carriedConsumables.ForceUpdateUI();
+                }
             }
+
             else if (this.gun.DefaultModule.shootStyle == ProjectileModule.ShootStyle.Burst)
             {
                 this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Charged;
                 this.gun.DefaultModule.cooldownTime = 1f;
                 this.gun.DefaultModule.numberOfShotsInClip = 9;
                 this.gun.DefaultModule.ammoCost = 3;
+                this.gun.Update();
                 if (player.carriedConsumables != null)
                 {
                     player.carriedConsumables.ForceUpdateUI();
                 }
             }
+
             else if (this.gun.DefaultModule.shootStyle == ProjectileModule.ShootStyle.Charged)
             {
                 this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
                 gun.DefaultModule.cooldownTime = 0.2f;
+                this.gun.DefaultModule.ammoCost = 1;
+                this.gun.DefaultModule.numberOfShotsInClip = 6;
+                if (player.carriedConsumables != null)
+                {
+                    player.carriedConsumables.ForceUpdateUI();
+                }
             }
             Tools.Print(this.gun.DefaultModule.shootStyle, "ffffff", true);
 
