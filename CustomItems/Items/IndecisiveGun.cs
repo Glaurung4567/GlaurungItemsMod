@@ -68,7 +68,7 @@ namespace GlaurungItems.Items
             if (this.gun.DefaultModule.shootStyle == ProjectileModule.ShootStyle.SemiAutomatic)
             {
                 this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Automatic;
-                this.gun.DefaultModule.cooldownTime = 0.1f;
+                this.gun.DefaultModule.cooldownTime = 0.05f;
                 this.gun.DefaultModule.numberOfShotsInClip = 40;
                 if (player.carriedConsumables != null)
                 {
@@ -91,8 +91,7 @@ namespace GlaurungItems.Items
             {
                 this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Charged;
                 this.gun.DefaultModule.cooldownTime = 1f;
-                this.gun.DefaultModule.numberOfShotsInClip = 9;
-                this.gun.DefaultModule.ammoCost = 3;
+                this.gun.DefaultModule.numberOfShotsInClip = 2;
                 this.gun.Update();
                 if (player.carriedConsumables != null)
                 {
@@ -111,7 +110,6 @@ namespace GlaurungItems.Items
                     player.carriedConsumables.ForceUpdateUI();
                 }
             }
-            Tools.Print(this.gun.DefaultModule.shootStyle, "ffffff", true);
 
             base.OnReload(player, gun);
         }
