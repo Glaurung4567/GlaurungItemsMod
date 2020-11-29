@@ -134,7 +134,7 @@
     <Compile Include="ItemAPI\ItemBuilder.cs" />
     <Compile Include="ItemAPI\ResourceExtractor.cs" />
     <Compile Include="ItemAPI\SpriteBuilder.cs" />
-    <Compile Include="Items\VladofGun.cs" />
+    <Compile Include="Items\IndecisiveGun.cs" />
     <Compile Include="Items\Yoink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools.cs" />

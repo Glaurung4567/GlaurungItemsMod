@@ -15,7 +15,7 @@ namespace GlaurungItems
     public class GlaurungItems : ETGModule
     {
         public bool setup;
-        private static string version = "0.0.1";
+        private static string version = "1.3.0";
         public static AdvancedStringDB Strings;
 
         public override void Init()
@@ -90,7 +90,7 @@ namespace GlaurungItems
                 OzzieHelm.Init();
                 AmmoletOfWonder.Init();
 
-                VladofGun.Add();
+                IndecisiveGun.Add();
                 SappingBullets.Init();
                 //GunDeadArmyStronghold.Init();
 

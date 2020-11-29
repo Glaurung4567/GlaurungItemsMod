@@ -22,7 +22,7 @@ namespace GlaurungItems.Items
 				"Created by a powerful wizard specialized in elemental magics who became fed up with all the enemies who resisted his various attacks " +
 				"(he had a bad memory so he didn't remember which enemy was weak to which type of magic...).";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.quality = PickupObject.ItemQuality.B;
+			item.quality = PickupObject.ItemQuality.C;
 		}
 
 		public override void Pickup(PlayerController player)
@@ -91,6 +91,7 @@ namespace GlaurungItems.Items
         {
             if (!sappedTargets.Contains(target))
             {
+				target.PlayEffectOnActor((GameObject)ResourceCache.Acquire("Global VFX/VFX_Tarnisher_Effect"), new Vector3(0f, 0.5f, 0f), true, false, false);
 				if (target.behaviorSpeculator != null && target.behaviorSpeculator.ImmuneToStun)
                 {
 					target.behaviorSpeculator.ImmuneToStun = false;
