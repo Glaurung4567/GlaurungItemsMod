@@ -19,7 +19,7 @@ namespace GlaurungItems.Items
 				"After being used too many times, it only erase the memories of the targets for 5 seconds after which they regain their composure.";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 500f);
-			item.quality = ItemQuality.C;
+			item.quality = ItemQuality.A;
 			item.AddItemToTrorcMetaShop(5);//second argument is the position in the shop item list
 			Toolbox.SetupUnlockOnCustomFlag(item, CustomDungeonFlags.ITEMSPECIFIC_NEURALIZER, true);
 		}

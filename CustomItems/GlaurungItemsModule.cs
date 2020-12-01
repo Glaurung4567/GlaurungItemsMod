@@ -88,9 +88,10 @@ namespace GlaurungItems
                 BlinkbackDevice.Init();
                 OzzieHelm.Init();
                 AmmoletOfWonder.Init();
+                SappingBullets.Init();
 
                 IndecisiveGun.Add();
-                SappingBullets.Init();
+                CreatePit.Init();
                 //GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra
