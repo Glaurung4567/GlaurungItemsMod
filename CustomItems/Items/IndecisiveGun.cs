@@ -57,6 +57,7 @@ namespace GlaurungItems.Items
             {
                 Projectile = projectile2,
                 ChargeTime = 1.5f,
+                AmmoCost = 3,
             };
             gun.DefaultModule.chargeProjectiles = new List<ProjectileModule.ChargeProjectile> { chargeProj };
 
@@ -91,7 +92,7 @@ namespace GlaurungItems.Items
             {
                 this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Charged;
                 this.gun.DefaultModule.cooldownTime = 1f;
-                this.gun.DefaultModule.numberOfShotsInClip = 2;
+                this.gun.DefaultModule.numberOfShotsInClip = 9;
                 this.gun.Update();
                 if (player.carriedConsumables != null)
                 {

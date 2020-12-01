@@ -8,7 +8,6 @@ using ItemAPI;
 using Items;
 using MonoMod.RuntimeDetour;
 using UnityEngine;
-using Ionic.Zip;
 
 namespace GlaurungItems
 {
