@@ -61,9 +61,20 @@ namespace GlaurungItems.Items
 			AssetBundle sharedAssets2 = ResourceManager.LoadAssetBundle("shared_auto_002");
 
 			GameObject WaterDrum = sharedAssets2.LoadAsset<GameObject>("Blue Drum");
-			WaterDrum.GetComponent<DungeonPlaceableBehaviour>().InstantiateObject(user.CurrentRoom, user.PlacedPosition, false);
+			GameObject spawnedDrum = WaterDrum.GetComponent<DungeonPlaceableBehaviour>().InstantiateObject(user.CurrentRoom, user.PlacedPosition, false);
 			Tools.Print(WaterDrum.GetComponent<DungeonPlaceableBehaviour>() == null, "ffffff", true);
-
+			KickableObject componentInChildren = spawnedDrum.GetComponentInChildren<KickableObject>();
+			if (componentInChildren)
+			{
+				componentInChildren.specRigidbody.Reinitialize();
+				componentInChildren.rollSpeed = 5f;
+				user.CurrentRoom.RegisterInteractable(componentInChildren);
+			}
+			/*KickableObject component = spawnedDrum.GetComponent<KickableObject>();
+			if (component)
+			{
+				component.ForceDeregister();
+			}*/
 			//DungeonPlaceableBehaviour trap = RobotDave.GetPitTrap();
 			//gameObject1.AddComponent<PitTrapEnemyController>();
 			//GameObject t = trap.InstantiateObject(user.CurrentRoom, user.CenterPosition.ToIntVector2());
