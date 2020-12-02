@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GlaurungItems.Items
 {
-	public class PitTrapEnemyController : BasicTrapController
+	public class PitTrapEnemyController : BasicTrapEnemyController
 	{
 		protected override void OnDestroy()
 		{
@@ -26,9 +26,9 @@ namespace GlaurungItems.Items
 			return base.InstantiateObject(targetRoom, loc, deferConfiguration);
 		}
 
-		protected override void BeginState(BasicTrapController.State newState)
+		protected override void BeginState(BasicTrapEnemyController.State newState)
 		{
-			if (newState == BasicTrapController.State.Active)
+			if (newState == BasicTrapEnemyController.State.Active)
 			{
 				for (int i = this.m_cachedPosition.x; i < this.m_cachedPosition.x + this.placeableWidth; i++)
 				{
@@ -42,7 +42,7 @@ namespace GlaurungItems.Items
 					base.specRigidbody.enabled = false;
 				}
 			}
-			else if (newState == BasicTrapController.State.Resetting)
+			else if (newState == BasicTrapEnemyController.State.Resetting)
 			{
 				for (int k = this.m_cachedPosition.x; k < this.m_cachedPosition.x + this.placeableWidth; k++)
 				{

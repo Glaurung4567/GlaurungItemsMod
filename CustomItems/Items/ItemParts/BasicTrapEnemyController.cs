@@ -8,7 +8,7 @@ namespace GlaurungItems.Items
 {
 	public class BasicTrapEnemyController : TrapController, IPlaceConfigurable
 	{
-		public BasicTrapEnemyController()
+		public BasicTrapEnemyController() : base()
 		{
 			this.triggerTimerDelay = 1f;
 			this.LocalTimeScale = 1f;
@@ -126,7 +126,7 @@ namespace GlaurungItems.Items
 				{
 					this.TriggerTrap(rigidbody);
 				}
-				if (this.damageMethod == BasicTrapEnemyController.DamageMethod.SpecRigidbody && this.m_state == BasicTrapEnemyController.State.Active && (flag || this.damagesFlyingPlayers))
+				if (this.damageMethod == BasicTrapController.DamageMethod.SpecRigidbody && this.m_state == BasicTrapEnemyController.State.Active && (flag || this.damagesFlyingPlayers))
 				{
 					this.Damage(rigidbody);
 				}
@@ -147,7 +147,7 @@ namespace GlaurungItems.Items
 			if (this.m_state == BasicTrapEnemyController.State.Ready)
 			{
 				this.state = BasicTrapEnemyController.State.Triggered;
-				if (this.damageMethod == BasicTrapEnemyController.DamageMethod.OnTrigger)
+				if (this.damageMethod == BasicTrapController.DamageMethod.OnTrigger)
 				{
 					this.Damage(target);
 				}
@@ -233,6 +233,7 @@ namespace GlaurungItems.Items
 
 		protected virtual void UpdateState()
 		{
+
 			if (this.m_state == BasicTrapEnemyController.State.Ready)
 			{
 				if (this.triggerMethod == BasicTrapEnemyController.TriggerMethod.PlaceableFootprint)
@@ -261,7 +262,7 @@ namespace GlaurungItems.Items
 			}
 			else if (this.m_state == BasicTrapEnemyController.State.Active)
 			{
-				if (this.damageMethod == BasicTrapEnemyController.DamageMethod.PlaceableFootprint)
+				if (this.damageMethod == BasicTrapController.DamageMethod.PlaceableFootprint)
 				{
 					SpeculativeRigidbody playerRigidbodyInFootprint2 = this.GetPlayerRigidbodyInFootprint();
 					if (playerRigidbodyInFootprint2)
@@ -290,6 +291,7 @@ namespace GlaurungItems.Items
 			{
 				this.state = BasicTrapEnemyController.State.Ready;
 			}
+
 		}
 
 		protected virtual void EndState(BasicTrapEnemyController.State newState)
@@ -418,7 +420,7 @@ namespace GlaurungItems.Items
 		[ShowInInspectorIf("triggerMethod", 2, false)]
 		public float triggerTimerOffset;
 
-		public BasicTrapEnemyController.PlaceableFootprintBuffer footprintBuffer;
+		public BasicTrapController.PlaceableFootprintBuffer footprintBuffer;
 
 		public bool damagesFlyingPlayers;
 
@@ -447,7 +449,7 @@ namespace GlaurungItems.Items
 		public float resetDelay;
 
 		[Header("Damage")]
-		public BasicTrapEnemyController.DamageMethod damageMethod;
+		public BasicTrapController.DamageMethod damageMethod;
 
 		[FormerlySerializedAs("activeDamage")]
 		public float damage;
