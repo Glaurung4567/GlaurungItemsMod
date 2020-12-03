@@ -21,7 +21,7 @@ namespace GlaurungItems.Items
 			string longDesc = "WIP";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 5f);
-			item.quality = ItemQuality.C;
+			item.quality = ItemQuality.EXCLUDED;
 		}
 
 		protected override void DoEffect(PlayerController user)
@@ -61,8 +61,16 @@ namespace GlaurungItems.Items
 			AssetBundle sharedAssets2 = ResourceManager.LoadAssetBundle("shared_auto_002");
 
 			GameObject WaterDrum = sharedAssets2.LoadAsset<GameObject>("Blue Drum");
-			GameObject spawnedDrum = WaterDrum.GetComponent<DungeonPlaceableBehaviour>().InstantiateObject(user.CurrentRoom, user.PlacedPosition, false);
-			Tools.Print(WaterDrum.GetComponent<DungeonPlaceableBehaviour>() == null, "ffffff", true);
+
+			float roomPosX = user.transform.position.x - user.CurrentRoom.area.basePosition.x;
+			float roomPosY = user.transform.position.y - user.CurrentRoom.area.basePosition.y;
+			Vector2 posInCurrentRoom = new Vector2(roomPosX + 1, roomPosY + 1);
+
+			GameObject spawnedDrum = WaterDrum.GetComponent<DungeonPlaceableBehaviour>().InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2(), false);
+			
+			Tools.Print(new IntVector2(user.CurrentRoom.area.basePosition.x + user.CurrentRoom.area.dimensions.X, 
+				user.CurrentRoom.area.basePosition.y + user.CurrentRoom.area.dimensions.Y), "ffffff", true);
+			
 			KickableObject componentInChildren = spawnedDrum.GetComponentInChildren<KickableObject>();
 			if (componentInChildren)
 			{

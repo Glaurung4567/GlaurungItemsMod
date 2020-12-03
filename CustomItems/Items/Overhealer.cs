@@ -60,6 +60,7 @@ namespace GlaurungItems.Items
         public override void PostProcessProjectile(Projectile projectile)
         {
             projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.OnProjectileHitEnemy));
+            base.PostProcessProjectile(projectile);
         }
 
         public void OnProjectileHitEnemy(Projectile proj, SpeculativeRigidbody enemy, bool fatal)

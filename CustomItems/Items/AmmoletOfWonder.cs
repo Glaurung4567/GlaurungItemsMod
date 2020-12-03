@@ -30,7 +30,6 @@ namespace GlaurungItems.Items
             List<AIActor> activeEnemies = GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(centerPoint.ToIntVector2(VectorConversions.Round)).GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
 
             int randomSelect = Random.Range(1, 45);
-            Tools.Print(randomSelect, "ffffff", true);
             switch (randomSelect)
             {
                 case 1:

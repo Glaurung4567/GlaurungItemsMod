@@ -34,11 +34,9 @@ namespace GlaurungItems.Items
 			gun.DefaultModule.cooldownTime = 2f;
 			gun.DefaultModule.numberOfShotsInClip = 3;
 			gun.SetBaseMaxAmmo(142);
+			gun.muzzleFlashEffects.type = VFXPoolType.None;
 
 			gun.quality = PickupObject.ItemQuality.A;
-
-
-			gun.muzzleFlashEffects = null;
 
 			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
 			projectile.gameObject.SetActive(false);
@@ -77,14 +75,14 @@ namespace GlaurungItems.Items
 		private void RemoveHolders()
 		{
 			roomWhereThisWasFired = null;
-			foreach (AIActor holder in spawnedChainHolders)
+			foreach (AIActor holder in spawnedScriptFirerers)
 			{
 				if (holder != null)
 				{
 					holder.EraseFromExistence(true);
 				}
 			}
-			spawnedChainHolders = new List<AIActor>();
+			spawnedScriptFirerers = new List<AIActor>();
 		}
 
 		public override void OnPostFired(PlayerController player, Gun gun)
@@ -199,7 +197,7 @@ namespace GlaurungItems.Items
 
 				SelectGunAttack(aiactor); //to fire once
 
-				spawnedChainHolders.Add(aiactor);
+				spawnedScriptFirerers.Add(aiactor);
                 if (projectile)
                 {
 					projectile.DieInAir();
@@ -455,7 +453,7 @@ namespace GlaurungItems.Items
 		private bool HasReloaded;
 		public static float playerGunCurrentAngle = 0f;
 		private static float bulletsDamageMultiplier = 1f;
-		private List<AIActor> spawnedChainHolders = new List<AIActor>();
+		private List<AIActor> spawnedScriptFirerers = new List<AIActor>();
 		private RoomHandler roomWhereThisWasFired = null;
 	}
 }

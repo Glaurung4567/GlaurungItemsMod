@@ -57,7 +57,7 @@ namespace GlaurungItems.Items
             
             // Here we just set the quality of the gun and the "EncounterGuid", which is used by Gungeon to identify the gun.
             gun.quality = PickupObject.ItemQuality.B;
-            gun.encounterTrackable.EncounterGuid = "change this for different guns, so the game doesn't think they're the same gun of  course yeah sure pal ";
+            //gun.encounterTrackable.EncounterGuid = "change this for different guns, so the game doesn't think they're the same gun of course yeah sure pal, yeah yeah spapi i know guid bad really hella bad blablabla ";
             
             //This block of code helps clone our projectile. Basically it makes it so things like Shadow Clone and Hip Holster keep the stats/sprite of your custom gun's projectiles.
             Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);

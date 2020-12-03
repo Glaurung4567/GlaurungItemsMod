@@ -69,7 +69,7 @@
     <Reference Include="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ItemAPI\AmmoletOfWonder.cs" />
+    <Compile Include="Items\AmmoletOfWonder.cs" />
     <Compile Include="ItemAPI\EasyGoopDefinition.cs" />
     <Compile Include="ItemAPI\SaveSpAPI\AdvancedDungeonPrerequisite .cs" />
     <Compile Include="ItemAPI\SaveSpAPI\AdvancedGameStats.cs" />
@@ -90,6 +90,7 @@
     <Compile Include="ItemAPI\SpecialBlankModificationItem.cs" />
     <Compile Include="ItemAPI\SpecialFoyerShop.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
+    <Compile Include="Items\BarrelsLauncher.cs" />
     <Compile Include="Items\BlinkbackDevice.cs" />
     <Compile Include="Items\CreatePit.cs" />
     <Compile Include="Items\GunjuringEncyclopedia.cs" />

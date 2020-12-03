@@ -92,6 +92,8 @@ namespace GlaurungItems
 
                 IndecisiveGun.Add();
                 CreatePit.Init();
+                BarrelsLauncher.Add();
+                
                 //GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra
