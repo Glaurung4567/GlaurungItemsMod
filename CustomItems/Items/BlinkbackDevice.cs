@@ -134,9 +134,9 @@ namespace GlaurungItems.Items
 			this.CurrentDamageCooldown = Mathf.Min(CurrentDamageCooldown, cooldown);
 		}
 
+		private bool timeAfterImgsActive;
 		private static float cooldown = 750f;
 		private static int numberOfPreviousSteps = 150;
-		private bool timeAfterImgsActive;
 		private List<Vector3> playerPositionsDuringActivation;
 		private List<float> playerHealthValuesDuringActivation;
 		private List<float> playerArmorValuesDuringActivation;
