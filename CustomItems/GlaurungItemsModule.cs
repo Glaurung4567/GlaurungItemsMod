@@ -92,7 +92,7 @@ namespace GlaurungItems
 
                 IndecisiveGun.Add();
                 CreatePit.Init();
-                
+                MineCrafter.Init();                
                 //GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra
