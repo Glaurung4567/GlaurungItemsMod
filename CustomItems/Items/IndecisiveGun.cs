@@ -20,6 +20,7 @@ namespace GlaurungItems.Items
             gun.SetupSprite(null, "jpxfrd_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
+            gun.SetAnimationFPS(gun.chargeAnimation, 12);
             //gun.SetAnimationFPS(gun.idleAnimation, 8);
             gun.AddProjectileModuleFrom("klobb", true, false);
 
