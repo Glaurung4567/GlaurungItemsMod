@@ -92,7 +92,6 @@ namespace GlaurungItems
 
                 IndecisiveGun.Add();
                 CreatePit.Init();
-                BarrelsLauncher.Add();
                 
                 //GunDeadArmyStronghold.Init();
 

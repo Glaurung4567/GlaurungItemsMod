@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace GlaurungItems.Items
 {
+    //crash game on room change...
     class BarrelsLauncher : AdvancedGunBehavior
     {
         public static void Add()
@@ -74,7 +75,7 @@ namespace GlaurungItems.Items
                         Drum = sharedAssets2.LoadAsset<GameObject>("Yellow Drum");
                         break;
                     case 3:
-                        Drum = sharedAssets2.LoadAsset<GameObject>("Ice Cube Bomb");
+                        Drum = sharedAssets2.LoadAsset<GameObject>("Blue Drum");
                         break;
                     default:
                         break;
@@ -83,19 +84,41 @@ namespace GlaurungItems.Items
                 PlayerController user = this.gun.CurrentOwner as PlayerController;
                 float roomPosX = user.transform.position.x - user.CurrentRoom.area.basePosition.x;
                 float roomPosY = user.transform.position.y - user.CurrentRoom.area.basePosition.y;
-                Vector2 posInCurrentRoom = new Vector2(roomPosX + 1, roomPosY + 1);
-
-                GameObject spawnedDrum = Drum.GetComponent<DungeonPlaceableBehaviour>().InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2(), false);
-
-
-
-                KickableObject componentInChildren = spawnedDrum.GetComponentInChildren<KickableObject>();
-                if (componentInChildren)
+                float xOffSet = 0;
+                float yOffSet = 0;
+                float offsetAmount = 1.5f;
+                float currentAngle = this.gun.CurrentAngle;
+                if (currentAngle > 45f && currentAngle <= 135f)
                 {
-                    componentInChildren.specRigidbody.Reinitialize();
-                    componentInChildren.rollSpeed = 5f;
-                    user.CurrentRoom.RegisterInteractable(componentInChildren);
+                    yOffSet = offsetAmount;//up
                 }
+                else if((currentAngle > 0 && currentAngle > 135f) || (currentAngle < 0 && currentAngle <= -135f))
+                {
+                    xOffSet = -offsetAmount;//left
+                }
+                else if(currentAngle > -135f && currentAngle <= -45f)
+                {
+                    yOffSet = -offsetAmount;//bottom
+                }
+                else
+                {
+                    xOffSet = offsetAmount;//right
+                }
+                Vector2 posInCurrentRoom = new Vector2(roomPosX + xOffSet, roomPosY + yOffSet);
+                Vector2 posInMap = new Vector2(user.transform.position.x + xOffSet, user.transform.position.y + yOffSet);
+
+                if (user.IsValidPlayerPosition(posInMap))
+                {
+                    GameObject spawnedDrum = Drum.GetComponent<DungeonPlaceableBehaviour>().InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2(), false);
+                    KickableObject componentInChildren = spawnedDrum.GetComponentInChildren<KickableObject>();
+                    if (componentInChildren)
+                    {
+                        componentInChildren.specRigidbody.Reinitialize();
+                        componentInChildren.rollSpeed = 5f;
+                        user.CurrentRoom.RegisterInteractable(componentInChildren);
+                    }
+                }
+
             }
         }
 
@@ -134,7 +157,7 @@ namespace GlaurungItems.Items
                 HasReloaded = false;
                 AkSoundEngine.PostEvent("Stop_WPN_All", base.gameObject);
                 base.OnReloadPressed(player, gun, bSOMETHING);
-                AkSoundEngine.PostEvent("Play_UI_page_turn_01", base.gameObject);
+                AkSoundEngine.PostEvent("Play_WPN_SAA_reload_01", base.gameObject);
             }
         }
 

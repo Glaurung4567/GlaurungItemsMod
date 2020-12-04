@@ -145,7 +145,7 @@ namespace GlaurungItems.Items
                 HasReloaded = false;
                 AkSoundEngine.PostEvent("Stop_WPN_All", base.gameObject);
                 base.OnReloadPressed(player, gun, bSOMETHING);
-                AkSoundEngine.PostEvent("Play_UI_page_turn_01", base.gameObject);
+                AkSoundEngine.PostEvent("Play_WPN_SAA_reload_01", base.gameObject);
             }
         }
 

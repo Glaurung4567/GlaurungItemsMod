@@ -58,34 +58,62 @@ namespace GlaurungItems.Items
 
 			Destroy(trap.GetComponent<PitTrapController>());
 			*/
-			AssetBundle sharedAssets2 = ResourceManager.LoadAssetBundle("shared_auto_002");
-
-			GameObject WaterDrum = sharedAssets2.LoadAsset<GameObject>("Blue Drum");
-
-			float roomPosX = user.transform.position.x - user.CurrentRoom.area.basePosition.x;
-			float roomPosY = user.transform.position.y - user.CurrentRoom.area.basePosition.y;
-			Vector2 posInCurrentRoom = new Vector2(roomPosX + 1, roomPosY + 1);
-
-			GameObject spawnedDrum = WaterDrum.GetComponent<DungeonPlaceableBehaviour>().InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2(), false);
-			
-			Tools.Print(new IntVector2(user.CurrentRoom.area.basePosition.x + user.CurrentRoom.area.dimensions.X, 
-				user.CurrentRoom.area.basePosition.y + user.CurrentRoom.area.dimensions.Y), "ffffff", true);
-			
-			KickableObject componentInChildren = spawnedDrum.GetComponentInChildren<KickableObject>();
-			if (componentInChildren)
+			if (user.CurrentRoom != null)
 			{
-				componentInChildren.specRigidbody.Reinitialize();
-				componentInChildren.rollSpeed = 5f;
-				user.CurrentRoom.RegisterInteractable(componentInChildren);
+
+
+
+				float roomPosX = user.transform.position.x - user.CurrentRoom.area.basePosition.x;
+				float roomPosY = user.transform.position.y - user.CurrentRoom.area.basePosition.y;
+				float xOffSet = 0;
+				float yOffSet = 0;
+				float offsetAmount = 2f;
+				float gunCurrentAngle = BraveMathCollege.Atan2Degrees(this.LastOwner.unadjustedAimPoint.XY() - this.LastOwner.CenterPosition);
+				if (gunCurrentAngle > 45f && gunCurrentAngle <= 135f)
+				{
+					yOffSet = offsetAmount;//up
+				}
+				else if ((gunCurrentAngle > 0 && gunCurrentAngle > 135f) || (gunCurrentAngle < 0 && gunCurrentAngle <= -135f))
+				{
+					xOffSet = -offsetAmount;//left
+				}
+				else if (gunCurrentAngle > -135f && gunCurrentAngle <= -45f)
+				{
+					yOffSet = -offsetAmount;//bottom
+				}
+				else
+				{
+					xOffSet = offsetAmount;//right
+				}
+				Vector2 posInCurrentRoom = new Vector2(roomPosX + xOffSet, roomPosY + yOffSet);
+				Vector2 posInMap = new Vector2(user.transform.position.x + xOffSet, user.transform.position.y + yOffSet).ToIntVector2().ToVector2();
+				if (user.IsValidPlayerPosition(posInMap))
+				{
+					AssetBundle sharedAssets2 = ResourceManager.LoadAssetBundle("shared_auto_002");
+					DungeonPlaceable ExplodyBarrel = sharedAssets2.LoadAsset<DungeonPlaceable>("ExplodyBarrel_Maybe");
+					GameObject spawnedDrum = ExplodyBarrel.InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2());
+					KickableObject componentInChildren = spawnedDrum.GetComponentInChildren<KickableObject>();
+					if (componentInChildren)
+					{
+						componentInChildren.specRigidbody.Reinitialize();
+						componentInChildren.rollSpeed = 5f;
+						user.CurrentRoom.RegisterInteractable(componentInChildren);
+					}
+				}
+				/*
+				AssetBundle sharedAssets = ResourceManager.LoadAssetBundle("shared_auto_001");
+				GameObject Drum = sharedAssets.LoadAsset<GameObject>("Red Drum");
+				GameObject spawnedDrum = Drum.GetComponent<DungeonPlaceableBehaviour>().InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2(), false);
+
+				KickableObject componentInChildren = spawnedDrum.GetComponentInChildren<KickableObject>();
+				if (componentInChildren)
+				{
+					componentInChildren.specRigidbody.Reinitialize();
+					componentInChildren.rollSpeed = 5f;
+					user.CurrentRoom.RegisterInteractable(componentInChildren);
+				}
+				*/
 			}
-			/*KickableObject component = spawnedDrum.GetComponent<KickableObject>();
-			if (component)
-			{
-				component.ForceDeregister();
-			}*/
-			//DungeonPlaceableBehaviour trap = RobotDave.GetPitTrap();
-			//gameObject1.AddComponent<PitTrapEnemyController>();
-			//GameObject t = trap.InstantiateObject(user.CurrentRoom, user.CenterPosition.ToIntVector2());
 		}
 
 		public override bool CanBeUsed(PlayerController user)
