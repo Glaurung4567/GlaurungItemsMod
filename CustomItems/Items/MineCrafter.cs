@@ -17,7 +17,7 @@ namespace GlaurungItems.Items
 			GameObject gameObject = new GameObject(text);
 			MineCrafter item = gameObject.AddComponent<MineCrafter>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
-			string shortDesc = "WIP";
+			string shortDesc = "Do a Barrel Roll !";
 			string longDesc = "WIP";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, cooldown);
@@ -92,15 +92,7 @@ namespace GlaurungItems.Items
 					MinorBreakable minorBreakComponentInChildren = barrel.GetComponentInChildren<MinorBreakable>();
 					if (minorBreakComponentInChildren)
 					{
-						Projectile sourceProj = ((Gun)ETGMod.Databases.Items[31]).DefaultModule.projectiles[0];
-						GameObject gameObject = SpawnManager.SpawnProjectile(sourceProj.gameObject, minorBreakComponentInChildren.CenterPoint, Quaternion.Euler(0f, 0f, 0f), true);
-						Projectile projectile = gameObject.GetComponent<Projectile>();
-						projectile.baseData.speed = 0;
-						projectile.baseData.damage = 0;
-						projectile.baseData.force = 0;
-						projectile.AdditionalScaleMultiplier = 0.001f;
-						projectile.hitEffects.suppressMidairDeathVfx = true;
-						projectile.sprite.renderer.enabled = false;
+						minorBreakComponentInChildren.Break();
 					}
 				}
             }
@@ -120,11 +112,22 @@ namespace GlaurungItems.Items
 			this.CurrentDamageCooldown = Mathf.Min(CurrentDamageCooldown, cooldown);
 		}
 
+        public override void Update()
+        {
+            base.Update();
+            if (this.LastOwner && barrelSpawned && barrel.GetComponentInChildren<MinorBreakable>() && barrel.GetComponentInChildren<MinorBreakable>().IsBroken)
+            {
+				barrelSpawned = false;
+				this.ForceApplyCooldown(this.LastOwner);
+
+			}
+        }
+
+		[SerializeField]
 		private bool barrelSpawned;
 		private static float cooldown = 5f;
 		[SerializeField]
 		private GameObject barrel = null;
-
 		private ExplosionData playerFriendlyExplosion = new ExplosionData
 		{
 			damageRadius = 4f,
