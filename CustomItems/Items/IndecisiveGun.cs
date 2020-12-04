@@ -1,8 +1,10 @@
 ﻿using Gungeon;
 using ItemAPI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
+using UnityEngine;
 
 namespace GlaurungItems.Items
 {
@@ -33,7 +35,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.preventFiringDuringCharge = true;
             gun.SetBaseMaxAmmo(500);
 
-            gun.quality = PickupObject.ItemQuality.EXCLUDED;
+            gun.quality = PickupObject.ItemQuality.A;
 
             Projectile projectile = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(31) as Gun).DefaultModule.projectiles[0]);
             projectile.gameObject.SetActive(false);
@@ -64,40 +66,62 @@ namespace GlaurungItems.Items
             ETGMod.Databases.Items.Add(gun, null, "ANY");
         }
 
+        protected override void OnPickup(PlayerController player)
+        {
+            base.OnPickup(player);
+            SetSavedShootingStyle(player);
+            player.GunChanged += this.OnGunChanged;
+        }
+
+        protected override void OnPostDrop(PlayerController player)
+        {
+            player.GunChanged -= this.OnGunChanged;
+            base.OnPostDrop(player);
+        }
+
+        private void OnGunChanged(Gun oldGun, Gun newGun, bool arg3)
+        {
+            if (this.gun && this.gun.CurrentOwner)
+            {
+                PlayerController player = this.gun.CurrentOwner as PlayerController;
+                if (newGun == this.gun)
+                {
+                    SetSavedShootingStyle(player);
+                }
+            }
+        }
+
+        private void SetSavedShootingStyle(PlayerController player)
+        {
+            if (shootStyle == ProjectileModule.ShootStyle.Automatic)
+            {
+                SetAuto(player);
+            }
+            if (shootStyle == ProjectileModule.ShootStyle.Burst)
+            {
+                SetBurst(player);
+            }
+            if (shootStyle == ProjectileModule.ShootStyle.Charged)
+            {
+                SetCharged(player);
+            }
+        }
+
         public override void OnReload(PlayerController player, Gun gun)
         {
             if (this.gun.DefaultModule.shootStyle == ProjectileModule.ShootStyle.SemiAutomatic)
             {
-                this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Automatic;
-                this.gun.DefaultModule.cooldownTime = 0.05f;
-                this.gun.DefaultModule.numberOfShotsInClip = 40;
-                if (player.carriedConsumables != null)
-                {
-                    player.carriedConsumables.ForceUpdateUI();
-                }
+                SetAuto(player);
             }
 
             else if (this.gun.DefaultModule.shootStyle == ProjectileModule.ShootStyle.Automatic)
             {
-                this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Burst;
-                this.gun.DefaultModule.cooldownTime = 0.2f;
-                this.gun.DefaultModule.numberOfShotsInClip = 24;
-                if (player.carriedConsumables != null)
-                {
-                    player.carriedConsumables.ForceUpdateUI();
-                }
+                SetBurst(player);
             }
 
             else if (this.gun.DefaultModule.shootStyle == ProjectileModule.ShootStyle.Burst)
             {
-                this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Charged;
-                this.gun.DefaultModule.cooldownTime = 1f;
-                this.gun.DefaultModule.numberOfShotsInClip = 9;
-                this.gun.Update();
-                if (player.carriedConsumables != null)
-                {
-                    player.carriedConsumables.ForceUpdateUI();
-                }
+                SetCharged(player);
             }
 
             else if (this.gun.DefaultModule.shootStyle == ProjectileModule.ShootStyle.Charged)
@@ -111,16 +135,50 @@ namespace GlaurungItems.Items
                     player.carriedConsumables.ForceUpdateUI();
                 }
             }
-
+            shootStyle = this.gun.DefaultModule.shootStyle;
             base.OnReload(player, gun);
         }
 
+        private void SetAuto(PlayerController player)
+        {
+            this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Automatic;
+            this.gun.DefaultModule.cooldownTime = 0.05f;
+            this.gun.DefaultModule.numberOfShotsInClip = 40;
+            if (player.carriedConsumables != null)
+            {
+                player.carriedConsumables.ForceUpdateUI();
+            }
+        }
+
+        private void SetBurst(PlayerController player)
+        {
+            this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Burst;
+            this.gun.DefaultModule.cooldownTime = 0.2f;
+            this.gun.DefaultModule.numberOfShotsInClip = 24;
+            if (player.carriedConsumables != null)
+            {
+                player.carriedConsumables.ForceUpdateUI();
+            }
+        }
+
+        private void SetCharged(PlayerController player)
+        {
+            this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Charged;
+            this.gun.DefaultModule.cooldownTime = 1f;
+            this.gun.DefaultModule.numberOfShotsInClip = 9;
+            this.gun.Update();
+            if (player.carriedConsumables != null)
+            {
+                player.carriedConsumables.ForceUpdateUI();
+            }
+        }
+
+        //This block of code allows us to change the reload sounds.
         public override void OnPostFired(PlayerController player, Gun gun)
         {
             gun.PreventNormalFireAudio = true;
             AkSoundEngine.PostEvent("Play_WPN_metalbullet_impact_01", gameObject);
         }
-        //This block of code allows us to change the reload sounds.
         protected override void Update()
         {
             base.Update();
@@ -140,6 +198,7 @@ namespace GlaurungItems.Items
 
         public override void OnReloadPressed(PlayerController player, Gun gun, bool bSOMETHING)
         {
+            ReloadIt(player, gun);
             if (gun.IsReloading && this.HasReloaded)
             {
                 HasReloaded = false;
@@ -149,7 +208,27 @@ namespace GlaurungItems.Items
             }
         }
 
-        private bool HasReloaded;
+        public void ReloadIt(PlayerController player, Gun gun)
+        {
+            base.StartCoroutine(this.DelayedTryReload(player, gun));
+        }
 
+        public IEnumerator DelayedTryReload(PlayerController player, Gun gun)
+        {
+            yield return null;
+            if (!gun.IsReloading)
+            {
+                int clipshotsremainingLast = gun.ClipShotsRemaining;
+                gun.ClipShotsRemaining = (gun.DefaultModule.numberOfShotsInClip - 1);
+                gun.Reload();
+                gun.ClipShotsRemaining = clipshotsremainingLast;
+                OnReload(player, gun);
+            }
+            yield break;
+        }
+
+        private bool HasReloaded;
+        [SerializeField]
+        private ProjectileModule.ShootStyle shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
     }
 }

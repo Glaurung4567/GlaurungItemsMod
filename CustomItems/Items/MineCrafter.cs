@@ -86,7 +86,7 @@ namespace GlaurungItems.Items
                     else
                     {
 						barrelSpawned = false;
-						base.StartCoroutine(refillOnWrongSpawn());
+						base.StartCoroutine(RefillOnWrongSpawn());
 					}
 				}
 			}
@@ -104,7 +104,7 @@ namespace GlaurungItems.Items
             }
 		}
 
-        private IEnumerator refillOnWrongSpawn()
+        private IEnumerator RefillOnWrongSpawn()
         {
 			yield return new WaitForSeconds(0.1f);
 			ClearCooldowns();
