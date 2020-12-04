@@ -1,6 +1,7 @@
 ﻿using Dungeonator;
 using ItemAPI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,15 +14,15 @@ namespace GlaurungItems.Items
 		public static void Init()
 		{
 			string text = "Mine Crafter";
-			string resourcePath = "GlaurungItems/Resources/acme_crate";
+			string resourcePath = "GlaurungItems/Resources/mine_crafter";
 			GameObject gameObject = new GameObject(text);
 			MineCrafter item = gameObject.AddComponent<MineCrafter>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
 			string shortDesc = "Do a Barrel Roll !";
-			string longDesc = "WIP";
+			string longDesc = "Spawns a rolling tnt barrel which can be remotely detonated. \n \n Created by a fan of explosives who wanted his C4 to move after being deployed.";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, cooldown);
-			item.quality = ItemQuality.EXCLUDED;
+			item.quality = ItemQuality.C;
 		}
 
 		protected override void DoEffect(PlayerController user)
@@ -82,6 +83,11 @@ namespace GlaurungItems.Items
 						}
 						this.barrel = spawnedDrum;
 					}
+                    else
+                    {
+						barrelSpawned = false;
+						base.StartCoroutine(refillOnWrongSpawn());
+					}
 				}
 			}
             else
@@ -96,6 +102,13 @@ namespace GlaurungItems.Items
 					}
 				}
             }
+		}
+
+        private IEnumerator refillOnWrongSpawn()
+        {
+			yield return new WaitForSeconds(0.1f);
+			ClearCooldowns();
+			yield break;
 		}
 
 		public override bool CanBeUsed(PlayerController user)
@@ -125,7 +138,7 @@ namespace GlaurungItems.Items
 
 		[SerializeField]
 		private bool barrelSpawned;
-		private static float cooldown = 5f;
+		private static float cooldown = 200f;
 		[SerializeField]
 		private GameObject barrel = null;
 		private ExplosionData playerFriendlyExplosion = new ExplosionData

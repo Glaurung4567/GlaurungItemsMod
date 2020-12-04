@@ -47,7 +47,7 @@ namespace GlaurungItems.Items
             projectile.baseData.range *= 3f;
             projectile.transform.parent = gun.barrelOffset;
 
-            Projectile projectile2 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(748) as Gun).DefaultModule.projectiles[0]);
+            Projectile projectile2 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(365) as Gun).DefaultModule.projectiles[0]);
             projectile2.gameObject.SetActive(false);
             FakePrefab.MarkAsFakePrefab(projectile2.gameObject);
             UnityEngine.Object.DontDestroyOnLoad(projectile2);
@@ -56,7 +56,7 @@ namespace GlaurungItems.Items
             ProjectileModule.ChargeProjectile chargeProj = new ProjectileModule.ChargeProjectile
             {
                 Projectile = projectile2,
-                ChargeTime = 1.5f,
+                ChargeTime = 1f,
                 AmmoCost = 3,
             };
             gun.DefaultModule.chargeProjectiles = new List<ProjectileModule.ChargeProjectile> { chargeProj };

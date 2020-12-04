@@ -179,5 +179,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\sapping_bullets.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\mine_crafter.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
