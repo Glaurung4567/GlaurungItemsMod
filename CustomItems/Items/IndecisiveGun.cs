@@ -1,8 +1,11 @@
 ﻿using Gungeon;
 using ItemAPI;
+using MonoMod.RuntimeDetour;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Timers;
 using UnityEngine;
 
@@ -62,10 +65,11 @@ namespace GlaurungItems.Items
             UnityEngine.Object.DontDestroyOnLoad(projectile2);
 
             projectile2.baseData.damage *= 1;
+            projectile2.baseData.speed *= 2;
             ProjectileModule.ChargeProjectile chargeProj = new ProjectileModule.ChargeProjectile
             {
                 Projectile = projectile2,
-                ChargeTime = 0.75f,
+                ChargeTime = 0.5f,
                 AmmoCost = 3,
             };
             gun.DefaultModule.chargeProjectiles = new List<ProjectileModule.ChargeProjectile> { chargeProj };
@@ -78,6 +82,7 @@ namespace GlaurungItems.Items
             base.OnPickup(player);
             SetSavedShootingStyle(player);
             player.GunChanged += this.OnGunChanged;
+            
         }
 
         protected override void OnPostDrop(PlayerController player)
@@ -134,7 +139,7 @@ namespace GlaurungItems.Items
             else if (this.gun.DefaultModule.shootStyle == ProjectileModule.ShootStyle.Charged)
             {
                 this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
-                gun.DefaultModule.cooldownTime = 0.2f;
+                this.gun.DefaultModule.cooldownTime = 0.2f;
                 this.gun.DefaultModule.ammoCost = 1;
                 this.gun.DefaultModule.numberOfShotsInClip = 6;
 
@@ -150,8 +155,10 @@ namespace GlaurungItems.Items
 
                 if (player.carriedConsumables != null) { player.carriedConsumables.ForceUpdateUI(); }
                 RemoveChainLightningModifier();
+                this.gun.Update();
             }
             shootStyle = this.gun.DefaultModule.shootStyle;
+            //player.stats.RecalculateStats(player, false);
             base.OnReload(player, gun);
         }
 
@@ -176,6 +183,8 @@ namespace GlaurungItems.Items
             if (player.carriedConsumables != null) { player.carriedConsumables.ForceUpdateUI(); }
             RemoveBouncingModifier();
             RemovePiercingModifier();
+            this.gun.Update();
+
         }
 
         private void SetBurst(PlayerController player)
@@ -200,8 +209,8 @@ namespace GlaurungItems.Items
             this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Charged;
             this.gun.DefaultModule.cooldownTime = 1f;
             this.gun.DefaultModule.numberOfShotsInClip = 3;
-            this.gun.Update();
             if (player.carriedConsumables != null) { player.carriedConsumables.ForceUpdateUI(); }
+            this.gun.Update();
         }
 
         private void RemoveChainLightningModifier()
@@ -228,6 +237,8 @@ namespace GlaurungItems.Items
             }
         }
 
+        //private void StatsChanged
+
         //This block of code allows us to change the reload sounds.
         public override void OnPostFired(PlayerController player, Gun gun)
         {
@@ -247,6 +258,22 @@ namespace GlaurungItems.Items
                 if (!gun.IsReloading && !HasReloaded)
                 {
                     this.HasReloaded = true;
+                }
+                if(gun.CurrentOwner is PlayerController)
+                {
+                    PlayerController player = gun.CurrentOwner as PlayerController;
+                    if (previousStats.Values.Sum() == -30)//at init
+                    {
+                        foreach(PlayerStats.StatType stat in previousStats.Keys)
+                        {
+                            previousStats[stat] = player.stats.GetStatValue(stat);
+                            stats[stat] = player.stats.GetStatValue(stat);
+                        }
+                    }
+                    else 
+                    { 
+                    
+                    }
                 }
             }
         }
@@ -287,5 +314,262 @@ namespace GlaurungItems.Items
 
         [SerializeField]
         private ProjectileModule.ShootStyle shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
+
+        public Dictionary<PlayerStats.StatType, float> previousStats { get; set; } = new Dictionary<PlayerStats.StatType, float>
+        {
+            {
+                PlayerStats.StatType.MovementSpeed,
+                -1
+            },
+            {
+                PlayerStats.StatType.RateOfFire,
+                -1
+            },
+            {
+                PlayerStats.StatType.Accuracy,
+                -1
+            },
+            {
+                PlayerStats.StatType.Health,
+                -1
+            },
+            {
+                PlayerStats.StatType.Coolness,
+                -1
+            },
+            {
+                PlayerStats.StatType.Damage,
+                -1
+            },
+            {
+                PlayerStats.StatType.ProjectileSpeed,
+                -1
+            },
+            {
+                PlayerStats.StatType.AdditionalGunCapacity,
+                -1
+            },
+            {
+                PlayerStats.StatType.AdditionalItemCapacity,
+                -1
+            },
+            {
+                PlayerStats.StatType.AmmoCapacityMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.ReloadSpeed,
+                -1
+            },
+            {
+                PlayerStats.StatType.AdditionalShotPiercing,
+                -1
+            },
+            {
+                PlayerStats.StatType.KnockbackMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.GlobalPriceMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.Curse,
+                -1
+            },
+            {
+                PlayerStats.StatType.PlayerBulletScale,
+                -1
+            },
+            {
+                PlayerStats.StatType.AdditionalClipCapacityMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.AdditionalShotBounces,
+                -1
+            },
+            {
+                PlayerStats.StatType.AdditionalBlanksPerFloor,
+                -1
+            },
+            {
+                PlayerStats.StatType.ShadowBulletChance,
+                -1
+            },
+            {
+                PlayerStats.StatType.ThrownGunDamage,
+                -1
+            },
+            {
+                PlayerStats.StatType.DodgeRollDamage,
+                -1
+            },
+            {
+                PlayerStats.StatType.DamageToBosses,
+                -1
+            },
+            {
+                PlayerStats.StatType.EnemyProjectileSpeedMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.ExtremeShadowBulletChance,
+                -1
+            },
+            {
+                PlayerStats.StatType.ChargeAmountMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.RangeMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.DodgeRollDistanceMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.DodgeRollSpeedMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.TarnisherClipCapacityMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.MoneyMultiplierFromEnemies,
+                -1
+            },
+        };
+
+        public Dictionary<PlayerStats.StatType, float> stats { get; set; } = new Dictionary<PlayerStats.StatType, float>
+        {
+            {
+                PlayerStats.StatType.MovementSpeed,
+                -1
+            },
+            {
+                PlayerStats.StatType.RateOfFire,
+                -1
+            },
+            {
+                PlayerStats.StatType.Accuracy,
+                -1
+            },
+            {
+                PlayerStats.StatType.Health,
+                -1
+            },
+            {
+                PlayerStats.StatType.Coolness,
+                -1
+            },
+            {
+                PlayerStats.StatType.Damage,
+                -1
+            },
+            {
+                PlayerStats.StatType.ProjectileSpeed,
+                -1
+            },
+            {
+                PlayerStats.StatType.AdditionalGunCapacity,
+                -1
+            },
+            {
+                PlayerStats.StatType.AdditionalItemCapacity,
+                -1
+            },
+            {
+                PlayerStats.StatType.AmmoCapacityMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.ReloadSpeed,
+                -1
+            },
+            {
+                PlayerStats.StatType.AdditionalShotPiercing,
+                -1
+            },
+            {
+                PlayerStats.StatType.KnockbackMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.GlobalPriceMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.Curse,
+                -1
+            },
+            {
+                PlayerStats.StatType.PlayerBulletScale,
+                -1
+            },
+            {
+                PlayerStats.StatType.AdditionalClipCapacityMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.AdditionalShotBounces,
+                -1
+            },
+            {
+                PlayerStats.StatType.AdditionalBlanksPerFloor,
+                -1
+            },
+            {
+                PlayerStats.StatType.ShadowBulletChance,
+                -1
+            },
+            {
+                PlayerStats.StatType.ThrownGunDamage,
+                -1
+            },
+            {
+                PlayerStats.StatType.DodgeRollDamage,
+                -1
+            },
+            {
+                PlayerStats.StatType.DamageToBosses,
+                -1
+            },
+            {
+                PlayerStats.StatType.EnemyProjectileSpeedMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.ExtremeShadowBulletChance,
+                -1
+            },
+            {
+                PlayerStats.StatType.ChargeAmountMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.RangeMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.DodgeRollDistanceMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.DodgeRollSpeedMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.TarnisherClipCapacityMultiplier,
+                -1
+            },
+            {
+                PlayerStats.StatType.MoneyMultiplierFromEnemies,
+                -1
+            },
+        };
+
     }
 }
