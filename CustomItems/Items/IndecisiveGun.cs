@@ -77,32 +77,6 @@ namespace GlaurungItems.Items
             ETGMod.Databases.Items.Add(gun, null, "ANY");
         }
 
-        protected override void OnPickup(PlayerController player)
-        {
-            base.OnPickup(player);
-            SetSavedShootingStyle(player);
-            player.GunChanged += this.OnGunChanged;
-            
-        }
-
-        protected override void OnPostDrop(PlayerController player)
-        {
-            player.GunChanged -= this.OnGunChanged;
-            base.OnPostDrop(player);
-        }
-
-        private void OnGunChanged(Gun oldGun, Gun newGun, bool arg3)
-        {
-            if (this.gun && this.gun.CurrentOwner)
-            {
-                PlayerController player = this.gun.CurrentOwner as PlayerController;
-                if (newGun == this.gun)
-                {
-                    SetSavedShootingStyle(player);
-                }
-            }
-        }
-
         private void SetSavedShootingStyle(PlayerController player)
         {
             if (shootStyle == ProjectileModule.ShootStyle.Automatic)
@@ -139,6 +113,7 @@ namespace GlaurungItems.Items
             else if (this.gun.DefaultModule.shootStyle == ProjectileModule.ShootStyle.Charged)
             {
                 this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
+                shootStyle = this.gun.DefaultModule.shootStyle;
                 this.gun.DefaultModule.cooldownTime = 0.2f;
                 this.gun.DefaultModule.ammoCost = 1;
                 this.gun.DefaultModule.numberOfShotsInClip = 6;
@@ -157,14 +132,13 @@ namespace GlaurungItems.Items
                 RemoveChainLightningModifier();
                 this.gun.Update();
             }
-            shootStyle = this.gun.DefaultModule.shootStyle;
-            //player.stats.RecalculateStats(player, false);
             base.OnReload(player, gun);
         }
 
         private void SetAuto(PlayerController player)
         {
             this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Automatic;
+            shootStyle = this.gun.DefaultModule.shootStyle;
             this.gun.DefaultModule.cooldownTime = 0.12f;
             this.gun.DefaultModule.angleVariance = 15f;
             this.gun.DefaultModule.numberOfShotsInClip = 30;
@@ -190,6 +164,7 @@ namespace GlaurungItems.Items
         private void SetBurst(PlayerController player)
         {
             this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Burst;
+            shootStyle = this.gun.DefaultModule.shootStyle;
             this.gun.DefaultModule.cooldownTime = 0.2f;
             this.gun.DefaultModule.angleVariance = 1f;
             this.gun.DefaultModule.numberOfShotsInClip = 24;
@@ -207,6 +182,7 @@ namespace GlaurungItems.Items
         private void SetCharged(PlayerController player)
         {
             this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Charged;
+            shootStyle = this.gun.DefaultModule.shootStyle;
             this.gun.DefaultModule.cooldownTime = 1f;
             this.gun.DefaultModule.numberOfShotsInClip = 3;
             if (player.carriedConsumables != null) { player.carriedConsumables.ForceUpdateUI(); }
@@ -262,36 +238,9 @@ namespace GlaurungItems.Items
                 if(gun.CurrentOwner is PlayerController)
                 {
                     PlayerController player = gun.CurrentOwner as PlayerController;
-                    List<PlayerStats.StatType> statTypes = new List<PlayerStats.StatType>(stats.Keys);
-                    if (this.previousStats.Values.Sum() == -30)//at init
+                    if(this.gun.DefaultModule.shootStyle != this.shootStyle && !this.gun.IsReloading)
                     {
-                        foreach(PlayerStats.StatType stat in statTypes)
-                        {
-                            this.previousStats[stat] = player.stats.GetStatValue(stat);
-                            this.stats[stat] = player.stats.GetStatValue(stat);
-                        }
-                    }
-                    else 
-                    {
-                        foreach (PlayerStats.StatType stat in statTypes)
-                        {
-                            this.stats[stat] = player.stats.GetStatValue(stat);
-                        }
-
-                        foreach (PlayerStats.StatType stat in statTypes)
-                        {
-                            if(this.previousStats[stat] != this.stats[stat])
-                            {
-                                SetSavedShootingStyle(player);
-                                Tools.Print("reset shoot", "ffffff", true);
-                                break;
-                            }
-                        }
-
-                        foreach (PlayerStats.StatType stat in statTypes)
-                        {
-                            this.previousStats[stat] = this.stats[stat];
-                        }
+                        SetSavedShootingStyle(player);
                     }
                 }
             }
@@ -299,7 +248,10 @@ namespace GlaurungItems.Items
 
         public override void OnReloadPressed(PlayerController player, Gun gun, bool bSOMETHING)
         {
-            ReloadIt(player, gun);
+            if ((gun.ClipCapacity == gun.ClipShotsRemaining) || (gun.CurrentAmmo == gun.ClipShotsRemaining))
+            {
+                OnReload(player, gun);
+            }
             if (gun.IsReloading && this.HasReloaded)
             {
                 HasReloaded = false;
@@ -309,286 +261,10 @@ namespace GlaurungItems.Items
             }
         }
 
-        public void ReloadIt(PlayerController player, Gun gun)
-        {
-            base.StartCoroutine(this.DelayedTryReload(player, gun));
-        }
-
-        public IEnumerator DelayedTryReload(PlayerController player, Gun gun)
-        {
-            yield return null;
-            if (!gun.IsReloading)
-            {
-                int clipshotsremainingLast = gun.ClipShotsRemaining;
-                gun.ClipShotsRemaining = (gun.DefaultModule.numberOfShotsInClip - 1);
-                gun.Reload();
-                gun.ClipShotsRemaining = clipshotsremainingLast;
-                OnReload(player, gun);
-            }
-            yield break;
-        }
-
         private bool HasReloaded;
         private static ChainLightningModifier chainLightning = (PickupObjectDatabase.GetById(330) as Gun).DefaultModule.projectiles[0].GetComponent<ChainLightningModifier>();
 
         [SerializeField]
         private ProjectileModule.ShootStyle shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
-
-        public Dictionary<PlayerStats.StatType, float> previousStats { get; set; } = new Dictionary<PlayerStats.StatType, float>
-        {
-            {
-                PlayerStats.StatType.MovementSpeed,
-                -1
-            },
-            {
-                PlayerStats.StatType.RateOfFire,
-                -1
-            },
-            {
-                PlayerStats.StatType.Accuracy,
-                -1
-            },
-            {
-                PlayerStats.StatType.Health,
-                -1
-            },
-            {
-                PlayerStats.StatType.Coolness,
-                -1
-            },
-            {
-                PlayerStats.StatType.Damage,
-                -1
-            },
-            {
-                PlayerStats.StatType.ProjectileSpeed,
-                -1
-            },
-            {
-                PlayerStats.StatType.AdditionalGunCapacity,
-                -1
-            },
-            {
-                PlayerStats.StatType.AdditionalItemCapacity,
-                -1
-            },
-            {
-                PlayerStats.StatType.AmmoCapacityMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.ReloadSpeed,
-                -1
-            },
-            {
-                PlayerStats.StatType.AdditionalShotPiercing,
-                -1
-            },
-            {
-                PlayerStats.StatType.KnockbackMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.GlobalPriceMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.Curse,
-                -1
-            },
-            {
-                PlayerStats.StatType.PlayerBulletScale,
-                -1
-            },
-            {
-                PlayerStats.StatType.AdditionalClipCapacityMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.AdditionalShotBounces,
-                -1
-            },
-            {
-                PlayerStats.StatType.AdditionalBlanksPerFloor,
-                -1
-            },
-            {
-                PlayerStats.StatType.ShadowBulletChance,
-                -1
-            },
-            {
-                PlayerStats.StatType.ThrownGunDamage,
-                -1
-            },
-            {
-                PlayerStats.StatType.DodgeRollDamage,
-                -1
-            },
-            {
-                PlayerStats.StatType.DamageToBosses,
-                -1
-            },
-            {
-                PlayerStats.StatType.EnemyProjectileSpeedMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.ExtremeShadowBulletChance,
-                -1
-            },
-            {
-                PlayerStats.StatType.ChargeAmountMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.RangeMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.DodgeRollDistanceMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.DodgeRollSpeedMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.TarnisherClipCapacityMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.MoneyMultiplierFromEnemies,
-                -1
-            },
-        };
-
-        public Dictionary<PlayerStats.StatType, float> stats { get; set; } = new Dictionary<PlayerStats.StatType, float>
-        {
-            {
-                PlayerStats.StatType.MovementSpeed,
-                -1
-            },
-            {
-                PlayerStats.StatType.RateOfFire,
-                -1
-            },
-            {
-                PlayerStats.StatType.Accuracy,
-                -1
-            },
-            {
-                PlayerStats.StatType.Health,
-                -1
-            },
-            {
-                PlayerStats.StatType.Coolness,
-                -1
-            },
-            {
-                PlayerStats.StatType.Damage,
-                -1
-            },
-            {
-                PlayerStats.StatType.ProjectileSpeed,
-                -1
-            },
-            {
-                PlayerStats.StatType.AdditionalGunCapacity,
-                -1
-            },
-            {
-                PlayerStats.StatType.AdditionalItemCapacity,
-                -1
-            },
-            {
-                PlayerStats.StatType.AmmoCapacityMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.ReloadSpeed,
-                -1
-            },
-            {
-                PlayerStats.StatType.AdditionalShotPiercing,
-                -1
-            },
-            {
-                PlayerStats.StatType.KnockbackMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.GlobalPriceMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.Curse,
-                -1
-            },
-            {
-                PlayerStats.StatType.PlayerBulletScale,
-                -1
-            },
-            {
-                PlayerStats.StatType.AdditionalClipCapacityMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.AdditionalShotBounces,
-                -1
-            },
-            {
-                PlayerStats.StatType.AdditionalBlanksPerFloor,
-                -1
-            },
-            {
-                PlayerStats.StatType.ShadowBulletChance,
-                -1
-            },
-            {
-                PlayerStats.StatType.ThrownGunDamage,
-                -1
-            },
-            {
-                PlayerStats.StatType.DodgeRollDamage,
-                -1
-            },
-            {
-                PlayerStats.StatType.DamageToBosses,
-                -1
-            },
-            {
-                PlayerStats.StatType.EnemyProjectileSpeedMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.ExtremeShadowBulletChance,
-                -1
-            },
-            {
-                PlayerStats.StatType.ChargeAmountMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.RangeMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.DodgeRollDistanceMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.DodgeRollSpeedMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.TarnisherClipCapacityMultiplier,
-                -1
-            },
-            {
-                PlayerStats.StatType.MoneyMultiplierFromEnemies,
-                -1
-            },
-        };
-
     }
 }
