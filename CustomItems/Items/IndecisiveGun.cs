@@ -262,17 +262,36 @@ namespace GlaurungItems.Items
                 if(gun.CurrentOwner is PlayerController)
                 {
                     PlayerController player = gun.CurrentOwner as PlayerController;
-                    if (previousStats.Values.Sum() == -30)//at init
+                    List<PlayerStats.StatType> statTypes = new List<PlayerStats.StatType>(stats.Keys);
+                    if (this.previousStats.Values.Sum() == -30)//at init
                     {
-                        foreach(PlayerStats.StatType stat in previousStats.Keys)
+                        foreach(PlayerStats.StatType stat in statTypes)
                         {
-                            previousStats[stat] = player.stats.GetStatValue(stat);
-                            stats[stat] = player.stats.GetStatValue(stat);
+                            this.previousStats[stat] = player.stats.GetStatValue(stat);
+                            this.stats[stat] = player.stats.GetStatValue(stat);
                         }
                     }
                     else 
-                    { 
-                    
+                    {
+                        foreach (PlayerStats.StatType stat in statTypes)
+                        {
+                            this.stats[stat] = player.stats.GetStatValue(stat);
+                        }
+
+                        foreach (PlayerStats.StatType stat in statTypes)
+                        {
+                            if(this.previousStats[stat] != this.stats[stat])
+                            {
+                                SetSavedShootingStyle(player);
+                                Tools.Print("reset shoot", "ffffff", true);
+                                break;
+                            }
+                        }
+
+                        foreach (PlayerStats.StatType stat in statTypes)
+                        {
+                            this.previousStats[stat] = this.stats[stat];
+                        }
                     }
                 }
             }
