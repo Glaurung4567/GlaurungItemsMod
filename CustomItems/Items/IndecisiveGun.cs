@@ -44,11 +44,17 @@ namespace GlaurungItems.Items
             UnityEngine.Object.DontDestroyOnLoad(projectile);
             gun.DefaultModule.projectiles[0] = projectile;
 
-            projectile.baseData.damage *= 8f;
+            projectile.baseData.damage *= 6f;
             projectile.baseData.speed *= 2.8f;
             projectile.baseData.force *= 1f;
             projectile.baseData.range *= 3f;
             projectile.transform.parent = gun.barrelOffset;
+
+            BounceProjModifier bounceMod = projectile.gameObject.GetOrAddComponent<BounceProjModifier>();
+            bounceMod.numberOfBounces = 4;
+            PierceProjModifier pierceMod = projectile.gameObject.GetOrAddComponent<PierceProjModifier>();
+            pierceMod.penetratesBreakables = true;
+            pierceMod.penetration = 5;
 
             Projectile projectile2 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(365) as Gun).DefaultModule.projectiles[0]);
             projectile2.gameObject.SetActive(false);
@@ -59,7 +65,7 @@ namespace GlaurungItems.Items
             ProjectileModule.ChargeProjectile chargeProj = new ProjectileModule.ChargeProjectile
             {
                 Projectile = projectile2,
-                ChargeTime = 1f,
+                ChargeTime = 0.75f,
                 AmmoCost = 3,
             };
             gun.DefaultModule.chargeProjectiles = new List<ProjectileModule.ChargeProjectile> { chargeProj };
@@ -131,10 +137,19 @@ namespace GlaurungItems.Items
                 gun.DefaultModule.cooldownTime = 0.2f;
                 this.gun.DefaultModule.ammoCost = 1;
                 this.gun.DefaultModule.numberOfShotsInClip = 6;
-                if (player.carriedConsumables != null)
-                {
-                    player.carriedConsumables.ForceUpdateUI();
-                }
+
+                Projectile proj = this.gun.DefaultModule.projectiles[0];
+                proj.baseData.damage = 1f;
+                proj.baseData.damage *= 8f;
+                
+                BounceProjModifier bounceMod = proj.gameObject.GetOrAddComponent<BounceProjModifier>();
+                bounceMod.numberOfBounces = 4;
+                PierceProjModifier pierceMod = proj.gameObject.GetOrAddComponent<PierceProjModifier>();
+                pierceMod.penetratesBreakables = true;
+                pierceMod.penetration = 5;
+
+                if (player.carriedConsumables != null) { player.carriedConsumables.ForceUpdateUI(); }
+                RemoveChainLightningModifier();
             }
             shootStyle = this.gun.DefaultModule.shootStyle;
             base.OnReload(player, gun);
@@ -143,34 +158,69 @@ namespace GlaurungItems.Items
         private void SetAuto(PlayerController player)
         {
             this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Automatic;
-            this.gun.DefaultModule.cooldownTime = 0.05f;
-            this.gun.DefaultModule.numberOfShotsInClip = 40;
-            if (player.carriedConsumables != null)
-            {
-                player.carriedConsumables.ForceUpdateUI();
-            }
+            this.gun.DefaultModule.cooldownTime = 0.12f;
+            this.gun.DefaultModule.angleVariance = 15f;
+            this.gun.DefaultModule.numberOfShotsInClip = 30;
+
+            Projectile proj = this.gun.DefaultModule.projectiles[0];
+            proj.baseData.damage = 1f;
+            proj.baseData.damage *= 5f;
+
+            chainLightning.maximumLinkDistance = 10f;
+            this.gun.DefaultModule.projectiles[0].gameObject.AddComponent(chainLightning);
+
+            if (player.carriedConsumables != null) { player.carriedConsumables.ForceUpdateUI(); }
+            RemoveBouncingModifier();
+            RemovePiercingModifier();
         }
 
         private void SetBurst(PlayerController player)
         {
             this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Burst;
             this.gun.DefaultModule.cooldownTime = 0.2f;
+            this.gun.DefaultModule.angleVariance = 1f;
             this.gun.DefaultModule.numberOfShotsInClip = 24;
-            if (player.carriedConsumables != null)
-            {
-                player.carriedConsumables.ForceUpdateUI();
-            }
+
+            Projectile proj = this.gun.DefaultModule.projectiles[0];
+            proj.baseData.damage = 1f;
+            proj.baseData.damage *= 4f;
+
+            if (player.carriedConsumables != null) { player.carriedConsumables.ForceUpdateUI(); }
+            RemoveChainLightningModifier();
+            RemoveBouncingModifier();
+            RemovePiercingModifier();
         }
 
         private void SetCharged(PlayerController player)
         {
             this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Charged;
             this.gun.DefaultModule.cooldownTime = 1f;
-            this.gun.DefaultModule.numberOfShotsInClip = 9;
+            this.gun.DefaultModule.numberOfShotsInClip = 3;
             this.gun.Update();
-            if (player.carriedConsumables != null)
+            if (player.carriedConsumables != null) { player.carriedConsumables.ForceUpdateUI(); }
+        }
+
+        private void RemoveChainLightningModifier()
+        {
+            if (this.gun.DefaultModule.projectiles[0].gameObject.GetComponent<ChainLightningModifier>() != null)
             {
-                player.carriedConsumables.ForceUpdateUI();
+                Destroy(this.gun.DefaultModule.projectiles[0].gameObject.GetComponent<ChainLightningModifier>());
+            }
+        }
+
+        private void RemoveBouncingModifier()
+        {
+            if (this.gun.DefaultModule.projectiles[0].gameObject.GetComponent<BounceProjModifier>() != null)
+            {
+                Destroy(this.gun.DefaultModule.projectiles[0].gameObject.GetComponent<BounceProjModifier>());
+            }
+        }
+        
+        private void RemovePiercingModifier()
+        {
+            if (this.gun.DefaultModule.projectiles[0].gameObject.GetComponent<PierceProjModifier>() != null)
+            {
+                Destroy(this.gun.DefaultModule.projectiles[0].gameObject.GetComponent<PierceProjModifier>());
             }
         }
 
@@ -229,6 +279,8 @@ namespace GlaurungItems.Items
         }
 
         private bool HasReloaded;
+        private static ChainLightningModifier chainLightning = (PickupObjectDatabase.GetById(330) as Gun).DefaultModule.projectiles[0].GetComponent<ChainLightningModifier>();
+
         [SerializeField]
         private ProjectileModule.ShootStyle shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
     }
