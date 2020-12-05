@@ -167,7 +167,11 @@ namespace GlaurungItems.Items
             proj.baseData.damage *= 5f;
 
             chainLightning.maximumLinkDistance = 10f;
-            this.gun.DefaultModule.projectiles[0].gameObject.AddComponent(chainLightning);
+            if (this.gun.DefaultModule.projectiles[0].gameObject.GetComponent<ChainLightningModifier>() == null && !(this.Owner as PlayerController).HasPassiveItem(298))
+            {
+                this.gun.DefaultModule.projectiles[0].gameObject.AddComponent(chainLightning);
+            }
+
 
             if (player.carriedConsumables != null) { player.carriedConsumables.ForceUpdateUI(); }
             RemoveBouncingModifier();
@@ -202,7 +206,7 @@ namespace GlaurungItems.Items
 
         private void RemoveChainLightningModifier()
         {
-            if (this.gun.DefaultModule.projectiles[0].gameObject.GetComponent<ChainLightningModifier>() != null)
+            if (this.gun.DefaultModule.projectiles[0].gameObject.GetComponent<ChainLightningModifier>() != null && !(this.Owner as PlayerController).HasPassiveItem(298))
             {
                 Destroy(this.gun.DefaultModule.projectiles[0].gameObject.GetComponent<ChainLightningModifier>());
             }
