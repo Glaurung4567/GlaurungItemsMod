@@ -92,6 +92,7 @@ namespace GlaurungItems.Items
                     GameObject spikePrefab = FakePrefab.Clone(spikeTrap);
                     ConvertTrapControllers.ConvertBasicTrapToAdvancedTrap(spikePrefab);
                     GameObject spike = spikePrefab.GetComponentInChildren<AdvancedTrapController>().InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2());
+                    AdvancedTrapController trap = spikePrefab.GetComponentInChildren<AdvancedTrapController>();
                     
                     /*AssetBundle sharedAssets2 = ResourceManager.LoadAssetBundle("shared_auto_002");
                     DungeonPlaceable PitTrap = sharedAssets2.LoadAsset<DungeonPlaceable>("Pit Trap");
