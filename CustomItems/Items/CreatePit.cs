@@ -26,13 +26,10 @@ namespace GlaurungItems.Items
 
 		protected override void DoEffect(PlayerController user)
 		{
-			/*
-			AssetBundle sharedAssets2 = ResourceManager.LoadAssetBundle("shared_auto_002");
-			DungeonPlaceable PitTrap = sharedAssets2.LoadAsset<DungeonPlaceable>("Pit Trap");
-			GameObject trap = PitTrap.InstantiateObject(user.CurrentRoom, user.PlacedPosition);
-			PitTrapController pit = trap.GetComponent<PitTrapController>();
-			//Destroy(trap.GetComponent<PitTrapController>());
+			
 
+			//Destroy(trap.GetComponent<PitTrapController>());
+            /*
 			PitTrapEnemyController pit2 = trap.GetOrAddComponent<PitTrapEnemyController>();
 			pit2.triggerMethod = (BasicTrapEnemyController.TriggerMethod)pit.triggerMethod;
 			pit2.triggerTimerDelay = pit.triggerTimerDelay;
@@ -60,9 +57,6 @@ namespace GlaurungItems.Items
 			*/
 			if (user.CurrentRoom != null)
 			{
-
-
-
 				float roomPosX = user.transform.position.x - user.CurrentRoom.area.basePosition.x;
 				float roomPosY = user.transform.position.y - user.CurrentRoom.area.basePosition.y;
 				float xOffSet = 0;
@@ -89,42 +83,11 @@ namespace GlaurungItems.Items
 				Vector2 posInMap = new Vector2(user.transform.position.x + xOffSet, user.transform.position.y + yOffSet).ToIntVector2().ToVector2();
 				if (user.IsValidPlayerPosition(posInMap))
 				{
-					AssetBundle sharedAssets2 = ResourceManager.LoadAssetBundle("shared_auto_002");
-					DungeonPlaceable ExplodyBarrel = sharedAssets2.LoadAsset<DungeonPlaceable>("ExplodyBarrel_Maybe");
-					GameObject spawnedDrum = ExplodyBarrel.InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2());
-					
-					MinorBreakable minorBreakComponentInChildren = spawnedDrum.GetComponentInChildren<MinorBreakable>();
-                    if (minorBreakComponentInChildren)
-                    {
-						ExplosionData defaultExplosionData = GameManager.Instance.Dungeon.sharedSettingsPrefab.DefaultExplosionData;
-						this.playerFriendlyExplosion.effect = defaultExplosionData.effect;
-						this.playerFriendlyExplosion.ignoreList = defaultExplosionData.ignoreList;
-						this.playerFriendlyExplosion.ss = defaultExplosionData.ss;
-						minorBreakComponentInChildren.explosionData = playerFriendlyExplosion;
-
-					}
-
-					KickableObject kickableComponentInChildren = spawnedDrum.GetComponentInChildren<KickableObject>();
-					if (kickableComponentInChildren)
-					{
-						kickableComponentInChildren.specRigidbody.Reinitialize();
-						kickableComponentInChildren.rollSpeed = 5f;
-						user.CurrentRoom.RegisterInteractable(kickableComponentInChildren);
-					}
-				}
-				/*
-				AssetBundle sharedAssets = ResourceManager.LoadAssetBundle("shared_auto_001");
-				GameObject Drum = sharedAssets.LoadAsset<GameObject>("Red Drum");
-				GameObject spawnedDrum = Drum.GetComponent<DungeonPlaceableBehaviour>().InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2(), false);
-
-				KickableObject componentInChildren = spawnedDrum.GetComponentInChildren<KickableObject>();
-				if (componentInChildren)
-				{
-					componentInChildren.specRigidbody.Reinitialize();
-					componentInChildren.rollSpeed = 5f;
-					user.CurrentRoom.RegisterInteractable(componentInChildren);
-				}
-				*/
+                    AssetBundle sharedAssets2 = ResourceManager.LoadAssetBundle("shared_auto_002");
+                    DungeonPlaceable PitTrap = sharedAssets2.LoadAsset<DungeonPlaceable>("Pit Trap");
+                    GameObject trap = PitTrap.InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2());
+                    //ConvertTrapControllers.ConvertBasicPitTrapToAdvancedPitTrap(trap);
+                }
 			}
 		}
 
@@ -133,21 +96,171 @@ namespace GlaurungItems.Items
 			return user.CurrentRoom != null;
 		}
 
-		private ExplosionData playerFriendlyExplosion = new ExplosionData
-		{
-			damageRadius = 4f,
-			doDamage = true,
-			damageToPlayer = 0f,
-			damage = 25f,
-			doExplosionRing = true,
-			doDestroyProjectiles = true,
-			doForce = true,
-			debrisForce = 50f,
-			preventPlayerForce = true,
-			explosionDelay = 0f,
-			usesComprehensiveDelay = false,
-			doScreenShake = true,
-			playDefaultSFX = true,
-		};
 	}
+
+    //Courtesy of nn
+    public class ConvertTrapControllers
+    {
+        public static void ConvertBasicTrapToAdvancedTrap(GameObject trap)
+        {
+            BasicTrapController trapController = trap.GetComponent<BasicTrapController>();
+            AdvancedTrapController advTrapController = trap.GetOrAddComponent<AdvancedTrapController>();
+            advTrapController.footprintBuffer = trapController.footprintBuffer;
+            advTrapController.activeAnimName = trapController.activeAnimName;
+            advTrapController.activeTime = trapController.activeTime;
+            advTrapController.activeVfx = trapController.activeVfx;
+            advTrapController.animateChildren = trapController.animateChildren;
+            advTrapController.damage = trapController.damage;
+            advTrapController.damageMethod = trapController.damageMethod;
+            advTrapController.damagesFlyingPlayers = trapController.damagesFlyingPlayers;
+            advTrapController.damageTypes = trapController.damageTypes;
+            advTrapController.difficulty = trapController.difficulty;
+            advTrapController.IgnitesGoop = trapController.IgnitesGoop;
+            advTrapController.isPassable = trapController.isPassable;
+            advTrapController.LocalTimeScale = trapController.LocalTimeScale;
+            advTrapController.placeableHeight = trapController.placeableHeight;
+            advTrapController.placeableWidth = trapController.placeableWidth;
+            advTrapController.resetAnimName = trapController.resetAnimName;
+            advTrapController.resetDelay = trapController.resetDelay;
+            advTrapController.TrapSwitchState = trapController.TrapSwitchState;
+            advTrapController.triggerAnimName = trapController.triggerAnimName;
+            advTrapController.triggerDelay = trapController.triggerDelay;
+            advTrapController.triggerMethod = trapController.triggerMethod;
+            advTrapController.triggerOnBlank = trapController.triggerOnBlank;
+            advTrapController.triggerOnExplosion = trapController.triggerOnExplosion;
+            advTrapController.triggerTimerDelay = trapController.triggerTimerDelay;
+            advTrapController.triggerTimerDelay1 = trapController.triggerTimerDelay1;
+            advTrapController.triggerTimerOffset = trapController.triggerTimerOffset;
+            UnityEngine.Object.Destroy(trap.GetComponent<BasicTrapController>());
+        }
+        public static void ConvertBasicPitTrapToAdvancedPitTrap(GameObject trap)
+        {
+            PitTrapController trapController = trap.GetComponent<PitTrapController>();
+            AdvancedPitTrapController advTrapController = trap.GetOrAddComponent<AdvancedPitTrapController>();
+            advTrapController.footprintBuffer = trapController.footprintBuffer;
+            advTrapController.activeAnimName = trapController.activeAnimName;
+            advTrapController.activeTime = trapController.activeTime;
+            advTrapController.activeVfx = trapController.activeVfx;
+            advTrapController.animateChildren = trapController.animateChildren;
+            advTrapController.damage = trapController.damage;
+            advTrapController.damageMethod = trapController.damageMethod;
+            advTrapController.damagesFlyingPlayers = trapController.damagesFlyingPlayers;
+            advTrapController.damageTypes = trapController.damageTypes;
+            advTrapController.difficulty = trapController.difficulty;
+            advTrapController.IgnitesGoop = trapController.IgnitesGoop;
+            advTrapController.isPassable = trapController.isPassable;
+            advTrapController.LocalTimeScale = trapController.LocalTimeScale;
+            advTrapController.placeableHeight = trapController.placeableHeight;
+            advTrapController.placeableWidth = trapController.placeableWidth;
+            advTrapController.resetAnimName = trapController.resetAnimName;
+            advTrapController.resetDelay = trapController.resetDelay;
+            advTrapController.TrapSwitchState = trapController.TrapSwitchState;
+            advTrapController.triggerAnimName = trapController.triggerAnimName;
+            advTrapController.triggerDelay = trapController.triggerDelay;
+            advTrapController.triggerMethod = trapController.triggerMethod;
+            advTrapController.triggerOnBlank = trapController.triggerOnBlank;
+            advTrapController.triggerOnExplosion = trapController.triggerOnExplosion;
+            advTrapController.triggerTimerDelay = trapController.triggerTimerDelay;
+            advTrapController.triggerTimerDelay1 = trapController.triggerTimerDelay1;
+            advTrapController.triggerTimerOffset = trapController.triggerTimerOffset;
+            UnityEngine.Object.Destroy(trap.GetComponent<PitTrapController>());
+        }
+    }
+    public class AdvancedTrapController : BasicTrapController, IPlaceConfigurable
+    {
+        public override void Start()
+        {
+            playerHasEnteredRoomOnce = false;
+            base.Start();
+        }
+        public override void Update()
+        {
+            if (Time.timeScale == 0f)
+            {
+                return;
+            }
+            if (!playerHasEnteredRoomOnce && GameManager.Instance.PlayerIsInRoom(FetchParentRoom())) playerHasEnteredRoomOnce = true;
+            if (TimerPlayerRadius == TimerPlayerRadiusType.NEARROOM && !GameManager.Instance.PlayerIsNearRoom(FetchParentRoom()))
+            {
+                return;
+            }
+            if (TimerPlayerRadius == TimerPlayerRadiusType.INROOM && !GameManager.Instance.PlayerIsInRoom(FetchParentRoom()))
+            {
+                return;
+            }
+            if (TimerPlayerRadius == TimerPlayerRadiusType.ANYWHEREAFTERENTERINGROOMONCE && !playerHasEnteredRoomOnce)
+            {
+                return;
+            }
+            this.m_stateTimer = Mathf.Max(0f, this.m_stateTimer - BraveTime.DeltaTime) * this.LocalTimeScale;
+            this.m_triggerTimer -= BraveTime.DeltaTime * this.LocalTimeScale;
+            this.m_disabledTimer = Mathf.Max(0f, this.m_disabledTimer - BraveTime.DeltaTime * this.LocalTimeScale);
+            if (this.triggerMethod == BasicTrapController.TriggerMethod.Timer && this.m_triggerTimer < 0f)
+            {
+                this.TriggerTrap(null);
+            }
+            this.UpdateState();
+        }
+        public RoomHandler FetchParentRoom()
+        {
+            return GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(base.transform.position.IntXY(VectorConversions.Round));
+        }
+        public TimerPlayerRadiusType TimerPlayerRadius = TimerPlayerRadiusType.NEARROOM;
+        private bool playerHasEnteredRoomOnce = false;
+        public enum TimerPlayerRadiusType
+        {
+            INROOM,
+            NEARROOM,
+            ANYWHEREAFTERENTERINGROOMONCE,
+        }
+    }
+    public class AdvancedPitTrapController : AdvancedTrapController
+    {
+        public override GameObject InstantiateObject(RoomHandler targetRoom, IntVector2 loc, bool deferConfiguration = false)
+        {
+            IntVector2 intVector = loc + targetRoom.area.basePosition;
+            for (int i = intVector.x; i < intVector.x + this.placeableWidth; i++)
+            {
+                for (int j = intVector.y; j < intVector.y + this.placeableHeight; j++)
+                {
+                    CellData cellData = GameManager.Instance.Dungeon.data.cellData[i][j];
+                    cellData.type = CellType.PIT;
+                    cellData.fallingPrevented = true;
+                }
+            }
+            return base.InstantiateObject(targetRoom, loc, deferConfiguration);
+        }
+        protected override void BeginState(BasicTrapController.State newState)
+        {
+            if (newState == BasicTrapController.State.Active)
+            {
+                for (int i = this.m_cachedPosition.x; i < this.m_cachedPosition.x + this.placeableWidth; i++)
+                {
+                    for (int j = this.m_cachedPosition.y; j < this.m_cachedPosition.y + this.placeableHeight; j++)
+                    {
+                        GameManager.Instance.Dungeon.data.cellData[i][j].fallingPrevented = false;
+                    }
+                }
+                if (base.specRigidbody)
+                {
+                    base.specRigidbody.enabled = false;
+                }
+            }
+            else if (newState == BasicTrapController.State.Resetting)
+            {
+                for (int k = this.m_cachedPosition.x; k < this.m_cachedPosition.x + this.placeableWidth; k++)
+                {
+                    for (int l = this.m_cachedPosition.y; l < this.m_cachedPosition.y + this.placeableHeight; l++)
+                    {
+                        GameManager.Instance.Dungeon.data.cellData[k][l].fallingPrevented = true;
+                    }
+                }
+                if (base.specRigidbody)
+                {
+                    base.specRigidbody.enabled = true;
+                }
+            }
+            base.BeginState(newState);
+        }
+    }
 }

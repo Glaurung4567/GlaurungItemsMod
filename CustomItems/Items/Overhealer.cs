@@ -19,6 +19,7 @@ namespace GlaurungItems.Items
             gun.SetShortDescription("Counter-Intuitive");
             gun.SetLongDescription("This was created with the intent to heal allies, but a malfunction made it kill the target instead if he was fully healed due to positive energy overdose. \n \n" +
                 "A sadistic medic brought it to the Gungeon to kheal friends and foes alike.");
+            //gun.SetupSprite(null, "overhealer_idle_001", 8);
             gun.SetupSprite(null, "overhealer_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
