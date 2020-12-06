@@ -86,7 +86,9 @@ namespace GlaurungItems.Items
                     AssetBundle sharedAssets2 = ResourceManager.LoadAssetBundle("shared_auto_002");
                     DungeonPlaceable PitTrap = sharedAssets2.LoadAsset<DungeonPlaceable>("Pit Trap");
                     GameObject trap = PitTrap.InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2());
-                    //ConvertTrapControllers.ConvertBasicPitTrapToAdvancedPitTrap(trap);
+                    ConvertTrapControllers.ConvertBasicPitTrapToAdvancedPitTrap(trap);
+                    AdvancedPitTrapController pit = trap.GetComponent<AdvancedPitTrapController>();
+                    pit.placeableHeight += 5;
                 }
 			}
 		}
