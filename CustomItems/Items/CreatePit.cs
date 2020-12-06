@@ -3,6 +3,7 @@ using ItemAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using UnityEngine;
 
@@ -88,7 +89,8 @@ namespace GlaurungItems.Items
                     GameObject trap = PitTrap.InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2());
                     ConvertTrapControllers.ConvertBasicPitTrapToAdvancedPitTrap(trap);
                     AdvancedPitTrapController pit = trap.GetComponent<AdvancedPitTrapController>();
-                    pit.placeableHeight += 5;
+                    pit.sprite.HeightOffGround += 3;
+                    //pit.placeableHeight += 10;
                 }
 			}
 		}
@@ -175,6 +177,9 @@ namespace GlaurungItems.Items
             playerHasEnteredRoomOnce = false;
             base.Start();
         }
+
+        
+
         public override void Update()
         {
             if (Time.timeScale == 0f)
@@ -203,10 +208,104 @@ namespace GlaurungItems.Items
             }
             this.UpdateState();
         }
+
         public RoomHandler FetchParentRoom()
         {
             return GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(base.transform.position.IntXY(VectorConversions.Round));
         }
+
+
+        protected override void UpdateState()
+        {
+            if (this.GetTrapState() == BasicTrapController.State.Ready)
+            {
+                if (this.triggerMethod == BasicTrapController.TriggerMethod.PlaceableFootprint)
+                {
+                    SpeculativeRigidbody enemyRigidbodyInFootprint = GetEnemyRigidbodyInFootprint();//this.GetEnemyRigidbodyInFootprint();
+                    if (enemyRigidbodyInFootprint)
+                    {
+                        bool flag = enemyRigidbodyInFootprint.spriteAnimator.QueryGroundedFrame();
+                        if (enemyRigidbodyInFootprint.gameActor != null)
+                        {
+                            flag = (flag && !enemyRigidbodyInFootprint.gameActor.IsFlying);
+                        }
+                        if (flag)
+                        {
+                            this.TriggerTrap(null);
+                        }
+                    }
+                }
+            }
+            else if (this.GetTrapState() == BasicTrapController.State.Triggered)
+            {
+                if (this.m_stateTimer == 0f)
+                {
+                    this.state = BasicTrapController.State.Active;
+                }
+            }
+            else if (this.GetTrapState() == BasicTrapController.State.Active)
+            {
+                if (this.damageMethod == BasicTrapController.DamageMethod.PlaceableFootprint)
+                {
+                    SpeculativeRigidbody enemyRigidbodyInFootprint2 = this.GetEnemyRigidbodyInFootprint();//this.GetEnemyRigidbodyInFootprint();
+                    if (enemyRigidbodyInFootprint2)
+                    {
+                        bool flag2 = enemyRigidbodyInFootprint2.spriteAnimator.QueryGroundedFrame();
+                        if (enemyRigidbodyInFootprint2.gameActor != null)
+                        {
+                            flag2 = (flag2 && !enemyRigidbodyInFootprint2.gameActor.IsFlying);
+                        }
+                        if (flag2 || this.damagesFlyingPlayers)
+                        {
+                            this.Damage(enemyRigidbodyInFootprint2);
+                        }
+                    }
+                }
+                if (this.IgnitesGoop)
+                {
+                    DeadlyDeadlyGoopManager.IgniteGoopsCircle(base.sprite.WorldCenter, 1f);
+                }
+                if (this.m_stateTimer == 0f)
+                {
+                    this.state = BasicTrapController.State.Resetting;
+                }
+            }
+            else if (this.GetTrapState() == BasicTrapController.State.Resetting && this.m_stateTimer == 0f)
+            {
+                this.state = BasicTrapController.State.Ready;
+            }
+        }
+
+        //based of GetPlayerRigidbodyInFootprint from BasicTrapController
+        protected virtual SpeculativeRigidbody GetEnemyRigidbodyInFootprint()
+        {
+            for (int i = 0; i < GameManager.Instance.AllPlayers.Length; i++)
+            {
+                PlayerController playerController = GameManager.Instance.AllPlayers[i];
+                if (!(playerController == null) && playerController.CurrentRoom != null && playerController.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All) != null)
+                {
+                    List<AIActor> aiactors = playerController.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
+                    for (int j = 0; j < aiactors.Count; j++)
+                    {
+                        PixelCollider primaryPixelCollider = aiactors[j].specRigidbody.PrimaryPixelCollider;//playerController.specRigidbody.PrimaryPixelCollider;
+                        if (primaryPixelCollider != null)
+                        {
+                            if (this.m_cachedPixelMin.x <= primaryPixelCollider.MaxX && this.m_cachedPixelMax.x >= primaryPixelCollider.MinX && this.m_cachedPixelMin.y <= primaryPixelCollider.MaxY && this.m_cachedPixelMax.y >= primaryPixelCollider.MinY)
+                            {
+                                return aiactors[j].specRigidbody;
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        protected BasicTrapController.State GetTrapState()
+        {
+            return (BasicTrapController.State)privateFieldInfo.GetValue(this);
+        }
+
         public TimerPlayerRadiusType TimerPlayerRadius = TimerPlayerRadiusType.NEARROOM;
         private bool playerHasEnteredRoomOnce = false;
         public enum TimerPlayerRadiusType
@@ -215,7 +314,11 @@ namespace GlaurungItems.Items
             NEARROOM,
             ANYWHEREAFTERENTERINGROOMONCE,
         }
+
+        //from spapi on discord
+        private static FieldInfo privateFieldInfo = typeof(BasicTrapController).GetField("m_state", BindingFlags.NonPublic | BindingFlags.Instance);
     }
+
     public class AdvancedPitTrapController : AdvancedTrapController
     {
         public override GameObject InstantiateObject(RoomHandler targetRoom, IntVector2 loc, bool deferConfiguration = false)
@@ -234,6 +337,9 @@ namespace GlaurungItems.Items
         }
         protected override void BeginState(BasicTrapController.State newState)
         {
+            Tools.Print("yo", "ffffff", true);
+            Tools.Print(this.triggerMethod, "ffffff", true);
+
             if (newState == BasicTrapController.State.Active)
             {
                 for (int i = this.m_cachedPosition.x; i < this.m_cachedPosition.x + this.placeableWidth; i++)
