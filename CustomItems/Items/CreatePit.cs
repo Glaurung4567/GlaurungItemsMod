@@ -1,5 +1,6 @@
 ﻿using Dungeonator;
 using ItemAPI;
+using Pathfinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,11 +87,12 @@ namespace GlaurungItems.Items
 				{
 
                     AssetBundle sharedAssets = ResourceManager.LoadAssetBundle("shared_auto_001");
-                    GameObject spikeTrap = sharedAssets.LoadAsset<GameObject>("trap_spike_gungeon_2x2");
+                    //GameObject spikeTrap = sharedAssets.LoadAsset<GameObject>("trap_spike_gungeon_2x2");
+                    GameObject spikeTrap = sharedAssets.LoadAsset<GameObject>("trap_pit_gungeon_trigger_2x2");
                     GameObject spikePrefab = FakePrefab.Clone(spikeTrap);
                     ConvertTrapControllers.ConvertBasicTrapToAdvancedTrap(spikePrefab);
                     GameObject spike = spikePrefab.GetComponentInChildren<AdvancedTrapController>().InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2());
-
+                    
                     /*AssetBundle sharedAssets2 = ResourceManager.LoadAssetBundle("shared_auto_002");
                     DungeonPlaceable PitTrap = sharedAssets2.LoadAsset<DungeonPlaceable>("Pit Trap");
                     GameObject trap = PitTrap.InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2());
