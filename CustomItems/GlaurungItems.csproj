@@ -95,7 +95,6 @@
     <Compile Include="Items\BlinkbackDevice.cs" />
     <Compile Include="Items\CreatePit.cs" />
     <Compile Include="Items\GunjuringEncyclopedia.cs" />
-    <Compile Include="Items\ItemParts\BasicTrapEnemyController.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunAngryBookBasicAttack2.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunBirdEggVomit2.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunBossFinalGuideSword1.cs" />
@@ -110,7 +109,6 @@
     <Compile Include="Items\ItemParts\BulletScriptGunShotgrubManAttack1.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunTankTreaderScatterShot1.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunWallMimicSlam1.cs" />
-    <Compile Include="Items\ItemParts\PitTrapEnemyController.cs" />
     <Compile Include="Items\ItemParts\ShootZeroProjectilesBulletScript.cs" />
     <Compile Include="Items\old\GunDeadArmyStronghold.cs" />
     <Compile Include="Items\LooseCanon.cs" />

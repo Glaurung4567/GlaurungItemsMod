@@ -84,15 +84,36 @@ namespace GlaurungItems.Items
 				Vector2 posInMap = new Vector2(user.transform.position.x + xOffSet, user.transform.position.y + yOffSet).ToIntVector2().ToVector2();
 				if (user.IsValidPlayerPosition(posInMap))
 				{
-                    AssetBundle sharedAssets2 = ResourceManager.LoadAssetBundle("shared_auto_002");
+
+                    AssetBundle sharedAssets = ResourceManager.LoadAssetBundle("shared_auto_001");
+                    GameObject spikeTrap = sharedAssets.LoadAsset<GameObject>("trap_spike_gungeon_2x2");
+                    GameObject spikePrefab = FakePrefab.Clone(spikeTrap);
+                    ConvertTrapControllers.ConvertBasicTrapToAdvancedTrap(spikePrefab);
+                    GameObject spike = spikePrefab.GetComponentInChildren<AdvancedTrapController>().InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2());
+
+                    /*AssetBundle sharedAssets2 = ResourceManager.LoadAssetBundle("shared_auto_002");
                     DungeonPlaceable PitTrap = sharedAssets2.LoadAsset<DungeonPlaceable>("Pit Trap");
                     GameObject trap = PitTrap.InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2());
                     ConvertTrapControllers.ConvertBasicPitTrapToAdvancedPitTrap(trap);
-                    AdvancedPitTrapController pit = trap.GetComponent<AdvancedPitTrapController>();
-                    pit.sprite.HeightOffGround += 3;
+                    AdvancedPitTrapController pit = trap.GetComponent<AdvancedPitTrapController>();*/
+                    //pit.sprite.HeightOffGround += 3;
                     //pit.placeableHeight += 10;
+
+                    /*
+                    AssetBundle sharedAssets = ResourceManager.LoadAssetBundle("shared_auto_001");
+                    GameObject Drum = sharedAssets.LoadAsset<GameObject>("Red Drum");
+                    GameObject spawnedDrum = Drum.GetComponent<DungeonPlaceableBehaviour>().InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2(), false);
+
+                    KickableObject componentInChildren = spawnedDrum.GetComponentInChildren<KickableObject>();
+                    if (componentInChildren)
+                    {
+                        componentInChildren.specRigidbody.Reinitialize();
+                        componentInChildren.rollSpeed = 5f;
+                        user.CurrentRoom.RegisterInteractable(componentInChildren);
+                    }
+                    */
                 }
-			}
+            }
 		}
 
 		public override bool CanBeUsed(PlayerController user)
@@ -172,6 +193,7 @@ namespace GlaurungItems.Items
     }
     public class AdvancedTrapController : BasicTrapController, IPlaceConfigurable
     {
+        /*
         public override void Start()
         {
             playerHasEnteredRoomOnce = false;
@@ -212,7 +234,7 @@ namespace GlaurungItems.Items
         public RoomHandler FetchParentRoom()
         {
             return GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(base.transform.position.IntXY(VectorConversions.Round));
-        }
+        }*/
 
 
         protected override void UpdateState()
@@ -337,9 +359,6 @@ namespace GlaurungItems.Items
         }
         protected override void BeginState(BasicTrapController.State newState)
         {
-            Tools.Print("yo", "ffffff", true);
-            Tools.Print(this.triggerMethod, "ffffff", true);
-
             if (newState == BasicTrapController.State.Active)
             {
                 for (int i = this.m_cachedPosition.x; i < this.m_cachedPosition.x + this.placeableWidth; i++)
