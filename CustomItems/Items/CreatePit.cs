@@ -87,13 +87,38 @@ namespace GlaurungItems.Items
 				{
 
                     AssetBundle sharedAssets = ResourceManager.LoadAssetBundle("shared_auto_001");
-                    //GameObject spikeTrap = sharedAssets.LoadAsset<GameObject>("trap_spike_gungeon_2x2");
-                    GameObject spikeTrap = sharedAssets.LoadAsset<GameObject>("trap_pit_gungeon_trigger_2x2");
+                    GameObject spikeTrap = sharedAssets.LoadAsset<GameObject>("trap_spike_gungeon_2x2");
                     GameObject spikePrefab = FakePrefab.Clone(spikeTrap);
+                    CellData cellBefore = user.CurrentRoom.GetNearestCellToPosition(posInMap);
+                    Tools.Print(cellBefore.isOccupied, "ffffff", true);
+
                     ConvertTrapControllers.ConvertBasicTrapToAdvancedTrap(spikePrefab);
                     GameObject spike = spikePrefab.GetComponentInChildren<AdvancedTrapController>().InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2());
-                    AdvancedTrapController trap = spikePrefab.GetComponentInChildren<AdvancedTrapController>();
                     
+                    CellData cellAfter = user.CurrentRoom.GetNearestCellToPosition(posInMap);
+                    Tools.Print(cellAfter.isOccupied, "ffffff", true);
+                    Tools.Print(cellAfter.parentArea.dimensions.X, "ffffff", true);
+                    Tools.Print(spikePrefab.GetComponentInChildren<AdvancedTrapController>().sprite.WorldTopLeft - spikePrefab.GetComponentInChildren<AdvancedTrapController>().sprite.WorldBottomLeft, "ffffff", true);
+                    CellData cellAfter2 = user.CurrentRoom.GetNearestCellToPosition(new Vector2(posInMap.x + 1.5f, posInMap.y + 0.2f));
+                    CellData cellAfter3 = user.CurrentRoom.GetNearestCellToPosition(new Vector2(posInMap.x + 0.2f, posInMap.y + 1.5f));
+                    CellData cellAfter4 = user.CurrentRoom.GetNearestCellToPosition(new Vector2(posInMap.x + 1.5f, posInMap.y + 1.5f));
+
+
+                    cellAfter.isOccupied = false;
+                    cellAfter2.isOccupied = false;
+                    cellAfter3.isOccupied = false;
+                    cellAfter4.isOccupied = false;
+                    Tools.Print(cellAfter.isOccupied, "ffffff", true);
+                    Tools.Print(cellAfter2.isOccupied, "ffffff", true);
+                    Tools.Print(cellAfter3.isOccupied, "ffffff", true);
+                    Tools.Print(cellAfter4.isOccupied, "ffffff", true);
+
+                    Tools.Print("prout", "ffffff", true);
+                    Tools.Print(cellAfter2 == cellAfter, "ffffff", true);
+                    Tools.Print(cellAfter2 == cellAfter3, "ffffff", true);
+                    Tools.Print(cellAfter2 == cellAfter4, "ffffff", true);
+
+
                     /*AssetBundle sharedAssets2 = ResourceManager.LoadAssetBundle("shared_auto_002");
                     DungeonPlaceable PitTrap = sharedAssets2.LoadAsset<DungeonPlaceable>("Pit Trap");
                     GameObject trap = PitTrap.InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2());

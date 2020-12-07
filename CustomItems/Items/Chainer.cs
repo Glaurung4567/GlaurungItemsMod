@@ -159,6 +159,7 @@ namespace GlaurungItems.Items
 				if (aiactor.healthHaver != null)
 				{
 					aiactor.healthHaver.PreventAllDamage = true;
+					//aiactor.OverrideBuffEffectPosition
 				}
 
 				if (aiactor.bulletBank != null)
