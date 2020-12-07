@@ -91,7 +91,7 @@ namespace GlaurungItems
                 SappingBullets.Init();
 
                 IndecisiveGun.Add();
-                CreatePit.Init();
+                CreateTrap.Init();
                 MineCrafter.Init();                
                 //GunDeadArmyStronghold.Init();
 

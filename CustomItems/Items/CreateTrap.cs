@@ -1,7 +1,5 @@
 ﻿using Dungeonator;
 using ItemAPI;
-using Pathfinding;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,17 +8,17 @@ using UnityEngine;
 
 namespace GlaurungItems.Items
 {
-    class CreatePit : PlayerItem
+    class CreateTrap : PlayerItem
 	{
 		public static void Init()
 		{
-			string text = "Create Pit";
+			string text = "Create Trap";
 			string resourcePath = "GlaurungItems/Resources/acme_crate";
 			GameObject gameObject = new GameObject(text);
-			CreatePit item = gameObject.AddComponent<CreatePit>();
+			CreateTrap item = gameObject.AddComponent<CreateTrap>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
-			string shortDesc = "WIP";
-			string longDesc = "WIP";
+			string shortDesc = "Your turn now to avoid those";
+			string longDesc = "A spell similar to the infamous Create Pit.";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 5f);
 			item.quality = ItemQuality.EXCLUDED;
@@ -143,6 +141,7 @@ namespace GlaurungItems.Items
 
 	}
 
+    /*---------------------------------------------------------*/
     //Courtesy of nn
     public class ConvertTrapControllers
     {
