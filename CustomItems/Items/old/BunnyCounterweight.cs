@@ -71,9 +71,19 @@ namespace GlaurungItems.Items
         {
             List<PlayerStats.StatType> statTypes = new List<PlayerStats.StatType>(stats.Keys);
 
+            this.AddPassiveStatModifier(statModified, -amountModified);
+            foreach (PlayerStats.StatType stat in statTypes)
+            {
+                this.AddPassiveStatModifier(stat, amountModified/8);
+            }
+            base.Owner.stats.RecalculateStats(base.Owner, true);
             //do balance
             yield return new WaitForSeconds(0.2f);
-
+            foreach (PlayerStats.StatType stat in statTypes)
+            {
+                this.previousStats[stat] = -1;
+                this.stats[stat] = -1;
+            }
             cooldown = false;
             yield break;
         }

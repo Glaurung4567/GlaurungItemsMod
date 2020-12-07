@@ -90,7 +90,7 @@
     <Compile Include="ItemAPI\SpecialBlankModificationItem.cs" />
     <Compile Include="ItemAPI\SpecialFoyerShop.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
-    <Compile Include="Items\BunnyCounterweight.cs" />
+    <Compile Include="Items\old\BunnyCounterweight.cs" />
     <Compile Include="Items\MineCrafter.cs" />
     <Compile Include="Items\old\BarrelsLauncher.cs" />
     <Compile Include="Items\BlinkbackDevice.cs" />
