@@ -70,6 +70,8 @@ namespace GlaurungItems.Items
             }
         }
 
+        //pickup: get stats and baseStats and make the diff to balance
+
         public override DebrisObject Drop(PlayerController player)
         {
             if(this.passiveStatModifiers != null && this.passiveStatModifiers.Count() > 0)
@@ -91,10 +93,26 @@ namespace GlaurungItems.Items
             {
                 if (statsModified[stat])
                 {
-                    this.AddPassiveStatModifier(stat, -statsModifiedAmount[stat]);
+                    //increasing accuracy make the gun less accurate, reload speed increase make it reload slower https://enterthegungeon.gamepedia.com/Stats#ReloadSpeed
+                    if (stat == PlayerStats.StatType.Accuracy || stat == PlayerStats.StatType.ReloadSpeed)  
+                    {
+                        this.AddPassiveStatModifier(stat, statsModifiedAmount[stat]);
+                    }
+                    else
+                    {
+                        this.AddPassiveStatModifier(stat, -statsModifiedAmount[stat]);
+                    }
+
                     foreach (PlayerStats.StatType stat2 in statTypes)
                     {
-                        this.AddPassiveStatModifier(stat2, statsModifiedAmount[stat] / balanceDivider);
+                        if (stat == PlayerStats.StatType.Accuracy || stat == PlayerStats.StatType.ReloadSpeed)
+                        {
+                            this.AddPassiveStatModifier(stat2, -(statsModifiedAmount[stat] / balanceDivider));
+                        }
+                        else
+                        {
+                            this.AddPassiveStatModifier(stat2, (statsModifiedAmount[stat] / balanceDivider));
+                        }
                     }
                 }
             }
