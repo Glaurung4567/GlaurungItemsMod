@@ -96,22 +96,32 @@ namespace GlaurungItems.Items
                     //increasing accuracy make the gun less accurate, reload speed increase make it reload slower https://enterthegungeon.gamepedia.com/Stats#ReloadSpeed
                     if (stat == PlayerStats.StatType.Accuracy || stat == PlayerStats.StatType.ReloadSpeed)  
                     {
-                        this.AddPassiveStatModifier(stat, statsModifiedAmount[stat]);
+                        this.AddPassiveStatModifier(stat, -statsModifiedAmount[stat]);
+                        foreach (PlayerStats.StatType stat2 in statTypes)
+                        {
+                            if (stat2 == PlayerStats.StatType.Accuracy || stat2 == PlayerStats.StatType.ReloadSpeed)
+                            {
+                                this.AddPassiveStatModifier(stat2, (statsModifiedAmount[stat] / balanceDivider));
+                            }
+                            else
+                            {
+                                this.AddPassiveStatModifier(stat2, -(statsModifiedAmount[stat] / balanceDivider));
+                            }
+                        }
                     }
                     else
                     {
                         this.AddPassiveStatModifier(stat, -statsModifiedAmount[stat]);
-                    }
-
-                    foreach (PlayerStats.StatType stat2 in statTypes)
-                    {
-                        if (stat == PlayerStats.StatType.Accuracy || stat == PlayerStats.StatType.ReloadSpeed)
+                        foreach (PlayerStats.StatType stat2 in statTypes)
                         {
-                            this.AddPassiveStatModifier(stat2, -(statsModifiedAmount[stat] / balanceDivider));
-                        }
-                        else
-                        {
-                            this.AddPassiveStatModifier(stat2, (statsModifiedAmount[stat] / balanceDivider));
+                            if (stat2 == PlayerStats.StatType.Accuracy || stat2 == PlayerStats.StatType.ReloadSpeed)
+                            {
+                                this.AddPassiveStatModifier(stat2, -(statsModifiedAmount[stat] / balanceDivider));
+                            }
+                            else
+                            {
+                                this.AddPassiveStatModifier(stat2, (statsModifiedAmount[stat] / balanceDivider));
+                            }
                         }
                     }
                 }
