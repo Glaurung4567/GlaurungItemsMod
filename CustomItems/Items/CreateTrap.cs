@@ -18,10 +18,10 @@ namespace GlaurungItems.Items
 			CreateTrap item = gameObject.AddComponent<CreateTrap>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
 			string shortDesc = "Your turn to avoid those";
-			string longDesc = "A spell similar to the infamous Create Pit.";
+			string longDesc = "A spell based on to the infamous Create Pit.";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 500f);
-			item.quality = ItemQuality.B;
+			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 250f);
+			item.quality = ItemQuality.C;
 		}
 
 		protected override void DoEffect(PlayerController user)
@@ -70,6 +70,9 @@ namespace GlaurungItems.Items
 
                     ConvertTrapControllers.ConvertBasicTrapToAdvancedTrap(spikePrefab);
                     GameObject spike = spikePrefab.GetComponentInChildren<AdvancedTrapController>().InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2());
+                    AdvancedTrapController advSpike = spike.GetComponentInChildren<AdvancedTrapController>();
+                    advSpike.triggerDelay *= 0.4f;
+                    advSpike.resetDelay *= 0.4f;
                     
                     CellData cellAfter = user.CurrentRoom.GetNearestCellToPosition(cellPos);
                     //Tools.Print(spikePrefab.GetComponentInChildren<AdvancedTrapController>().sprite.WorldTopLeft - spikePrefab.GetComponentInChildren<AdvancedTrapController>().sprite.WorldBottomLeft, "ffffff", true);
@@ -231,7 +234,7 @@ namespace GlaurungItems.Items
                         bool flag = enemyRigidbodyInFootprint.spriteAnimator.QueryGroundedFrame();
                         if (enemyRigidbodyInFootprint.gameActor != null)
                         {
-                            flag = (flag && !enemyRigidbodyInFootprint.gameActor.IsFlying);
+                            flag = (flag);// && !enemyRigidbodyInFootprint.gameActor.IsFlying);
                         }
                         if (flag)
                         {
@@ -257,7 +260,7 @@ namespace GlaurungItems.Items
                         bool flag2 = enemyRigidbodyInFootprint2.spriteAnimator.QueryGroundedFrame();
                         if (enemyRigidbodyInFootprint2.gameActor != null)
                         {
-                            flag2 = (flag2 && !enemyRigidbodyInFootprint2.gameActor.IsFlying);
+                            flag2 = (flag2);// && !enemyRigidbodyInFootprint2.gameActor.IsFlying);
                         }
                         if (flag2 || this.damagesFlyingPlayers)
                         {

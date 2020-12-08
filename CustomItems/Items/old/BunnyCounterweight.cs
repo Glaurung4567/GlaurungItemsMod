@@ -10,7 +10,7 @@ namespace GlaurungItems.Items
 {
     class AstralCounterweight : PassiveItem
     {
-
+        //idea by bunny based on https://bindingofisaacrebirth.gamepedia.com/Glyph_of_Balance
         public static void Init()
         {
             string itemName = "Astral Counterweight";
