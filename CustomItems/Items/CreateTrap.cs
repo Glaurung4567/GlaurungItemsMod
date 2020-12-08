@@ -1,9 +1,9 @@
 ﻿using Dungeonator;
 using ItemAPI;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using UnityEngine;
 
 namespace GlaurungItems.Items
@@ -17,44 +17,15 @@ namespace GlaurungItems.Items
 			GameObject gameObject = new GameObject(text);
 			CreateTrap item = gameObject.AddComponent<CreateTrap>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
-			string shortDesc = "Your turn now to avoid those";
+			string shortDesc = "Your turn to avoid those";
 			string longDesc = "A spell similar to the infamous Create Pit.";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 5f);
-			item.quality = ItemQuality.EXCLUDED;
+			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 500f);
+			item.quality = ItemQuality.B;
 		}
 
 		protected override void DoEffect(PlayerController user)
 		{
-			
-
-			//Destroy(trap.GetComponent<PitTrapController>());
-            /*
-			PitTrapEnemyController pit2 = trap.GetOrAddComponent<PitTrapEnemyController>();
-			pit2.triggerMethod = (BasicTrapEnemyController.TriggerMethod)pit.triggerMethod;
-			pit2.triggerTimerDelay = pit.triggerTimerDelay;
-			pit2.triggerTimerDelay1 = pit.triggerTimerDelay1;
-			pit2.triggerTimerOffset = pit.triggerTimerOffset;
-			pit2.footprintBuffer = pit.footprintBuffer;
-			pit2.damagesFlyingPlayers = pit.damagesFlyingPlayers;
-			pit2.triggerOnBlank = pit.triggerOnBlank;
-			pit2.triggerOnExplosion = pit.triggerOnExplosion;
-			pit2.animateChildren = pit.animateChildren;
-			pit2.triggerAnimName = pit.triggerAnimName;
-			pit2.triggerDelay = pit.triggerDelay;
-			pit2.activeAnimName = pit.activeAnimName;
-			pit2.activeVfx = pit.activeVfx;
-			pit2.activeTime = pit.activeTime;
-			pit2.resetAnimName = pit.resetAnimName;
-			pit2.triggerDelay = pit.resetDelay;
-			pit2.damageMethod = pit.damageMethod;
-			pit2.damage = pit.damage;
-			pit2.damageTypes = pit.damageTypes;
-			pit2.IgnitesGoop = pit.IgnitesGoop;
-			pit2.LocalTimeScale = pit.LocalTimeScale;
-
-			Destroy(trap.GetComponent<PitTrapController>());
-			*/
 			if (user.CurrentRoom != null)
 			{
 				float roomPosX = user.transform.position.x - user.CurrentRoom.area.basePosition.x;
@@ -85,6 +56,7 @@ namespace GlaurungItems.Items
                 Vector2 cellPos2 = new Vector2(posInMap.x + 1.2f, posInMap.y + 0.5f);
                 Vector2 cellPos3 = new Vector2(posInMap.x + 0.5f, posInMap.y + 1.2f);
                 Vector2 cellPos4 = new Vector2(posInMap.x + 1.2f, posInMap.y + 1.2f);
+                
                 if (user.IsValidPlayerPosition(cellPos) 
                     && user.IsValidPlayerPosition(cellPos2)
                     && user.IsValidPlayerPosition(cellPos3)
@@ -108,40 +80,31 @@ namespace GlaurungItems.Items
                     cellAfter2.isOccupied = false;
                     cellAfter3.isOccupied = false;
                     cellAfter4.isOccupied = false;
-
-                    /*AssetBundle sharedAssets2 = ResourceManager.LoadAssetBundle("shared_auto_002");
-                    DungeonPlaceable PitTrap = sharedAssets2.LoadAsset<DungeonPlaceable>("Pit Trap");
-                    GameObject trap = PitTrap.InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2());
-                    ConvertTrapControllers.ConvertBasicPitTrapToAdvancedPitTrap(trap);
-                    AdvancedPitTrapController pit = trap.GetComponent<AdvancedPitTrapController>();*/
-                    //pit.sprite.HeightOffGround += 3;
-                    //pit.placeableHeight += 10;
-
-                    /*
-                    AssetBundle sharedAssets = ResourceManager.LoadAssetBundle("shared_auto_001");
-                    GameObject Drum = sharedAssets.LoadAsset<GameObject>("Red Drum");
-                    GameObject spawnedDrum = Drum.GetComponent<DungeonPlaceableBehaviour>().InstantiateObject(user.CurrentRoom, posInCurrentRoom.ToIntVector2(), false);
-
-                    KickableObject componentInChildren = spawnedDrum.GetComponentInChildren<KickableObject>();
-                    if (componentInChildren)
-                    {
-                        componentInChildren.specRigidbody.Reinitialize();
-                        componentInChildren.rollSpeed = 5f;
-                        user.CurrentRoom.RegisterInteractable(componentInChildren);
-                    }
-                    */
+                }
+                else
+                {
+                    base.StartCoroutine(RefillOnWrongSpawn());
                 }
             }
 		}
 
-		public override bool CanBeUsed(PlayerController user)
+        private IEnumerator RefillOnWrongSpawn()
+        {
+            yield return new WaitForSeconds(0.1f);
+            ClearCooldowns();
+            yield break;
+        }
+
+        public override bool CanBeUsed(PlayerController user)
 		{
 			return user.CurrentRoom != null;
 		}
 
 	}
 
-    /*---------------------------------------------------------*/
+    /*--------------------------------------------------------------------------------------------------------*/
+    /*--------------------------------------------------------------------------------------------------------*/
+    /*--------------------------------------------------------------------------------------------------------*/
     //Courtesy of nn
     public class ConvertTrapControllers
     {

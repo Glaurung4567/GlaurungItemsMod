@@ -30,7 +30,7 @@ namespace GlaurungItems.Items
             if (player != null && !cooldown)
             {
                 List<PlayerStats.StatType> statTypes = new List<PlayerStats.StatType>(stats.Keys);
-                if (this.previousStats.Values.Sum() == -8)//at init
+                if (this.previousStats.Values.Sum() == -balanceDivider)
                 {
                     foreach (PlayerStats.StatType stat in statTypes)
                     {
@@ -49,14 +49,17 @@ namespace GlaurungItems.Items
                     {
                         if (this.previousStats[stat] != this.stats[stat])
                         {
-                            statModified = stat;
-                            amountModified = this.stats[stat] - this.previousStats[stat];
                             cooldown = true;
-                            base.StartCoroutine(this.RecalculateStats());
-                            break;
+                            this.CanBeDropped = false;
+                            statsModified[stat] = true;
+                            statsModifiedAmount[stat] = this.stats[stat] - this.previousStats[stat];
                         }
                     }
-                    if (!cooldown)
+                    if (cooldown)
+                    {
+                        base.StartCoroutine(this.RecalculateStats());
+                    }
+                    else
                     {
                         foreach (PlayerStats.StatType stat in statTypes)
                         {
@@ -67,37 +70,55 @@ namespace GlaurungItems.Items
             }
         }
 
+        public override DebrisObject Drop(PlayerController player)
+        {
+            if(this.passiveStatModifiers != null && this.passiveStatModifiers.Count() > 0)
+            {
+                int len = this.passiveStatModifiers.Count();
+                for (int i =0;  i < len; i++)
+                {
+                    this.RemovePassiveStatModifier(this.passiveStatModifiers[i]);
+
+                }
+            }
+            return base.Drop(player);
+        }
+
         private IEnumerator RecalculateStats()
         {
+            //do balance
             List<PlayerStats.StatType> statTypes = new List<PlayerStats.StatType>(stats.Keys);
 
-            this.AddPassiveStatModifier(statModified, -amountModified);
             foreach (PlayerStats.StatType stat in statTypes)
             {
-                this.AddPassiveStatModifier(stat, amountModified/8);
+                if (statsModified[stat])
+                {
+                    this.AddPassiveStatModifier(stat, -statsModifiedAmount[stat]);
+                    foreach (PlayerStats.StatType stat2 in statTypes)
+                    {
+                        this.AddPassiveStatModifier(stat2, statsModifiedAmount[stat] / balanceDivider);
+                    }
+                }
             }
             base.Owner.stats.RecalculateStats(base.Owner, true);
-            //do balance
             yield return new WaitForSeconds(0.2f);
             foreach (PlayerStats.StatType stat in statTypes)
             {
                 this.previousStats[stat] = -1;
                 this.stats[stat] = -1;
+                this.statsModified[stat] = false;
+                this.statsModifiedAmount[stat] = 0;
             }
+            this.CanBeDropped = true;
             cooldown = false;
             yield break;
         }
 
+        //be cautious that the dictionnaries and the balance divider have the same number of stats
+        private static readonly int balanceDivider = 10;
+
         [SerializeField]
         private bool cooldown = false;
-
-        [SerializeField]
-        private PlayerStats.StatType statModified = PlayerStats.StatType.MovementSpeed;
-
-        [SerializeField]
-        private float amountModified = 0f;
-
-
 
         [SerializeField]
         private Dictionary<PlayerStats.StatType, float> previousStats { get; set; } = new Dictionary<PlayerStats.StatType, float>
@@ -127,14 +148,22 @@ namespace GlaurungItems.Items
                 -1
             },
             {
-                PlayerStats.StatType.Curse,
-                -1
-            },
-            {
                 PlayerStats.StatType.DamageToBosses,
                 -1
             },
-        };
+            {
+                PlayerStats.StatType.ThrownGunDamage,
+                -1
+            },
+            {
+                PlayerStats.StatType.DodgeRollDamage,
+                -1
+            },
+            {
+                PlayerStats.StatType.Accuracy,
+                -1
+            },
+        }; 
 
         [SerializeField]
         public Dictionary<PlayerStats.StatType, float> stats { get; set; } = new Dictionary<PlayerStats.StatType, float>
@@ -164,12 +193,110 @@ namespace GlaurungItems.Items
                 -1
             },
             {
-                PlayerStats.StatType.Curse,
+                PlayerStats.StatType.DamageToBosses,
                 -1
             },
             {
-                PlayerStats.StatType.DamageToBosses,
+                PlayerStats.StatType.ThrownGunDamage,
                 -1
+            },
+            {
+                PlayerStats.StatType.DodgeRollDamage,
+                -1
+            },
+            {
+                PlayerStats.StatType.Accuracy,
+                -1
+            },
+        };
+
+        [SerializeField]
+        public Dictionary<PlayerStats.StatType, bool> statsModified { get; set; } = new Dictionary<PlayerStats.StatType, bool>
+        {
+            {
+                PlayerStats.StatType.MovementSpeed,
+                false
+            },
+            {
+                PlayerStats.StatType.RateOfFire,
+                false
+            },
+            {
+                PlayerStats.StatType.Coolness,
+                false
+            },
+            {
+                PlayerStats.StatType.Damage,
+                false
+            },
+            {
+                PlayerStats.StatType.ProjectileSpeed,
+                false
+            },
+            {
+                PlayerStats.StatType.ReloadSpeed,
+                false
+            },
+            {
+                PlayerStats.StatType.DamageToBosses,
+                false
+            },
+            {
+                PlayerStats.StatType.ThrownGunDamage,
+                false
+            },
+            {
+                PlayerStats.StatType.DodgeRollDamage,
+                false
+            },
+            {
+                PlayerStats.StatType.Accuracy,
+                false
+            },
+        };
+
+        [SerializeField]
+        public Dictionary<PlayerStats.StatType, float> statsModifiedAmount { get; set; } = new Dictionary<PlayerStats.StatType, float>
+        {
+            {
+                PlayerStats.StatType.MovementSpeed,
+                0
+            },
+            {
+                PlayerStats.StatType.RateOfFire,
+                0
+            },
+            {
+                PlayerStats.StatType.Coolness,
+                0
+            },
+            {
+                PlayerStats.StatType.Damage,
+                0
+            },
+            {
+                PlayerStats.StatType.ProjectileSpeed,
+                0
+            },
+            {
+                PlayerStats.StatType.ReloadSpeed,
+                0
+            },
+            {
+                PlayerStats.StatType.DamageToBosses,
+                0
+            },
+            {
+                PlayerStats.StatType.ThrownGunDamage,
+                0
+            },
+            {
+                PlayerStats.StatType.DodgeRollDamage,
+                0
+            },
+            {
+                PlayerStats.StatType.Accuracy,
+                0
             },
         };
 
