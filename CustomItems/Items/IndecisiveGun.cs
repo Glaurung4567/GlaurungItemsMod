@@ -19,7 +19,9 @@ namespace GlaurungItems.Items
             Game.Items.Rename("outdated_gun_mods:the_indecisive", "gl:the_indecisive");
             gun.gameObject.AddComponent<IndecisiveGun>();
             gun.SetShortDescription("4 in 1");
-            gun.SetLongDescription("WIP");
+            gun.SetLongDescription("Created by a gunsmith who had too many concepts he wanted to try but not enough resources " +
+                "to create all of them before going bankrupt, " +
+                "so he just crammed as much as he could in his final gun.");
             gun.SetupSprite(null, "jpxfrd_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
