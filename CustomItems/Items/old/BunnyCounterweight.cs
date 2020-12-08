@@ -74,11 +74,9 @@ namespace GlaurungItems.Items
         {
             if(this.passiveStatModifiers != null && this.passiveStatModifiers.Count() > 0)
             {
-                int len = this.passiveStatModifiers.Count();
-                for (int i =0;  i < len; i++)
+                foreach(StatModifier statMod in this.passiveStatModifiers)
                 {
-                    this.RemovePassiveStatModifier(this.passiveStatModifiers[i]);
-
+                    this.RemovePassiveStatModifier(statMod); 
                 }
             }
             return base.Drop(player);
@@ -113,6 +111,9 @@ namespace GlaurungItems.Items
             cooldown = false;
             yield break;
         }
+
+
+        /*-----------------------------------------------------------------------------------------------*/
 
         //be cautious that the dictionnaries and the balance divider have the same number of stats
         private static readonly int balanceDivider = 10;
