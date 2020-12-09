@@ -122,7 +122,7 @@ namespace GlaurungItems.Items
 
                 Projectile proj = this.gun.DefaultModule.projectiles[0];
                 proj.baseData.damage = 1f;
-                proj.baseData.damage *= 8f;
+                proj.baseData.damage *= 7f;
                 
                 BounceProjModifier bounceMod = proj.gameObject.GetOrAddComponent<BounceProjModifier>();
                 bounceMod.numberOfBounces = 4;
@@ -173,7 +173,7 @@ namespace GlaurungItems.Items
 
             Projectile proj = this.gun.DefaultModule.projectiles[0];
             proj.baseData.damage = 1f;
-            proj.baseData.damage *= 4f;
+            proj.baseData.damage *= 6f;
 
             if (player.carriedConsumables != null) { player.carriedConsumables.ForceUpdateUI(); }
             RemoveChainLightningModifier();

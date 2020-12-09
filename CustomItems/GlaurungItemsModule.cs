@@ -93,6 +93,7 @@ namespace GlaurungItems
                 IndecisiveGun.Add();
                 CreateTrap.Init();
                 MineCrafter.Init();
+                BeamTest.Add();
 
                 AstralCounterweight.Init();
                 //GunDeadArmyStronghold.Init();

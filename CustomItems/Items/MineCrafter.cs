@@ -19,7 +19,7 @@ namespace GlaurungItems.Items
 			string longDesc = "Spawns a rolling tnt barrel which can be remotely detonated. \n \n Created by a fan of explosives who wanted his C4 to move after being deployed.";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, cooldown);
-			item.quality = ItemQuality.C;
+			item.quality = ItemQuality.B;
 		}
 
 		protected override void DoEffect(PlayerController user)
