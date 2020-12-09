@@ -34,13 +34,27 @@ namespace GlaurungItems.Items
             gun.DefaultModule.numberOfShotsInClip = 30;
             gun.SetBaseMaxAmmo(400);
 
+            Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
+            projectile.gameObject.SetActive(false);
+            FakePrefab.MarkAsFakePrefab(projectile.gameObject);
+            UnityEngine.Object.DontDestroyOnLoad(projectile);
+            gun.DefaultModule.projectiles[0] = projectile;
+
+            projectile.baseData.damage *= 6f;
+            projectile.baseData.speed *= 2.8f;
+            projectile.baseData.force *= 1f;
+            projectile.baseData.range *= 3f;
+            projectile.FireApplyChance = 0;
+            projectile.AppliesFire = false;
+            projectile.AdjustPlayerProjectileTint(Color.cyan, 10, 0f);
+
+
 
             gun.quality = PickupObject.ItemQuality.EXCLUDED;
 
             //projectile.SetProjectileSpriteRight("build_projectile", 5, 5);
 
             ETGMod.Databases.Items.Add(gun, null, "ANY");
-            //            
 
         }
 
@@ -49,7 +63,33 @@ namespace GlaurungItems.Items
             base.OnPickup(player);
             //player.GunChanged += this.OnGunChanged;
             Tools.Print(this.gun.ActiveBeams.Count, "ffffff", true);
+
             Tools.Print(this.gun.DefaultModule.projectiles.Count, "ffffff", true);
+            
+        }
+
+        public override void PostProcessProjectile(Projectile projectile)
+        {
+
+        }
+
+        public override Projectile OnPreFireProjectileModifier(Gun gun, Projectile projectile, ProjectileModule mod)
+        {
+
+            return base.OnPreFireProjectileModifier(gun, projectile, mod);
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            if (gun.CurrentOwner)
+            {
+
+                if (this.gun.ActiveBeams != null && this.gun.ActiveBeams.Count > 0 && this.gun.ActiveBeams[0] != null && this.gun.ActiveBeams[0].beam != null)
+                {
+                    this.gun.ActiveBeams[0].beam.AdjustPlayerBeamTint(Color.black, 1);
+                }
+            }
         }
 
     }

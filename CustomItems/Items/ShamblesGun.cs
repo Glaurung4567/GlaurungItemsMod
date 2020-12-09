@@ -93,6 +93,11 @@ namespace GlaurungItems.Items
             Toolbox.SetupUnlockOnCustomFlag(gun, CustomDungeonFlags.ITEMSPECIFIC_SHAMBLES, true);
         }
 
+        public override void PostProcessProjectile(Projectile projectile)
+        {
+            projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.OnProjectileHitEnemy));
+        }
+
         public void OnProjectileHitEnemy(Projectile proj, SpeculativeRigidbody enemy, bool fatal)
         {
             bool flag = enemy != null;
@@ -151,10 +156,7 @@ namespace GlaurungItems.Items
             yield break;
         }
 
-        public override void PostProcessProjectile(Projectile projectile)
-        {
-            projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.OnProjectileHitEnemy));
-        }
+
 
         private void DoMicroBlank(Vector2 center, float knockbackForce = 30f)
         {
