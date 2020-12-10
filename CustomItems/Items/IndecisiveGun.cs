@@ -29,6 +29,7 @@ namespace GlaurungItems.Items
             //gun.SetAnimationFPS(gun.idleAnimation, 8);
             gun.AddProjectileModuleFrom("klobb", true, false);
 
+
             gun.DefaultModule.ammoCost = 1;
             gun.DefaultModule.angleVariance = 2f;
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
@@ -43,7 +44,7 @@ namespace GlaurungItems.Items
 
             gun.quality = PickupObject.ItemQuality.A;
 
-            Projectile projectile = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(31) as Gun).DefaultModule.projectiles[0]);
+            Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
             projectile.gameObject.SetActive(false);
             FakePrefab.MarkAsFakePrefab(projectile.gameObject);
             UnityEngine.Object.DontDestroyOnLoad(projectile);

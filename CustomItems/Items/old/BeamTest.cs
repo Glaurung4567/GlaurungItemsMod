@@ -44,7 +44,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.projectiles[0] = projectile;
 
             //those work
-            projectile.baseData.damage *= 15f;
+            projectile.baseData.damage *= 1f;
             projectile.baseData.force *= 1f;
             projectile.FireApplyChance = 0;
             projectile.AppliesFire = false;
@@ -110,12 +110,14 @@ namespace GlaurungItems.Items
             if (beam is BasicBeamController)
             {
                 BasicBeamController basicBeamController = (beam as BasicBeamController);
-                basicBeamController.penetration += 10; //it works !
-                basicBeamController.reflections = 5; //it works !
+                basicBeamController.penetration += 10; //it works 
+                basicBeamController.reflections = 5; //reflection = bounce and it works 
+
+                basicBeamController.ProjectileScale = 2f;//it works !!!
             }
 
 
-            beam.DamageModifier *= 10; //doesn't work 
+            beam.DamageModifier *= 10; //doesn't seem to work 
         }
     }
 }
