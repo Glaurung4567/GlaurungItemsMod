@@ -24,14 +24,15 @@ namespace GlaurungItems.Items
             gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(60) as Gun, true, false);
 
 
-            gun.DefaultModule.ammoCost = 1;
-            gun.DefaultModule.angleVariance = 0f;
+            gun.DefaultModule.ammoCost = 4;//dis work
+            gun.DefaultModule.angleVariance = 10f;//dis doesn't seem ta work
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Beam;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 1.5f;
+            gun.gunClass = GunClass.BEAM;
             
             gun.DefaultModule.cooldownTime = 0.2f;
-            gun.DefaultModule.numberOfShotsInClip = 30;
+            gun.DefaultModule.numberOfShotsInClip = 400;
             gun.SetBaseMaxAmmo(400);
 
             //changing the projectile to a projectile from a non beam weapon create a null error and break the beam
