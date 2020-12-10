@@ -43,11 +43,18 @@ namespace GlaurungItems.Items
             projectile.baseData.damage *= 6f;
             projectile.baseData.speed *= 2.8f;
             projectile.baseData.force *= 1f;
-            projectile.baseData.range *= 3f;
+            projectile.baseData.range *= 10f;
             projectile.FireApplyChance = 0;
             projectile.AppliesFire = false;
-            projectile.AdjustPlayerProjectileTint(Color.cyan, 10, 0f);
+            projectile.AdditionalScaleMultiplier = 10f;//doesn't work on beam apparently
+            projectile.AdjustPlayerProjectileTint(Color.cyan, 10, 0f); //doesn't change anything
 
+
+            BounceProjModifier bounceMod = projectile.gameObject.GetOrAddComponent<BounceProjModifier>();
+            bounceMod.numberOfBounces = 4;
+            PierceProjModifier pierceMod = projectile.gameObject.GetOrAddComponent<PierceProjModifier>();
+            pierceMod.penetratesBreakables = true;
+            pierceMod.penetration = 5;
 
 
             gun.quality = PickupObject.ItemQuality.EXCLUDED;
@@ -62,36 +69,39 @@ namespace GlaurungItems.Items
         {
             base.OnPickup(player);
             //player.GunChanged += this.OnGunChanged;
-            Tools.Print(this.gun.ActiveBeams.Count, "ffffff", true);
-
-            Tools.Print(this.gun.DefaultModule.projectiles.Count, "ffffff", true);
-            
+            player.PostProcessBeam += this.PostProcessBeam;
+            player.GunChanged += this.OnGunChanged;
         }
 
-        public override void PostProcessProjectile(Projectile projectile)
-        {
 
+        protected override void OnPostDrop(PlayerController player)
+        {
+            player.PostProcessBeam -= this.PostProcessBeam;
+            player.GunChanged -= this.OnGunChanged;
+            base.OnPostDrop(player);
         }
 
-        public override Projectile OnPreFireProjectileModifier(Gun gun, Projectile projectile, ProjectileModule mod)
+        private void OnGunChanged(Gun oldGun, Gun newGun, bool arg3)
         {
 
-            return base.OnPreFireProjectileModifier(gun, projectile, mod);
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-            if (gun.CurrentOwner)
+            if (this.gun && this.gun.CurrentOwner)
             {
-
-                if (this.gun.ActiveBeams != null && this.gun.ActiveBeams.Count > 0 && this.gun.ActiveBeams[0] != null && this.gun.ActiveBeams[0].beam != null)
+                PlayerController player = this.gun.CurrentOwner as PlayerController;
+                if (newGun == this.gun)
                 {
-                    this.gun.ActiveBeams[0].beam.AdjustPlayerBeamTint(Color.black, 1);
+                    player.PostProcessBeam += this.PostProcessBeam;
+                }
+                else
+                {
+                    player.PostProcessBeam -= this.PostProcessBeam;
                 }
             }
         }
 
+        private void PostProcessBeam(BeamController beam)
+        {
+            beam.AdjustPlayerBeamTint(Color.blue, 1);
+        }
     }
 }
 
