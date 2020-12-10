@@ -40,9 +40,9 @@ namespace GlaurungItems.Items
             UnityEngine.Object.DontDestroyOnLoad(projectile);
             gun.DefaultModule.projectiles[0] = projectile;
 
-            projectile.baseData.damage *= 6f;
+            projectile.baseData.damage *= 15f;
             projectile.baseData.speed *= 2.8f;
-            projectile.baseData.force *= 1f;
+            projectile.baseData.force *= -1f;
             projectile.baseData.range *= 10f;
             projectile.FireApplyChance = 0;
             projectile.AppliesFire = false;
@@ -101,6 +101,7 @@ namespace GlaurungItems.Items
         private void PostProcessBeam(BeamController beam)
         {
             beam.AdjustPlayerBeamTint(Color.blue, 1);
+            beam.DamageModifier *= 10; 
         }
     }
 }
