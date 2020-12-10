@@ -2,7 +2,6 @@
 using ItemAPI;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -13,7 +12,7 @@ namespace GlaurungItems.Items
 		public static void Init()
 		{
 			string text = "Create Trap";
-			string resourcePath = "GlaurungItems/Resources/acme_crate";
+			string resourcePath = "GlaurungItems/Resources/create_trap";
 			GameObject gameObject = new GameObject(text);
 			CreateTrap item = gameObject.AddComponent<CreateTrap>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);

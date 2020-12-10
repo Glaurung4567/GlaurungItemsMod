@@ -182,5 +182,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\mine_crafter.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\create_trap.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

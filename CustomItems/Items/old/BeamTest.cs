@@ -11,8 +11,8 @@ namespace GlaurungItems.Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("Beam Test", "jpxfrd");
-            Game.Items.Rename("outdated_gun_mods:beam_test", "gl:beam_test");
+            Gun gun = ETGMod.Databases.Items.NewGun("Beamer Prime", "jpxfrd");
+            Game.Items.Rename("outdated_gun_mods:beamer_prime", "gl:beamer_prime");
             gun.gameObject.AddComponent<BeamTest>();
             gun.SetShortDescription("WIP");
             gun.SetLongDescription("WIP");
@@ -34,22 +34,28 @@ namespace GlaurungItems.Items
             gun.DefaultModule.numberOfShotsInClip = 30;
             gun.SetBaseMaxAmmo(400);
 
+            //changing the projectile to a projectile from a non beam weapon create a null error and break the beam
+            //Projectile projectile = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(31) as Gun).DefaultModule.projectiles[0]);
+
             Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
             projectile.gameObject.SetActive(false);
             FakePrefab.MarkAsFakePrefab(projectile.gameObject);
             UnityEngine.Object.DontDestroyOnLoad(projectile);
             gun.DefaultModule.projectiles[0] = projectile;
 
+            //those work
             projectile.baseData.damage *= 15f;
-            projectile.baseData.speed *= 2.8f;
-            projectile.baseData.force *= -1f;
-            projectile.baseData.range *= 10f;
+            projectile.baseData.force *= 1f;
             projectile.FireApplyChance = 0;
             projectile.AppliesFire = false;
-            projectile.AdditionalScaleMultiplier = 10f;//doesn't work on beam apparently
+            projectile.baseData.speed *= 2.5f;
+            projectile.baseData.range *= 2.25f;
+
+
+            projectile.AdditionalScaleMultiplier = 10f;//doesn't work on beam width apparently
             projectile.AdjustPlayerProjectileTint(Color.cyan, 10, 0f); //doesn't change anything
 
-
+            //doesn't work here
             BounceProjModifier bounceMod = projectile.gameObject.GetOrAddComponent<BounceProjModifier>();
             bounceMod.numberOfBounces = 4;
             PierceProjModifier pierceMod = projectile.gameObject.GetOrAddComponent<PierceProjModifier>();
@@ -100,8 +106,16 @@ namespace GlaurungItems.Items
 
         private void PostProcessBeam(BeamController beam)
         {
-            beam.AdjustPlayerBeamTint(Color.blue, 1);
-            beam.DamageModifier *= 10; 
+            beam.AdjustPlayerBeamTint(Color.cyan, 1); //works
+            if (beam is BasicBeamController)
+            {
+                BasicBeamController basicBeamController = (beam as BasicBeamController);
+                basicBeamController.penetration += 10; //it works !
+                basicBeamController.reflections = 5; //it works !
+            }
+
+
+            beam.DamageModifier *= 10; //doesn't work 
         }
     }
 }
