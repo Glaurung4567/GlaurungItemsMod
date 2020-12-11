@@ -112,7 +112,10 @@ namespace GlaurungItems.Items
             {
                 BasicBeamController basicBeamController = (beam as BasicBeamController);
                 basicBeamController.penetration += 10; //it works 
-                basicBeamController.reflections = 2; //reflection = bounce and it works 
+                if (!basicBeamController.IsReflectedBeam)
+                {
+                    basicBeamController.reflections = 5; //reflection = bounce and it works 
+                }
                 basicBeamController.ProjectileScale = 2f;//it works !!!
                 basicBeamController.PenetratesCover = true; //works to pass through tables
 
