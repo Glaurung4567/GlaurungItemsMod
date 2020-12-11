@@ -24,7 +24,7 @@ namespace GlaurungItems.Items
             gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(60) as Gun, true, false);
 
 
-            gun.DefaultModule.ammoCost = 4;//dis work
+            gun.DefaultModule.ammoCost = 3;//dis work
             gun.DefaultModule.angleVariance = 10f;//dis doesn't seem ta work
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Beam;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
@@ -112,9 +112,13 @@ namespace GlaurungItems.Items
             {
                 BasicBeamController basicBeamController = (beam as BasicBeamController);
                 basicBeamController.penetration += 10; //it works 
-                basicBeamController.reflections = 5; //reflection = bounce and it works 
-
+                basicBeamController.reflections = 2; //reflection = bounce and it works 
                 basicBeamController.ProjectileScale = 2f;//it works !!!
+                basicBeamController.PenetratesCover = true; //works to pass through tables
+
+
+                basicBeamController.homingRadius = 9999f;
+                basicBeamController.homingAngularVelocity = 9999f;
             }
 
 
