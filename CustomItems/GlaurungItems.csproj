@@ -125,7 +125,6 @@
     <Compile Include="Items\Chainer.cs" />
     <Compile Include="Items\old\KillStreakGun.cs" />
     <Compile Include="Items\Neuralyzer.cs" />
-    <Compile Include="Items\old\UndertaleGunTest.cs" />
     <Compile Include="Items\Overhealer.cs" />
     <Compile Include="Items\OzzieHelm.cs" />
     <Compile Include="Items\SappingBullets.cs" />

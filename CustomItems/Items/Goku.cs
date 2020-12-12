@@ -21,7 +21,7 @@ namespace GlaurungItems.Items
             gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(20) as Gun, true, false);
 
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Beam;
-            gun.DefaultModule.ammoCost = 3;//dis work
+            gun.DefaultModule.ammoCost = 3;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 1.5f;
             gun.gunClass = GunClass.BEAM;
