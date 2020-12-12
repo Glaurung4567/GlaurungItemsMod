@@ -18,7 +18,7 @@ namespace GlaurungItems.Items
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
             //gun.SetAnimationFPS(gun.idleAnimation, 8);
             //20, 60, 40, 331, 121, 179, 10, 208, 107, 333, 196, 87, 100, 474, 595, 610, 
-            gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(20) as Gun, true, false);
+            gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(60) as Gun, true, false);
 
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Beam;
             gun.DefaultModule.ammoCost = 3;//dis work
@@ -46,7 +46,7 @@ namespace GlaurungItems.Items
             projectile.FireApplyChance = 0;
             projectile.AppliesFire = false;
             projectile.baseData.speed *= 2.5f;
-            projectile.baseData.range *= 2.25f;
+            projectile.baseData.range *= 0.75f;
 
             projectile.PenetratesInternalWalls = true;//doesn't seem to work
 
@@ -105,17 +105,17 @@ namespace GlaurungItems.Items
 
         private void PostProcessBeam(BeamController beam)
         {
-            beam.AdjustPlayerBeamTint(Color.cyan, 1); //works
+            beam.AdjustPlayerBeamTint(Color.green, 1); //works
             if (beam is BasicBeamController)
             {
                 BasicBeamController basicBeamController = (beam as BasicBeamController);
-                basicBeamController.penetration += 10; //it works 
+                basicBeamController.penetration = 10; //it works 
                 if (!basicBeamController.IsReflectedBeam)
                 {
-                    //basicBeamController.reflections = 5; //reflection = bounce and it works 
+                    basicBeamController.reflections = 2; //reflection = bounce and it works 
                     //create lag when hitting a broken lamp thingy on walls though for some reasons
                 }
-                basicBeamController.ProjectileScale = 5f;//it works !!!
+                basicBeamController.ProjectileScale = 1.1f;//it works !!!
                 basicBeamController.PenetratesCover = true; //works to pass through tables
 
                 basicBeamController.homingRadius = 9999f;//work
