@@ -10,11 +10,11 @@ namespace GlaurungItems.Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("Turtle Beam", "turtlebeam");
-            Game.Items.Rename("outdated_gun_mods:turtle_beam", "gl:turtle_beam");
+            Gun gun = ETGMod.Databases.Items.NewGun("Turtlez Beam", "turtlezbeam");
+            Game.Items.Rename("outdated_gun_mods:turtlez_beam", "gl:turtlez_beam");
             gun.gameObject.AddComponent<TurtleBeam>();
-            gun.SetShortDescription("WIP");
-            gun.SetLongDescription("WIP");
+            gun.SetShortDescription("Kaa mee ha me HAAA !");
+            gun.SetLongDescription("Gives the user the power to fire powerful energy blast, similar to the ones used by a famous alien warrior.");
             gun.SetupSprite(null, "jpxfrd_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
@@ -35,15 +35,13 @@ namespace GlaurungItems.Items
             UnityEngine.Object.DontDestroyOnLoad(projectile);
             gun.DefaultModule.projectiles[0] = projectile;
 
-            projectile.baseData.damage *= 2.5f;
+            projectile.baseData.damage *= 3f;
             projectile.baseData.force *= 2f;
             projectile.baseData.speed *= 2.5f;
             projectile.baseData.range *= 2.25f;
 
-            gun.quality = PickupObject.ItemQuality.EXCLUDED;
-
+            gun.quality = PickupObject.ItemQuality.C;
             ETGMod.Databases.Items.Add(gun, null, "ANY");
-
         }
 
         protected override void OnPickup(PlayerController player)
@@ -87,7 +85,7 @@ namespace GlaurungItems.Items
         {
             beam.AdjustPlayerBeamTint(Color.cyan, 1); 
             beam.usesChargeDelay = true;
-            beam.chargeDelay = 0.5f;
+            beam.chargeDelay = 0.15f;
             if (beam is BasicBeamController)
             {
                 BasicBeamController basicBeamController = (beam as BasicBeamController);
@@ -153,7 +151,7 @@ namespace GlaurungItems.Items
                         SpriteOutlineManager.RemoveOutlineFromSprite(player.sprite);
                     }
 
-                    if (gun.IsEmpty && !flashed)
+                    if (gun.CurrentAmmo <= 0 && !flashed)
                     {
                         Projectile projectile = ((Gun)ETGMod.Databases.Items[481]).DefaultModule.chargeProjectiles[0].Projectile;
                         GameObject gameObject = SpawnManager.SpawnProjectile(projectile.gameObject, player.CenterPosition, Quaternion.Euler(0f, 0f, 0f), true);
@@ -166,7 +164,7 @@ namespace GlaurungItems.Items
                         player.DoPostProcessProjectile(flash);
                         flashed = true;
                     }
-                    else if(!gun.IsEmpty && flashed)
+                    else if(gun.CurrentAmmo > 0 && flashed)
                     {
                         flashed = false;
 
