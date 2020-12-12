@@ -1,12 +1,6 @@
 ﻿using Gungeon;
 using ItemAPI;
-using MonoMod.RuntimeDetour;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Timers;
 using UnityEngine;
 
 namespace GlaurungItems.Items
@@ -41,6 +35,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.numberOfShotsInClip = 6;
             gun.DefaultModule.preventFiringDuringCharge = true;
             gun.SetBaseMaxAmmo(500);
+            gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
 
             gun.quality = PickupObject.ItemQuality.A;
 
@@ -216,13 +211,14 @@ namespace GlaurungItems.Items
             }
         }
 
-        //private void StatsChanged
 
         //This block of code allows us to change the reload sounds.
         public override void OnPostFired(PlayerController player, Gun gun)
         {
             gun.PreventNormalFireAudio = true;
-            AkSoundEngine.PostEvent("Play_WPN_metalbullet_impact_01", gameObject);
+            //Play_WPN_radiationlaser_shot_01
+            //Play_WPN_sflaser_shot_01
+            AkSoundEngine.PostEvent("Play_WPN_radiationlaser_shot_01", gameObject);
         }
         protected override void Update()
         {

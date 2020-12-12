@@ -94,7 +94,7 @@ namespace GlaurungItems
                 MineCrafter.Init();
 
                 BeamTest.Add();
-                Goku.Add();
+                TurtleBeam.Add();
                 AstralCounterweight.Init();
                 //GunDeadArmyStronghold.Init();
 

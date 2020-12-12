@@ -13,7 +13,7 @@ namespace GlaurungItems.Items
         //idea by bunny based on https://bindingofisaacrebirth.gamepedia.com/Glyph_of_Balance
         public static void Init()
         {
-            string itemName = "Astral Counterweight";
+            string itemName = "Libra";
             string resourceName = "GlaurungItems/Resources/acme_crate";
             GameObject obj = new GameObject(itemName);
             AstralCounterweight greandeParasite = obj.AddComponent<AstralCounterweight>();
@@ -71,6 +71,31 @@ namespace GlaurungItems.Items
         }
 
         //pickup: get stats and baseStats and make the diff to balance
+
+        public override void Pickup(PlayerController player)
+        {
+            base.Pickup(player);
+            List<PlayerStats.StatType> statTypes = new List<PlayerStats.StatType>(stats.Keys);
+            foreach (PlayerStats.StatType stat in statTypes)
+            {
+                this.previousStats[stat] = player.stats.GetStatValue(stat);
+                this.stats[stat] = player.stats.GetStatValue(stat);
+            }
+            foreach (PlayerStats.StatType stat in statTypes)
+            {
+                if (this.stats[stat] != player.stats.GetBaseStatValue(stat))
+                {
+                    cooldown = true;
+                    this.CanBeDropped = false;
+                    statsModified[stat] = true;
+                    statsModifiedAmount[stat] = this.stats[stat] - player.stats.GetBaseStatValue(stat);
+                }
+            }
+            if (cooldown)
+            {
+                base.StartCoroutine(this.RecalculateStats());
+            }
+        }
 
         public override DebrisObject Drop(PlayerController player)
         {

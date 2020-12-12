@@ -120,11 +120,6 @@ namespace GlaurungItems.Items
             }
         }
 
-        private void OnGunChanged(Gun oldGun, Gun newGun, bool arg3)
-        {
-            this.targetForOverhealKill = new List<AIActor>();
-        }
-
         // boilerplate stuff
         public override void OnPostFired(PlayerController player, Gun gun)
         {
@@ -140,7 +135,6 @@ namespace GlaurungItems.Items
             base.Update();
             if (gun.CurrentOwner)
             {
-
                 if (!gun.PreventNormalFireAudio)
                 {
                     this.gun.PreventNormalFireAudio = true;
