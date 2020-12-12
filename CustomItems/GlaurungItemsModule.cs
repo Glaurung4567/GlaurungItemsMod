@@ -93,8 +93,8 @@ namespace GlaurungItems
                 CreateTrap.Init();
                 MineCrafter.Init();
 
-                BeamTest.Add();
                 TurtleBeam.Add();
+                NuArcana.Init();
                 AstralCounterweight.Init();
                 //GunDeadArmyStronghold.Init();
 
