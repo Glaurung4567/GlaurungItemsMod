@@ -95,7 +95,8 @@ namespace GlaurungItems
 
                 TurtleBeam.Add();
                 NuArcana.Init();
-                AstralCounterweight.Init();
+
+                BunnyCounterweight.Init();
                 //GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra

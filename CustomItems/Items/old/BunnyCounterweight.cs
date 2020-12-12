@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace GlaurungItems.Items
 {
-    class AstralCounterweight : PassiveItem
+    class BunnyCounterweight : PassiveItem
     {
         //idea by bunny based on https://bindingofisaacrebirth.gamepedia.com/Glyph_of_Balance
         public static void Init()
@@ -16,7 +16,7 @@ namespace GlaurungItems.Items
             string itemName = "Libra";
             string resourceName = "GlaurungItems/Resources/acme_crate";
             GameObject obj = new GameObject(itemName);
-            AstralCounterweight greandeParasite = obj.AddComponent<AstralCounterweight>();
+            BunnyCounterweight greandeParasite = obj.AddComponent<BunnyCounterweight>();
             ItemBuilder.AddSpriteToObject(itemName, resourceName, obj);
             string shortDesc = "Equillibrium";
             string longDesc = "Those unaffected by the great leveller shall now be raised in kind to hold their own.";

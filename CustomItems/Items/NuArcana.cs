@@ -18,7 +18,7 @@ namespace GlaurungItems.Items
 			NuArcana item = gameObject.AddComponent<NuArcana>();
 			ItemBuilder.AddSpriteToObject(name, resourcePath, gameObject);
 			string shortDesc = "All life begins and ends with Nu";
-			string longDesc = "A long forgotten technique used by strange immortal spheric creatures, it allows the user to make the target barely alive, no matter how tough they are.";
+			string longDesc = "A long forgotten technique used by strange immortal spheric creatures, it allows the user to put the target just at death door without killing them, no matter how tough they are.";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.quality = PickupObject.ItemQuality.B;
 			NuArcana.ID = item.PickupObjectId;
@@ -67,6 +67,7 @@ namespace GlaurungItems.Items
 				if (aiActor.healthHaver && aiActor.healthHaver.IsAlive && !aiActor.healthHaver.IsBoss && UnityEngine.Random.value < 0.01f)
 				{
 					aiActor.healthHaver.ForceSetCurrentHealth(1);
+					aiActor.SetOverrideOutlineColor(Color.clear);
 				}
 			}
 		}
@@ -80,7 +81,8 @@ namespace GlaurungItems.Items
 				if(!fatal && aiActor.healthHaver && !aiActor.healthHaver.IsBoss && UnityEngine.Random.value < 0.01f)
                 {
 					aiActor.healthHaver.ForceSetCurrentHealth(1);
-                }
+					aiActor.SetOverrideOutlineColor(Color.clear);
+				}
 			}
 		}
 
