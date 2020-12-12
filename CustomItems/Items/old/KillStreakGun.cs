@@ -3,7 +3,7 @@ using ItemAPI;
 using System;
 using System.Timers;
 
-namespace Items
+namespace GlaurungItems.Items
 {
     class KillStreakGun : AdvancedGunBehavior
     {

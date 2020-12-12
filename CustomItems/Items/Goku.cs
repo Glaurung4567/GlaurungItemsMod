@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace GlaurungItems.Items
 {
-    class BeamTest : AdvancedGunBehavior
+    class Goku : AdvancedGunBehavior
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("Beamer Prime", "beamer");
-            Game.Items.Rename("outdated_gun_mods:beamer_prime", "gl:beamer_prime");
-            gun.gameObject.AddComponent<BeamTest>();
+            Gun gun = ETGMod.Databases.Items.NewGun("Goku", "goku");
+            Game.Items.Rename("outdated_gun_mods:goku", "gl:goku");
+            gun.gameObject.AddComponent<Goku>();
             gun.SetShortDescription("WIP");
             gun.SetLongDescription("WIP");
             gun.SetupSprite(null, "jpxfrd_idle_001", 8);
@@ -22,14 +22,12 @@ namespace GlaurungItems.Items
 
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Beam;
             gun.DefaultModule.ammoCost = 3;//dis work
-            gun.DefaultModule.angleVariance = 10f;//dis doesn't seem ta work
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 1.5f;
             gun.gunClass = GunClass.BEAM;
-            
-            gun.DefaultModule.cooldownTime = 0.2f;//dunno if it's useful, don't think so 
-            gun.DefaultModule.numberOfShotsInClip = 400;
-            gun.SetBaseMaxAmmo(400);
+
+            gun.DefaultModule.numberOfShotsInClip = 20;
+            gun.SetBaseMaxAmmo(100);
 
             //changing the projectile to a projectile from a non beam weapon create a null error and break the beam
             //Projectile projectile = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(31) as Gun).DefaultModule.projectiles[0]);
@@ -43,28 +41,10 @@ namespace GlaurungItems.Items
             //those work
             projectile.baseData.damage *= 1f;
             projectile.baseData.force *= 1f;
-            projectile.FireApplyChance = 0;
-            projectile.AppliesFire = false;
             projectile.baseData.speed *= 2.5f;
             projectile.baseData.range *= 2.25f;
 
-            projectile.PenetratesInternalWalls = true;//doesn't seem to work
-
-
-            projectile.AdditionalScaleMultiplier = 10f;//doesn't work on beam width apparently here
-            projectile.AdjustPlayerProjectileTint(Color.cyan, 10, 0f); //doesn't change anything here
-
-            //doesn't work here
-            BounceProjModifier bounceMod = projectile.gameObject.GetOrAddComponent<BounceProjModifier>();
-            bounceMod.numberOfBounces = 4;
-            PierceProjModifier pierceMod = projectile.gameObject.GetOrAddComponent<PierceProjModifier>();
-            pierceMod.penetratesBreakables = true;
-            pierceMod.penetration = 5;
-
-
             gun.quality = PickupObject.ItemQuality.EXCLUDED;
-
-            //projectile.SetProjectileSpriteRight("build_projectile", 5, 5);
 
             ETGMod.Databases.Items.Add(gun, null, "ANY");
 
@@ -73,7 +53,6 @@ namespace GlaurungItems.Items
         protected override void OnPickup(PlayerController player)
         {
             base.OnPickup(player);
-            //player.GunChanged += this.OnGunChanged;
             player.PostProcessBeam += this.PostProcessBeam;
             player.GunChanged += this.OnGunChanged;
         }
@@ -106,21 +85,18 @@ namespace GlaurungItems.Items
         private void PostProcessBeam(BeamController beam)
         {
             beam.AdjustPlayerBeamTint(Color.cyan, 1); //works
+            beam.usesChargeDelay = true;
+            beam.chargeDelay = 0.5f;
             if (beam is BasicBeamController)
             {
                 BasicBeamController basicBeamController = (beam as BasicBeamController);
-                basicBeamController.penetration += 10; //it works 
+                basicBeamController.penetration += 100; //it works 
                 if (!basicBeamController.IsReflectedBeam)
                 {
-                    //basicBeamController.reflections = 5; //reflection = bounce and it works 
-                    //create lag when hitting a broken lamp thingy on walls though for some reasons
+                    basicBeamController.reflections = 0; 
                 }
-                basicBeamController.ProjectileScale = 5f;//it works !!!
-                basicBeamController.PenetratesCover = true; //works to pass through tables
-
-                basicBeamController.homingRadius = 9999f;//work
-                basicBeamController.homingAngularVelocity = 9999f;//work
-                basicBeamController.projectile.PenetratesInternalWalls = true;//don't work
+                basicBeamController.ProjectileScale = 4f;
+                basicBeamController.PenetratesCover = true;
             }
         }
     }

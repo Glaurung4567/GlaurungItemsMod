@@ -5,9 +5,7 @@ using System.Reflection;
 using EnemyAPI;
 using GlaurungItems.Items;
 using ItemAPI;
-using Items;
 using MonoMod.RuntimeDetour;
-using UnityEngine;
 
 namespace GlaurungItems
 {
@@ -69,6 +67,7 @@ namespace GlaurungItems
 
                 GlaurungItems.Strings.Enemies.Set("#LOW_PRIEST", "Low Priest");
 
+
                 ShamblesGun.Add();
                 Neuralyzer.Init();
                 HowlOfTheJammed.Init();
@@ -93,8 +92,9 @@ namespace GlaurungItems
                 IndecisiveGun.Add();
                 CreateTrap.Init();
                 MineCrafter.Init();
-                BeamTest.Add();
 
+                BeamTest.Add();
+                Goku.Add();
                 AstralCounterweight.Init();
                 //GunDeadArmyStronghold.Init();
 
