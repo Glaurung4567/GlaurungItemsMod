@@ -4,4 +4,5 @@ This is the source code repository of my items mod for Enter the Gungeon game(ht
 
 Next update : 
 Added the actives Mine Crafter and Create Trap 
-Added The Indecisive gun
+Added The Indecisive and Turtlez Beam guns
+Added Matriochk Ammolet and Nu Arcana passives
