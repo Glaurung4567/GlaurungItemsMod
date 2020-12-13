@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace GlaurungItems.Items
 {
-    class TurtleBeam : AdvancedGunBehavior
+    class TurtlezBeam : AdvancedGunBehavior
     {
         public static void Add()
         {
             Gun gun = ETGMod.Databases.Items.NewGun("Turtlez Beam", "turtlezbeam");
             Game.Items.Rename("outdated_gun_mods:turtlez_beam", "gl:turtlez_beam");
-            gun.gameObject.AddComponent<TurtleBeam>();
+            gun.gameObject.AddComponent<TurtlezBeam>();
             gun.SetShortDescription("Kamehameha !");
             gun.SetLongDescription("Gives the user the power to fire powerful energy blast, similar to the ones used by a famous alien warrior.");
             gun.SetupSprite(null, "jpxfrd_idle_001", 8);

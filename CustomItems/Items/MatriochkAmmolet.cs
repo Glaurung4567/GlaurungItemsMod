@@ -18,10 +18,10 @@ namespace GlaurungItems.Items
             var item = obj.AddComponent<MatriochkAmmolet>();
             ItemBuilder.AddSpriteToObject(itemName, resourceName, obj);
             string shortDesc = "How many are stored in those ?";
-            string longDesc = "Trigger a mini blank when a blank is activated. \n \n";
+            string longDesc = "Has a chance to trigger additional blanks when a blank is activated. \n \n Created by a Gungeonner who missed his cold and harsh Mother Land.";
             ItemBuilder.SetupItem(item, shortDesc, longDesc, "gl");
             ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.AdditionalBlanksPerFloor, 1, StatModifier.ModifyMethod.ADDITIVE);
-            item.quality = ItemQuality.C;
+            item.quality = ItemQuality.B;
             item.BlankStunTime = 0;
         }
 
@@ -31,7 +31,7 @@ namespace GlaurungItems.Items
             {
                 cooldown = true;
                 int randomSelect = Random.Range(1, 10);
-                Tools.Print(randomSelect, "ffffff", true);
+                //Tools.Print(randomSelect, "ffffff", true);
                 switch (randomSelect)
                 {
                     case 1:

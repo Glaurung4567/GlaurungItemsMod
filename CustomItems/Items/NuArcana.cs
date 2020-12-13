@@ -65,7 +65,7 @@ namespace GlaurungItems.Items
 				if (aiActor.healthHaver && aiActor.healthHaver.IsAlive && !aiActor.healthHaver.IsBoss && UnityEngine.Random.value < 0.01f)
 				{
 					aiActor.healthHaver.ForceSetCurrentHealth(1);
-					aiActor.SetOverrideOutlineColor(Color.clear);
+					aiActor.SetOverrideOutlineColor(Color.cyan);
 				}
 			}
 		}
@@ -79,7 +79,7 @@ namespace GlaurungItems.Items
 				if(!fatal && aiActor.healthHaver && !aiActor.healthHaver.IsBoss && UnityEngine.Random.value < 0.01f)
                 {
 					aiActor.healthHaver.ForceSetCurrentHealth(1);
-					aiActor.SetOverrideOutlineColor(Color.clear);
+					aiActor.SetOverrideOutlineColor(Color.cyan);
 				}
 			}
 		}
