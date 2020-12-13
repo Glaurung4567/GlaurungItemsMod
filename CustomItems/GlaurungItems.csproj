@@ -90,6 +90,7 @@
     <Compile Include="ItemAPI\SpecialBlankModificationItem.cs" />
     <Compile Include="ItemAPI\SpecialFoyerShop.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
+    <Compile Include="Items\MatriochkAmmolet.cs" />
     <Compile Include="Items\NuArcana.cs" />
     <Compile Include="Items\TurtleBeam.cs" />
     <Compile Include="Items\old\BeamTest.cs" />

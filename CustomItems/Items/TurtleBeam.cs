@@ -1,7 +1,5 @@
 ﻿using Gungeon;
 using ItemAPI;
-using System;
-using System.Collections;
 using UnityEngine;
 
 namespace GlaurungItems.Items
@@ -13,7 +11,7 @@ namespace GlaurungItems.Items
             Gun gun = ETGMod.Databases.Items.NewGun("Turtlez Beam", "turtlezbeam");
             Game.Items.Rename("outdated_gun_mods:turtlez_beam", "gl:turtlez_beam");
             gun.gameObject.AddComponent<TurtleBeam>();
-            gun.SetShortDescription("Kaa mee ha me HAAA !");
+            gun.SetShortDescription("Kamehameha !");
             gun.SetLongDescription("Gives the user the power to fire powerful energy blast, similar to the ones used by a famous alien warrior.");
             gun.SetupSprite(null, "jpxfrd_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);

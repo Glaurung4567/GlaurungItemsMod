@@ -71,7 +71,7 @@ namespace GlaurungItems.Items
                     if (component != null)
                     {
                         ExplosiveModifier component2 = component.GetComponent<ExplosiveModifier>();
-                        var rollBomb = PickupObjectDatabase.GetById(567).GetComponent<FireVolleyOnRollItem>();
+                        var rollBomb = PickupObjectDatabase.GetById(567).GetComponent<FireVolleyOnRollItem>();//roll bomb
                         ProjectileModule projectileModule = rollBomb.ModVolley.projectiles[0];
                         Projectile currentProjectile = projectileModule.GetCurrentProjectile();
                         ExplosionData miniExplosionData = currentProjectile.GetComponent<ExplosiveModifier>().explosionData.CopyExplosionData();                        

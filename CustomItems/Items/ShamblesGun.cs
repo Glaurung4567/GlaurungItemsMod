@@ -137,36 +137,27 @@ namespace GlaurungItems.Items
         {
             //yield return new WaitForSeconds(0.1f);
             Projectile Boomprojectile = ((Gun)ETGMod.Databases.Items[593]).DefaultModule.projectiles[0];
-            ExplosiveModifier boomer = Boomprojectile.gameObject.GetComponent<ExplosiveModifier>();
+            ExplosiveModifier explo = Boomprojectile.gameObject.GetComponent<ExplosiveModifier>();
+
+            ExplosiveModifier boomer = new ExplosiveModifier();
+            boomer.explosionData = explo.explosionData.CopyExplosionData();
             boomer.explosionData.damageToPlayer = 0f;
             boomer.explosionData.damage = 10f;
             boomer.explosionData.pushRadius = 4f;
+            boomer.explosionData.force = 5f;
+
             boomer.explosionData.doForce = true;
             boomer.explosionData.doDestroyProjectiles = true;
             boomer.explosionData.preventPlayerForce = true;
-            this.DoMicroBlank(enemyPosition, 0f);
+            Exploder.Explode(enemyPosition, boomer.explosionData, Vector2.zero, null, false, 0, false);
             yield return new WaitForSeconds(0.1f);
             aiActor.transform.position = playerPosition;
             player.transform.position = enemyPosition;
             aiActor.specRigidbody.Reinitialize();
             aiActor.specRigidbody.RecheckTriggers = true;
-            Exploder.Explode(enemyPosition, boomer.explosionData, Vector2.zero, null, false, 0, false);
             player.specRigidbody.Reinitialize();
             player.specRigidbody.RecheckTriggers = true;
             yield break;
-        }
-
-
-
-        private void DoMicroBlank(Vector2 center, float knockbackForce = 30f)
-        {
-            GameObject silencerVFX = (GameObject)ResourceCache.Acquire("Global VFX/BlankVFX_Ghost");
-            AkSoundEngine.PostEvent("Play_OBJ_silenceblank_small_01", base.gameObject);
-            GameObject gameObject = new GameObject("silencer");
-            SilencerInstance silencerInstance = gameObject.AddComponent<SilencerInstance>();
-            float additionalTimeAtMaxRadius = 0.25f;
-            silencerInstance.ForceNoDamage = true;
-            silencerInstance.TriggerSilencer(center, 20f, 5f, silencerVFX, 0f, 4f, 3f, 4f, knockbackForce, 4f, additionalTimeAtMaxRadius, this.gun.CurrentOwner as PlayerController, false, false);
         }
 
         protected override void OnPickup(PlayerController player)
