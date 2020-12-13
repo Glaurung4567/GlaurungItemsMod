@@ -30,8 +30,21 @@ namespace GlaurungItems.Items
             if (!cooldown)
             {
                 cooldown = true;
-                GameManager.Instance.StartCoroutine(this.EndCooldown());
-                this.DoMicroBlank(user.CenterPosition, 0f);
+                int randomSelect = Random.Range(1, 10);
+                switch (randomSelect)
+                {
+                    case 1:
+                    case 2:
+                    case 3:
+                        GameManager.Instance.StartCoroutine(this.EndCooldownOneSmallDoll(centerPoint));
+                        break;
+                    case 4:
+                        GameManager.Instance.StartCoroutine(this.EndCooldownOneDoll(centerPoint));
+                        break;
+                    default:
+                        GameManager.Instance.StartCoroutine(this.EndCooldown());
+                        break;
+                }
             }
         }
 
@@ -45,9 +58,34 @@ namespace GlaurungItems.Items
             silencerInstance.TriggerSilencer(center, 20f, 5f, silencerVFX, 0f, 4f, 3f, 4f, knockbackForce, 4f, additionalTimeAtMaxRadius, base.Owner, false, false);
         }
 
+        private void DoBlank(Vector2 centerPoint)
+        {
+            SilencerInstance silencer = new SilencerInstance();
+            GameObject blankVFXPrefab = (GameObject)BraveResources.Load("Global VFX/BlankVFX", ".prefab");
+            silencer.TriggerSilencer(centerPoint, 20f, 5f, blankVFXPrefab, 0f, 4f, 3f, 4f, 30f, 4f, 0.25f, base.Owner, false, false);
+        }
+
         private IEnumerator EndCooldown()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.2f);
+            cooldown = false;
+            yield break;
+        }
+
+        private IEnumerator EndCooldownOneSmallDoll(Vector2 center)
+        {
+            yield return null;
+            this.DoMicroBlank(center);
+            yield return new WaitForSeconds(0.2f);
+            cooldown = false;
+            yield break;
+        }
+
+        private IEnumerator EndCooldownOneDoll(Vector2 center)
+        {
+            yield return new WaitForSeconds(0.1f);
+            this.DoBlank(center);
+            yield return new WaitForSeconds(0.2f);
             cooldown = false;
             yield break;
         }
