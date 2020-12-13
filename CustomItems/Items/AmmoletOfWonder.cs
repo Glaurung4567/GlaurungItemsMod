@@ -437,9 +437,10 @@ namespace GlaurungItems.Items
         private IEnumerator RecursiveBlank(Vector2 centerPoint, PlayerController user)
         {
             yield return new WaitForSeconds(0.5f);
-            SilencerInstance silencer = new SilencerInstance();
-            GameObject blankVFXPrefab = (GameObject)BraveResources.Load("Global VFX/BlankVFX", ".prefab");
-            silencer.TriggerSilencer(centerPoint, 20f, 5f, blankVFXPrefab, 0f, 4f, 3f, 4f, 30f, 4f, 0.25f, user, false, false);
+            GameObject gameObjectBlankVFX = (GameObject)ResourceCache.Acquire("Global VFX/BlankVFX");
+            GameObject gameObjectBlank = new GameObject("silencer");
+            SilencerInstance silencerInstance = gameObjectBlank.AddComponent<SilencerInstance>();
+            silencerInstance.TriggerSilencer(centerPoint, 50f, 25f, gameObjectBlankVFX, 0.25f, 0.2f, 50f, 10f, 140f, 15f, 0.5f, user, true, false);
             yield break;
         }
 
