@@ -12,12 +12,12 @@ namespace GlaurungItems.Items
     {
         public static void Init()
         {
-            string itemName = "Ammolet Of Wonder";
+            string itemName = "Matriochk Ammolet";
             string resourceName = "GlaurungItems/Resources/ammolet_of_wonder";
             GameObject obj = new GameObject(itemName);
             var item = obj.AddComponent<MatriochkAmmolet>();
             ItemBuilder.AddSpriteToObject(itemName, resourceName, obj);
-            string shortDesc = "How many charges are stored in those ?";
+            string shortDesc = "How many are stored in those ?";
             string longDesc = "Trigger a mini blank when a blank is activated. \n \n";
             ItemBuilder.SetupItem(item, shortDesc, longDesc, "gl");
             ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.AdditionalBlanksPerFloor, 1, StatModifier.ModifyMethod.ADDITIVE);
@@ -29,9 +29,9 @@ namespace GlaurungItems.Items
         {
             if (!cooldown)
             {
-                this.DoMicroBlank(user.transform.position, 0f);
                 cooldown = true;
-                GameManager.Instance.StartCoroutine(this.EndCooldown());              
+                GameManager.Instance.StartCoroutine(this.EndCooldown());
+                this.DoMicroBlank(user.CenterPosition, 0f);
             }
         }
 
@@ -47,7 +47,7 @@ namespace GlaurungItems.Items
 
         private IEnumerator EndCooldown()
         {
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(1f);
             cooldown = false;
             yield break;
         }
