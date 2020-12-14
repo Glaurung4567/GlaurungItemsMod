@@ -83,7 +83,6 @@ namespace GlaurungItems
                 BanishingBullets.Init();
                 Yoink.Init();
 
-                BulletScriptGun.Add();
                 BlinkbackDevice.Init();
                 OzzieHelm.Init();
                 AmmoletOfWonder.Init();
@@ -97,7 +96,7 @@ namespace GlaurungItems
                 NuArcana.Init();
                 MatriochkAmmolet.Init();
 
-                BulletScriptGunSource.Add();
+                GunjuringEncyclopedia.Add();
                 //GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra

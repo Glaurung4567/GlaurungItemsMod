@@ -10,21 +10,21 @@ namespace GlaurungItems.Items
 		protected override IEnumerator Top()
 		{
 			//this.FireCluster(this.Direction);
-			this.FireCluster(BulletScriptGun.playerGunCurrentAngle);
+			this.FireCluster(GunjuringEncyclopedia.playerGunCurrentAngle);
 			yield return this.Wait(10);
 			for (int i = 0; i < 25; i++)
 			{
 				float num = -45f + (float)i * 3.75f;
 				//this.Fire(new Offset(0.5f, 0f, this.Direction + num, string.Empty, DirectionType.Absolute), new Direction(num, DirectionType.Relative, -1f), new Speed(10f, SpeedType.Absolute), null);
-				this.Fire(new Offset(0.5f, 0f, BulletScriptGun.playerGunCurrentAngle + num, string.Empty, DirectionType.Absolute), new Direction(BulletScriptGun.playerGunCurrentAngle + num, DirectionType.Absolute, -1f), new Speed(10f, SpeedType.Absolute), null);
+				this.Fire(new Offset(0.5f, 0f, GunjuringEncyclopedia.playerGunCurrentAngle + num, string.Empty, DirectionType.Absolute), new Direction(GunjuringEncyclopedia.playerGunCurrentAngle + num, DirectionType.Absolute, -1f), new Speed(10f, SpeedType.Absolute), null);
 			}
 			//this.FireCluster(this.Direction - 45f);
-			this.FireCluster(BulletScriptGun.playerGunCurrentAngle - 45f);
+			this.FireCluster(GunjuringEncyclopedia.playerGunCurrentAngle - 45f);
 			//this.FireCluster(this.Direction + 45f);
-			this.FireCluster(BulletScriptGun.playerGunCurrentAngle + 45f);
+			this.FireCluster(GunjuringEncyclopedia.playerGunCurrentAngle + 45f);
 			yield return this.Wait(10);
 			//this.FireCluster(this.Direction);
-			this.FireCluster(BulletScriptGun.playerGunCurrentAngle);
+			this.FireCluster(GunjuringEncyclopedia.playerGunCurrentAngle);
 			yield break;
 		}
 

@@ -9,7 +9,7 @@ namespace GlaurungItems.Items
 	{
 		protected override IEnumerator Top()
 		{
-			float direction = BulletScriptGun.playerGunCurrentAngle;//base.GetAimDirection((float)((UnityEngine.Random.value >= 0.4f) ? 0 : 1), 8f) + UnityEngine.Random.Range(-10f, 10f);
+			float direction = GunjuringEncyclopedia.playerGunCurrentAngle;//base.GetAimDirection((float)((UnityEngine.Random.value >= 0.4f) ? 0 : 1), 8f) + UnityEngine.Random.Range(-10f, 10f);
 			for (int i = 0; i < 18; i++)
 			{
 				float angle = (float)i * 20f;

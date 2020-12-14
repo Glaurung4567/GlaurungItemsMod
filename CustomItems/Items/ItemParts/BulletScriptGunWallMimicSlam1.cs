@@ -8,7 +8,7 @@ namespace GlaurungItems.Items
 	{
 		protected override IEnumerator Top()
 		{
-			float facingDirection = BulletScriptGun.playerGunCurrentAngle;//this.BulletBank.aiAnimator.CurrentArtAngle;
+			float facingDirection = GunjuringEncyclopedia.playerGunCurrentAngle;//this.BulletBank.aiAnimator.CurrentArtAngle;
 			this.FireLine(facingDirection - 90f, 5f, 45f, -15f, false);
 			this.FireLine(facingDirection, 11f, -45f, 45f, false);
 			this.FireLine(facingDirection + 90f, 5f, -45f, 15f, false);

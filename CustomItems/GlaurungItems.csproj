@@ -93,7 +93,7 @@
     <Compile Include="Items\old\Kragun.cs" />
     <Compile Include="Items\MatriochkAmmolet.cs" />
     <Compile Include="Items\NuArcana.cs" />
-    <Compile Include="Items\old\BulletScriptGunMk2.cs" />
+    <Compile Include="Items\GunjuringEncyclopedia.cs" />
     <Compile Include="Items\TurtlezBeam.cs" />
     <Compile Include="Items\old\BeamTest.cs" />
     <Compile Include="Items\old\BunnyCounterweight.cs" />
@@ -101,7 +101,7 @@
     <Compile Include="Items\old\bugged\BarrelsLauncher.cs" />
     <Compile Include="Items\BlinkbackDevice.cs" />
     <Compile Include="Items\CreateTrap.cs" />
-    <Compile Include="Items\GunjuringEncyclopedia.cs" />
+    <Compile Include="Items\old\BulletScriptWranglerStyleGun.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunAngryBookBasicAttack2.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunBirdEggVomit2.cs" />
     <Compile Include="Items\ItemParts\BulletScriptGunBossFinalGuideSword1.cs" />

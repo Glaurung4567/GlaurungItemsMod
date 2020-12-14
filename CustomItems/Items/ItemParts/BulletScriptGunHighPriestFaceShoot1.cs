@@ -11,7 +11,7 @@ namespace GlaurungItems.Items
 		protected override IEnumerator Top()
 		{
 			//yield return this.Wait(60);
-			float aim = BulletScriptGun.playerGunCurrentAngle;//this.GetAimDirection(1f, 16f);
+			float aim = GunjuringEncyclopedia.playerGunCurrentAngle;//this.GetAimDirection(1f, 16f);
 			this.Fire(new Direction(aim, DirectionType.Absolute, -1f), new Speed(16f, SpeedType.Absolute), new BulletScriptGunHighPriestFaceShoot1.FastHomingShot());
 			//yield return this.Wait(30);
 			yield break;
@@ -30,7 +30,7 @@ namespace GlaurungItems.Items
 			{
 				for (int i = 0; i < 180; i++)
 				{
-					float aim = BulletScriptGun.playerGunCurrentAngle;// this.GetAimDirection(1f, 16f);
+					float aim = GunjuringEncyclopedia.playerGunCurrentAngle;// this.GetAimDirection(1f, 16f);
 					float delta = BraveMathCollege.ClampAngle180(aim - this.Direction);
 					if (Mathf.Abs(delta) > 100f)
 					{

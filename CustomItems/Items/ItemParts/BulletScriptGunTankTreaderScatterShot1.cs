@@ -8,7 +8,7 @@ namespace GlaurungItems.Items
 	{
 		protected override IEnumerator Top()
 		{
-			base.Fire(new Direction(BulletScriptGun.playerGunCurrentAngle, DirectionType.Absolute, -1f), new Speed(12f, SpeedType.Absolute), new BulletScriptGunTankTreaderScatterShot1.ScatterBullet());
+			base.Fire(new Direction(GunjuringEncyclopedia.playerGunCurrentAngle, DirectionType.Absolute, -1f), new Speed(12f, SpeedType.Absolute), new BulletScriptGunTankTreaderScatterShot1.ScatterBullet());
 			return null;
 		}
 

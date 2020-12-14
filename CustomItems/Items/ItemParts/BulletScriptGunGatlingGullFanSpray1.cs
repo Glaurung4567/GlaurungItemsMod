@@ -8,7 +8,7 @@ namespace GlaurungItems.Items
 	{
 		protected override IEnumerator Top()
 		{
-			float angle = BulletScriptGun.playerGunCurrentAngle - 45f;
+			float angle = GunjuringEncyclopedia.playerGunCurrentAngle - 45f;
 			float totalDuration = 2.4f;
 			int numBullets = Mathf.RoundToInt(totalDuration * 10f);
 			for (int i = 0; i < numBullets; i++)

@@ -13,7 +13,7 @@ namespace GlaurungItems.Items
 			float num2 = 9f;
 			for (int i = 0; i < 5; i++)
 			{
-				base.Fire(new Direction(BulletScriptGun.playerGunCurrentAngle, DirectionType.Absolute, -1f), new Speed(9f, SpeedType.Absolute), new BulletScriptGunShotgrubManAttack1.GrossBullet(num + (float)i * num2));
+				base.Fire(new Direction(GunjuringEncyclopedia.playerGunCurrentAngle, DirectionType.Absolute, -1f), new Speed(9f, SpeedType.Absolute), new BulletScriptGunShotgrubManAttack1.GrossBullet(num + (float)i * num2));
 			}
 			return null;
 		}

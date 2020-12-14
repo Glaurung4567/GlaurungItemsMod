@@ -8,7 +8,7 @@ namespace GlaurungItems.Items
 	{
 		protected override IEnumerator Top()
 		{
-			float startDirection = BulletScriptGun.playerGunCurrentAngle - 60f;
+			float startDirection = GunjuringEncyclopedia.playerGunCurrentAngle - 60f;
 			for (int i = 0; i < 7; i++)
 			{
 				int baseDelay = i * 7;

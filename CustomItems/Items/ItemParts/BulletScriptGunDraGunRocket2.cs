@@ -10,7 +10,7 @@ namespace GlaurungItems.Items
 		protected override IEnumerator Top()
 		{
 			//-90f
-			base.Fire(new Direction(BulletScriptGun.playerGunCurrentAngle, DirectionType.Absolute, -1f), new Speed(40f, SpeedType.Absolute), new DraGunRocket2.Rocket());
+			base.Fire(new Direction(GunjuringEncyclopedia.playerGunCurrentAngle, DirectionType.Absolute, -1f), new Speed(40f, SpeedType.Absolute), new DraGunRocket2.Rocket());
 			return null;
 		}
 

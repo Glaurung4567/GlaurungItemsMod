@@ -62,7 +62,7 @@ namespace GlaurungItems.Items
 			{
 				yield return this.Wait(45 - this.spawnTime);
 				//this.ChangeDirection(new Direction(0f, DirectionType.Aim, -1f), 1);
-				this.ChangeDirection(new Direction(BulletScriptGun.playerGunCurrentAngle, DirectionType.Absolute, -1f), 1);
+				this.ChangeDirection(new Direction(GunjuringEncyclopedia.playerGunCurrentAngle, DirectionType.Absolute, -1f), 1);
 				this.ChangeSpeed(new Speed(12f, SpeedType.Absolute), 1);
 				yield break;
 			}

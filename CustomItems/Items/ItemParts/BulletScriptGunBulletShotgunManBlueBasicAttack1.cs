@@ -8,7 +8,7 @@ namespace GlaurungItems.Items
 	{
 		protected override IEnumerator Top()
 		{
-			float aimDirection = BulletScriptGun.playerGunCurrentAngle;//this.AimDirection;
+			float aimDirection = GunjuringEncyclopedia.playerGunCurrentAngle;//this.AimDirection;
 			for (int i = -2; i <= 2; i++)
 			{
 				this.Fire(new Direction((float)(i * 20) + aimDirection, DirectionType.Absolute, -1f), new Speed(5f, SpeedType.Absolute), null);
@@ -20,7 +20,7 @@ namespace GlaurungItems.Items
 			}
 			if (BraveMathCollege.AbsAngleBetween(this.AimDirection, aimDirection) > 30f)
 			{
-				aimDirection = BulletScriptGun.playerGunCurrentAngle;//this.AimDirection;
+				aimDirection = GunjuringEncyclopedia.playerGunCurrentAngle;//this.AimDirection;
 			}
 			for (float num = -1.5f; num <= 1.5f; num += 1f)
 			{

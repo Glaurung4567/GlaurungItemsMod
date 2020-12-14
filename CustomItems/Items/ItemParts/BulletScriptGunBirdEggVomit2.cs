@@ -8,7 +8,7 @@ namespace GlaurungItems.Items
 	{
 		protected override IEnumerator Top()
 		{
-			float num = BraveMathCollege.ClampAngle360(BulletScriptGun.playerGunCurrentAngle);
+			float num = BraveMathCollege.ClampAngle360(GunjuringEncyclopedia.playerGunCurrentAngle);
 			float direction = (float)((num <= 90f || num > 180f) ? 20 : 160);
 			base.Fire(new Direction(direction, DirectionType.Absolute, -1f), new Speed(2f, SpeedType.Absolute), new BulletScriptGunBirdEggVomit2.EggBullet());
 			return null;
@@ -35,7 +35,7 @@ namespace GlaurungItems.Items
 			protected override IEnumerator Top()
 			{
 				this.Projectile.sprite.SetSprite("egg_projectile_001");
-				float startRotation = (float)((BulletScriptGun.playerGunCurrentAngle <= 90f || BulletScriptGun.playerGunCurrentAngle >= 270f) ? 135 : -135);
+				float startRotation = (float)((GunjuringEncyclopedia.playerGunCurrentAngle <= 90f || GunjuringEncyclopedia.playerGunCurrentAngle >= 270f) ? 135 : -135);
 				for (int i = 0; i < 45; i++)
 				{
 					Vector2 velocity = BraveMathCollege.DegreesToVector(this.Direction, this.Speed);
@@ -72,11 +72,11 @@ namespace GlaurungItems.Items
 				float positiveInfinity = float.PositiveInfinity;
 				for (int i = 0; i < 0; i++)
 				{
-					base.Fire(new Direction(BulletScriptGun.playerGunCurrentAngle, DirectionType.Absolute, -1f), new Speed(9f, SpeedType.Absolute), new BulletScriptGunBirdEggVomit2.ClusterBullet((float)i * positiveInfinity));
+					base.Fire(new Direction(GunjuringEncyclopedia.playerGunCurrentAngle, DirectionType.Absolute, -1f), new Speed(9f, SpeedType.Absolute), new BulletScriptGunBirdEggVomit2.ClusterBullet((float)i * positiveInfinity));
 				}
 				for (int j = 0; j < 12; j++)
 				{
-					base.Fire(new Direction(BulletScriptGun.playerGunCurrentAngle, DirectionType.Absolute, -1f), new Speed(9f, SpeedType.Absolute), new BulletScriptGunBirdEggVomit2.InnerBullet());
+					base.Fire(new Direction(GunjuringEncyclopedia.playerGunCurrentAngle, DirectionType.Absolute, -1f), new Speed(9f, SpeedType.Absolute), new BulletScriptGunBirdEggVomit2.InnerBullet());
 				}
 				this.spawnedBursts = true;
 			}
