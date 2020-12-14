@@ -387,18 +387,18 @@ namespace GlaurungItems.Items
 			{
 				AIBulletBank bulletBank = aiactor.bulletBank;
 				bulletBank.CollidesWithEnemies = true;
-				bulletBank.OnProjectileCreated = (Action<Projectile>)Delegate.Combine(bulletBank.OnProjectileCreated, new Action<Projectile>(GunjuringEncyclopedia.OnPostProcessProjectile));
+				bulletBank.OnProjectileCreated = (Action<Projectile>)Delegate.Combine(bulletBank.OnProjectileCreated, new Action<Projectile>(this.OnPostProcessProjectile));
 			}
 			if (aiactor.aiShooter != null)
 			{
 				AIShooter aiShooter = aiactor.aiShooter;
-				aiShooter.PostProcessProjectile = (Action<Projectile>)Delegate.Combine(aiShooter.PostProcessProjectile, new Action<Projectile>(GunjuringEncyclopedia.OnPostProcessProjectile));
+				aiShooter.PostProcessProjectile = (Action<Projectile>)Delegate.Combine(aiShooter.PostProcessProjectile, new Action<Projectile>(this.OnPostProcessProjectile));
 			}
 			// to make the companion shoot once
 			aiactor.aiShooter.ShootBulletScript(bulletScriptSelected);
 		}
 
-		private static void OnPostProcessProjectile(Projectile proj)
+		private void OnPostProcessProjectile(Projectile proj)
 		{
 			//proj.AdjustPlayerProjectileTint(Color.yellow, 0);
 			if(!(proj.Owner is PlayerController))
@@ -406,14 +406,9 @@ namespace GlaurungItems.Items
 				if(proj.gameObject.GetComponent<ComplexProjectileModifier>() != null)
                 {
 					Destroy(proj.gameObject.GetComponent<ComplexProjectileModifier>());
-                }
-				//proj.AdjustPlayerProjectileTint(Color.yellow, 0);
-				//Tools.Print(proj.OwnerName, "ffffff", true);
-				
+                }				
             }
-			if (proj.Owner is PlayerController)
-			{
-			}
+
 			//bullets modifiers to check
 			//ComplexProjectileModifier broken (blank/explosive/hungry/shadow)
 			//bouncy bullets nada
@@ -424,8 +419,14 @@ namespace GlaurungItems.Items
 			//zombieBullets fine
 			//chance nada
 			//ghost nada
+			proj.Owner = this.gun.CurrentOwner; //to allow the projectile damage modif, otherwise it stays at 10 for some reasons
 
+			proj.baseData.damage = 1;
 			proj.baseData.damage *= bulletsDamageMultiplier;
+			if(this.gun.CurrentOwner is PlayerController)
+            {
+				proj.baseData.damage *= (this.gun.CurrentOwner as PlayerController).stats.GetStatValue(PlayerStats.StatType.Damage);
+			}
 			if (proj.IsBlackBullet)
 			{
 				proj.baseData.damage *= 2;
