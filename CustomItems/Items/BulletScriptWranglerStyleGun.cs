@@ -10,13 +10,13 @@ using Random = UnityEngine.Random;
 
 namespace GlaurungItems.Items
 {
-	class BulletScriptWranglerStyleGun : AdvancedGunBehavior
+	class GunjuringEncyclopedia : AdvancedGunBehavior
 	{
 		public static void Add()
 		{
-			Gun gun = ETGMod.Databases.Items.NewGun("Gunjuringy Encyclopedia", "bok");
-			Game.Items.Rename("outdated_gun_mods:gunjuringy_encyclopedia", "gl:gunjuringy_encyclopedia");
-			gun.gameObject.AddComponent<BulletScriptWranglerStyleGun>();
+			Gun gun = ETGMod.Databases.Items.NewGun("Gunjuring Encyclopedia", "book");
+			Game.Items.Rename("outdated_gun_mods:gunjuring_encyclopedia", "gl:gunjuring_encyclopedia");
+			gun.gameObject.AddComponent<GunjuringEncyclopedia>();
 			gun.SetShortDescription("Janky");
 			gun.SetLongDescription("A book used by one of the few ArchGunjurers. \n \nIt fires random attack patterns from different Gundead.");
 			gun.SetupSprite(null, "book_idle_001", 8);
@@ -403,12 +403,12 @@ namespace GlaurungItems.Items
 			if (aiactor.bulletBank != null)
 			{
 				AIBulletBank bulletBank = aiactor.bulletBank;
-				bulletBank.OnProjectileCreated = (Action<Projectile>)Delegate.Combine(bulletBank.OnProjectileCreated, new Action<Projectile>(BulletScriptWranglerStyleGun.OnPostProcessProjectile));
+				bulletBank.OnProjectileCreated = (Action<Projectile>)Delegate.Combine(bulletBank.OnProjectileCreated, new Action<Projectile>(GunjuringEncyclopedia.OnPostProcessProjectile));
 			}
 			if (aiactor.aiShooter != null)
 			{
 				AIShooter aiShooter = aiactor.aiShooter;
-				aiShooter.PostProcessProjectile = (Action<Projectile>)Delegate.Combine(aiShooter.PostProcessProjectile, new Action<Projectile>(BulletScriptWranglerStyleGun.OnPostProcessProjectile));
+				aiShooter.PostProcessProjectile = (Action<Projectile>)Delegate.Combine(aiShooter.PostProcessProjectile, new Action<Projectile>(GunjuringEncyclopedia.OnPostProcessProjectile));
 			}
 			// to make the companion shoot once
 			aiactor.aiShooter.ShootBulletScript(bulletScriptSelected);
@@ -417,6 +417,15 @@ namespace GlaurungItems.Items
 		private static void OnPostProcessProjectile(Projectile proj)
 		{
 			//proj.AdjustPlayerProjectileTint(Color.yellow, 0);
+			if(!(proj.Owner is PlayerController))
+            {
+				if(proj.gameObject.GetComponent<ComplexProjectileModifier>() != null)
+                {
+					Destroy(proj.gameObject.GetComponent<ComplexProjectileModifier>());
+                }
+				//proj.AdjustPlayerProjectileTint(Color.yellow, 0);
+				//Tools.Print(proj.OwnerName, "ffffff", true);
+            }
 			proj.baseData.damage *= bulletsDamageMultiplier;
 			if (proj.IsBlackBullet)
 			{
@@ -424,7 +433,7 @@ namespace GlaurungItems.Items
 			}
 			proj.collidesWithPlayer = false;
 			proj.TreatedAsNonProjectileForChallenge = true;
-			proj.specRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Combine(proj.specRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(BulletScriptWranglerStyleGun.HandlePreCollision));
+			proj.specRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Combine(proj.specRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(GunjuringEncyclopedia.HandlePreCollision));
 
 		}
 
@@ -435,7 +444,7 @@ namespace GlaurungItems.Items
 			{
 				float damage = myRigidbody.projectile.baseData.damage;
 				myRigidbody.projectile.baseData.damage = 0f;
-				GameManager.Instance.StartCoroutine(BulletScriptWranglerStyleGun.ChangeProjectileDamage(myRigidbody.projectile, damage));
+				GameManager.Instance.StartCoroutine(GunjuringEncyclopedia.ChangeProjectileDamage(myRigidbody.projectile, damage));
 			}
 		}
 		private static IEnumerator ChangeProjectileDamage(Projectile bullet, float oldDamage)

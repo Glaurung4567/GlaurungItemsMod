@@ -735,8 +735,9 @@ namespace ItemAPI
 			return null;
 		}
 
-		public static void CopyAIBulletBank(UnityEngine.GameObject obj, AIBulletBank bank)
+		public static AIBulletBank CopyAIBulletBank(AIBulletBank bank)
 		{
+			UnityEngine.GameObject obj = new UnityEngine.GameObject();
 			AIBulletBank newBank = obj.GetOrAddComponent<AIBulletBank>();
 			newBank.Bullets = bank.Bullets;
 			newBank.FixedPlayerPosition = bank.FixedPlayerPosition;
@@ -758,16 +759,7 @@ namespace ItemAPI
 			newBank.TimeScale = bank.TimeScale;
 			newBank.SuppressPlayerVelocityAveraging = bank.SuppressPlayerVelocityAveraging;
 			newBank.FixedPlayerRigidbody = bank.FixedPlayerRigidbody;
-			/*newBank.spriteAnimator = bank.spriteAnimator;
-            newBank.sprite = bank.sprite;
-            newBank.specRigidbody = bank.specRigidbody;
-            newBank.encounterTrackable = bank.encounterTrackable;
-            newBank.majorBreakable = bank.majorBreakable;
-            newBank.gameActor = bank.gameActor;
-            newBank.aiAnimator = bank.aiAnimator;
-            newBank.healthHaver = bank.healthHaver;
-            newBank.aiActor = bank.aiActor;
-            newBank.renderer = bank.renderer;*/
+			return newBank;
 		}
 
 		public static ExplosionData CopyExplosionData(this ExplosionData other)
