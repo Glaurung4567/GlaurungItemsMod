@@ -158,7 +158,7 @@ namespace GlaurungItems.Items
 				aiactor.behaviorSpeculator.OtherBehaviors = EnemyDatabase.GetOrLoadByGuid("b08ec82bef6940328c7ecd9ffc6bd16c").behaviorSpeculator.OtherBehaviors;
 				aiactor.behaviorSpeculator.AttackBehaviors = EnemyDatabase.GetOrLoadByGuid("b08ec82bef6940328c7ecd9ffc6bd16c").behaviorSpeculator.AttackBehaviors;
 
-				aiactor.sprite.renderer.enabled = false; // to make the companion invisible
+				//aiactor.sprite.renderer.enabled = false; // to make the companion invisible
 				aiactor.aiShooter.ToggleGunAndHandRenderers(false, "bulletscript enemy with invisible gun");
 				aiactor.procedurallyOutlined = false;
 				aiactor.CorpseObject = null;
@@ -183,10 +183,16 @@ namespace GlaurungItems.Items
 				aiactor.PreventFallingInPitsEver = true;
 
 				//aiactor.HandleReinforcementFallIntoRoom(0f); //don't use this if you want your mob to be invisible
-				aiactor.gameObject.AddComponent<CompanionController>();
+				/*aiactor.gameObject.AddComponent<CompanionController>();
 				CompanionController component = aiactor.gameObject.GetComponent<CompanionController>();
 				component.CanInterceptBullets = false;
-				component.Initialize(owner);
+				component.Initialize(owner);*/
+
+				aiactor.specRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider, CollisionLayer.PlayerHitBox,
+					CollisionLayer.Projectile, CollisionLayer.PlayerCollider, CollisionLayer.PlayerBlocker, CollisionLayer.BeamBlocker));
+
+				aiactor.specRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.BulletBlocker, CollisionLayer.BulletBreakable, CollisionLayer.Trap));
+
 
 				aiactor.aiShooter.AimAtPoint(owner.AimCenter); //to orient the gun of the companion
 
@@ -219,158 +225,133 @@ namespace GlaurungItems.Items
 				lastOption = 26;
 			}
 			int randomSelect = Random.Range(1, lastOption);
-			string enemyGuid;
+			string enemyGuid = EnemyGuidDatabase.Entries["faster_tutorial_turret"]; ;
 			bulletsDamageMultiplier = 1;
 
 			switch (randomSelect)
 			{
 				case 1:
 					enemyGuid = EnemyGuidDatabase.Entries["lead_maiden"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(LeadMaidenSustain1));
 					bulletsDamageMultiplier = 4f;
 					break;
 				case 2:
 					enemyGuid = EnemyGuidDatabase.Entries["bookllet"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunAngryBookBasicAttack2));
 					bulletsDamageMultiplier = 4f;
 					break;
 				case 3:
 					enemyGuid = EnemyGuidDatabase.Entries["chancebulon"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunChancebulonDice1));
 					bulletsDamageMultiplier = 4f;
 					break;
 				case 4:
 					enemyGuid = EnemyGuidDatabase.Entries["chancebulon"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunChancebulonBouncingRing1));
 					bulletsDamageMultiplier = 8f;
 					break;
 				case 5:
 					enemyGuid = EnemyGuidDatabase.Entries["blue_shotgun_kin"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunBulletShotgunManBlueBasicAttack1));
 					bulletsDamageMultiplier = 10f;
 					break;
 				case 6:
 					enemyGuid = EnemyGuidDatabase.Entries["cubulead"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(CubuleadSlam1));
 					bulletsDamageMultiplier = 8f;
 					break;
 				case 7:
 					enemyGuid = EnemyGuidDatabase.Entries["fungun"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(MushroomGuySmallWaft1));
 					bulletsDamageMultiplier = 10f;
 					break;
 				case 8:
 					enemyGuid = EnemyGuidDatabase.Entries["shotgrub"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunShotgrubManAttack1));
 					bulletsDamageMultiplier = 10f;
 					break;
 				case 9:
 					enemyGuid = EnemyGuidDatabase.Entries["creech"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(ShotgunCreecherUglyCircle1));
 					bulletsDamageMultiplier = 6f;
 					break;
 				case 10: // maybe needs modifications to make the whip disappear when the companion die
 					enemyGuid = EnemyGuidDatabase.Entries["wall_mimic"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunWallMimicSlam1));
 					bulletsDamageMultiplier = 6f;
 					break;
 				case 11:
 					enemyGuid = EnemyGuidDatabase.Entries["green_bookllet"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(AngryBookGreenClover1));
 					bulletsDamageMultiplier = 6f;
 					break;
 				case 12:
 					enemyGuid = EnemyGuidDatabase.Entries["phaser_spider"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunPhaseSpiderWeb1));
 					bulletsDamageMultiplier = 6f;
 					break;
 				case 13:
 					enemyGuid = EnemyGuidDatabase.Entries["gun_nut"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunGunNutCone));
 					bulletsDamageMultiplier = 6f;
 					break;
 				case 14:
 					enemyGuid = EnemyGuidDatabase.Entries["bookllet"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(AngryBookBasicAttack1));
 					bulletsDamageMultiplier = 6f;
 					break;
 				case 15:
 					enemyGuid = EnemyGuidDatabase.Entries["gigi"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunBirdEggVomit2));
 					bulletsDamageMultiplier = 8f;
 					break;
 				case 16:
 					enemyGuid = EnemyGuidDatabase.Entries["dr_wolfs_monster"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunBossFinalGuideSword1));
 					bulletsDamageMultiplier = 12f;
 					break;
 				case 17:
 					enemyGuid = EnemyGuidDatabase.Entries["gatling_gull"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunGatlingGullFanSpray1));
 					bulletsDamageMultiplier = 12f;
 					break;
 				case 18:
 					enemyGuid = EnemyGuidDatabase.Entries["bullet_king"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletKingQuadShot1));
 					bulletsDamageMultiplier = 6f;
 					break;
 				case 19:
 					enemyGuid = EnemyGuidDatabase.Entries["dragun"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(DraGunFlameBreath1));
 					bulletsDamageMultiplier = 6f;
 					break;
 				case 20:
 					enemyGuid = EnemyGuidDatabase.Entries["treadnaught"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunTankTreaderScatterShot1));
 					bulletsDamageMultiplier = 10f;
 					break;
 				case 21:
 					enemyGuid = EnemyGuidDatabase.Entries["high_priest"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BulletScriptGunHighPriestFaceShoot1));
 					bulletsDamageMultiplier = 60f;
 					break;
 				case 22:
 					enemyGuid = EnemyGuidDatabase.Entries["resourceful_rat"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(ResourcefulRatTail1));
 					bulletsDamageMultiplier = 4f;
 					break;
 				case 23:
 					enemyGuid = EnemyGuidDatabase.Entries["last_human"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(BossFinalRobotGrenades1));
 					bulletsDamageMultiplier = 6f;
 					break;
 				case 24:
 					enemyGuid = EnemyGuidDatabase.Entries["resourceful_rat_mech"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(MetalGearRatTailgun1));
 					bulletsDamageMultiplier = 6f;
 					break;
 				case 25:
 					enemyGuid = EnemyGuidDatabase.Entries["resourceful_rat"];
-					bullets = EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank.Bullets;
 					bulletScriptSelected = new CustomBulletScriptSelector(typeof(ResourcefulRatSpinFire1));
 					bulletsDamageMultiplier = 6f;
 					break;
@@ -399,10 +380,13 @@ namespace GlaurungItems.Items
 					/*MetalGearRatLaserBullets1*/
 					/*BossFinalBulletAgunimLightning1*/
 			}
-			aiactor.bulletBank.Bullets = bullets;
+
+
+			aiactor.bulletBank.Bullets = Toolbox.CopyAIBulletBank(EnemyDatabase.GetOrLoadByGuid(enemyGuid).bulletBank).Bullets;//to prevent our gun from affecting the bulletbank of the enemy;
 			if (aiactor.bulletBank != null)
 			{
 				AIBulletBank bulletBank = aiactor.bulletBank;
+				bulletBank.CollidesWithEnemies = true;
 				bulletBank.OnProjectileCreated = (Action<Projectile>)Delegate.Combine(bulletBank.OnProjectileCreated, new Action<Projectile>(GunjuringEncyclopedia.OnPostProcessProjectile));
 			}
 			if (aiactor.aiShooter != null)
@@ -429,26 +413,6 @@ namespace GlaurungItems.Items
             }
 			if (proj.Owner is PlayerController)
 			{
-				if (proj.gameObject.GetComponent<ComplexProjectileModifier>() != null && Random.value > 0.05f)
-				{
-					Destroy(proj.gameObject.GetComponent<ComplexProjectileModifier>());
-				}
-				if (proj.gameObject.GetComponentInChildren<ExplosiveModifier>() != null && Random.value > 0.05f)
-				{
-					Destroy(proj.gameObject.GetComponentInChildren<ExplosiveModifier>());
-				}
-				if (proj.gameObject.GetComponentInChildren<SpawnProjModifier>() != null && Random.value > 0.05f)
-				{
-					Destroy(proj.gameObject.GetComponentInChildren<SpawnProjModifier>());
-				}
-				if (proj.gameObject.GetComponentInChildren<DevolverModifier>() != null && Random.value > 0.05f)
-				{
-					Destroy(proj.gameObject.GetComponentInChildren<DevolverModifier>());
-				}
-				if (proj.gameObject.GetComponentInChildren<HungryProjectileModifier>() != null && Random.value > 0.05f)
-				{
-					Destroy(proj.gameObject.GetComponentInChildren<HungryProjectileModifier>());
-				}
 			}
 			//bullets modifiers to check
 			//ComplexProjectileModifier broken (blank/explosive/hungry/shadow)
