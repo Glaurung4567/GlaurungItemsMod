@@ -425,7 +425,23 @@ namespace GlaurungItems.Items
                 }
 				//proj.AdjustPlayerProjectileTint(Color.yellow, 0);
 				//Tools.Print(proj.OwnerName, "ffffff", true);
+				
             }
+			if ((proj.Owner is PlayerController))
+			{
+				if (proj.gameObject.GetComponent<ComplexProjectileModifier>() != null && Random.value > 0.05f)
+				{
+					Destroy(proj.gameObject.GetComponent<ComplexProjectileModifier>());
+				}
+			}
+			//bullets modifiers to check
+			//ComplexProjectileModifier broken (blank/explosive/hungry/shadow)
+			//bouncy bullets nada
+			//scattershot mkay good
+			//remote bullets nada
+			//angry bit op(kinda piercing)
+			//zombieBullets fine
+
 			proj.baseData.damage *= bulletsDamageMultiplier;
 			if (proj.IsBlackBullet)
 			{
