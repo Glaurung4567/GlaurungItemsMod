@@ -735,6 +735,41 @@ namespace ItemAPI
 			return null;
 		}
 
+		public static void CopyAIBulletBank(UnityEngine.GameObject obj, AIBulletBank bank)
+		{
+			AIBulletBank newBank = obj.GetOrAddComponent<AIBulletBank>();
+			newBank.Bullets = bank.Bullets;
+			newBank.FixedPlayerPosition = bank.FixedPlayerPosition;
+			newBank.OnProjectileCreated = bank.OnProjectileCreated;
+			newBank.OverrideGun = bank.OverrideGun;
+			newBank.rampTime = bank.rampTime;
+			newBank.OnProjectileCreatedWithSource = bank.OnProjectileCreatedWithSource;
+			newBank.rampBullets = bank.rampBullets;
+			newBank.transforms = bank.transforms;
+			newBank.useDefaultBulletIfMissing = bank.useDefaultBulletIfMissing;
+			newBank.rampStartHeight = bank.rampStartHeight;
+			newBank.SpecificRigidbodyException = bank.SpecificRigidbodyException;
+			newBank.PlayShells = bank.PlayShells;
+			newBank.PlayAudio = bank.PlayAudio;
+			newBank.PlayVfx = bank.PlayVfx;
+			newBank.CollidesWithEnemies = bank.CollidesWithEnemies;
+			newBank.FixedPlayerRigidbodyLastPosition = bank.FixedPlayerRigidbodyLastPosition;
+			newBank.ActorName = bank.ActorName;
+			newBank.TimeScale = bank.TimeScale;
+			newBank.SuppressPlayerVelocityAveraging = bank.SuppressPlayerVelocityAveraging;
+			newBank.FixedPlayerRigidbody = bank.FixedPlayerRigidbody;
+			/*newBank.spriteAnimator = bank.spriteAnimator;
+            newBank.sprite = bank.sprite;
+            newBank.specRigidbody = bank.specRigidbody;
+            newBank.encounterTrackable = bank.encounterTrackable;
+            newBank.majorBreakable = bank.majorBreakable;
+            newBank.gameActor = bank.gameActor;
+            newBank.aiAnimator = bank.aiAnimator;
+            newBank.healthHaver = bank.healthHaver;
+            newBank.aiActor = bank.aiActor;
+            newBank.renderer = bank.renderer;*/
+		}
+
 		public static ExplosionData CopyExplosionData(this ExplosionData other)
 		{
 			ExplosionData explosionData = new ExplosionData();
