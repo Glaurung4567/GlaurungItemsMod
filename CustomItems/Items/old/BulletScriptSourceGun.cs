@@ -283,7 +283,7 @@ namespace GlaurungItems.Items
                     if(this.gun.CurrentOwner is PlayerController)
                     {
                         PlayerController player = this.gun.CurrentOwner as PlayerController;
-                        player.DoPostProcessProjectile(projectile);
+                        //player.DoPostProcessProjectile(projectile);
                     }
                 }
             }

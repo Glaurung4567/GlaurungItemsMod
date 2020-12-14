@@ -97,6 +97,7 @@ namespace GlaurungItems
                 MatriochkAmmolet.Init();
 
                 GunjuringEncyclopedia.Add();
+                BulletScriptSourceGun.Add();
                 //GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra

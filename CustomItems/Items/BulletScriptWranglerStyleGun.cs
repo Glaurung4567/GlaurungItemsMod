@@ -36,7 +36,7 @@ namespace GlaurungItems.Items
 			gun.SetBaseMaxAmmo(142);
 			gun.muzzleFlashEffects.type = VFXPoolType.None;
 
-			gun.quality = PickupObject.ItemQuality.A;
+			gun.quality = PickupObject.ItemQuality.EXCLUDED;
 
 			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
 			projectile.gameObject.SetActive(false);
@@ -427,11 +427,27 @@ namespace GlaurungItems.Items
 				//Tools.Print(proj.OwnerName, "ffffff", true);
 				
             }
-			if ((proj.Owner is PlayerController))
+			if (proj.Owner is PlayerController)
 			{
 				if (proj.gameObject.GetComponent<ComplexProjectileModifier>() != null && Random.value > 0.05f)
 				{
 					Destroy(proj.gameObject.GetComponent<ComplexProjectileModifier>());
+				}
+				if (proj.gameObject.GetComponentInChildren<ExplosiveModifier>() != null && Random.value > 0.05f)
+				{
+					Destroy(proj.gameObject.GetComponentInChildren<ExplosiveModifier>());
+				}
+				if (proj.gameObject.GetComponentInChildren<SpawnProjModifier>() != null && Random.value > 0.05f)
+				{
+					Destroy(proj.gameObject.GetComponentInChildren<SpawnProjModifier>());
+				}
+				if (proj.gameObject.GetComponentInChildren<DevolverModifier>() != null && Random.value > 0.05f)
+				{
+					Destroy(proj.gameObject.GetComponentInChildren<DevolverModifier>());
+				}
+				if (proj.gameObject.GetComponentInChildren<HungryProjectileModifier>() != null && Random.value > 0.05f)
+				{
+					Destroy(proj.gameObject.GetComponentInChildren<HungryProjectileModifier>());
 				}
 			}
 			//bullets modifiers to check
@@ -439,8 +455,11 @@ namespace GlaurungItems.Items
 			//bouncy bullets nada
 			//scattershot mkay good
 			//remote bullets nada
+			//katana bullets pb
 			//angry bit op(kinda piercing)
 			//zombieBullets fine
+			//chance nada
+			//ghost nada
 
 			proj.baseData.damage *= bulletsDamageMultiplier;
 			if (proj.IsBlackBullet)
