@@ -15,7 +15,7 @@ namespace GlaurungItems.Items
             gun.SetShortDescription("WIP");
             gun.SetLongDescription("WIP");
             gun.SetupSprite(null, "jpxfrd_idle_001", 8);
-            gun.SetAnimationFPS(gun.shootAnimation, 24);
+            gun.SetAnimationFPS(gun.shootAnimation, 12);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
             //gun.SetAnimationFPS(gun.idleAnimation, 8);
             gun.AddProjectileModuleFrom("klobb", true, false);
@@ -24,12 +24,14 @@ namespace GlaurungItems.Items
             gun.DefaultModule.angleVariance = 0f;
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
-            gun.reloadTime = 1.5f;
-            gun.DefaultModule.cooldownTime = 0.2f;
-            gun.DefaultModule.numberOfShotsInClip = 30;
-            gun.SetBaseMaxAmmo(400);
+            gun.gunHandedness = GunHandedness.HiddenOneHanded;
+            gun.reloadTime = 2.2f;
+            gun.DefaultModule.cooldownTime = 2f;
+            gun.DefaultModule.numberOfShotsInClip = 3;
+            gun.SetBaseMaxAmmo(142);
+            gun.muzzleFlashEffects.type = VFXPoolType.None;
 
-            gun.quality = PickupObject.ItemQuality.EXCLUDED;
+            gun.quality = PickupObject.ItemQuality.A;
 
             Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
             projectile.gameObject.SetActive(false);
@@ -37,14 +39,53 @@ namespace GlaurungItems.Items
             UnityEngine.Object.DontDestroyOnLoad(projectile);
             gun.DefaultModule.projectiles[0] = projectile;
 
-            projectile.baseData.damage *= 4f;
-            projectile.baseData.speed *= 2.8f;
-            projectile.baseData.force *= 1f;
-            projectile.baseData.range *= 3f;
-            projectile.transform.parent = gun.barrelOffset;
+            projectile.baseData.damage = 0f;
+            projectile.baseData.speed *= 0.001f;
+            projectile.baseData.force = 0f;
+            projectile.baseData.range *= 0.000f;
             //projectile.SetProjectileSpriteRight("build_projectile", 5, 5);
 
             ETGMod.Databases.Items.Add(gun, null, "ANY");
+        }
+
+        //This block of code allows us to change the reload sounds.
+        public override void OnPostFired(PlayerController player, Gun gun)
+        {
+            gun.PreventNormalFireAudio = true;
+            //AkSoundEngine.PostEvent("Play_ENV_time_shatter_01", GameManager.Instance.gameObject);
+            //AkSoundEngine.PostEvent("Play_ENM_wizard_book_01", gameObject);
+            AkSoundEngine.PostEvent("Play_OBJ_book_drop_01", gameObject);
+        }
+        protected override void Update()
+        {
+            base.Update();
+
+            if (gun.CurrentOwner)
+            {
+                if (!gun.PreventNormalFireAudio)
+                {
+                    this.gun.PreventNormalFireAudio = true;
+                }
+                if (!gun.IsReloading && !HasReloaded)
+                {
+                    this.HasReloaded = true;
+                }
+            }
+        }
+
+        public override void OnReloadPressed(PlayerController player, Gun gun, bool bSOMETHING)
+        {
+            if (gun.IsReloading && this.HasReloaded)
+            {
+                HasReloaded = false;
+                AkSoundEngine.PostEvent("Stop_WPN_All", base.gameObject);
+                base.OnReloadPressed(player, gun, bSOMETHING);
+                AkSoundEngine.PostEvent("Play_UI_page_turn_01", base.gameObject);
+                if ((this.Owner as PlayerController).HasPassiveItem(500))
+                {
+
+                }
+            }
         }
 
         public override void PostProcessProjectile(Projectile projectile)
@@ -88,8 +129,7 @@ namespace GlaurungItems.Items
         }
 
         public static float playerGunCurrentAngle = 0f;
-
-
+        private bool HasReloaded;
     }
 
 }
