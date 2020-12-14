@@ -7,3 +7,4 @@ Added the actives Mine Crafter and Create Trap
 Added The Indecisive and Turtlez Beam guns
 Added Matriochk Ammolet and Nu Arcana passives
 Removed the mini blank effect on Shambles
+Fixed a bug where enemies bullets blanked when the player has blank bullets
