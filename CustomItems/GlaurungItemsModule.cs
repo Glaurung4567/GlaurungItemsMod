@@ -97,7 +97,6 @@ namespace GlaurungItems
                 NuArcana.Init();
                 MatriochkAmmolet.Init();
 
-                Kragun.Add();
                 BulletScriptGunSource.Add();
                 //GunDeadArmyStronghold.Init();
 

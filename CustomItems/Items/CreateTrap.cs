@@ -20,7 +20,7 @@ namespace GlaurungItems.Items
 			string longDesc = "A spell based on to the infamous Create Pit.";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 250f);
-			item.quality = ItemQuality.C;
+			item.quality = ItemQuality.B;
 		}
 
 		protected override void DoEffect(PlayerController user)
