@@ -90,8 +90,10 @@
     <Compile Include="ItemAPI\SpecialBlankModificationItem.cs" />
     <Compile Include="ItemAPI\SpecialFoyerShop.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
+    <Compile Include="Items\Kragun.cs" />
     <Compile Include="Items\MatriochkAmmolet.cs" />
     <Compile Include="Items\NuArcana.cs" />
+    <Compile Include="Items\old\BulletScriptGunMk2.cs" />
     <Compile Include="Items\TurtlezBeam.cs" />
     <Compile Include="Items\old\BeamTest.cs" />
     <Compile Include="Items\old\BunnyCounterweight.cs" />

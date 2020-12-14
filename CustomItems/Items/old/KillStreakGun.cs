@@ -5,13 +5,13 @@ using System.Timers;
 
 namespace GlaurungItems.Items
 {
-    class KillStreakGun : AdvancedGunBehavior
+    class KillStreak : AdvancedGunBehavior
     {
         public static void Add()
         {
             Gun gun = ETGMod.Databases.Items.NewGun("Kill Streak", "jpxfrd");
             Game.Items.Rename("outdated_gun_mods:kill_streak", "gl:kill_streak");
-            gun.gameObject.AddComponent<KillStreakGun>();
+            gun.gameObject.AddComponent<KillStreak>();
             gun.SetShortDescription("WIP");
             gun.SetLongDescription("WIP");
             gun.SetupSprite(null, "jpxfrd_idle_001", 8);

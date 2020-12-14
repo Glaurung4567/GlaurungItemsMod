@@ -97,6 +97,8 @@ namespace GlaurungItems
                 NuArcana.Init();
                 MatriochkAmmolet.Init();
 
+                Kragun.Add();
+                BulletScriptGunSource.Add();
                 //GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra

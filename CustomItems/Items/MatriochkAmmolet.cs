@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using ItemAPI;
-using Dungeonator;
 using Random = UnityEngine.Random;
 using System.Collections;
-using EnemyAPI;
 
 namespace GlaurungItems.Items
 {
