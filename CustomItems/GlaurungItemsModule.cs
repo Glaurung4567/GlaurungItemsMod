@@ -72,6 +72,7 @@ namespace GlaurungItems
                 Neuralyzer.Init();
                 HowlOfTheJammed.Init();
                 Chainer.Add();
+                GunjuringEncyclopedia.Add();
                 RaiseDead.Init();
                 Overhealer.Add();
                 HighPriestSecretMap.Init();
@@ -92,12 +93,11 @@ namespace GlaurungItems
                 CreateTrap.Init();
                 MineCrafter.Init();
 
-                TurtlezBeam.Add();
-                NuArcana.Init();
-                MatriochkAmmolet.Init();
+                //TurtlezBeam.Add();
+                //NuArcana.Init();
+                //MatriochkAmmolet.Init();
 
-                GunjuringEncyclopedia.Add();
-                BulletScriptSourceGun.Add();
+                //BulletScriptSourceGun.Add();
                 //GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra
