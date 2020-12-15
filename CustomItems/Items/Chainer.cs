@@ -134,6 +134,7 @@ namespace GlaurungItems.Items
                 AIActor aiactor = AIActor.Spawn(orLoadByGuid.aiActor, positionVector, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(positionVector.ToIntVector2()), true, AIActor.AwakenAnimationType.Default, true);
 
 				aiactor.bulletBank.Bullets = Toolbox.CopyAIBulletBank(EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["executioner"]).bulletBank).Bullets;
+				aiactor.bulletBank.CollidesWithEnemies = true;
 
 				// to prevent the aiActor from moving
 				aiactor.behaviorSpeculator.MovementBehaviors = EnemyDatabase.GetOrLoadByGuid("b08ec82bef6940328c7ecd9ffc6bd16c").behaviorSpeculator.MovementBehaviors;
@@ -227,6 +228,7 @@ namespace GlaurungItems.Items
 
 			proj.baseData.damage = 1;
 			proj.collidesWithPlayer = false;
+			proj.collidesWithEnemies = true;
 			proj.TreatedAsNonProjectileForChallenge = true;
 			proj.specRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Combine(proj.specRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandlePreCollision));
 			GameManager.Instance.StartCoroutine(this.ChangeProjectileDamage(proj));
@@ -353,11 +355,11 @@ namespace GlaurungItems.Items
 			{
 				if (enemy.aiActor != null)
 				{
-					proj.TreatedAsNonProjectileForChallenge = true;
+					//proj.TreatedAsNonProjectileForChallenge = true;
 					proj.ImmuneToBlanks = true;
 					proj.ImmuneToSustainedBlanks = true; //don't work
-					proj.baseData.damage *= 4f;
-					GameManager.Instance.StartCoroutine(ChainCompanionisedEnemyBulletModifiers.ChangeProjectileDamage(proj));
+					//proj.baseData.damage *= 4f;
+					//GameManager.Instance.StartCoroutine(ChainCompanionisedEnemyBulletModifiers.ChangeProjectileDamage(proj));
 
 					//if (enemy.aiActor.IsBlackPhantom) { proj.baseData.damage = baseBulletDamage * jammedDamageMultiplier; }
 				}
