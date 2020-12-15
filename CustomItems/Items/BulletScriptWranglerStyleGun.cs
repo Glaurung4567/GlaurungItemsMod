@@ -401,12 +401,9 @@ namespace GlaurungItems.Items
 		private void OnPostProcessProjectile(Projectile proj)
 		{
 			//proj.AdjustPlayerProjectileTint(Color.yellow, 0);
-			if(!(proj.Owner is PlayerController))
+			if(proj.Owner is AIActor && !(proj.Owner as AIActor).CompanionOwner)
             {
-				if(proj.gameObject.GetComponent<ComplexProjectileModifier>() != null)
-                {
-					Destroy(proj.gameObject.GetComponent<ComplexProjectileModifier>());
-                }				
+				return;				
             }
 
 			//bullets modifiers to check
