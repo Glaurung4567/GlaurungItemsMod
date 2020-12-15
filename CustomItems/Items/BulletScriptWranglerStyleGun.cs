@@ -174,7 +174,7 @@ namespace GlaurungItems.Items
 				aiactor.behaviorSpeculator.OtherBehaviors = EnemyDatabase.GetOrLoadByGuid("b08ec82bef6940328c7ecd9ffc6bd16c").behaviorSpeculator.OtherBehaviors;
 				aiactor.behaviorSpeculator.AttackBehaviors = EnemyDatabase.GetOrLoadByGuid("b08ec82bef6940328c7ecd9ffc6bd16c").behaviorSpeculator.AttackBehaviors;
 
-				//aiactor.sprite.renderer.enabled = false; // to make the companion invisible
+				aiactor.sprite.renderer.enabled = false; // to make the companion invisible
 				aiactor.aiShooter.ToggleGunAndHandRenderers(false, "bulletscript enemy with invisible gun");
 				aiactor.procedurallyOutlined = false;
 				aiactor.CorpseObject = null;
@@ -422,10 +422,6 @@ namespace GlaurungItems.Items
 				return; //to prevent the OnPostProcessProjectile from affecting enemies projectiles
 			}
 
-			//bullets modifiers to check
-			//ComplexProjectileModifier broken (blank/explosive/hungry/shadow)
-			//bouncy bullets nada
-			//scattershot bit much
 			proj.Owner = this.gun.CurrentOwner; //to allow the projectile damage modif, otherwise it stays at 10 for some reasons
 
 			proj.baseData.damage = 1;

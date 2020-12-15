@@ -133,7 +133,7 @@ namespace GlaurungItems.Items
 				Vector2 positionVector = owner.sprite.WorldBottomCenter;
                 AIActor aiactor = AIActor.Spawn(orLoadByGuid.aiActor, positionVector, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(positionVector.ToIntVector2()), true, AIActor.AwakenAnimationType.Default, true);
 
-				aiactor.bulletBank.Bullets = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["executioner"]).bulletBank.Bullets;
+				aiactor.bulletBank.Bullets = Toolbox.CopyAIBulletBank(EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["executioner"]).bulletBank).Bullets;
 
 				// to prevent the aiActor from moving
 				aiactor.behaviorSpeculator.MovementBehaviors = EnemyDatabase.GetOrLoadByGuid("b08ec82bef6940328c7ecd9ffc6bd16c").behaviorSpeculator.MovementBehaviors;
@@ -165,11 +165,16 @@ namespace GlaurungItems.Items
 				aiactor.knockbackDoer.SetImmobile(true, "Chainer"); // from the TetherBehavior to prevent the companion from being pushed by explosions
 				aiactor.PreventFallingInPitsEver = true;
 
-                //aiactor.HandleReinforcementFallIntoRoom(0f); //don't use this if you want your mob to be invisible
-                aiactor.gameObject.AddComponent<CompanionController>();
+				//aiactor.HandleReinforcementFallIntoRoom(0f); //don't use this if you want your mob to be invisible
+				/*aiactor.gameObject.AddComponent<CompanionController>();
                 CompanionController component = aiactor.gameObject.GetComponent<CompanionController>();
                 component.CanInterceptBullets = false;
-                component.Initialize(owner);
+                component.Initialize(owner);*/
+
+				aiactor.specRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider, CollisionLayer.PlayerHitBox,
+					CollisionLayer.Projectile, CollisionLayer.PlayerCollider, CollisionLayer.PlayerBlocker, CollisionLayer.BeamBlocker));
+
+				aiactor.specRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.BulletBlocker, CollisionLayer.BulletBreakable, CollisionLayer.Trap));
 
 				if (aiactor.healthHaver != null)
 				{
@@ -180,19 +185,19 @@ namespace GlaurungItems.Items
 				if (aiactor.bulletBank != null)
 				{
 					AIBulletBank bulletBank = aiactor.bulletBank;
-					bulletBank.OnProjectileCreated = (Action<Projectile>)Delegate.Combine(bulletBank.OnProjectileCreated, new Action<Projectile>(Chainer.OnPostProcessProjectile));
+					bulletBank.OnProjectileCreated = (Action<Projectile>)Delegate.Combine(bulletBank.OnProjectileCreated, new Action<Projectile>(this.OnPostProcessProjectile));
 				}
 				if (aiactor.aiShooter != null)
 				{
 					AIShooter aiShooter = aiactor.aiShooter;
-					aiShooter.PostProcessProjectile = (Action<Projectile>)Delegate.Combine(aiShooter.PostProcessProjectile, new Action<Projectile>(Chainer.OnPostProcessProjectile));
+					aiShooter.PostProcessProjectile = (Action<Projectile>)Delegate.Combine(aiShooter.PostProcessProjectile, new Action<Projectile>(this.OnPostProcessProjectile));
 				}
 
-				ChainCompanionisedEnemyBulletModifiers companionisedBullets = aiactor.gameObject.GetOrAddComponent<ChainCompanionisedEnemyBulletModifiers>();
+				/*ChainCompanionisedEnemyBulletModifiers companionisedBullets = aiactor.gameObject.GetOrAddComponent<ChainCompanionisedEnemyBulletModifiers>();
 				companionisedBullets.jammedDamageMultiplier = 2f;
 				companionisedBullets.TintBullets = false;
 				companionisedBullets.TintColor = Color.grey;
-				companionisedBullets.baseBulletDamage = 2f;
+				companionisedBullets.baseBulletDamage = 2f;*/
 
 				// to make the companion shoot once
 				aiactor.aiShooter.AimAtPoint(owner.AimCenter);
@@ -210,9 +215,57 @@ namespace GlaurungItems.Items
             }
         }
 
-		private static void OnPostProcessProjectile(Projectile proj)
+		private void OnPostProcessProjectile(Projectile proj)
 		{
+			if (proj.Owner is AIActor && !(proj.Owner as AIActor).CompanionOwner)
+			{
+				return; //to prevent the OnPostProcessProjectile from affecting enemies projectiles
+			}
 			proj.AdjustPlayerProjectileTint(Color.grey, 0);
+
+			proj.Owner = this.gun.CurrentOwner; //to allow the projectile damage modif, otherwise it stays at 10 for some reasons
+
+			proj.baseData.damage = 1;
+			proj.collidesWithPlayer = false;
+			proj.TreatedAsNonProjectileForChallenge = true;
+			proj.specRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Combine(proj.specRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandlePreCollision));
+			GameManager.Instance.StartCoroutine(this.ChangeProjectileDamage(proj));
+		}
+
+		private IEnumerator ChangeProjectileDamage(Projectile proj)
+		{
+			yield return new WaitForSeconds(1f);
+			proj.baseData.damage *= 6f;
+			if (this.gun.CurrentOwner is PlayerController)
+			{
+				proj.baseData.damage *= (this.gun.CurrentOwner as PlayerController).stats.GetStatValue(PlayerStats.StatType.Damage);
+			}
+			if (proj.IsBlackBullet)
+			{
+				proj.baseData.damage *= 2;
+			}
+			yield break;
+		}
+
+		private void HandlePreCollision(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, SpeculativeRigidbody otherRigidbody, PixelCollider otherPixelCollider)
+		{
+			bool flag = otherRigidbody && otherRigidbody.healthHaver && otherRigidbody.aiActor && otherRigidbody.aiActor.CompanionOwner;
+			if (flag)
+			{
+				float damage = myRigidbody.projectile.baseData.damage;
+				myRigidbody.projectile.baseData.damage = 0f;
+				GameManager.Instance.StartCoroutine(Chainer.ChangeProjectileDamage(myRigidbody.projectile, damage));
+			}
+		}
+		private static IEnumerator ChangeProjectileDamage(Projectile bullet, float oldDamage)
+		{
+			yield return new WaitForSeconds(0.1f);
+			bool flag = bullet != null;
+			if (flag)
+			{
+				bullet.baseData.damage = oldDamage;
+			}
+			yield break;
 		}
 
 		public override void OnPostFired(PlayerController player, Gun gun)
@@ -317,7 +370,6 @@ namespace GlaurungItems.Items
 			yield return new WaitForSeconds(1f);
 			proj.baseData.damage *= 4f;
 			yield break;
-			throw new NotImplementedException();
         }
 
         private AIActor enemy;
