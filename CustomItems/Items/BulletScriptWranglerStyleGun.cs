@@ -133,14 +133,31 @@ namespace GlaurungItems.Items
 
 		public override void PostProcessProjectile(Projectile projectile)
 		{
-			SpawnBulletCompanion(this.Player, projectile);
-			if (roomWhereThisWasFired == null && gun.CurrentOwner && (gun.CurrentOwner as PlayerController).CurrentRoom != null)
-			{
-				roomWhereThisWasFired = (gun.CurrentOwner as PlayerController).CurrentRoom;
+			if(countTimesFiredInTimeLaps <= 1)
+            {
+				SpawnBulletCompanion(this.Player, projectile);
+				if (roomWhereThisWasFired == null && gun.CurrentOwner && (gun.CurrentOwner as PlayerController).CurrentRoom != null)
+				{
+					roomWhereThisWasFired = (gun.CurrentOwner as PlayerController).CurrentRoom;
+				}
+				if(countTimesFiredInTimeLaps == 1)
+                {
+					GameManager.Instance.StartCoroutine(this.ResetCountTimesFiredInTimeLaps());
+
+				}
 			}
+			countTimesFiredInTimeLaps++;
 		}
 
-		private void SpawnBulletCompanion(PlayerController owner, Projectile projectile)
+        private IEnumerator ResetCountTimesFiredInTimeLaps()
+        {
+			yield return new WaitForSeconds(0.5f);
+			countTimesFiredInTimeLaps = 0;
+			yield break;
+
+		}
+
+        private void SpawnBulletCompanion(PlayerController owner, Projectile projectile)
 		{
 			try
 			{
@@ -403,19 +420,13 @@ namespace GlaurungItems.Items
 			//proj.AdjustPlayerProjectileTint(Color.yellow, 0);
 			if(proj.Owner is AIActor && !(proj.Owner as AIActor).CompanionOwner)
             {
-				return;				
-            }
+				return; //to prevent the OnPostProcessProjectile from affecting enemies projectiles
+			}
 
 			//bullets modifiers to check
 			//ComplexProjectileModifier broken (blank/explosive/hungry/shadow)
 			//bouncy bullets nada
-			//scattershot mkay good
-			//remote bullets nada
-			//katana bullets pb
-			//angry bit op(kinda piercing)
-			//zombieBullets fine
-			//chance nada
-			//ghost nada
+			//scattershot bit much
 			proj.Owner = this.gun.CurrentOwner; //to allow the projectile damage modif, otherwise it stays at 10 for some reasons
 
 			proj.baseData.damage = 1;
@@ -431,7 +442,6 @@ namespace GlaurungItems.Items
 			proj.collidesWithPlayer = false;
 			proj.TreatedAsNonProjectileForChallenge = true;
 			proj.specRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Combine(proj.specRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(GunjuringEncyclopedia.HandlePreCollision));
-
 		}
 
 		private static void HandlePreCollision(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, SpeculativeRigidbody otherRigidbody, PixelCollider otherPixelCollider)
@@ -461,6 +471,7 @@ namespace GlaurungItems.Items
 		private static float bulletsDamageMultiplier = 1f;
 		private List<AIActor> spawnedScriptFirerers = new List<AIActor>();
 		private RoomHandler roomWhereThisWasFired = null;
+		private float countTimesFiredInTimeLaps;
 	}
 }
 
