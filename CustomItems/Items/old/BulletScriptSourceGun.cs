@@ -33,7 +33,7 @@ namespace GlaurungItems.Items
             gun.SetBaseMaxAmmo(142);
             gun.muzzleFlashEffects.type = VFXPoolType.None;
 
-            gun.quality = PickupObject.ItemQuality.A;
+            gun.quality = PickupObject.ItemQuality.EXCLUDED;
 
             Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
             projectile.gameObject.SetActive(false);
@@ -105,7 +105,7 @@ namespace GlaurungItems.Items
 			{
 				lastOption = 26;
 			}
-			int randomSelect = Random.Range(1, lastOption);
+			int randomSelect = 24;//Random.Range(1, lastOption);
 			bulletsDamageMultiplier = 1;
 
 			switch (randomSelect)
@@ -227,7 +227,7 @@ namespace GlaurungItems.Items
 					break;
 				case 24:
 					enemyGuid = EnemyGuidDatabase.Entries["resourceful_rat_mech"];
-					bulletScriptSelected = new CustomBulletScriptSelector(typeof(MetalGearRatTailgun1));
+					bulletScriptSelected = new CustomBulletScriptSelector(typeof(CustomMetalGearRatTailgun1));
 					bulletsDamageMultiplier = 6f;
 					break;
 				case 25:

@@ -36,7 +36,7 @@ namespace GlaurungItems.Items
 			gun.SetBaseMaxAmmo(142);
 			gun.muzzleFlashEffects.type = VFXPoolType.None;
 
-			gun.quality = PickupObject.ItemQuality.EXCLUDED;
+			gun.quality = PickupObject.ItemQuality.A;
 
 			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
 			projectile.gameObject.SetActive(false);

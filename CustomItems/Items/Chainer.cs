@@ -35,7 +35,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.numberOfShotsInClip = 5;
             gun.SetBaseMaxAmmo(75);
 
-            gun.quality = PickupObject.ItemQuality.EXCLUDED;
+            gun.quality = PickupObject.ItemQuality.B;
 
             Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
             projectile.gameObject.SetActive(false);
