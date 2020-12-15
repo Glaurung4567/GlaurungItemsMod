@@ -100,14 +100,29 @@ namespace GlaurungItems.Items
 
 		public override void PostProcessProjectile(Projectile projectile)
         {
-            SpawnChainCompanion(this.Player, projectile);
-			if(roomWhereThisWasFired == null && gun.CurrentOwner && (gun.CurrentOwner as PlayerController).CurrentRoom != null)
+			if(countTimesFiredInTimeLaps <= 1)
             {
-				roomWhereThisWasFired = (gun.CurrentOwner as PlayerController).CurrentRoom;
-            }
-        }
+				SpawnChainCompanion(this.Player, projectile);
+				if (roomWhereThisWasFired == null && gun.CurrentOwner && (gun.CurrentOwner as PlayerController).CurrentRoom != null)
+				{
+					roomWhereThisWasFired = (gun.CurrentOwner as PlayerController).CurrentRoom;
+				}
+				if(countTimesFiredInTimeLaps == 1)
+                {
+					GameManager.Instance.StartCoroutine(this.ResetCountTimesFiredInTimeLaps());
 
-        private void SpawnChainCompanion(PlayerController owner, Projectile projectile)
+				}
+			}
+			countTimesFiredInTimeLaps++;
+		}
+
+        private IEnumerator ResetCountTimesFiredInTimeLaps()
+		{
+			yield return new WaitForSeconds(0.5f);
+			countTimesFiredInTimeLaps = 0;
+			yield break;
+		}
+		private void SpawnChainCompanion(PlayerController owner, Projectile projectile)
         {
             try
             {
@@ -243,7 +258,8 @@ namespace GlaurungItems.Items
 		public static float playerGunCurrentAngle = 0f;
 		private List<AIActor> spawnedChainHolders = new List<AIActor>();
 		private RoomHandler roomWhereThisWasFired = null;
-    }
+		private float countTimesFiredInTimeLaps;
+	}
 
 	/// <summary>
 	/// from NN https://github.com/Nevernamed22/OnceMoreIntoTheBreach/blob/master/MakingAnItem/KalibersEye.cs 
@@ -309,6 +325,7 @@ namespace GlaurungItems.Items
 		public float jammedDamageMultiplier;
 		public bool TintBullets;
 		public Color TintColor;
+		private float countTimesFiredInTimeLaps;
 
 	}
 

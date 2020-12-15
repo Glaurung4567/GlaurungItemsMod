@@ -154,7 +154,6 @@ namespace GlaurungItems.Items
 			yield return new WaitForSeconds(0.5f);
 			countTimesFiredInTimeLaps = 0;
 			yield break;
-
 		}
 
         private void SpawnBulletCompanion(PlayerController owner, Projectile projectile)
