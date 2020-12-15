@@ -11,8 +11,8 @@ namespace GlaurungItems.Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("Gunjuringy Encyclopedia", "bok");
-            Game.Items.Rename("outdated_gun_mods:gunjuringy_encyclopedia", "gl:gunjuringy_encyclopedia");
+            Gun gun = ETGMod.Databases.Items.NewGun("Script Gun", "bok");
+            Game.Items.Rename("outdated_gun_mods:script_gun", "gl:script_gun");
             gun.gameObject.AddComponent<BulletScriptSourceGun>();
             gun.SetShortDescription("WIP");
             gun.SetLongDescription("WIP");
@@ -42,9 +42,9 @@ namespace GlaurungItems.Items
             gun.DefaultModule.projectiles[0] = projectile;
 
             projectile.baseData.damage = 0f;
-            projectile.baseData.speed *= 0.001f;
+            projectile.baseData.speed = 0.00f;
             projectile.baseData.force = 0f;
-            projectile.baseData.range *= 0.000f;
+            projectile.baseData.range *= 1.000f;
             //projectile.SetProjectileSpriteRight("build_projectile", 5, 5);
 
             ETGMod.Databases.Items.Add(gun, null, "ANY");
@@ -92,7 +92,10 @@ namespace GlaurungItems.Items
 
         public override void PostProcessProjectile(Projectile projectile)
         {
-            BulletScriptSource source = this.gun.CurrentOwner.gameObject.GetOrAddComponent<BulletScriptSource>();
+			GameObject gameObject = new GameObject();
+			gameObject.transform.position = this.gun.barrelOffset.position;
+			BulletScriptSource source = gameObject.GetOrAddComponent<BulletScriptSource>();
+			gameObject.AddComponent<BulletSourceKiller>();
 
 			//string enemyGuid = EnemyGuidDatabase.Entries["fungun"];
 			string enemyGuid = EnemyGuidDatabase.Entries["faster_tutorial_turret"];
