@@ -30,7 +30,7 @@ namespace GlaurungItems.Items
             gun.reloadTime = 1.5f;
             gun.DefaultModule.cooldownTime = 0.1f; 
             gun.DefaultModule.numberOfShotsInClip = PeacemakerCarbine.baseMagSize;
-            gun.SetBaseMaxAmmo(200);
+            gun.SetBaseMaxAmmo(300);
             gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
 
             gun.quality = PickupObject.ItemQuality.B;
@@ -41,7 +41,7 @@ namespace GlaurungItems.Items
             UnityEngine.Object.DontDestroyOnLoad(projectile);
             gun.DefaultModule.projectiles[0] = projectile;
 
-            projectile.baseData.damage *= 4f;
+            projectile.baseData.damage *= 5f;
             projectile.baseData.speed *= 2f;
             projectile.baseData.force *= 1f;
             projectile.baseData.range *= 3f;
@@ -55,6 +55,12 @@ namespace GlaurungItems.Items
 
             projectile2.baseData.damage *= 2;
             projectile2.baseData.speed *= 2;
+            projectile2.FireApplyChance = 1;
+            projectile2.AppliesFire = true;
+            projectile2.fireEffect = (PickupObjectDatabase.GetById(125) as Gun).DefaultModule.projectiles[0].fireEffect;
+            PierceProjModifier pierceMod = projectile2.gameObject.GetOrAddComponent<PierceProjModifier>();
+            pierceMod.penetratesBreakables = true;
+            pierceMod.penetration = 55;
             ProjectileModule.ChargeProjectile chargeProj = new ProjectileModule.ChargeProjectile
             {
                 Projectile = projectile2,
@@ -64,6 +70,16 @@ namespace GlaurungItems.Items
             gun.DefaultModule.chargeProjectiles = new List<ProjectileModule.ChargeProjectile> { chargeProj };
 
             ETGMod.Databases.Items.Add(gun, null, "ANY");
+        }
+
+        public override void OnFinishAttack(PlayerController player, Gun gun)
+        {
+            base.OnFinishAttack(player, gun);
+            gun.PreventNormalFireAudio = true;
+            if (altFireOn)
+            {
+                AkSoundEngine.PostEvent("Play_WPN_magnum_shot_01", gameObject);
+            }
         }
 
         public override void PostProcessProjectile(Projectile projectile)
@@ -79,7 +95,10 @@ namespace GlaurungItems.Items
             //This determines what sound you want to play when you fire a gun.
             //Sounds names are based on the Gungeon sound dump, which can be found at EnterTheGungeon/Etg_Data/StreamingAssets/Audio/GeneratedSoundBanks/Windows/sfx.txt
             gun.PreventNormalFireAudio = true;
-            AkSoundEngine.PostEvent("Play_WPN_smileyrevolver_shot_01", gameObject);
+            if (!altFireOn)
+            {
+                AkSoundEngine.PostEvent("Play_WPN_smileyrevolver_shot_01", gameObject);
+            }
         }
 
         protected override void Update()
@@ -109,7 +128,10 @@ namespace GlaurungItems.Items
                 HasReloaded = false;
                 AkSoundEngine.PostEvent("Stop_WPN_All", base.gameObject);
                 base.OnReloadPressed(player, gun, bSOMETHING);
-                AkSoundEngine.PostEvent("Play_WPN_SAA_reload_01", base.gameObject);
+                if (!altFireOn)
+                {
+                    AkSoundEngine.PostEvent("Play_WPN_SAA_reload_01", base.gameObject);
+                }
             }
         }
 

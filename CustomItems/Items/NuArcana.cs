@@ -11,12 +11,12 @@ namespace GlaurungItems.Items
 		public static void Init()
 		{
 			string name = "Nu Arcana";
-			string resourcePath = "GlaurungItems/Resources/acme_crate";
+			string resourcePath = "GlaurungItems/Resources/nu_arcana";
 			GameObject gameObject = new GameObject(name);
 			NuArcana item = gameObject.AddComponent<NuArcana>();
 			ItemBuilder.AddSpriteToObject(name, resourcePath, gameObject);
 			string shortDesc = "All life begins and ends with Nu";
-			string longDesc = "A long forgotten technique used by strange immortal spheric creatures, it allows the user to put the target just at death door without killing them, no matter how tough they are.";
+			string longDesc = "A long forgotten technique used by strange immortal spheric creatures, it allows the user to put the target just at death door without killing them, no matter how tough they are... unless they are immune to this effect.";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.quality = PickupObject.ItemQuality.B;
 			NuArcana.ID = item.PickupObjectId;
