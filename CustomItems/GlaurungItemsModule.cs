@@ -92,10 +92,11 @@ namespace GlaurungItems
                 IndecisiveGun.Add();
                 CreateTrap.Init();
                 MineCrafter.Init();
-
-                TurtlezBeam.Add();
                 NuArcana.Init();
                 MatriochkAmmolet.Init();
+
+                TurtlezBeam.Add();
+
 
                 Mashed.Add();
                 PeacemakerCarbine.Add();
