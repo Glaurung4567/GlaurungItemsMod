@@ -24,20 +24,21 @@ namespace GlaurungItems.Items
             //gun.SetAnimationFPS(gun.idleAnimation, 8);
             gun.AddProjectileModuleFrom("klobb", true, false);
 
-            gun.DefaultModule.ammoCost = 1;
+            gun.DefaultModule.ammoCost = PeacemakerCarbine.baseAmmoCost;
+            gun.DefaultModule.preventFiringDuringCharge = true;
+            gun.DefaultModule.triggerCooldownForAnyChargeAmount = true;
             gun.DefaultModule.angleVariance = PeacemakerCarbine.baseAngleVar;
-            gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Automatic;
+            gun.DefaultModule.shootStyle = PeacemakerCarbine.baseShootStyle;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 1.5f;
-            gun.DefaultModule.cooldownTime = PeacemakerCarbine.baseCooldownTime;
-            gun.DefaultModule.numberOfShotsInClip = 30;
+            gun.DefaultModule.cooldownTime = 0.05f; 
+            gun.DefaultModule.numberOfShotsInClip = PeacemakerCarbine.baseMagSize;
             gun.SetBaseMaxAmmo(200);
-            gun.gunClass = GunClass.FULLAUTO;
             gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
 
             gun.quality = PickupObject.ItemQuality.B;
 
-            Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
+            Projectile projectile = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(31) as Gun).DefaultModule.projectiles[0]);
             projectile.gameObject.SetActive(false);
             FakePrefab.MarkAsFakePrefab(projectile.gameObject);
             UnityEngine.Object.DontDestroyOnLoad(projectile);
@@ -49,6 +50,21 @@ namespace GlaurungItems.Items
             projectile.baseData.range *= 3f;
             projectile.transform.parent = gun.barrelOffset;
             //projectile.SetProjectileSpriteRight("build_projectile", 5, 5);
+
+            Projectile projectile2 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(748) as Gun).DefaultModule.projectiles[0]);
+            projectile2.gameObject.SetActive(false);
+            FakePrefab.MarkAsFakePrefab(projectile2.gameObject);
+            UnityEngine.Object.DontDestroyOnLoad(projectile2);
+
+            projectile2.baseData.damage *= 1;
+            projectile2.baseData.speed *= 2;
+            ProjectileModule.ChargeProjectile chargeProj = new ProjectileModule.ChargeProjectile
+            {
+                Projectile = projectile2,
+                ChargeTime = 0.5f,
+                AmmoCost = 3,
+            };
+            gun.DefaultModule.chargeProjectiles = new List<ProjectileModule.ChargeProjectile> { chargeProj };
 
             ETGMod.Databases.Items.Add(gun, null, "ANY");
         }
@@ -97,7 +113,6 @@ namespace GlaurungItems.Items
                 AkSoundEngine.PostEvent("Stop_WPN_All", base.gameObject);
                 base.OnReloadPressed(player, gun, bSOMETHING);
                 AkSoundEngine.PostEvent("Play_WPN_SAA_reload_01", base.gameObject);
-                SwitchFire();
             }
         }
 
@@ -105,22 +120,33 @@ namespace GlaurungItems.Items
         {
             if (!altFireOn)
             {
-                this.gun.DefaultModule.cooldownTime = 0.0001f;
                 this.gun.DefaultModule.angleVariance = 0f;
+                this.gun.DefaultModule.numberOfShotsInClip = 1;
+                this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Charged;
+                this.gun.DefaultModule.ammoCost = 20;
                 //faster proj + fire
                 altFireOn = true;
+                if ((this.gun.CurrentOwner is PlayerController) && (this.gun.CurrentOwner as PlayerController).carriedConsumables != null) { (this.gun.CurrentOwner as PlayerController).carriedConsumables.ForceUpdateUI(); }
             }
             else
             {
-                this.gun.DefaultModule.cooldownTime = PeacemakerCarbine.baseCooldownTime;
+                this.gun.DefaultModule.shootStyle = PeacemakerCarbine.baseShootStyle;
                 this.gun.DefaultModule.angleVariance = PeacemakerCarbine.baseAngleVar;
+                this.gun.DefaultModule.ammoCost = PeacemakerCarbine.baseAmmoCost;
+                this.gun.DefaultModule.numberOfShotsInClip = PeacemakerCarbine.baseMagSize;
+                if ((this.gun.CurrentOwner is PlayerController) && (this.gun.CurrentOwner as PlayerController).carriedConsumables != null) { (this.gun.CurrentOwner as PlayerController).carriedConsumables.ForceUpdateUI(); }
+
                 altFireOn = false;
             }
         }
 
         private bool HasReloaded;
-        private static float baseCooldownTime = 0.2f;
+
+        private static int baseAmmoCost = 1;
+        private static int baseMagSize = 20;
         private static float baseAngleVar = 3f;
+        private static ProjectileModule.ShootStyle baseShootStyle = ProjectileModule.ShootStyle.Automatic;
+
         [SerializeField]
         private bool altFireOn;
     }
