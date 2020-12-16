@@ -100,6 +100,8 @@ namespace GlaurungItems
                 Mashed.Add();
                 PeacemakerCarbine.Add();
 
+                RoomTeller.Init();
+
                 BulletScriptSourceGun.Add();
                 //GunDeadArmyStronghold.Init();
 
