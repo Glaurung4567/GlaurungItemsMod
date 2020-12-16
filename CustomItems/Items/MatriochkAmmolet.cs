@@ -10,7 +10,7 @@ namespace GlaurungItems.Items
         public static void Init()
         {
             string itemName = "Matriochk Ammolet";
-            string resourceName = "GlaurungItems/Resources/ammolet_of_wonder";
+            string resourceName = "GlaurungItems/Resources/matriock_ammolet";
             GameObject obj = new GameObject(itemName);
             var item = obj.AddComponent<MatriochkAmmolet>();
             ItemBuilder.AddSpriteToObject(itemName, resourceName, obj);

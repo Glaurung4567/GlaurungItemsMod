@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 using ItemAPI;
-using Random = UnityEngine.Random;
 using Gungeon;
 
 namespace GlaurungItems.Items
@@ -16,7 +13,7 @@ namespace GlaurungItems.Items
             Gun gun = ETGMod.Databases.Items.NewGun("Peacemaker Carbine", "peacemakercarbine");
             Game.Items.Rename("outdated_gun_mods:peacemaker_carbine", "gl:peacemaker_carbine");
             gun.gameObject.AddComponent<PeacemakerCarbine>();
-            gun.SetShortDescription("WIP");
+            gun.SetShortDescription("Bullets Storm");
             gun.SetLongDescription("WIP");
             gun.SetupSprite(null, "jpxfrd_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
@@ -31,7 +28,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.shootStyle = PeacemakerCarbine.baseShootStyle;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 1.5f;
-            gun.DefaultModule.cooldownTime = 0.05f; 
+            gun.DefaultModule.cooldownTime = 0.1f; 
             gun.DefaultModule.numberOfShotsInClip = PeacemakerCarbine.baseMagSize;
             gun.SetBaseMaxAmmo(200);
             gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
@@ -56,7 +53,7 @@ namespace GlaurungItems.Items
             FakePrefab.MarkAsFakePrefab(projectile2.gameObject);
             UnityEngine.Object.DontDestroyOnLoad(projectile2);
 
-            projectile2.baseData.damage *= 1;
+            projectile2.baseData.damage *= 2;
             projectile2.baseData.speed *= 2;
             ProjectileModule.ChargeProjectile chargeProj = new ProjectileModule.ChargeProjectile
             {
