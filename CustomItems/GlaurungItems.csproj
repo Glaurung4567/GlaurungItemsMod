@@ -96,6 +96,7 @@
     <Compile Include="Items\MatriochkAmmolet.cs" />
     <Compile Include="Items\NuArcana.cs" />
     <Compile Include="Items\old\BulletScriptSourceGun.cs" />
+    <Compile Include="Items\PeacemakerCarbine.cs" />
     <Compile Include="Items\TurtlezBeam.cs" />
     <Compile Include="Items\old\BeamTest.cs" />
     <Compile Include="Items\old\BunnyCounterweight.cs" />

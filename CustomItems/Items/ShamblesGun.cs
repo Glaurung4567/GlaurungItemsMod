@@ -223,6 +223,7 @@ namespace GlaurungItems.Items
             }
         }
 
+        //This block of code allows us to change the reload sounds.
         public override void OnPostFired(PlayerController player, Gun gun)
         {
             //This determines what sound you want to play when you fire a gun.
@@ -230,8 +231,6 @@ namespace GlaurungItems.Items
             gun.PreventNormalFireAudio = true;
             AkSoundEngine.PostEvent("Play_WPN_smileyrevolver_shot_01", gameObject);
         }
-        private bool HasReloaded;
-        //This block of code allows us to change the reload sounds.
         protected override void Update()
         {
             base.Update();
@@ -267,6 +266,8 @@ namespace GlaurungItems.Items
         //By default this gun is a one-handed weapon
         //If you need a basic two handed .json. Just use the jpxfrd2.json.
         //And finally, don't forget to add your Gun to your ETGModule class!
+
+        private bool HasReloaded;
 
         public static string[] BannedEnemies = new string[]
         {

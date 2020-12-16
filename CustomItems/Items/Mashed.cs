@@ -58,7 +58,6 @@ namespace GlaurungItems.Items
 			gun.quality = PickupObject.ItemQuality.B;
 
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
-			gun.barrelOffset.transform.localPosition = new Vector3(1.37f, 0.37f, 0f);
 		}
 
 		public override void PostProcessProjectile(Projectile projectile)

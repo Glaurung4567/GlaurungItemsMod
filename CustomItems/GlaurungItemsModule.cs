@@ -98,6 +98,7 @@ namespace GlaurungItems
                 MatriochkAmmolet.Init();
 
                 Mashed.Add();
+                PeacemakerCarbine.Add();
 
                 BulletScriptSourceGun.Add();
                 //GunDeadArmyStronghold.Init();

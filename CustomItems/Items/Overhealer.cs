@@ -19,7 +19,6 @@ namespace GlaurungItems.Items
             gun.SetShortDescription("Counter-Intuitive");
             gun.SetLongDescription("This was created with the intent to heal allies, but a malfunction made it kill the target instead if he was fully healed due to positive energy overdose. \n \n" +
                 "A sadistic medic brought it to the Gungeon to kheal friends and foes alike.");
-            //gun.SetupSprite(null, "overhealer_idle_001", 8);
             gun.SetupSprite(null, "overhealer_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
@@ -121,6 +120,7 @@ namespace GlaurungItems.Items
         }
 
         // boilerplate stuff
+        //This block of code allows us to change the reload sounds.
         public override void OnPostFired(PlayerController player, Gun gun)
         {
             //This determines what sound you want to play when you fire a gun.
@@ -128,8 +128,7 @@ namespace GlaurungItems.Items
             gun.PreventNormalFireAudio = true;
             AkSoundEngine.PostEvent("Play_OBJ_heart_heal_01", gameObject);
         }
-        private bool HasReloaded;
-        //This block of code allows us to change the reload sounds.
+
         protected override void Update()
         {
             base.Update();
@@ -157,6 +156,7 @@ namespace GlaurungItems.Items
             }
         }
 
+        private bool HasReloaded;
         private List<AIActor> targetForOverhealKill = new List<AIActor>();
         private static GameObject TeleporterPrototypeTelefragVFX = PickupObjectDatabase.GetById(449).GetComponent<TeleporterPrototypeItem>().TelefragVFXPrefab.gameObject;
     }
