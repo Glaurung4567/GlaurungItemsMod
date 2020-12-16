@@ -91,6 +91,7 @@
     <Compile Include="ItemAPI\SpecialFoyerShop.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
     <Compile Include="Items\ItemParts\CustomMechaRatTailScript.cs" />
+    <Compile Include="Items\Mashed.cs" />
     <Compile Include="Items\old\Kragun.cs" />
     <Compile Include="Items\MatriochkAmmolet.cs" />
     <Compile Include="Items\NuArcana.cs" />

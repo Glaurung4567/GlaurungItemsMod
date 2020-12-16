@@ -105,7 +105,7 @@ namespace GlaurungItems.Items
 			{
 				lastOption = 26;
 			}
-			int randomSelect = 24;//Random.Range(1, lastOption);
+			int randomSelect = 16;//Random.Range(1, lastOption);
 			bulletsDamageMultiplier = 1;
 
 			switch (randomSelect)

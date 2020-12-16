@@ -1,4 +1,6 @@
 ﻿using Brave.BulletScript;
+using ItemAPI;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -23,14 +25,23 @@ namespace GlaurungItems.Items
 
 		private void FireLine(Vector2 spawnPoint, Vector2 start, Vector2 end, int numBullets)
 		{
+            try
+            {
+
 			Vector2 a = (end - start) / (float)Mathf.Max(1, numBullets - 1);
 			float num = 0.333333343f;
 			for (int i = 0; i < numBullets; i++)
 			{
 				Vector2 a2 = (numBullets != 1) ? (start + a * (float)i) : end;
 				float speed = Vector2.Distance(a2, spawnPoint) / num;
-				base.Fire(new Offset(spawnPoint, 0f, string.Empty, DirectionType.Absolute), new Direction((a2 - spawnPoint).ToAngle(), DirectionType.Absolute, -1f), new Speed(speed, SpeedType.Absolute), new BulletScriptGunBossFinalGuideSword1.SwordBullet(base.Position, this.m_sign, this.m_doubleSwing));
+				this.Fire(new Offset(spawnPoint, 0f, string.Empty, DirectionType.Absolute), new Direction((a2 - spawnPoint).ToAngle(), DirectionType.Absolute, -1f), new Speed(speed, SpeedType.Absolute), new BulletScriptGunBossFinalGuideSword1.SwordBullet(this.BulletBank.transform.position, this.m_sign, this.m_doubleSwing));
 			}
+            }
+            catch (Exception e)
+            {
+				Tools.PrintException(e);
+            }
+
 		}
 
 		private const int SetupTime = 20;

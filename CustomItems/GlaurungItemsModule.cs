@@ -93,11 +93,13 @@ namespace GlaurungItems
                 CreateTrap.Init();
                 MineCrafter.Init();
 
-                //TurtlezBeam.Add();
-                //NuArcana.Init();
-                //MatriochkAmmolet.Init();
+                TurtlezBeam.Add();
+                NuArcana.Init();
+                MatriochkAmmolet.Init();
 
-                //BulletScriptSourceGun.Add();
+                Mashed.Add();
+
+                BulletScriptSourceGun.Add();
                 //GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra

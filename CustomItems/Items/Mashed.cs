@@ -6,52 +6,56 @@ using Object = UnityEngine.Object;
 
 namespace GlaurungItems.Items
 {
-	internal class Kragun : AdvancedGunBehavior
+	internal class Mashed : AdvancedGunBehavior
 	{
 		// Token: 0x0600028C RID: 652 RVA: 0x000162F8 File Offset: 0x000144F8
 		public static void Add()
 		{
-			Gun gun = ETGMod.Databases.Items.NewGun("Kragun", "kragun");
-			Game.Items.Rename("outdated_gun_mods:kragun", "gl:kragun");
-			gun.gameObject.AddComponent<Kragun>();
-			gun.gunSwitchGroup = (PickupObjectDatabase.GetById(37) as Gun).gunSwitchGroup;
-			GunExt.SetShortDescription(gun, "Unleash the kragun !");
+			Gun gun = ETGMod.Databases.Items.NewGun("Mashed", "mashed");
+			Game.Items.Rename("outdated_gun_mods:mashed", "gl:mashed");
+			gun.gameObject.AddComponent<Mashed>();
+			GunExt.SetShortDescription(gun, "Unleash the Mashed !");
 			GunExt.SetLongDescription(gun, "WIP");
 			GunExt.SetupSprite(gun, null, "jpxfrd_idle_001", 8);
 			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 16);
 			GunExt.SetAnimationFPS(gun, gun.chargeAnimation, 3);
-			for (int i = 0; i < 4; i++)
-			{
-				GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(60) as Gun, true, false);
-			}
-			foreach (ProjectileModule projectileModule in gun.Volley.projectiles)
-			{
-				projectileModule.ammoCost = 1;
-				projectileModule.shootStyle = (ProjectileModule.ShootStyle.Beam);
-				projectileModule.sequenceStyle = 0;
-				projectileModule.cooldownTime = 1f;
-				projectileModule.angleVariance = 20f;
-				projectileModule.numberOfShotsInClip = 10;
-				Projectile projectile = Object.Instantiate<Projectile>(projectileModule.projectiles[0]);
-				projectileModule.projectiles[0] = projectile;
-				projectile.gameObject.SetActive(false);
-				FakePrefab.MarkAsFakePrefab(projectile.gameObject);
-				Object.DontDestroyOnLoad(projectile);
-				projectile.baseData.damage *= 1f;
-				projectile.AdditionalScaleMultiplier *= 0.5f;
-				projectile.baseData.range *= 0.25f;
-				projectile.FireApplyChance = 0;
-				projectile.AppliesFire = false;
-				bool flag = projectileModule != gun.DefaultModule;
-				if (flag)
-				{
-					//projectileModule.ammoCost = 0;
-				}
-				projectile.transform.parent = gun.barrelOffset;
-			}
+
+			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(60) as Gun, true, false);
+			gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Beam;
+			gun.DefaultModule.ammoCost = 2;
+			gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
+			gun.reloadTime = 0.5f;
+			gun.gunClass = GunClass.BEAM;
+			gun.DefaultModule.numberOfShotsInClip = 50;
+
+			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
+			projectile.gameObject.SetActive(false);
+			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
+			UnityEngine.Object.DontDestroyOnLoad(projectile);
+			gun.DefaultModule.projectiles[0] = projectile;
+			projectile.baseData.damage *= 3f;
+			projectile.baseData.force *= 2f;
+			projectile.baseData.speed *= 2.5f;
+			projectile.baseData.range *= 2.25f;
+
+
+			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(365) as Gun, true, false);
+			gun.Volley.projectiles[1].shootStyle = ProjectileModule.ShootStyle.Automatic;
+			gun.Volley.projectiles[1].ammoCost = 1;
+			gun.Volley.projectiles[1].cooldownTime = 1;
+			gun.Volley.projectiles[1].numberOfShotsInClip = 10;
+			Projectile projectile2 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(365) as Gun).DefaultModule.projectiles[0]);
+			projectile2.gameObject.SetActive(false);
+			FakePrefab.MarkAsFakePrefab(projectile2.gameObject);
+			UnityEngine.Object.DontDestroyOnLoad(projectile2);
+
+			projectile2.baseData.damage *= 1;
+			projectile2.baseData.speed *= 2;
+			gun.Volley.projectiles[1].projectiles[0] = projectile2;
+
 			gun.reloadTime = 1f;
-			gun.SetBaseMaxAmmo(100);
-			gun.quality = (PickupObject.ItemQuality)3;
+			gun.SetBaseMaxAmmo(1000);
+			gun.quality = PickupObject.ItemQuality.B;
 
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			gun.barrelOffset.transform.localPosition = new Vector3(1.37f, 0.37f, 0f);
