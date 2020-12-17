@@ -218,7 +218,7 @@ namespace GlaurungItems.Items
             gun.PreventNormalFireAudio = true;
             //Play_WPN_radiationlaser_shot_01
             //Play_WPN_sflaser_shot_01
-            AkSoundEngine.PostEvent("Play_WPN_radiationlaser_shot_01", gameObject);
+            AkSoundEngine.PostEvent("Play_WPN_m1rifle_shot_01", gameObject);
         }
         protected override void Update()
         {

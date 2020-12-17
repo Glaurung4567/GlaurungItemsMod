@@ -78,7 +78,7 @@ namespace GlaurungItems.Items
             gun.PreventNormalFireAudio = true;
             if (altFireOn)
             {
-                AkSoundEngine.PostEvent("Play_WPN_magnum_shot_01", gameObject);
+                AkSoundEngine.PostEvent("Play_WPN_warp_impact_01", gameObject);
             }
         }
 

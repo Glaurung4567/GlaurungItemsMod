@@ -8,13 +8,13 @@ namespace GlaurungItems.Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("Turtlez Beam", "turtlezbeam");
+            Gun gun = ETGMod.Databases.Items.NewGun("Turtlez Beam", "turtlez");
             Game.Items.Rename("outdated_gun_mods:turtlez_beam", "gl:turtlez_beam");
             gun.gameObject.AddComponent<TurtlezBeam>();
             gun.SetShortDescription("Kamehameha !");
             gun.SetLongDescription("Gives the user the power to fire powerful energy blast, similar to the ones used by a famous alien warrior.");
-            gun.SetupSprite(null, "jpxfrd_idle_001", 8);
-            gun.SetAnimationFPS(gun.shootAnimation, 24);
+            gun.SetupSprite(null, "turtlez_idle_001", 8);
+            gun.SetAnimationFPS(gun.shootAnimation, 18);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
             gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(20) as Gun, true, false);
 
@@ -38,7 +38,7 @@ namespace GlaurungItems.Items
             projectile.baseData.speed *= 2.5f;
             projectile.baseData.range *= 2.25f;
 
-            gun.quality = PickupObject.ItemQuality.C;
+            gun.quality = PickupObject.ItemQuality.B;
             ETGMod.Databases.Items.Add(gun, null, "ANY");
         }
 
@@ -83,7 +83,7 @@ namespace GlaurungItems.Items
         {
             beam.AdjustPlayerBeamTint(Color.cyan, 1); 
             beam.usesChargeDelay = true;
-            beam.chargeDelay = 0.15f;
+            beam.chargeDelay = 0.5f;
             if (beam is BasicBeamController)
             {
                 BasicBeamController basicBeamController = (beam as BasicBeamController);
