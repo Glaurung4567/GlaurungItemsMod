@@ -12,7 +12,7 @@ namespace GlaurungItems.Items
             Game.Items.Rename("outdated_gun_mods:turtlez_beam", "gl:turtlez_beam");
             gun.gameObject.AddComponent<TurtlezBeam>();
             gun.SetShortDescription("Kamehameha !");
-            gun.SetLongDescription("Gives the user the power to fire powerful energy blast, similar to the ones used by a famous alien warrior.");
+            gun.SetLongDescription("Gives the user the power to fire powerful energy blast, similar to the ones fired by a famous alien warrior.");
             gun.SetupSprite(null, "turtlez_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 18);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
