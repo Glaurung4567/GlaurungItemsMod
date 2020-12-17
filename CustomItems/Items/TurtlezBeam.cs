@@ -113,7 +113,6 @@ namespace GlaurungItems.Items
 
         public override void OnFinishAttack(PlayerController player, Gun gun)
         {
-            //Tools.Print(chargeFraction, "ffffff", true);
             startedBeamSound = false;
             base.OnFinishAttack(player, gun);
         }

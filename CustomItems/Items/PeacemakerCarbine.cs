@@ -30,7 +30,7 @@ namespace GlaurungItems.Items
             gun.reloadTime = 1.5f;
             gun.DefaultModule.cooldownTime = 0.1f; 
             gun.DefaultModule.numberOfShotsInClip = PeacemakerCarbine.baseMagSize;
-            gun.SetBaseMaxAmmo(300);
+            gun.SetBaseMaxAmmo(360);
             gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
 
             gun.quality = PickupObject.ItemQuality.B;
