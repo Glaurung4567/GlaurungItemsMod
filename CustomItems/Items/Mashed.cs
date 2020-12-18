@@ -1,5 +1,6 @@
 ﻿using Gungeon;
 using ItemAPI;
+using System.Collections.Generic;
 using UnityEngine;
 using FakePrefab = ItemAPI.FakePrefab;
 using Object = UnityEngine.Object;
@@ -25,56 +26,80 @@ namespace GlaurungItems.Items
 			gun.quality = PickupObject.ItemQuality.B;
 			gun.gunClass = GunClass.BEAM;
 
-			//demon head
-			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(20) as Gun, true, false);
-			gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Beam;
-			gun.DefaultModule.ammoCost = 2;
-			gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
+			//charged
+			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(292) as Gun, true, false);
+			gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Charged;
+			gun.DefaultModule.ammoCost = 5;
+			gun.DefaultModule.cooldownTime = 0.2f;
 			gun.DefaultModule.numberOfShotsInClip = maxAmmo;
-			gun.DefaultModule.positionOffset = new Vector3(0.0f, -0.75f, 0.0f);
-
-			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
-			projectile.gameObject.SetActive(false);
-			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
-			UnityEngine.Object.DontDestroyOnLoad(projectile);
-			gun.DefaultModule.projectiles[0] = projectile;
-			projectile.baseData.damage *= 0.5f;
-			projectile.baseData.force *= 0.5f;
-			projectile.baseData.speed *= 0.5f;
-			projectile.baseData.range *= 0.03f;
-			projectile.FireApplyChance = 0;
-			projectile.AppliesFire = false;
-
-			//klobbe
-			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(31) as Gun, true, false);
-			gun.Volley.projectiles[1].shootStyle = ProjectileModule.ShootStyle.Automatic;
-			gun.Volley.projectiles[1].ammoCost = 1;
-			gun.Volley.projectiles[1].angleVariance = 3;
-			gun.Volley.projectiles[1].cooldownTime = 0.1f;
-			gun.Volley.projectiles[1].numberOfShotsInClip = maxAmmo;
-			Projectile projectile2 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(31) as Gun).DefaultModule.projectiles[0]);
-			projectile2.gameObject.SetActive(false);
-			FakePrefab.MarkAsFakePrefab(projectile2.gameObject);
-			UnityEngine.Object.DontDestroyOnLoad(projectile2);
-
-			projectile2.baseData.damage *= 1;
-			projectile2.baseData.speed *= 3;
-			gun.Volley.projectiles[1].projectiles[0] = projectile2;
-			
-			//
-			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(482) as Gun, true, false);
-			gun.Volley.projectiles[2].shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
-			gun.Volley.projectiles[2].ammoCost = 1;
-			gun.Volley.projectiles[2].cooldownTime = 0.2f;
-			gun.Volley.projectiles[2].numberOfShotsInClip = maxAmmo;
-			Projectile projectile3 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(503) as Gun).DefaultModule.projectiles[0]);
+			Projectile projectile3 = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
 			projectile3.gameObject.SetActive(false);
 			FakePrefab.MarkAsFakePrefab(projectile3.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile3);
 
 			projectile3.baseData.damage *= 1;
-			projectile3.baseData.speed *= 2;
-			gun.Volley.projectiles[2].projectiles[0] = projectile3;
+			projectile3.baseData.speed *= 1;
+			//gun.Volley.projectiles[3].projectiles[0] = projectile3;
+
+			ProjectileModule.ChargeProjectile chargeProj = new ProjectileModule.ChargeProjectile
+			{
+				Projectile = projectile3,
+				ChargeTime = 3.5f,
+				AmmoCost = 5,
+			};
+			gun.DefaultModule.chargeProjectiles = new List<ProjectileModule.ChargeProjectile> { chargeProj };
+
+
+			//auto
+			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(31) as Gun, true, false);
+			gun.Volley.projectiles[1].shootStyle = ProjectileModule.ShootStyle.Automatic;
+			gun.Volley.projectiles[1].ammoCost = 1;
+			gun.Volley.projectiles[1].angleVariance = 5;
+			gun.Volley.projectiles[1].cooldownTime = 0.07f;
+			gun.Volley.projectiles[1].numberOfShotsInClip = maxAmmo;
+			Projectile projectile1 = UnityEngine.Object.Instantiate<Projectile>(gun.Volley.projectiles[1].projectiles[0]);
+			projectile1.gameObject.SetActive(false);
+			FakePrefab.MarkAsFakePrefab(projectile1.gameObject);
+			UnityEngine.Object.DontDestroyOnLoad(projectile1);
+
+			projectile1.baseData.damage *= 1;
+			projectile1.baseData.speed *= 1.2f;
+			projectile1.baseData.range *= 0.75f;
+			gun.Volley.projectiles[1].projectiles[0] = projectile1;
+			
+			//semi auto
+			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(482) as Gun, true, false);
+			gun.Volley.projectiles[2].shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
+			gun.Volley.projectiles[2].ammoCost = 3;
+			gun.Volley.projectiles[2].angleVariance = 2f;
+			gun.Volley.projectiles[2].cooldownTime = 0.2f;
+			gun.Volley.projectiles[2].numberOfShotsInClip = maxAmmo;
+			Projectile projectile2 = UnityEngine.Object.Instantiate<Projectile>(gun.Volley.projectiles[2].projectiles[0]);
+			projectile2.gameObject.SetActive(false);
+			FakePrefab.MarkAsFakePrefab(projectile2.gameObject);
+			UnityEngine.Object.DontDestroyOnLoad(projectile2);
+
+			projectile2.baseData.damage *= 3;
+			projectile2.baseData.speed *= 2;
+			gun.Volley.projectiles[2].projectiles[0] = projectile2;
+
+			//beam
+			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(20) as Gun, true, false);
+			gun.Volley.projectiles[3].shootStyle = ProjectileModule.ShootStyle.Beam;
+			gun.Volley.projectiles[3].ammoCost = 1;
+			gun.Volley.projectiles[3].sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
+			gun.Volley.projectiles[3].numberOfShotsInClip = maxAmmo;
+			gun.Volley.projectiles[3].positionOffset = new Vector3(0.0f, -0.75f, 0.0f);
+
+			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.Volley.projectiles[3].projectiles[0]);
+			projectile.gameObject.SetActive(false);
+			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
+			UnityEngine.Object.DontDestroyOnLoad(projectile);
+			gun.Volley.projectiles[3].projectiles[0] = projectile;
+			projectile.baseData.damage *= 0.5f;
+			projectile.baseData.force *= 0.15f;
+			projectile.baseData.speed *= 0.5f;
+			projectile.baseData.range *= 0.05f;
 
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 		}
@@ -119,8 +144,7 @@ namespace GlaurungItems.Items
 
 		private void PostProcessBeam(BeamController beam)
 		{
-			beam.AdjustPlayerBeamTint(Color.green, 1); //works
-			beamControl = beam;
+			beam.AdjustPlayerBeamTint(Color.cyan, 1); //works
 			if (beam is BasicBeamController)
 			{
 				BasicBeamController basicBeamController = (beam as BasicBeamController);
@@ -184,6 +208,5 @@ namespace GlaurungItems.Items
 		private bool startedBeamSound;
 		private bool HasReloaded;
 		private static int maxAmmo = 1000;
-		private BeamController beamControl; 
 	}
 }
