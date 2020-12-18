@@ -55,7 +55,7 @@ namespace GlaurungItems.Items
 			gun.Volley.projectiles[1].shootStyle = ProjectileModule.ShootStyle.Automatic;
 			gun.Volley.projectiles[1].ammoCost = 1;
 			gun.Volley.projectiles[1].angleVariance = 5;
-			gun.Volley.projectiles[1].cooldownTime = 0.07f;
+			gun.Volley.projectiles[1].cooldownTime = 0.12f;
 			gun.Volley.projectiles[1].numberOfShotsInClip = maxAmmo;
 			Projectile projectile1 = UnityEngine.Object.Instantiate<Projectile>(gun.Volley.projectiles[1].projectiles[0]);
 			projectile1.gameObject.SetActive(false);
@@ -68,7 +68,7 @@ namespace GlaurungItems.Items
 			gun.Volley.projectiles[1].projectiles[0] = projectile1;
 			
 			//semi auto
-			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(482) as Gun, true, false);
+			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(12) as Gun, true, false);
 			gun.Volley.projectiles[2].shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
 			gun.Volley.projectiles[2].ammoCost = 3;
 			gun.Volley.projectiles[2].angleVariance = 2f;
@@ -79,7 +79,7 @@ namespace GlaurungItems.Items
 			FakePrefab.MarkAsFakePrefab(projectile2.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile2);
 
-			projectile2.baseData.damage *= 3;
+			projectile2.baseData.damage *= 0.75f;
 			projectile2.baseData.speed *= 2;
 			gun.Volley.projectiles[2].projectiles[0] = projectile2;
 
