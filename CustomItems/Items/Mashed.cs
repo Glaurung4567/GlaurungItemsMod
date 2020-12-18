@@ -72,7 +72,7 @@ namespace GlaurungItems.Items
 			//semi auto
 			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(357) as Gun, true, false);
 			gun.Volley.projectiles[2].shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
-			gun.Volley.projectiles[2].ammoCost = 3;
+			gun.Volley.projectiles[2].ammoCost = 2;
 			gun.Volley.projectiles[2].angleVariance = 2f;
 			gun.Volley.projectiles[2].cooldownTime = 0.4f;
 			gun.Volley.projectiles[2].numberOfShotsInClip = maxAmmo;
@@ -83,7 +83,20 @@ namespace GlaurungItems.Items
 
 			projectile2.baseData.damage *= 3f;
 			projectile2.baseData.speed *= 2;
-			Tools.Print(projectile2.gameObject.GetComponent<HomingModifier>() == null, "ffffff", true);
+			if(projectile2.gameObject.GetComponent<HomingModifier>() != null)
+            {
+				Destroy(projectile2.gameObject.GetComponent<HomingModifier>());
+			}
+			if(projectile2.gameObject.GetComponent<DelayedExplosiveBuff>() != null)
+            {
+				DelayedExplosiveBuff delayedExplosiveBuff = projectile2.gameObject.GetComponent<DelayedExplosiveBuff>();
+				delayedExplosiveBuff.delayBeforeBurst *= 2.5f;
+				ExplosionData explosion = delayedExplosiveBuff.explosionData.CopyExplosionData();
+				explosion.breakSecretWalls = false;
+				explosion.damage = 3f;
+				delayedExplosiveBuff.explosionData = explosion;
+			}
+
 			gun.Volley.projectiles[2].projectiles[0] = projectile2;
 
 			//beam
@@ -147,7 +160,7 @@ namespace GlaurungItems.Items
 
 		private void PostProcessBeam(BeamController beam)
 		{
-			beam.AdjustPlayerBeamTint(Color.cyan, 1); //works
+			beam.AdjustPlayerBeamTint(Color.black, 1);
 			if (beam is BasicBeamController)
 			{
 				BasicBeamController basicBeamController = (beam as BasicBeamController);
@@ -156,7 +169,7 @@ namespace GlaurungItems.Items
 					basicBeamController.reflections = 0;
 				}
 				basicBeamController.penetration = 10;
-				basicBeamController.ProjectileScale = 0.5f;
+				basicBeamController.ProjectileScale = 0.25f;
 				basicBeamController.PenetratesCover = true;
 			}
 		}

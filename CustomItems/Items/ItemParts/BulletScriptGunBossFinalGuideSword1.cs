@@ -34,7 +34,7 @@ namespace GlaurungItems.Items
 			{
 				Vector2 a2 = (numBullets != 1) ? (start + a * (float)i) : end;
 				float speed = Vector2.Distance(a2, spawnPoint) / num;
-				this.Fire(new Offset(spawnPoint, 0f, string.Empty, DirectionType.Absolute), new Direction((a2 - spawnPoint).ToAngle(), DirectionType.Absolute, -1f), new Speed(speed, SpeedType.Absolute), new BulletScriptGunBossFinalGuideSword1.SwordBullet(this.BulletBank.transform.position, this.m_sign, this.m_doubleSwing));
+				this.Fire(new Offset(spawnPoint, 0f, string.Empty, DirectionType.Absolute), new Direction((a2 - spawnPoint).ToAngle(), DirectionType.Absolute, -1f), new Speed(speed, SpeedType.Absolute), new SwordBullet(this.BulletBank.transform.position, this.m_sign, this.m_doubleSwing));
 			}
             }
             catch (Exception e)
