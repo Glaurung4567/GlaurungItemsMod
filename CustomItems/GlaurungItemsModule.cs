@@ -94,7 +94,6 @@ namespace GlaurungItems
                 MineCrafter.Init();
                 NuArcana.Init();
                 MatriochkAmmolet.Init();
-
                 TurtlezBeam.Add();
 
 

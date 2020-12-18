@@ -240,7 +240,7 @@ namespace GlaurungItems.Items
             {
 				lastOption = 26;
 			}
-			int randomSelect = Random.Range(1, lastOption);
+			int randomSelect = 16;//Random.Range(1, lastOption);
 			string enemyGuid = EnemyGuidDatabase.Entries["faster_tutorial_turret"]; ;
 			bulletsDamageMultiplier = 1;
 

@@ -1,5 +1,7 @@
 ﻿using Gungeon;
 using ItemAPI;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FakePrefab = ItemAPI.FakePrefab;
@@ -15,7 +17,7 @@ namespace GlaurungItems.Items
 			Gun gun = ETGMod.Databases.Items.NewGun("Mashed", "mashed");
 			Game.Items.Rename("outdated_gun_mods:mashed", "gl:mashed");
 			gun.gameObject.AddComponent<Mashed>();
-			GunExt.SetShortDescription(gun, "Unleash the Mashed !");
+			GunExt.SetShortDescription(gun, "Shoot Style: Yes");
 			GunExt.SetLongDescription(gun, "WIP");
 			GunExt.SetupSprite(gun, null, "jpxfrd_idle_001", 8);
 			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 16);
@@ -25,6 +27,7 @@ namespace GlaurungItems.Items
 			gun.SetBaseMaxAmmo(maxAmmo);
 			gun.quality = PickupObject.ItemQuality.B;
 			gun.gunClass = GunClass.BEAM;
+			gun.muzzleFlashEffects = null;
 
 			//charged
 			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(292) as Gun, true, false);
@@ -39,7 +42,6 @@ namespace GlaurungItems.Items
 
 			projectile3.baseData.damage *= 1;
 			projectile3.baseData.speed *= 1;
-			//gun.Volley.projectiles[3].projectiles[0] = projectile3;
 
 			ProjectileModule.ChargeProjectile chargeProj = new ProjectileModule.ChargeProjectile
 			{
@@ -51,7 +53,7 @@ namespace GlaurungItems.Items
 
 
 			//auto
-			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(31) as Gun, true, false);
+			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(124) as Gun, true, false);
 			gun.Volley.projectiles[1].shootStyle = ProjectileModule.ShootStyle.Automatic;
 			gun.Volley.projectiles[1].ammoCost = 1;
 			gun.Volley.projectiles[1].angleVariance = 5;
@@ -62,25 +64,26 @@ namespace GlaurungItems.Items
 			FakePrefab.MarkAsFakePrefab(projectile1.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile1);
 
-			projectile1.baseData.damage *= 1;
+			projectile1.baseData.damage *= 1.5f;
 			projectile1.baseData.speed *= 1.2f;
 			projectile1.baseData.range *= 0.75f;
 			gun.Volley.projectiles[1].projectiles[0] = projectile1;
 			
 			//semi auto
-			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(12) as Gun, true, false);
+			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(357) as Gun, true, false);
 			gun.Volley.projectiles[2].shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
 			gun.Volley.projectiles[2].ammoCost = 3;
 			gun.Volley.projectiles[2].angleVariance = 2f;
-			gun.Volley.projectiles[2].cooldownTime = 0.2f;
+			gun.Volley.projectiles[2].cooldownTime = 0.4f;
 			gun.Volley.projectiles[2].numberOfShotsInClip = maxAmmo;
 			Projectile projectile2 = UnityEngine.Object.Instantiate<Projectile>(gun.Volley.projectiles[2].projectiles[0]);
 			projectile2.gameObject.SetActive(false);
 			FakePrefab.MarkAsFakePrefab(projectile2.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile2);
 
-			projectile2.baseData.damage *= 0.75f;
+			projectile2.baseData.damage *= 3f;
 			projectile2.baseData.speed *= 2;
+			Tools.Print(projectile2.gameObject.GetComponent<HomingModifier>() == null, "ffffff", true);
 			gun.Volley.projectiles[2].projectiles[0] = projectile2;
 
 			//beam
@@ -152,9 +155,9 @@ namespace GlaurungItems.Items
 				{
 					basicBeamController.reflections = 0;
 				}
-				basicBeamController.penetration = 10; //it works 
-				basicBeamController.ProjectileScale = 0.5f;//it works !!!
-				basicBeamController.PenetratesCover = true; //works to pass through tables
+				basicBeamController.penetration = 10;
+				basicBeamController.ProjectileScale = 0.5f;
+				basicBeamController.PenetratesCover = true;
 			}
 		}
 
@@ -163,17 +166,24 @@ namespace GlaurungItems.Items
 		{
 			gun.PreventNormalFireAudio = true;
 			//Play_WPN_radiationlaser_shot_01
-			if (!startedBeamSound)
+			if (!fireSoundCooldown)
 			{
-				startedBeamSound = true;
+				fireSoundCooldown = true;
 				gun.PreventNormalFireAudio = true;
-				AkSoundEngine.PostEvent("Play_WPN_raidenlaser_shot_01", gameObject);
+				AkSoundEngine.PostEvent("Play_WPN_beretta_shot_01", gameObject);
+				GameManager.Instance.StartCoroutine(this.CooldownFireSound());
 			}
 		}
 
-		public override void OnFinishAttack(PlayerController player, Gun gun)
+        private IEnumerator CooldownFireSound()
+        {
+			yield return new WaitForSeconds(0.08f);
+			fireSoundCooldown = false;
+			yield break;
+        }
+
+        public override void OnFinishAttack(PlayerController player, Gun gun)
 		{
-			startedBeamSound = false;
 			base.OnFinishAttack(player, gun);
 		}
 
@@ -205,7 +215,7 @@ namespace GlaurungItems.Items
 			}
 		}
 
-		private bool startedBeamSound;
+		private bool fireSoundCooldown;
 		private bool HasReloaded;
 		private static int maxAmmo = 1000;
 	}
