@@ -114,7 +114,6 @@ namespace GlaurungItems.Items
 			projectile.baseData.damage *= 0.5f;
 			projectile.baseData.force *= 0.15f;
 			projectile.baseData.speed *= 0.5f;
-			projectile.baseData.range *= 0.05f;
 			gun.Volley.projectiles[3].positionOffset = new Vector3(0.0f, -0.75f, 0.0f);
 
 
@@ -135,6 +134,7 @@ namespace GlaurungItems.Items
 			beam.penetration = 10;
 			beam.ProjectileScale = 0.5f;
 			beam.PenetratesCover = true;
+			beam.projectile.baseData.range = 3f;
 			
 
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
