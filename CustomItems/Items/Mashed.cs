@@ -96,16 +96,15 @@ namespace GlaurungItems.Items
 				explosion.damage = 3f;
 				delayedExplosiveBuff.explosionData = explosion;
 			}
-
 			gun.Volley.projectiles[2].projectiles[0] = projectile2;
 
 			//beam
-			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(20) as Gun, true, false);
+			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(31) as Gun, true, false);
 			gun.Volley.projectiles[3].shootStyle = ProjectileModule.ShootStyle.Beam;
 			gun.Volley.projectiles[3].ammoCost = 1;
+			gun.Volley.projectiles[3].angleVariance = 0;
 			gun.Volley.projectiles[3].sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
 			gun.Volley.projectiles[3].numberOfShotsInClip = maxAmmo;
-			gun.Volley.projectiles[3].positionOffset = new Vector3(0.0f, -0.75f, 0.0f);
 
 			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.Volley.projectiles[3].projectiles[0]);
 			projectile.gameObject.SetActive(false);
@@ -116,6 +115,27 @@ namespace GlaurungItems.Items
 			projectile.baseData.force *= 0.15f;
 			projectile.baseData.speed *= 0.5f;
 			projectile.baseData.range *= 0.05f;
+			gun.Volley.projectiles[3].positionOffset = new Vector3(0.0f, -0.75f, 0.0f);
+
+
+			projectile.gameObject.AddComponent<MeshRenderer>();
+			projectile.gameObject.AddComponent<MeshFilter>();
+			tk2dSpriteCollectionData itemCollection = ETGMod.Databases.Items.ProjectileCollection;//PickupObjectDatabase.GetByEncounterName("singularity").sprite.Collection;
+			int spriteID = SpriteBuilder.AddSpriteToCollection("GlaurungItems/Resources/billiard_cue", itemCollection);
+			tk2dTiledSprite tiledSprite = projectile.gameObject.AddComponent<tk2dTiledSprite>();
+			tiledSprite.SetSprite(itemCollection, spriteID);
+			tiledSprite.spriteAnimator = projectile.gameObject.AddComponent<tk2dSpriteAnimator>();
+			Destroy(projectile.GetComponentInChildren<tk2dSprite>());
+			BasicBeamController beam = projectile.gameObject.AddComponent<BasicBeamController>();
+			
+			if (!beam.IsReflectedBeam)
+			{
+				beam.reflections = 0;
+			}
+			beam.penetration = 10;
+			beam.ProjectileScale = 0.5f;
+			beam.PenetratesCover = true;
+			
 
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 		}
@@ -130,14 +150,14 @@ namespace GlaurungItems.Items
 		{
 			base.OnPickup(player);
 			//player.GunChanged += this.OnGunChanged;
-			player.PostProcessBeam += this.PostProcessBeam;
-			player.GunChanged += this.OnGunChanged;
+			//player.PostProcessBeam += this.PostProcessBeam;
+			//player.GunChanged += this.OnGunChanged;
 		}
 
 		protected override void OnPostDrop(PlayerController player)
 		{
-			player.PostProcessBeam -= this.PostProcessBeam;
-			player.GunChanged -= this.OnGunChanged;
+			//player.PostProcessBeam -= this.PostProcessBeam;
+			//player.GunChanged -= this.OnGunChanged;
 			base.OnPostDrop(player);
 		}
 
@@ -160,7 +180,7 @@ namespace GlaurungItems.Items
 
 		private void PostProcessBeam(BeamController beam)
 		{
-			beam.AdjustPlayerBeamTint(Color.black, 1);
+			beam.AdjustPlayerBeamTint(Color.white, 1);
 			if (beam is BasicBeamController)
 			{
 				BasicBeamController basicBeamController = (beam as BasicBeamController);
@@ -169,7 +189,7 @@ namespace GlaurungItems.Items
 					basicBeamController.reflections = 0;
 				}
 				basicBeamController.penetration = 10;
-				basicBeamController.ProjectileScale = 0.25f;
+				basicBeamController.ProjectileScale = 0.5f;
 				basicBeamController.PenetratesCover = true;
 			}
 		}

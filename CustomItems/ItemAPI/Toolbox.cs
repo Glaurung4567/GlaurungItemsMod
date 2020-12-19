@@ -10,7 +10,6 @@ namespace ItemAPI
 {
     public static class Toolbox
     {
-		// Token: 0x060003BC RID: 956 RVA: 0x00029880 File Offset: 0x00027A80
 		public static void Init()
 		{
 			AssetBundle assetBundle = ResourceManager.LoadAssetBundle("shared_auto_001");
@@ -760,6 +759,20 @@ namespace ItemAPI
 			newBank.SuppressPlayerVelocityAveraging = bank.SuppressPlayerVelocityAveraging;
 			newBank.FixedPlayerRigidbody = bank.FixedPlayerRigidbody;
 			return newBank;
+		}
+
+		public static BasicBeamController GenerateBeamPrefab(this Projectile projectile, string spritePath)
+		{
+			projectile.gameObject.AddComponent<MeshRenderer>();
+			projectile.gameObject.AddComponent<MeshFilter>();
+
+			tk2dSprite sprite = projectile.GetComponent<tk2dSprite>();
+			int spriteID = SpriteBuilder.AddSpriteToCollection(spritePath, ETGMod.Databases.Items.ProjectileCollection);
+			tk2dTiledSprite tiledSprite = projectile.gameObject.AddComponent<tk2dTiledSprite>();
+			tiledSprite.sprite.SetSprite(ETGMod.Databases.Items.ProjectileCollection, spriteID);
+			projectile.gameObject.AddComponent<tk2dSpriteAnimator>();
+			BasicBeamController beamController = projectile.gameObject.AddComponent<BasicBeamController>();
+			return beamController;
 		}
 
 		public static ExplosionData CopyExplosionData(this ExplosionData other)
