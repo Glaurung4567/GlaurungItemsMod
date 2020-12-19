@@ -114,18 +114,18 @@ namespace GlaurungItems.Items
 			projectile.baseData.damage *= 0.5f;
 			projectile.baseData.force *= 0.15f;
 			projectile.baseData.speed *= 0.5f;
-			gun.Volley.projectiles[3].positionOffset = new Vector3(0.0f, -0.75f, 0.0f);
+			//gun.Volley.projectiles[3].positionOffset = new Vector3(0.0f, -0.75f, 0.0f);
 
 
-			projectile.gameObject.AddComponent<MeshRenderer>();
+			/*projectile.gameObject.AddComponent<MeshRenderer>();
 			projectile.gameObject.AddComponent<MeshFilter>();
 			tk2dSpriteCollectionData itemCollection = ETGMod.Databases.Items.ProjectileCollection;//PickupObjectDatabase.GetByEncounterName("singularity").sprite.Collection;
 			int spriteID = SpriteBuilder.AddSpriteToCollection("GlaurungItems/Resources/billiard_cue", itemCollection);
 			tk2dTiledSprite tiledSprite = projectile.gameObject.AddComponent<tk2dTiledSprite>();
 			tiledSprite.SetSprite(itemCollection, spriteID);
 			tiledSprite.spriteAnimator = projectile.gameObject.AddComponent<tk2dSpriteAnimator>();
-			Destroy(projectile.GetComponentInChildren<tk2dSprite>());
-			BasicBeamController beam = projectile.gameObject.AddComponent<BasicBeamController>();
+			Destroy(projectile.GetComponentInChildren<tk2dSprite>());*/
+			BasicBeamController beam = Toolbox.GenerateBeamPrefab(projectile, "GlaurungItems/Resources/billiard_cue");
 			
 			if (!beam.IsReflectedBeam)
 			{

@@ -763,7 +763,7 @@ namespace ItemAPI
 
 		public static BasicBeamController GenerateBeamPrefab(this Projectile projectile, string spritePath)
 		{
-			projectile.gameObject.AddComponent<MeshRenderer>();
+			/*projectile.gameObject.AddComponent<MeshRenderer>();
 			projectile.gameObject.AddComponent<MeshFilter>();
 
 			tk2dSprite sprite = projectile.GetComponent<tk2dSprite>();
@@ -772,7 +772,17 @@ namespace ItemAPI
 			tiledSprite.sprite.SetSprite(ETGMod.Databases.Items.ProjectileCollection, spriteID);
 			projectile.gameObject.AddComponent<tk2dSpriteAnimator>();
 			BasicBeamController beamController = projectile.gameObject.AddComponent<BasicBeamController>();
-			return beamController;
+			return beamController;*/
+			projectile.gameObject.AddComponent<MeshRenderer>();
+			projectile.gameObject.AddComponent<MeshFilter>();
+			tk2dSpriteCollectionData itemCollection = ETGMod.Databases.Items.ProjectileCollection;//PickupObjectDatabase.GetByEncounterName("singularity").sprite.Collection;
+			int spriteID = SpriteBuilder.AddSpriteToCollection("GlaurungItems/Resources/billiard_cue", itemCollection);
+			tk2dTiledSprite tiledSprite = projectile.gameObject.AddComponent<tk2dTiledSprite>();
+			tiledSprite.SetSprite(itemCollection, spriteID);
+			tiledSprite.spriteAnimator = projectile.gameObject.AddComponent<tk2dSpriteAnimator>();
+			Object.Destroy(projectile.GetComponentInChildren<tk2dSprite>());
+			BasicBeamController beam = projectile.gameObject.AddComponent<BasicBeamController>();
+			return beam;
 		}
 
 		public static ExplosionData CopyExplosionData(this ExplosionData other)
