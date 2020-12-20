@@ -99,7 +99,7 @@ namespace GlaurungItems.Items
 			gun.Volley.projectiles[2].projectiles[0] = projectile2;
 
 			//beam
-			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(31) as Gun, true, false);
+			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(87) as Gun, true, false);
 			gun.Volley.projectiles[3].shootStyle = ProjectileModule.ShootStyle.Beam;
 			gun.Volley.projectiles[3].ammoCost = 1;
 			gun.Volley.projectiles[3].angleVariance = 0;
@@ -113,7 +113,19 @@ namespace GlaurungItems.Items
 			gun.Volley.projectiles[3].projectiles[0] = projectile;
 			projectile.baseData.damage *= 0.5f;
 			projectile.baseData.force *= 0.15f;
-			projectile.baseData.speed *= 0.5f;
+			projectile.baseData.speed *= 1f;
+			projectile.AppliesPoison = false;
+			projectile.PoisonApplyChance = 0;
+			BasicBeamController beam = projectile.GetComponentInChildren<BasicBeamController>();
+			if (!beam.IsReflectedBeam)
+			{
+				beam.reflections = 0;
+			}
+			beam.penetration = 10;
+			beam.ProjectileScale = 0.5f;
+			beam.PenetratesCover = true;
+			beam.projectile.baseData.range = 3f;
+			beam.AdjustPlayerBeamTint(Color.white, 1);
 			//gun.Volley.projectiles[3].positionOffset = new Vector3(0.0f, -0.75f, 0.0f);
 
 
@@ -125,17 +137,10 @@ namespace GlaurungItems.Items
 			tiledSprite.SetSprite(itemCollection, spriteID);
 			tiledSprite.spriteAnimator = projectile.gameObject.AddComponent<tk2dSpriteAnimator>();
 			Destroy(projectile.GetComponentInChildren<tk2dSprite>());*/
-			BasicBeamController beam = Toolbox.GenerateBeamPrefab(projectile, "GlaurungItems/Resources/billiard_cue");
-			
-			if (!beam.IsReflectedBeam)
-			{
-				beam.reflections = 0;
-			}
-			beam.penetration = 10;
-			beam.ProjectileScale = 0.5f;
-			beam.PenetratesCover = true;
-			beam.projectile.baseData.range = 3f;
-			
+			//BasicBeamController beam = Toolbox.GenerateBeamPrefab(projectile, "GlaurungItems/Resources/billiard_cue");
+
+
+
 
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 		}
