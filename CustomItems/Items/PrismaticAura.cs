@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GlaurungItems.Items
 {
@@ -30,6 +31,7 @@ namespace GlaurungItems.Items
 		private void StartEffect(PlayerController user)
 		{
 			wasUsed = true;
+			iter = 0;
 		}
 
 		public override bool CanBeUsed(PlayerController user)
@@ -46,9 +48,14 @@ namespace GlaurungItems.Items
 		{
 			if (this.LastOwner && this.wasUsed)
 			{
+                if (iter % framesEffectInterval == 0)
+                {
+					int randInt = Random.Range(0, 5);
+					selectedColor = colors[randInt];
+				}
 				this.DoAura();
 				this.HandleRadialIndicator();
-				
+				iter++;
 			}
 			else
 			{
@@ -100,8 +107,9 @@ namespace GlaurungItems.Items
 			{
 				this.m_radialIndicatorActive = true;
 				this.m_radialIndicator = ((GameObject)UnityEngine.Object.Instantiate(ResourceCache.Acquire("Global VFX/HeatIndicator"), this.LastOwner.CenterPosition.ToVector3ZisY(0f), Quaternion.identity, this.LastOwner.transform)).GetComponent<HeatIndicatorController>();
-				this.m_radialIndicator.CurrentColor = Color.cyan.WithAlpha(30f);
+				this.m_radialIndicator.IsFire = false;
 			}
+			this.m_radialIndicator.CurrentColor = selectedColor.WithAlpha(30f);
 		}
 
 		private void UnhandleRadialIndicator()
@@ -117,8 +125,21 @@ namespace GlaurungItems.Items
 			}
 		}
 
-		private float duration = 10f;
+		private float duration = 12f;
+		private int framesEffectInterval = 90;
 		private bool wasUsed = false;
+		private int iter;
+
+		private List<Color> colors = new List<Color>
+		{
+			Color.green,
+			Color.red,
+			Color.cyan,
+			Color.grey,
+			new Color(244f/255f, 3f/255f, 252f/255f)
+		};
+		private Color selectedColor;
+
 		private bool m_radialIndicatorActive;
 		private HeatIndicatorController m_radialIndicator;
 		private Action<AIActor, float> AuraAction;
