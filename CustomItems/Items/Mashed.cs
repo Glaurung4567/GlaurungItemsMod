@@ -116,16 +116,17 @@ namespace GlaurungItems.Items
 			projectile.baseData.speed *= 1f;
 			projectile.AppliesPoison = false;
 			projectile.PoisonApplyChance = 0;
+			projectile.AdditionalScaleMultiplier = 5;
 			BasicBeamController beam = projectile.GetComponentInChildren<BasicBeamController>();
 			if (!beam.IsReflectedBeam)
 			{
 				beam.reflections = 0;
 			}
 			beam.penetration = 10;
-			beam.ProjectileScale = 0.5f;
 			beam.PenetratesCover = true;
 			beam.projectile.baseData.range = 3f;
-			beam.AdjustPlayerBeamTint(Color.white, 1);
+			beam.projectile.AdditionalScaleMultiplier *= 3;
+			beam.ProjectileScale *= 5f; //doesn't seem to work
 			//gun.Volley.projectiles[3].positionOffset = new Vector3(0.0f, -0.75f, 0.0f);
 
 
@@ -154,15 +155,14 @@ namespace GlaurungItems.Items
 		protected override void OnPickup(PlayerController player)
 		{
 			base.OnPickup(player);
-			//player.GunChanged += this.OnGunChanged;
-			//player.PostProcessBeam += this.PostProcessBeam;
-			//player.GunChanged += this.OnGunChanged;
+			player.GunChanged += this.OnGunChanged;
+			player.PostProcessBeam += this.PostProcessBeam;
 		}
 
 		protected override void OnPostDrop(PlayerController player)
 		{
-			//player.PostProcessBeam -= this.PostProcessBeam;
-			//player.GunChanged -= this.OnGunChanged;
+			player.PostProcessBeam -= this.PostProcessBeam;
+			player.GunChanged -= this.OnGunChanged;
 			base.OnPostDrop(player);
 		}
 
@@ -185,17 +185,13 @@ namespace GlaurungItems.Items
 
 		private void PostProcessBeam(BeamController beam)
 		{
-			beam.AdjustPlayerBeamTint(Color.white, 1);
 			if (beam is BasicBeamController)
 			{
 				BasicBeamController basicBeamController = (beam as BasicBeamController);
-				if (!basicBeamController.IsReflectedBeam)
-				{
-					basicBeamController.reflections = 0;
+				if(basicBeamController.Gun == this.gun)
+                {
+					basicBeamController.ProjectileScale = 0.5f;
 				}
-				basicBeamController.penetration = 10;
-				basicBeamController.ProjectileScale = 0.5f;
-				basicBeamController.PenetratesCover = true;
 			}
 		}
 

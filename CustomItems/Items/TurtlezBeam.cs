@@ -33,10 +33,21 @@ namespace GlaurungItems.Items
             UnityEngine.Object.DontDestroyOnLoad(projectile);
             gun.DefaultModule.projectiles[0] = projectile;
 
-            projectile.baseData.damage *= 3f;
+            projectile.baseData.damage *= 4f;
             projectile.baseData.force *= 2f;
             projectile.baseData.speed *= 2.5f;
             projectile.baseData.range *= 2.25f;
+
+            BasicBeamController beam = projectile.GetComponentInChildren<BasicBeamController>();
+            if (!beam.IsReflectedBeam)
+            {
+                beam.reflections = 0;
+            }
+            beam.AdjustPlayerBeamTint(Color.cyan, 1);
+            beam.usesChargeDelay = true;
+            beam.chargeDelay = 0.3f;
+            beam.penetration = 100;
+            beam.PenetratesCover = true;
 
             gun.quality = PickupObject.ItemQuality.B;
             ETGMod.Databases.Items.Add(gun, null, "ANY");
@@ -81,20 +92,13 @@ namespace GlaurungItems.Items
 
         private void PostProcessBeam(BeamController beam)
         {
-            beam.AdjustPlayerBeamTint(Color.cyan, 1); 
-            beam.usesChargeDelay = true;
-            beam.chargeDelay = 0.5f;
             if (beam is BasicBeamController)
             {
                 BasicBeamController basicBeamController = (beam as BasicBeamController);
-                
-                basicBeamController.penetration += 100;  
-                if (!basicBeamController.IsReflectedBeam)
+                if (basicBeamController.Gun == this.gun)
                 {
-                    basicBeamController.reflections = 0; 
+                    basicBeamController.ProjectileScale = 3.5f;
                 }
-                basicBeamController.ProjectileScale = 4f;
-                basicBeamController.PenetratesCover = true;
             }
         }
 
