@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace GlaurungItems.Items
 {
-	class PrismaticSphere : PlayerItem
+	class PrismaticAura : PlayerItem
 	{
 		public static void Init()
 		{
-			string text = "Prismatic Sphere";
+			string text = "Prismatic Aura";
 			string resourcePath = "GlaurungItems/Resources/acme_crate";
 			GameObject gameObject = new GameObject(text);
-			PrismaticSphere item = gameObject.AddComponent<PrismaticSphere>();
+			PrismaticAura item = gameObject.AddComponent<PrismaticAura>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
 			string shortDesc = "WIP";
 			string longDesc = "";
