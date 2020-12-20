@@ -96,13 +96,13 @@ namespace GlaurungItems
                 MatriochkAmmolet.Init();
                 TurtlezBeam.Add();
 
-
                 Mashed.Add();
                 PeacemakerCarbine.Add();
+                PrismaticSphere.Init();
 
+                //modder tools
                 RoomTeller.Init();
 
-                BulletScriptSourceGun.Add();
                 //GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra

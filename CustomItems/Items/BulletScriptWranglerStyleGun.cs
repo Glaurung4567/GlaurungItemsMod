@@ -240,7 +240,7 @@ namespace GlaurungItems.Items
             {
 				lastOption = 26;
 			}
-			int randomSelect = 16;//Random.Range(1, lastOption);
+			int randomSelect = Random.Range(1, lastOption);
 			string enemyGuid = EnemyGuidDatabase.Entries["faster_tutorial_turret"]; ;
 			bulletsDamageMultiplier = 1;
 
@@ -417,8 +417,8 @@ namespace GlaurungItems.Items
 		private void OnPostProcessProjectile(Projectile proj)
 		{
 			//proj.AdjustPlayerProjectileTint(Color.yellow, 0);
-			if(proj.Owner is AIActor && !(proj.Owner as AIActor).CompanionOwner)
-            {
+			if ((proj.Owner is AIActor && (proj.Owner as AIActor).CompanionOwner == null) || proj.TrapOwner)
+			{
 				return; //to prevent the OnPostProcessProjectile from affecting enemies projectiles
 			}
 
@@ -426,9 +426,15 @@ namespace GlaurungItems.Items
 
 			proj.baseData.damage = 1;
 			proj.baseData.damage *= bulletsDamageMultiplier;
-			if(this.gun.CurrentOwner is PlayerController)
-            {
-				proj.baseData.damage *= (this.gun.CurrentOwner as PlayerController).stats.GetStatValue(PlayerStats.StatType.Damage);
+
+			if (this.gun.CurrentOwner is PlayerController)
+			{
+				PlayerController player = (this.gun.CurrentOwner as PlayerController);
+				proj.baseData.damage *= player.stats.GetStatValue(PlayerStats.StatType.Damage);
+				/*if (Random.value <= 0.1f)
+				{
+					player.DoPostProcessProjectile(proj);
+				}*/
 			}
 			if (proj.IsBlackBullet)
 			{

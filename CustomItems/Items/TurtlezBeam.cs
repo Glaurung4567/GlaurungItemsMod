@@ -14,7 +14,7 @@ namespace GlaurungItems.Items
             gun.SetShortDescription("Kamehameha !");
             gun.SetLongDescription("Gives the user the power to fire powerful energy blast, similar to the ones fired by a famous alien warrior.");
             gun.SetupSprite(null, "turtlez_idle_001", 8);
-            gun.SetAnimationFPS(gun.shootAnimation, 18);
+            gun.SetAnimationFPS(gun.shootAnimation, 22);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
             gun.AddProjectileModuleFrom(PickupObjectDatabase.GetById(20) as Gun, true, false);
 
@@ -49,7 +49,7 @@ namespace GlaurungItems.Items
             beam.penetration = 100;
             beam.PenetratesCover = true;
 
-            gun.quality = PickupObject.ItemQuality.B;
+            gun.quality = PickupObject.ItemQuality.A;
             ETGMod.Databases.Items.Add(gun, null, "ANY");
         }
 
