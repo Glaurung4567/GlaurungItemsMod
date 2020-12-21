@@ -6,14 +6,14 @@ using Random = UnityEngine.Random;
 
 namespace GlaurungItems.Items
 {
-	class PrismaticAura : PlayerItem
+	class PrismaticField : PlayerItem
 	{
 		public static void Init()
 		{
-			string text = "Prismatic Aura";
+			string text = "Prismatic Field";
 			string resourcePath = "GlaurungItems/Resources/acme_crate";
 			GameObject gameObject = new GameObject(text);
-			PrismaticAura item = gameObject.AddComponent<PrismaticAura>();
+			PrismaticField item = gameObject.AddComponent<PrismaticField>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
 			string shortDesc = "WIP";
 			string longDesc = "";
@@ -51,24 +51,52 @@ namespace GlaurungItems.Items
                 if (iter % framesEffectInterval == 0)
                 {
 					int randInt = Random.Range(0, 5);
+					GameActorEffect effect = null;
+					bool stun = false;
                     switch (randInt)
                     {
 						case 0:
 							selectedColor = Color.red;
+							effect = (PickupObjectDatabase.GetById(125) as Gun).DefaultModule.projectiles[0].fireEffect;
+							break;
+						case 1:
+							selectedColor = Color.cyan;
+							effect = (PickupObjectDatabase.GetById(402) as Gun).DefaultModule.projectiles[0].freezeEffect;
+							break;
+						case 2:
+							selectedColor = Color.grey;
+							effect = new GameActorPetrifyEffect(this.LastOwner);
+							break;
+						case 3:
+							selectedColor = Color.white;
+							stun = true;
+							break;
+						case 4:
+							selectedColor = Color.green;
+							effect = (PickupObjectDatabase.GetById(513) as Gun).DefaultModule.projectiles[0].healthEffect;
 
-							this.AuraAction = delegate (AIActor actor, float dist)
-							{
-								float num2 = this.DamagePerSecond * BraveTime.DeltaTime;
-								if (num2 > 0f)
-								{
-									didDamageEnemies = true;
-								}
-								actor.healthHaver.ApplyDamage(num2, Vector2.zero, "Aura", this.damageTypes, DamageCategory.Normal, false, null, false);
-							};
 							break;
 						default:
 							break;
                     }
+
+					this.AuraAction = delegate (AIActor actor, float dist)
+					{
+						float num2 = this.DamagePerSecond * BraveTime.DeltaTime;
+						if (num2 > 0f)
+						{
+							if(effect != null)
+                            {
+								actor.ApplyEffect(effect);
+							}
+                            if (stun)
+                            {
+								actor.behaviorSpeculator.Stun(3f);
+                            }
+							didDamageEnemies = true;
+						}
+						actor.healthHaver.ApplyDamage(num2, Vector2.zero, "Aura", this.damageTypes, DamageCategory.Normal, false, null, false);
+					};
 				}
 				this.DoAura();
 				this.HandleRadialIndicator();
@@ -163,8 +191,52 @@ namespace GlaurungItems.Items
 		private bool m_radialIndicatorActive;
 		private HeatIndicatorController m_radialIndicator;
 		private Action<AIActor, float> AuraAction;
-		public float AuraRadius = 5;
+		public float AuraRadius = 4;
 		public CoreDamageTypes damageTypes;
 		public float DamagePerSecond = 5;
 	}
+
+	public class GameActorPetrifyEffect : GameActorEffect
+	{
+		public GameActorPetrifyEffect(PlayerController owner)
+		{
+			this.AffectsPlayers = false;
+			this.duration = 8f;
+			this.AppliesTint = true;
+			this.TintColor = new Color(0.2f, 0.2f, 0.2f, Mathf.Clamp01(this.duration));
+			this.Owner = owner;
+		}
+
+		public bool ShouldVanishOnDeath(GameActor actor)
+		{
+			return (!actor.healthHaver || !actor.healthHaver.IsBoss) && (!(actor is AIActor) || !(actor as AIActor).IsSignatureEnemy);
+		}
+
+		public override void OnEffectApplied(GameActor actor, RuntimeGameActorEffectData effectData, float partialAmount = 1f)
+		{
+			bool flag = !actor.healthHaver.IsBoss && !actor.healthHaver.IsDead;
+			if (flag)
+			{
+				AIActor aiActor = actor.aiActor;
+				this.prev = aiActor.CanTargetPlayers;
+				aiActor.CanTargetPlayers = false;
+				aiActor.MovementSpeed = 0f;
+				base.OnEffectApplied(actor, effectData, partialAmount);
+			}
+		}
+
+		public override void OnEffectRemoved(GameActor actor, RuntimeGameActorEffectData effectData)
+		{
+			AIActor aiActor = actor.aiActor;
+			aiActor.MovementSpeed = aiActor.BaseMovementSpeed;
+			aiActor.CanTargetPlayers = this.prev;
+			base.OnEffectRemoved(actor, effectData);
+		}
+
+		private bool prev = true;
+
+		public PlayerController Owner;
+	}
 }
+
+

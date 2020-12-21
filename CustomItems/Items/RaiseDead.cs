@@ -105,10 +105,10 @@ namespace GlaurungItems.Items
                 }
 
                 
-                CompanionisedEnemyBulletModifiers companionisedBullets = aiactor.gameObject.GetOrAddComponent<CompanionisedEnemyBulletModifiers>();
+                /*CompanionisedEnemyBulletModifiers companionisedBullets = aiactor.gameObject.GetOrAddComponent<CompanionisedEnemyBulletModifiers>();
                 companionisedBullets.jammedDamageMultiplier = 2f;
                 companionisedBullets.TintBullets = false;
-                companionisedBullets.baseBulletDamage = 10f;
+                companionisedBullets.baseBulletDamage = 10f;*/
                 
             }
             catch (Exception e)

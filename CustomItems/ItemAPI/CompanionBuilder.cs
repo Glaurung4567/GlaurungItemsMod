@@ -238,9 +238,13 @@ namespace ItemAPI
         {
             enemy = base.aiActor;
             AIBulletBank bulletBank2 = enemy.bulletBank;
-            foreach (AIBulletBank.Entry bullet in bulletBank2.Bullets)
-            {
-                bullet.BulletObject.GetComponent<Projectile>().BulletScriptSettings.preventPooling = true;
+            if (enemy.CompanionOwner != null) 
+            { 
+                foreach (AIBulletBank.Entry bullet in bulletBank2.Bullets)
+                {
+                    //create lag... but prevent the proj from being reused and the modifs affects enemies proj
+                    bullet.BulletObject.GetComponent<Projectile>().BulletScriptSettings.preventPooling = true;
+                }
             }
             if (enemy.aiShooter != null)
             {

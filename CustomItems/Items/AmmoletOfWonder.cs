@@ -29,7 +29,7 @@ namespace GlaurungItems.Items
         {
             List<AIActor> activeEnemies = GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(centerPoint.ToIntVector2(VectorConversions.Round)).GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
 
-            int randomSelect = Random.Range(1, 45);
+            int randomSelect = Random.Range(1, 46);
             switch (randomSelect)
             {
                 case 1:
@@ -366,7 +366,10 @@ namespace GlaurungItems.Items
                         }
                     }
                     break;
-
+                case 45:
+                    GameActorEffect poisonEffect = (PickupObjectDatabase.GetById(513) as Gun).DefaultModule.projectiles[0].healthEffect;
+                    ApplyEffectOnEnnemies(activeEnemies, poisonEffect);
+                    break;
                 default:
                     this.BlankForceMultiplier = 0;
                     base.StartCoroutine(this.ResetBlankModifierStats());

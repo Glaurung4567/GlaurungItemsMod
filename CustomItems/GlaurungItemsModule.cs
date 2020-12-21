@@ -98,7 +98,7 @@ namespace GlaurungItems
 
                 Mashed.Add();
                 PeacemakerCarbine.Add();
-                PrismaticAura.Init();
+                PrismaticField.Init();
 
                 //modder tools
                 RoomTeller.Init();

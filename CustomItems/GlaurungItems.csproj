@@ -97,7 +97,7 @@
     <Compile Include="Items\NuArcana.cs" />
     <Compile Include="Items\old\BulletScriptSourceGun.cs" />
     <Compile Include="Items\PeacemakerCarbine.cs" />
-    <Compile Include="Items\PrismaticAura.cs" />
+    <Compile Include="Items\PrismaticField.cs" />
     <Compile Include="Items\RoomTeller.cs" />
     <Compile Include="Items\TurtlezBeam.cs" />
     <Compile Include="Items\old\BeamTest.cs" />
