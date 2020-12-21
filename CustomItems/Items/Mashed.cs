@@ -11,7 +11,6 @@ namespace GlaurungItems.Items
 {
 	internal class Mashed : AdvancedGunBehavior
 	{
-		// Token: 0x0600028C RID: 652 RVA: 0x000162F8 File Offset: 0x000144F8
 		public static void Add()
 		{
 			Gun gun = ETGMod.Databases.Items.NewGun("Mashed", "mashed");

@@ -51,7 +51,24 @@ namespace GlaurungItems.Items
                 if (iter % framesEffectInterval == 0)
                 {
 					int randInt = Random.Range(0, 5);
-					selectedColor = colors[randInt];
+                    switch (randInt)
+                    {
+						case 0:
+							selectedColor = Color.red;
+
+							this.AuraAction = delegate (AIActor actor, float dist)
+							{
+								float num2 = this.DamagePerSecond * BraveTime.DeltaTime;
+								if (num2 > 0f)
+								{
+									didDamageEnemies = true;
+								}
+								actor.healthHaver.ApplyDamage(num2, Vector2.zero, "Aura", this.damageTypes, DamageCategory.Normal, false, null, false);
+							};
+							break;
+						default:
+							break;
+                    }
 				}
 				this.DoAura();
 				this.HandleRadialIndicator();
@@ -71,8 +88,9 @@ namespace GlaurungItems.Items
 
 		protected virtual void DoAura()
 		{
-			bool didDamageEnemies = false;
+			didDamageEnemies = false;
 			PlayerController playerController = this.LastOwner as PlayerController;
+
 			if (this.AuraAction == null)
 			{
 				this.AuraAction = delegate (AIActor actor, float dist)
@@ -85,6 +103,7 @@ namespace GlaurungItems.Items
 					actor.healthHaver.ApplyDamage(num2, Vector2.zero, "Aura", this.damageTypes, DamageCategory.Normal, false, null, false);
 				};
 			}
+
 			if (playerController != null && playerController.CurrentRoom != null)
 			{
 				float num = this.AuraRadius;
@@ -140,6 +159,7 @@ namespace GlaurungItems.Items
 		};
 		private Color selectedColor;
 
+		private bool didDamageEnemies;
 		private bool m_radialIndicatorActive;
 		private HeatIndicatorController m_radialIndicator;
 		private Action<AIActor, float> AuraAction;
