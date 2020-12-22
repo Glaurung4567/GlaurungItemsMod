@@ -5,3 +5,6 @@ This is the source code repository of my items mod for Enter the Gungeon game(ht
 Next update : 
 Added Turtlez Beam guns
 Added Matriochk Ammolet and Nu Arcana passives
+Removed synergies for Raise Dead
+Added Room Teller for modders
+Added Peacemaker Carbine, Mashed and Prismatic field
