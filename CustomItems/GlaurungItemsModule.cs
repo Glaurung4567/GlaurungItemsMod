@@ -115,14 +115,14 @@ namespace GlaurungItems
                 {
                     new SynergyHub.KlobbeCogSynergy()
                 }).ToArray<AdvancedSynergyEntry>();
-                GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
+                /*GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
                 {
                     new SynergyHub.RaiseDeadGhostSynergy()
                 }).ToArray<AdvancedSynergyEntry>();
                 GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
                 {
                     new SynergyHub.RaiseDeadSkusketSynergy()
-                }).ToArray<AdvancedSynergyEntry>();
+                }).ToArray<AdvancedSynergyEntry>();*/
                 GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
                 {
                     new SynergyHub.BulletScriptGunSynergy1()

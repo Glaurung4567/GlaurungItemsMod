@@ -35,14 +35,14 @@ namespace GlaurungItems.Items
                 {
                     this.SpawnUndeadCompanion(user, spentEnemyGuid, 10f, true);
                 }
-                if(user.PlayerHasActiveSynergy("Restless Spirit"))
+                /*if(user.PlayerHasActiveSynergy("Restless Spirit"))
                 {
                     this.SpawnUndeadCompanion(user, EnemyGuidDatabase.Entries["hollowpoint"], 15f);
                 }
                 if (user.PlayerHasActiveSynergy("Skull Bros"))
                 {
                     this.SpawnUndeadCompanion(user, EnemyGuidDatabase.Entries["skusket"], 8f);
-                }
+                }*/
             }
             else if(isInRoom && !user.IsInCombat)
             {
@@ -93,7 +93,7 @@ namespace GlaurungItems.Items
                 {
                     Destroy(aiactor.gameObject.GetComponent<SpawnEnemyOnDeath>());
                 }
-                if (aiactor.bulletBank != null)
+                /*if (aiactor.bulletBank != null)
                 {
                     AIBulletBank bulletBank = aiactor.bulletBank;
                     bulletBank.OnProjectileCreated = (Action<Projectile>)Delegate.Combine(bulletBank.OnProjectileCreated, new Action<Projectile>(RaiseDead.OnPostProcessProjectile));
@@ -102,7 +102,7 @@ namespace GlaurungItems.Items
                 {
                     AIShooter aiShooter = aiactor.aiShooter;
                     aiShooter.PostProcessProjectile = (Action<Projectile>)Delegate.Combine(aiShooter.PostProcessProjectile, new Action<Projectile>(RaiseDead.OnPostProcessProjectile));
-                }
+                }*/
 
                 
                 /*CompanionisedEnemyBulletModifiers companionisedBullets = aiactor.gameObject.GetOrAddComponent<CompanionisedEnemyBulletModifiers>();

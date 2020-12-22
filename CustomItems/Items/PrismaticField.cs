@@ -50,9 +50,11 @@ namespace GlaurungItems.Items
 			{
                 if (iter % framesEffectInterval == 0)
                 {
-					int randInt = Random.Range(0, 5);
+					int randInt = Random.Range(0, 8);
 					GameActorEffect effect = null;
+					damagePerSecond = 5;
 					bool stun = false;
+					bool planeShift = false;
                     switch (randInt)
                     {
 						case 0:
@@ -74,7 +76,18 @@ namespace GlaurungItems.Items
 						case 4:
 							selectedColor = Color.green;
 							effect = (PickupObjectDatabase.GetById(513) as Gun).DefaultModule.projectiles[0].healthEffect;
-
+							break;
+						case 5:
+							selectedColor = new Color(244f / 255f, 3f / 255f, 252f / 255f);
+							effect = (PickupObjectDatabase.GetById(379) as Gun).DefaultModule.projectiles[0].charmEffect;
+							break;
+						case 6:
+							selectedColor = Color.black;
+							damagePerSecond = 25;
+							break;
+						case 7:
+							selectedColor = Color.magenta;
+							planeShift = true;
 							break;
 						default:
 							break;
@@ -82,7 +95,7 @@ namespace GlaurungItems.Items
 
 					this.AuraAction = delegate (AIActor actor, float dist)
 					{
-						float num2 = this.DamagePerSecond * BraveTime.DeltaTime;
+						float num2 = this.damagePerSecond * BraveTime.DeltaTime;
 						if (num2 > 0f)
 						{
 							if(effect != null)
@@ -92,6 +105,14 @@ namespace GlaurungItems.Items
                             if (stun)
                             {
 								actor.behaviorSpeculator.Stun(3f);
+                            }
+							if(planeShift)
+                            {
+								if(actor.healthHaver && actor.healthHaver.IsAlive && !actor.healthHaver.IsBoss && 
+								this.LastOwner && this.LastOwner.CurrentRoom != null)
+                                {
+									actor.TeleportSomewhere();
+                                }
                             }
 							didDamageEnemies = true;
 						}
@@ -111,7 +132,9 @@ namespace GlaurungItems.Items
 
 		protected override void OnPreDrop(PlayerController user)
 		{
+			this.UnhandleRadialIndicator();
 			EndEffect(user);
+			base.OnPreDrop(user);
 		}
 
 		protected virtual void DoAura()
@@ -123,7 +146,7 @@ namespace GlaurungItems.Items
 			{
 				this.AuraAction = delegate (AIActor actor, float dist)
 				{
-					float num2 = this.DamagePerSecond * BraveTime.DeltaTime;
+					float num2 = this.damagePerSecond * BraveTime.DeltaTime;
 					if (num2 > 0f)
 					{
 						didDamageEnemies = true;
@@ -173,7 +196,7 @@ namespace GlaurungItems.Items
 		}
 
 		private float duration = 12f;
-		private int framesEffectInterval = 90;
+		private int framesEffectInterval = 160;
 		private bool wasUsed = false;
 		private int iter;
 
@@ -191,17 +214,18 @@ namespace GlaurungItems.Items
 		private bool m_radialIndicatorActive;
 		private HeatIndicatorController m_radialIndicator;
 		private Action<AIActor, float> AuraAction;
-		public float AuraRadius = 4;
+		public float AuraRadius = 5;
 		public CoreDamageTypes damageTypes;
-		public float DamagePerSecond = 5;
+		public float damagePerSecond = 5;
 	}
 
+	/*----------------------------------------------------------------------------------*/
 	public class GameActorPetrifyEffect : GameActorEffect
 	{
 		public GameActorPetrifyEffect(PlayerController owner)
 		{
 			this.AffectsPlayers = false;
-			this.duration = 8f;
+			this.duration = 4f;
 			this.AppliesTint = true;
 			this.TintColor = new Color(0.2f, 0.2f, 0.2f, Mathf.Clamp01(this.duration));
 			this.Owner = owner;
