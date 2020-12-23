@@ -137,7 +137,6 @@ namespace GlaurungItems.Items
             }
         }
 
-        // Token: 0x06000663 RID: 1635 RVA: 0x0003A9A9 File Offset: 0x00038BA9
         private static IEnumerator ChangeProjectileDamage(Projectile bullet, float oldDamage)
         {
             yield return new WaitForSeconds(0.1f);
