@@ -119,6 +119,10 @@ namespace GlaurungItems.Items
 			yield return new WaitForSeconds(0.2f);
 			proj.RemoveBulletScriptControl();
 			proj.collidesWithEnemies = true;
+			if (proj.Owner && proj.Owner.specRigidbody)//from PassiveReflectItem
+			{
+				proj.specRigidbody.DeregisterSpecificCollisionException(proj.Owner.specRigidbody);
+			}
 			proj.Owner = inflicter;
 			proj.OwnerName = inflicter.name;
 			proj.SetNewShooter(inflicter.specRigidbody);
