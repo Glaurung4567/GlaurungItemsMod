@@ -99,7 +99,7 @@ namespace GlaurungItems
                 Mashed.Add();
                 PeacemakerCarbine.Add();
                 PrismaticField.Init();
-                MinorityBullets.Init();
+                TurncoatRounds.Init();
 
                 //modder tools
                 RoomTeller.Init();

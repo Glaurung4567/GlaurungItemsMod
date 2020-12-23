@@ -15,7 +15,7 @@ namespace GlaurungItems.Items
 			GameObject gameObject = new GameObject(text);
 			PrismaticField item = gameObject.AddComponent<PrismaticField>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
-			string shortDesc = "WIP";
+			string shortDesc = "Sphere and Spray Combined";
 			string longDesc = "";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 500f);

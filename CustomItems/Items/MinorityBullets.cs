@@ -6,19 +6,19 @@ using Random = UnityEngine.Random;
 
 namespace GlaurungItems.Items
 {
-    class MinorityBullets : PassiveItem
+    class TurncoatRounds : PassiveItem
 	{
 		public static void Init()
 		{
-			string name = "Minority Bullets";
+			string name = "Turncoat Rounds";
 			string resourcePath = "GlaurungItems/Resources/acme_crate";
 			GameObject gameObject = new GameObject(name);
-			MinorityBullets item = gameObject.AddComponent<MinorityBullets>();
+			TurncoatRounds item = gameObject.AddComponent<TurncoatRounds>();
 			ItemBuilder.AddSpriteToObject(name, resourcePath, gameObject);
 			string shortDesc = "Minority World";
 			string longDesc = "";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.quality = PickupObject.ItemQuality.C;
+			item.quality = PickupObject.ItemQuality.B;
 		}
 
 		public override void Pickup(PlayerController player)
@@ -108,7 +108,7 @@ namespace GlaurungItems.Items
 
         private void OnPostProcessProjectile(Projectile proj)
         {
-			if(Random.value <= 1f)
+			if(Random.value <= 0.05f)
             {
 				GameManager.Instance.StartCoroutine(this.ChangeProjectileTarget(proj));
 			}
@@ -131,6 +131,8 @@ namespace GlaurungItems.Items
 			//proj.Direction = -proj.Direction;
 			proj.ManualControl = false;
 			proj.SendInDirection(-proj.Direction, true);
+			proj.baseData.damage *= 4;
+			proj.baseData.speed *= 2;
 			proj.Speed *= 2;
 			proj.UpdateSpeed();
             yield break;
