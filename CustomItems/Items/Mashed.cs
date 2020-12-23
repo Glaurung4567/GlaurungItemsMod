@@ -29,18 +29,26 @@ namespace GlaurungItems.Items
 			gun.muzzleFlashEffects = null;
 
 			//charged
-			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(292) as Gun, true, false);
+			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(223) as Gun, true, false);
 			gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Charged;
-			gun.DefaultModule.ammoCost = 5;
+			gun.DefaultModule.ammoCost = 3;
+			gun.DefaultModule.angleVariance = 0;
 			gun.DefaultModule.cooldownTime = 0.2f;
 			gun.DefaultModule.numberOfShotsInClip = maxAmmo;
-			Projectile projectile3 = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
+			Projectile projectile3 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(406) as Gun).Volley.projectiles[1].projectiles[0]);
 			projectile3.gameObject.SetActive(false);
 			FakePrefab.MarkAsFakePrefab(projectile3.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile3);
 
-			projectile3.baseData.damage *= 1;
-			projectile3.baseData.speed *= 1;
+			projectile3.baseData.damage *= 5;
+			projectile3.baseData.speed *= 2;
+			projectile3.AdditionalScaleMultiplier = 0.5f;
+			projectile3.AppliesPoison = false;
+			projectile3.PoisonApplyChance = 0f;
+			if(projectile3.GetComponentInChildren<BounceProjModifier>() != null)
+            {
+				Destroy(projectile3.GetComponentInChildren<BounceProjModifier>());
+            }
 
 			ProjectileModule.ChargeProjectile chargeProj = new ProjectileModule.ChargeProjectile
 			{
@@ -55,7 +63,7 @@ namespace GlaurungItems.Items
 			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(124) as Gun, true, false);
 			gun.Volley.projectiles[1].shootStyle = ProjectileModule.ShootStyle.Automatic;
 			gun.Volley.projectiles[1].ammoCost = 1;
-			gun.Volley.projectiles[1].angleVariance = 5;
+			gun.Volley.projectiles[1].angleVariance = 7;
 			gun.Volley.projectiles[1].cooldownTime = 0.12f;
 			gun.Volley.projectiles[1].numberOfShotsInClip = maxAmmo;
 			Projectile projectile1 = UnityEngine.Object.Instantiate<Projectile>(gun.Volley.projectiles[1].projectiles[0]);
@@ -124,6 +132,8 @@ namespace GlaurungItems.Items
 			beam.penetration = 10;
 			beam.PenetratesCover = true;
 			beam.projectile.baseData.range = 3f;
+			beam.homingRadius = 0;
+			beam.homingAngularVelocity = 0;
 			beam.projectile.AdditionalScaleMultiplier *= 3;
 			beam.ProjectileScale *= 5f; //doesn't seem to work
 			//gun.Volley.projectiles[3].positionOffset = new Vector3(0.0f, -0.75f, 0.0f);
