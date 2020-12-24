@@ -58,8 +58,8 @@ namespace GlaurungItems.Items
 			beam.projectile.baseData.range = 3f;
 			beam.homingRadius = 0;
 			beam.homingAngularVelocity = 0;
-			beam.projectile.AdditionalScaleMultiplier *= 3;
-			beam.ProjectileScale *= 5f; //doesn't seem to work
+			beam.projectile.AdditionalScaleMultiplier = 3;
+			beam.ProjectileScale = 5f; //doesn't seem to work
 
 
 
@@ -171,14 +171,14 @@ namespace GlaurungItems.Items
 		protected override void OnPickup(PlayerController player)
 		{
 			base.OnPickup(player);
-			player.GunChanged += this.OnGunChanged;
-			player.PostProcessBeam += this.PostProcessBeam;
+			//player.GunChanged += this.OnGunChanged;
+			//player.PostProcessBeam += this.PostProcessBeam;
 		}
 
 		protected override void OnPostDrop(PlayerController player)
 		{
-			player.PostProcessBeam -= this.PostProcessBeam;
-			player.GunChanged -= this.OnGunChanged;
+			//player.PostProcessBeam -= this.PostProcessBeam;
+			//player.GunChanged -= this.OnGunChanged;
 			base.OnPostDrop(player);
 		}
 
