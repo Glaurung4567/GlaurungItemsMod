@@ -10,12 +10,12 @@ namespace GlaurungItems.Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("Peacemaker Carbine", "peacemakercarbine");
+            Gun gun = ETGMod.Databases.Items.NewGun("Peacemaker Carbine", "peacemaker");
             Game.Items.Rename("outdated_gun_mods:peacemaker_carbine", "gl:peacemaker_carbine");
             gun.gameObject.AddComponent<PeacemakerCarbine>();
             gun.SetShortDescription("Bullets Storm");
             gun.SetLongDescription("Used by a weirdo who thought shooting enemies using specific combos would grant him a bonus of some sort... His gun packs quite a punch nonetheless, especially the alt-fire mode.");
-            gun.SetupSprite(null, "jpxfrd_idle_001", 8);
+            gun.SetupSprite(null, "peacemaker_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
             //gun.SetAnimationFPS(gun.idleAnimation, 8);
@@ -32,6 +32,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.numberOfShotsInClip = PeacemakerCarbine.baseMagSize;
             gun.SetBaseMaxAmmo(360);
             gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
+            gun.barrelOffset.transform.localPosition = new Vector3(0f, 0.3f, 0);
 
             gun.quality = PickupObject.ItemQuality.B;
 
