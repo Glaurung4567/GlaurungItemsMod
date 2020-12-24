@@ -13,28 +13,63 @@ namespace GlaurungItems.Items
 	{
 		public static void Add()
 		{
-			Gun gun = ETGMod.Databases.Items.NewGun("Swiss Army Rifle", "mashed");
+			Gun gun = ETGMod.Databases.Items.NewGun("Swiss Army Rifle", "indecisive");
 			Game.Items.Rename("outdated_gun_mods:swiss_army_rifle", "gl:swiss_army_rifle");
 			gun.gameObject.AddComponent<Mashed>();
 			GunExt.SetShortDescription(gun, "Shoot Style: Yes");
 			GunExt.SetLongDescription(gun, "A gun packed with different fire modes usable all at once to be able to handle any situation.");
-			GunExt.SetupSprite(gun, null, "jpxfrd_idle_001", 8);
-			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 16);
+			GunExt.SetupSprite(gun, null, "indecisive_idle_001", 8);
+			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 3);
 			GunExt.SetAnimationFPS(gun, gun.chargeAnimation, 3);
 
 			gun.reloadTime = 1f;
 			gun.SetBaseMaxAmmo(maxAmmo);
 			gun.quality = PickupObject.ItemQuality.B;
-			gun.gunClass = GunClass.BEAM;
+			//gun.gunClass = GunClass.BEAM;
 			gun.muzzleFlashEffects = null;
+
+
+			//beam
+			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(87) as Gun, true, false);
+			gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Beam;
+			gun.DefaultModule.ammoCost = 1;
+			gun.DefaultModule.angleVariance = 0;
+			gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
+			gun.DefaultModule.numberOfShotsInClip = maxAmmo;
+
+			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
+			projectile.gameObject.SetActive(false);
+			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
+			UnityEngine.Object.DontDestroyOnLoad(projectile);
+			gun.DefaultModule.projectiles[0] = projectile;
+			projectile.baseData.damage *= 0.5f;
+			projectile.baseData.force *= 0.15f;
+			projectile.baseData.speed *= 1f;
+			projectile.AppliesPoison = false;
+			projectile.PoisonApplyChance = 0;
+			projectile.AdditionalScaleMultiplier = 5;
+			BasicBeamController beam = projectile.GetComponentInChildren<BasicBeamController>();
+			if (!beam.IsReflectedBeam)
+			{
+				beam.reflections = 0;
+			}
+			beam.penetration = 10;
+			beam.PenetratesCover = true;
+			beam.projectile.baseData.range = 3f;
+			beam.homingRadius = 0;
+			beam.homingAngularVelocity = 0;
+			beam.projectile.AdditionalScaleMultiplier *= 3;
+			beam.ProjectileScale *= 5f; //doesn't seem to work
+
+
 
 			//charged
 			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(223) as Gun, true, false);
-			gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Charged;
-			gun.DefaultModule.ammoCost = 3;
-			gun.DefaultModule.angleVariance = 0;
-			gun.DefaultModule.cooldownTime = 0.2f;
-			gun.DefaultModule.numberOfShotsInClip = maxAmmo;
+			gun.Volley.projectiles[1].shootStyle = ProjectileModule.ShootStyle.Charged;
+			gun.Volley.projectiles[1].ammoCost = 3;
+			gun.Volley.projectiles[1].angleVariance = 0;
+			gun.Volley.projectiles[1].cooldownTime = 0.2f;
+			gun.Volley.projectiles[1].numberOfShotsInClip = maxAmmo;
 			Projectile projectile3 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(406) as Gun).Volley.projectiles[1].projectiles[0]);
 			projectile3.gameObject.SetActive(false);
 			FakePrefab.MarkAsFakePrefab(projectile3.gameObject);
@@ -45,6 +80,9 @@ namespace GlaurungItems.Items
 			projectile3.AdditionalScaleMultiplier = 0.5f;
 			projectile3.AppliesPoison = false;
 			projectile3.PoisonApplyChance = 0f;
+			PierceProjModifier pierce = projectile3.gameObject.AddComponent<PierceProjModifier>();
+			pierce.penetratesBreakables = true;
+			pierce.penetration = 100;
 			if(projectile3.GetComponentInChildren<BounceProjModifier>() != null)
             {
 				Destroy(projectile3.GetComponentInChildren<BounceProjModifier>());
@@ -56,25 +94,10 @@ namespace GlaurungItems.Items
 				ChargeTime = 3.5f,
 				AmmoCost = 3,
 			};
-			gun.DefaultModule.chargeProjectiles = new List<ProjectileModule.ChargeProjectile> { chargeProj };
+			gun.Volley.projectiles[1].chargeProjectiles = new List<ProjectileModule.ChargeProjectile> { chargeProj };
 
 
-			//auto
-			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(124) as Gun, true, false);
-			gun.Volley.projectiles[1].shootStyle = ProjectileModule.ShootStyle.Automatic;
-			gun.Volley.projectiles[1].ammoCost = 1;
-			gun.Volley.projectiles[1].angleVariance = 7;
-			gun.Volley.projectiles[1].cooldownTime = 0.12f;
-			gun.Volley.projectiles[1].numberOfShotsInClip = maxAmmo;
-			Projectile projectile1 = UnityEngine.Object.Instantiate<Projectile>(gun.Volley.projectiles[1].projectiles[0]);
-			projectile1.gameObject.SetActive(false);
-			FakePrefab.MarkAsFakePrefab(projectile1.gameObject);
-			UnityEngine.Object.DontDestroyOnLoad(projectile1);
 
-			projectile1.baseData.damage *= 1.25f;
-			projectile1.baseData.speed *= 1.2f;
-			projectile1.baseData.range *= 0.75f;
-			gun.Volley.projectiles[1].projectiles[0] = projectile1;
 			
 			//semi auto
 			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(357) as Gun, true, false);
@@ -105,38 +128,22 @@ namespace GlaurungItems.Items
 			}
 			gun.Volley.projectiles[2].projectiles[0] = projectile2;
 
-			//beam
-			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(87) as Gun, true, false);
-			gun.Volley.projectiles[3].shootStyle = ProjectileModule.ShootStyle.Beam;
+			//auto
+			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(124) as Gun, true, false);
+			gun.Volley.projectiles[3].shootStyle = ProjectileModule.ShootStyle.Automatic;
 			gun.Volley.projectiles[3].ammoCost = 1;
-			gun.Volley.projectiles[3].angleVariance = 0;
-			gun.Volley.projectiles[3].sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
+			gun.Volley.projectiles[3].angleVariance = 7;
+			gun.Volley.projectiles[3].cooldownTime = 0.12f;
 			gun.Volley.projectiles[3].numberOfShotsInClip = maxAmmo;
+			Projectile projectile1 = UnityEngine.Object.Instantiate<Projectile>(gun.Volley.projectiles[3].projectiles[0]);
+			projectile1.gameObject.SetActive(false);
+			FakePrefab.MarkAsFakePrefab(projectile1.gameObject);
+			UnityEngine.Object.DontDestroyOnLoad(projectile1);
 
-			Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.Volley.projectiles[3].projectiles[0]);
-			projectile.gameObject.SetActive(false);
-			FakePrefab.MarkAsFakePrefab(projectile.gameObject);
-			UnityEngine.Object.DontDestroyOnLoad(projectile);
-			gun.Volley.projectiles[3].projectiles[0] = projectile;
-			projectile.baseData.damage *= 0.5f;
-			projectile.baseData.force *= 0.15f;
-			projectile.baseData.speed *= 1f;
-			projectile.AppliesPoison = false;
-			projectile.PoisonApplyChance = 0;
-			projectile.AdditionalScaleMultiplier = 5;
-			BasicBeamController beam = projectile.GetComponentInChildren<BasicBeamController>();
-			if (!beam.IsReflectedBeam)
-			{
-				beam.reflections = 0;
-			}
-			beam.penetration = 10;
-			beam.PenetratesCover = true;
-			beam.projectile.baseData.range = 3f;
-			beam.homingRadius = 0;
-			beam.homingAngularVelocity = 0;
-			beam.projectile.AdditionalScaleMultiplier *= 3;
-			beam.ProjectileScale *= 5f; //doesn't seem to work
-			//gun.Volley.projectiles[3].positionOffset = new Vector3(0.0f, -0.75f, 0.0f);
+			projectile1.baseData.damage *= 1.25f;
+			projectile1.baseData.speed *= 1.2f;
+			projectile1.baseData.range *= 0.75f;
+			gun.Volley.projectiles[3].projectiles[0] = projectile1;
 
 
 			/*projectile.gameObject.AddComponent<MeshRenderer>();
@@ -244,6 +251,15 @@ namespace GlaurungItems.Items
 				{
 					this.HasReloaded = true;
 				}
+				if(gun.GetChargeFraction() >= 1 && !fullyCharged)
+                {
+					fullyCharged = true;
+					this.DoChargeCompletePoof();
+				}
+				if (gun.GetChargeFraction() == 0 && fullyCharged)
+				{
+					fullyCharged = false;
+				}
 			}
 		}
 
@@ -258,7 +274,19 @@ namespace GlaurungItems.Items
 			}
 		}
 
+		private void DoChargeCompletePoof()
+		{
+			GameObject gameObject = SpawnManager.SpawnVFX(BraveResources.Load<GameObject>("Global VFX/VFX_DBZ_Charge", ".prefab"), false);
+			gameObject.transform.parent = this.gun.CurrentOwner.transform;
+			gameObject.transform.position = this.gun.CurrentOwner.specRigidbody.UnitCenter;
+			tk2dBaseSprite component = gameObject.GetComponent<tk2dBaseSprite>();
+			component.HeightOffGround = -1f;
+			component.UpdateZDepth();
+			(this.gun.CurrentOwner as PlayerController).DoVibration(Vibration.Time.Quick, Vibration.Strength.Medium);
+		}
+
 		private bool fireSoundCooldown;
+		private bool fullyCharged;
 		private bool HasReloaded;
 		private static int maxAmmo = 1000;
 	}
