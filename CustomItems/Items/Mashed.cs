@@ -171,14 +171,14 @@ namespace GlaurungItems.Items
 		protected override void OnPickup(PlayerController player)
 		{
 			base.OnPickup(player);
-			//player.GunChanged += this.OnGunChanged;
-			//player.PostProcessBeam += this.PostProcessBeam;
+			player.GunChanged += this.OnGunChanged;
+			player.PostProcessBeam += this.PostProcessBeam;
 		}
 
 		protected override void OnPostDrop(PlayerController player)
 		{
-			//player.PostProcessBeam -= this.PostProcessBeam;
-			//player.GunChanged -= this.OnGunChanged;
+			player.PostProcessBeam -= this.PostProcessBeam;
+			player.GunChanged -= this.OnGunChanged;
 			base.OnPostDrop(player);
 		}
 
