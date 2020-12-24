@@ -32,8 +32,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.numberOfShotsInClip = PeacemakerCarbine.baseMagSize;
             gun.SetBaseMaxAmmo(360);
             gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
-            gun.barrelOffset.transform.localPosition = new Vector3(0f, 0.3f, 0);
-
+            gun.barrelOffset.transform.localPosition = new Vector3(1.875f, 0.625f, 0f);
             gun.quality = PickupObject.ItemQuality.B;
 
             Projectile projectile = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(31) as Gun).DefaultModule.projectiles[0]);
