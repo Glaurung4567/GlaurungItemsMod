@@ -18,7 +18,7 @@ namespace GlaurungItems.Items
 			string shortDesc = "Minority World";
 			string longDesc = "";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.quality = PickupObject.ItemQuality.B;
+			item.quality = PickupObject.ItemQuality.A;
 		}
 
 		public override void Pickup(PlayerController player)
@@ -108,7 +108,7 @@ namespace GlaurungItems.Items
 
         private void OnPostProcessProjectile(Projectile proj)
         {
-			if(Random.value <= 0.05f)
+			if(Random.value <= 0.1f)
             {
 				GameManager.Instance.StartCoroutine(this.ChangeProjectileTarget(proj));
 			}

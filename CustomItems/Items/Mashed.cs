@@ -13,11 +13,11 @@ namespace GlaurungItems.Items
 	{
 		public static void Add()
 		{
-			Gun gun = ETGMod.Databases.Items.NewGun("Mashed", "mashed");
-			Game.Items.Rename("outdated_gun_mods:mashed", "gl:mashed");
+			Gun gun = ETGMod.Databases.Items.NewGun("Swiss Army Rifle", "mashed");
+			Game.Items.Rename("outdated_gun_mods:swiss_army_rifle", "gl:swiss_army_rifle");
 			gun.gameObject.AddComponent<Mashed>();
 			GunExt.SetShortDescription(gun, "Shoot Style: Yes");
-			GunExt.SetLongDescription(gun, "WIP");
+			GunExt.SetLongDescription(gun, "A gun packed with different fire modes usable all at once to be able to handle any situation.");
 			GunExt.SetupSprite(gun, null, "jpxfrd_idle_001", 8);
 			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 16);
 			GunExt.SetAnimationFPS(gun, gun.chargeAnimation, 3);
@@ -40,7 +40,7 @@ namespace GlaurungItems.Items
 			FakePrefab.MarkAsFakePrefab(projectile3.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile3);
 
-			projectile3.baseData.damage *= 5;
+			projectile3.baseData.damage *= 22;
 			projectile3.baseData.speed *= 2;
 			projectile3.AdditionalScaleMultiplier = 0.5f;
 			projectile3.AppliesPoison = false;
@@ -54,7 +54,7 @@ namespace GlaurungItems.Items
 			{
 				Projectile = projectile3,
 				ChargeTime = 3.5f,
-				AmmoCost = 5,
+				AmmoCost = 3,
 			};
 			gun.DefaultModule.chargeProjectiles = new List<ProjectileModule.ChargeProjectile> { chargeProj };
 
@@ -71,7 +71,7 @@ namespace GlaurungItems.Items
 			FakePrefab.MarkAsFakePrefab(projectile1.gameObject);
 			UnityEngine.Object.DontDestroyOnLoad(projectile1);
 
-			projectile1.baseData.damage *= 1.5f;
+			projectile1.baseData.damage *= 1.25f;
 			projectile1.baseData.speed *= 1.2f;
 			projectile1.baseData.range *= 0.75f;
 			gun.Volley.projectiles[1].projectiles[0] = projectile1;
