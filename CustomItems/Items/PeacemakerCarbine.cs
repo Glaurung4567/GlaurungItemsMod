@@ -14,7 +14,7 @@ namespace GlaurungItems.Items
             Game.Items.Rename("outdated_gun_mods:peacemaker_carbine", "gl:peacemaker_carbine");
             gun.gameObject.AddComponent<PeacemakerCarbine>();
             gun.SetShortDescription("Bullets Storm");
-            gun.SetLongDescription("WIP");
+            gun.SetLongDescription("Used by a weirdo who thought shooting enemies using specific combos would grant him a bonus of some sort... His gun packs quite a punch nonetheless, especially the alt-fire mode.");
             gun.SetupSprite(null, "jpxfrd_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
