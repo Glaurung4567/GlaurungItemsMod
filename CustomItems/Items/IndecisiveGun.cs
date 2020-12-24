@@ -9,7 +9,7 @@ namespace GlaurungItems.Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("The Indecisive", "indecisive2");
+            Gun gun = ETGMod.Databases.Items.NewGun("The Indecisive", "indecisive");
             Game.Items.Rename("outdated_gun_mods:the_indecisive", "gl:the_indecisive");
             gun.gameObject.AddComponent<IndecisiveGun>();
             gun.SetShortDescription("4 in 1");

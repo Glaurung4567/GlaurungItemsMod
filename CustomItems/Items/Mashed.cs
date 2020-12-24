@@ -13,12 +13,12 @@ namespace GlaurungItems.Items
 	{
 		public static void Add()
 		{
-			Gun gun = ETGMod.Databases.Items.NewGun("Swiss Army Rifle", "indecisive");
+			Gun gun = ETGMod.Databases.Items.NewGun("Swiss Army Rifle", "mashed");
 			Game.Items.Rename("outdated_gun_mods:swiss_army_rifle", "gl:swiss_army_rifle");
 			gun.gameObject.AddComponent<Mashed>();
 			GunExt.SetShortDescription(gun, "Shoot Style: Yes");
 			GunExt.SetLongDescription(gun, "A gun packed with different fire modes usable all at once to be able to handle any situation.");
-			GunExt.SetupSprite(gun, null, "indecisive_idle_001", 8);
+			GunExt.SetupSprite(gun, null, "jpxfrd_idle_001", 8);
 			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 3);
 			GunExt.SetAnimationFPS(gun, gun.chargeAnimation, 3);
 
