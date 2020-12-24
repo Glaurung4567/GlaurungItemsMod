@@ -131,9 +131,13 @@ namespace GlaurungItems.Items
 			//proj.Direction = -proj.Direction;
 			proj.ManualControl = false;
 			proj.SendInDirection(-proj.Direction, true);
-			proj.baseData.damage *= 4;
+			proj.baseData.damage *= 6;
 			proj.baseData.speed *= 2;
 			proj.Speed *= 2;
+            if (proj.IsBlackBullet)
+            {
+				proj.baseData.damage *= 2;
+			}
 			proj.UpdateSpeed();
             yield break;
         }
