@@ -6,17 +6,16 @@ using Gungeon;
 
 namespace GlaurungItems.Items
 {
-    internal class Overhealer: AdvancedGunBehavior
+    internal class AtlasTest : AdvancedGunBehavior
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("OverHealer", "overhealer");
-            Game.Items.Rename("outdated_gun_mods:overhealer", "gl:overhealer");
-            gun.gameObject.AddComponent<Overhealer>();
-            gun.SetShortDescription("Counter-Intuitive");
-            gun.SetLongDescription("This was created with the intent to heal allies, but a malfunction made it kill the target instead if he was fully healed due to positive energy overdose. \n \n" +
-                "A sadistic medic brought it to the Gungeon to kheal friends and foes alike.");
-            gun.SetupSprite(null, "overhealer_idle_001", 8);
+            Gun gun = ETGMod.Databases.Items.NewGun("Atlas Test", "atlastest");
+            Game.Items.Rename("outdated_gun_mods:atlas_test", "gl:atlas_test");
+            gun.gameObject.AddComponent<AtlasTest>();
+            gun.SetShortDescription("WIP");
+            gun.SetLongDescription("");
+            gun.SetupSprite(null, "jpxfrd_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
             //gun.SetAnimationFPS(gun.idleAnimation, 8);
@@ -36,7 +35,6 @@ namespace GlaurungItems.Items
             gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
 
             gun.quality = PickupObject.ItemQuality.B;
-            //gun.encounterTrackable.EncounterGuid = "Incredible healer lay on hands channel energy healer's hands signature skill heal skill focus heal";
 
             Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
             projectile.gameObject.SetActive(false);
@@ -44,8 +42,8 @@ namespace GlaurungItems.Items
             UnityEngine.Object.DontDestroyOnLoad(projectile);
             gun.DefaultModule.projectiles[0] = projectile;
 
-            projectile.baseData.damage = 0f;
-            projectile.baseData.speed *= 2.8f;
+            projectile.baseData.damage *= 2f;
+            projectile.baseData.speed *= 1.5f;
             projectile.baseData.force *= 1f;
             projectile.baseData.range *= 3f;
             projectile.transform.parent = gun.barrelOffset;
@@ -56,6 +54,8 @@ namespace GlaurungItems.Items
 
         public override void PostProcessProjectile(Projectile projectile)
         {
+            AtlasProjMod atlas = projectile.gameObject.AddComponent<AtlasProjMod>();
+            atlas.targetedEnemies = targetedEnemies;
             projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.OnProjectileHitEnemy));
             base.PostProcessProjectile(projectile);
         }
@@ -64,30 +64,10 @@ namespace GlaurungItems.Items
         {
             if (enemy != null)
             {
-                AIActor aiActor = enemy.aiActor;
-                if (aiActor != null && this.gun && this.gun.CurrentOwner)
+                AIActor aiactor = enemy.aiActor;
+                if (!targetedEnemies.Contains(aiactor))
                 {
-                    if (aiActor.healthHaver.IsAlive && !aiActor.healthHaver.IsBoss && aiActor.healthHaver.GetCurrentHealthPercentage()<0.75 
-                        && !this.targetForOverhealKill.Contains(aiActor))
-                    {
-                        //Tools.Print(aiActor.healthHaver.GetCurrentHealthPercentage(), "FFFFFF", true);
-                        this.targetForOverhealKill.Add(aiActor);
-                        aiActor.SetOverrideOutlineColor(Color.green);
-                    }
-
-                    if(aiActor.healthHaver.IsAlive && aiActor.healthHaver.GetCurrentHealthPercentage() < 1)
-                    {
-                        aiActor.healthHaver.ApplyHealing(7f);
-                        if(aiActor.healthHaver.GetCurrentHealthPercentage() == 1 && this.targetForOverhealKill.Contains(aiActor))
-                        {
-                            Instantiate<GameObject>(Overhealer.TeleporterPrototypeTelefragVFX, aiActor.sprite.WorldCenter, Quaternion.identity);
-                            aiActor.healthHaver.ApplyDamage(10000f, Vector2.zero, "OverHealed !", CoreDamageTypes.Void, 0, true, null, true);
-                            //Tools.Print("Killed", "FFFFFF", true);
-                        }else if (aiActor.healthHaver.IsBoss && aiActor.healthHaver.GetCurrentHealthPercentage() == 1)
-                        {
-                            aiActor.healthHaver.ApplyDamage(100f, Vector2.zero, "OverHealed !", CoreDamageTypes.Void, 0, true, null, true);
-                        }
-                    }
+                    targetedEnemies.Add(aiactor);
                 }
             }
         }
@@ -95,7 +75,7 @@ namespace GlaurungItems.Items
         protected override void OnPickup(PlayerController player)
         {
             base.OnPickup(player);
-            this.targetForOverhealKill = new List<AIActor>();
+            this.targetedEnemies = new List<AIActor>();
             //player.GunChanged += this.OnGunChanged;
             player.OnRoomClearEvent += this.OnLeaveCombat;
         }
@@ -103,8 +83,7 @@ namespace GlaurungItems.Items
         protected override void OnPostDrop(PlayerController user)
         {
             user.OnRoomClearEvent -= this.OnLeaveCombat;
-            //user.GunChanged -= this.OnGunChanged;
-            this.targetForOverhealKill = new List<AIActor>();
+            this.targetedEnemies = new List<AIActor>();
             base.OnPostDrop(user);
         }
 
@@ -112,7 +91,7 @@ namespace GlaurungItems.Items
         {
             if (user != null)
             {
-                this.targetForOverhealKill = new List<AIActor>();
+                this.targetedEnemies = new List<AIActor>();
             }
         }
 
@@ -123,7 +102,7 @@ namespace GlaurungItems.Items
             //This determines what sound you want to play when you fire a gun.
             //Sounds names are based on the Gungeon sound dump, which can be found at EnterTheGungeon/Etg_Data/StreamingAssets/Audio/GeneratedSoundBanks/Windows/sfx.txt
             gun.PreventNormalFireAudio = true;
-            AkSoundEngine.PostEvent("Play_OBJ_heart_heal_01", gameObject);
+            AkSoundEngine.PostEvent("Play_WPN_beretta_shot_01", gameObject);
         }
 
         protected override void Update()
@@ -154,7 +133,39 @@ namespace GlaurungItems.Items
         }
 
         private bool HasReloaded;
-        private List<AIActor> targetForOverhealKill = new List<AIActor>();
-        private static GameObject TeleporterPrototypeTelefragVFX = PickupObjectDatabase.GetById(449).GetComponent<TeleporterPrototypeItem>().TelefragVFXPrefab.gameObject;
+        private List<AIActor> targetedEnemies = new List<AIActor>();
     }
+
+
+    //---------------------------------------------------------------------------------
+    public class AtlasProjMod : MonoBehaviour
+    {
+        public AtlasProjMod()
+        {
+            
+        }
+
+        private void Awake()
+        {
+            this.m_Projectile = base.GetComponent<Projectile>();
+            
+        }
+
+        private void Update()
+        {
+            foreach(AIActor actor in targetedEnemies)
+            {
+                if(Vector3.Distance(actor.transform.position, m_Projectile.transform.position) <= 3 && m_Projectile.gameObject.GetComponent<HomingModifier>() == null)
+                {
+                    HomingModifier homing = m_Projectile.gameObject.GetOrAddComponent<HomingModifier>();
+                    homing.HomingRadius = 3;
+                    homing.AngularVelocity = 10;
+                }
+            }
+        }
+
+        public Projectile m_Projectile;
+        public List<AIActor> targetedEnemies = new List<AIActor>();
+    }
+
 }

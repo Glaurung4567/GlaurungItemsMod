@@ -90,6 +90,7 @@
     <Compile Include="ItemAPI\SpecialBlankModificationItem.cs" />
     <Compile Include="ItemAPI\SpecialFoyerShop.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
+    <Compile Include="Items\AtlasTest.cs" />
     <Compile Include="Items\ItemParts\CustomMechaRatTailScript.cs" />
     <Compile Include="Items\Mashed.cs" />
     <Compile Include="Items\TurncoatRounds.cs" />

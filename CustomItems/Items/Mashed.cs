@@ -13,18 +13,19 @@ namespace GlaurungItems.Items
 	{
 		public static void Add()
 		{
-			Gun gun = ETGMod.Databases.Items.NewGun("Swiss Army Rifle", "mashed");
+			Gun gun = ETGMod.Databases.Items.NewGun("Swiss Army Rifle", "jpxfrd");
 			Game.Items.Rename("outdated_gun_mods:swiss_army_rifle", "gl:swiss_army_rifle");
 			gun.gameObject.AddComponent<Mashed>();
 			GunExt.SetShortDescription(gun, "Shoot Style: Yes");
 			GunExt.SetLongDescription(gun, "A gun packed with different fire modes usable all at once to be able to handle any situation.");
 			GunExt.SetupSprite(gun, null, "jpxfrd_idle_001", 8);
-			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 3);
+			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 12);
 			GunExt.SetAnimationFPS(gun, gun.chargeAnimation, 3);
 
 			gun.reloadTime = 1f;
 			gun.SetBaseMaxAmmo(maxAmmo);
 			gun.quality = PickupObject.ItemQuality.B;
+			gun.usesContinuousFireAnimation = true;
 			//gun.gunClass = GunClass.BEAM;
 			gun.muzzleFlashEffects = null;
 
@@ -48,6 +49,7 @@ namespace GlaurungItems.Items
 			projectile.AppliesPoison = false;
 			projectile.PoisonApplyChance = 0;
 			projectile.AdditionalScaleMultiplier = 5;
+			projectile.transform.parent = gun.barrelOffset;
 			BasicBeamController beam = projectile.GetComponentInChildren<BasicBeamController>();
 			if (!beam.IsReflectedBeam)
 			{
@@ -80,6 +82,8 @@ namespace GlaurungItems.Items
 			projectile3.AdditionalScaleMultiplier = 0.5f;
 			projectile3.AppliesPoison = false;
 			projectile3.PoisonApplyChance = 0f;
+			projectile3.transform.parent = gun.barrelOffset;
+
 			PierceProjModifier pierce = projectile3.gameObject.AddComponent<PierceProjModifier>();
 			pierce.penetratesBreakables = true;
 			pierce.penetration = 100;
@@ -113,7 +117,8 @@ namespace GlaurungItems.Items
 
 			projectile2.baseData.damage *= 3f;
 			projectile2.baseData.speed *= 2;
-			if(projectile2.gameObject.GetComponent<HomingModifier>() != null)
+			projectile2.transform.parent = gun.barrelOffset;
+			if (projectile2.gameObject.GetComponent<HomingModifier>() != null)
             {
 				Destroy(projectile2.gameObject.GetComponent<HomingModifier>());
 			}
@@ -143,6 +148,7 @@ namespace GlaurungItems.Items
 			projectile1.baseData.damage *= 1.25f;
 			projectile1.baseData.speed *= 1.2f;
 			projectile1.baseData.range *= 0.75f;
+			projectile1.transform.parent = gun.barrelOffset;
 			gun.Volley.projectiles[3].projectiles[0] = projectile1;
 
 
