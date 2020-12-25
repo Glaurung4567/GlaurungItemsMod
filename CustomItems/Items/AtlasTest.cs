@@ -22,12 +22,12 @@ namespace GlaurungItems.Items
             gun.AddProjectileModuleFrom("klobb", true, false);
 
             gun.DefaultModule.ammoCost = 1;
-            gun.DefaultModule.angleVariance = 7f;
-            gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Automatic;
+            gun.DefaultModule.angleVariance = AtlasTest.baseAngleVar;
+            gun.DefaultModule.shootStyle = AtlasTest.baseShootStyle;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
-            gun.reloadTime = 1.5f;
+            gun.reloadTime = 0.6f;
             gun.DefaultModule.cooldownTime = 0.1f;
-            gun.DefaultModule.numberOfShotsInClip = 30;
+            gun.DefaultModule.numberOfShotsInClip = AtlasTest.baseMagSize;
             //gun.usesContinuousFireAnimation = true;
             gun.SetBaseMaxAmmo(400);
             gun.gunClass = GunClass.FULLAUTO;
@@ -42,11 +42,14 @@ namespace GlaurungItems.Items
             UnityEngine.Object.DontDestroyOnLoad(projectile);
             gun.DefaultModule.projectiles[0] = projectile;
 
-            projectile.baseData.damage *= 2f;
+            projectile.baseData.damage = 1;
+            projectile.baseData.damage *= AtlasTest.baseDmgMultiplier;
             projectile.baseData.speed *= 1.5f;
             projectile.baseData.force *= 1f;
             projectile.baseData.range *= 3f;
             projectile.transform.parent = gun.barrelOffset;
+
+
             //projectile.SetProjectileSpriteRight("build_projectile", 5, 5);
 
             ETGMod.Databases.Items.Add(gun, null, "ANY");
@@ -54,9 +57,17 @@ namespace GlaurungItems.Items
 
         public override void PostProcessProjectile(Projectile projectile)
         {
-            AtlasProjMod atlas = projectile.gameObject.AddComponent<AtlasProjMod>();
-            atlas.targetedEnemies = targetedEnemies;
-            projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.OnProjectileHitEnemy));
+            if (!altFireOn)
+            {
+                LockOnHomingModifier homing = projectile.gameObject.GetOrAddComponent<LockOnHomingModifier>();
+                homing.HomingRadius = 50;
+                homing.lockOnTarget = targetedEnemy;
+                homing.AngularVelocity = 700;
+            }
+            else
+            {
+                projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.OnProjectileHitEnemy));
+            }
             base.PostProcessProjectile(projectile);
         }
 
@@ -65,17 +76,17 @@ namespace GlaurungItems.Items
             if (enemy != null)
             {
                 AIActor aiactor = enemy.aiActor;
-                if (!targetedEnemies.Contains(aiactor))
+                if(aiactor && aiactor.healthHaver && aiactor.healthHaver.IsAlive)
                 {
-                    targetedEnemies.Add(aiactor);
-                }
+                    this.targetedEnemy = aiactor;
+                    Tools.Print(targetedEnemy, "ffffff", true);
+                }               
             }
         }
 
         protected override void OnPickup(PlayerController player)
         {
             base.OnPickup(player);
-            this.targetedEnemies = new List<AIActor>();
             //player.GunChanged += this.OnGunChanged;
             player.OnRoomClearEvent += this.OnLeaveCombat;
         }
@@ -83,7 +94,6 @@ namespace GlaurungItems.Items
         protected override void OnPostDrop(PlayerController user)
         {
             user.OnRoomClearEvent -= this.OnLeaveCombat;
-            this.targetedEnemies = new List<AIActor>();
             base.OnPostDrop(user);
         }
 
@@ -91,7 +101,6 @@ namespace GlaurungItems.Items
         {
             if (user != null)
             {
-                this.targetedEnemies = new List<AIActor>();
             }
         }
 
@@ -123,17 +132,58 @@ namespace GlaurungItems.Items
 
         public override void OnReloadPressed(PlayerController player, Gun gun, bool bSOMETHING)
         {
+            if ((gun.ClipCapacity == gun.ClipShotsRemaining) || (gun.CurrentAmmo == gun.ClipShotsRemaining))
+            {
+                SwitchFire();
+            }
             if (gun.IsReloading && this.HasReloaded)
             {
                 HasReloaded = false;
                 AkSoundEngine.PostEvent("Stop_WPN_All", base.gameObject);
                 base.OnReloadPressed(player, gun, bSOMETHING);
                 AkSoundEngine.PostEvent("Play_WPN_SAA_reload_01", base.gameObject);
+                if (altFireOn)
+                {
+                    SwitchFire();
+                }
+            }
+        }
+
+        private void SwitchFire()
+        {
+            if (!altFireOn)
+            {
+                this.gun.DefaultModule.angleVariance = 0f;
+                this.gun.DefaultModule.numberOfShotsInClip = 1;
+                this.gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
+                this.gun.DefaultModule.projectiles[0].baseData.damage = 0;
+                //faster proj + fire
+                altFireOn = true;
+                if ((this.gun.CurrentOwner is PlayerController) && (this.gun.CurrentOwner as PlayerController).carriedConsumables != null) { (this.gun.CurrentOwner as PlayerController).carriedConsumables.ForceUpdateUI(); }
+            }
+            else
+            {
+                this.gun.DefaultModule.shootStyle = AtlasTest.baseShootStyle;
+                this.gun.DefaultModule.angleVariance = AtlasTest.baseAngleVar;
+                this.gun.DefaultModule.numberOfShotsInClip = AtlasTest.baseMagSize;
+                this.gun.DefaultModule.projectiles[0].baseData.damage = 1;
+                this.gun.DefaultModule.projectiles[0].baseData.damage *= AtlasTest.baseDmgMultiplier;
+
+                if ((this.gun.CurrentOwner is PlayerController) && (this.gun.CurrentOwner as PlayerController).carriedConsumables != null) { (this.gun.CurrentOwner as PlayerController).carriedConsumables.ForceUpdateUI(); }
+
+                altFireOn = false;
             }
         }
 
         private bool HasReloaded;
-        private List<AIActor> targetedEnemies = new List<AIActor>();
+        private static int baseMagSize = 30;
+        private static float baseAngleVar = 5f;
+        private static float baseDmgMultiplier = 6f;
+        private static ProjectileModule.ShootStyle baseShootStyle = ProjectileModule.ShootStyle.Automatic;
+        [SerializeField]
+        private bool altFireOn;
+        [SerializeField]
+        private AIActor targetedEnemy;
     }
 
 
@@ -155,17 +205,20 @@ namespace GlaurungItems.Items
         {
             foreach(AIActor actor in targetedEnemies)
             {
-                if(Vector3.Distance(actor.transform.position, m_Projectile.transform.position) <= 3 && m_Projectile.gameObject.GetComponent<HomingModifier>() == null)
+                if(Vector3.Distance(actor.CenterPosition, m_Projectile.transform.position) <= 5 && m_Projectile.gameObject.GetComponent<LockOnHomingModifier>() == null)
                 {
-                    HomingModifier homing = m_Projectile.gameObject.GetOrAddComponent<HomingModifier>();
-                    homing.HomingRadius = 3;
-                    homing.AngularVelocity = 10;
+                    LockOnHomingModifier homing = m_Projectile.gameObject.GetOrAddComponent<LockOnHomingModifier>();
+                    homing.HomingRadius = 50;
+                    homing.lockOnTarget = actor;
+                    homing.AngularVelocity = 700;
+                    Tools.Print("tes", "ffffff", true);
+                    return;
                 }
             }
         }
 
         public Projectile m_Projectile;
-        public List<AIActor> targetedEnemies = new List<AIActor>();
+        public List<AIActor> targetedEnemies;
     }
 
 }

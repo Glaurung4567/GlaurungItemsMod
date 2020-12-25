@@ -95,12 +95,12 @@ namespace GlaurungItems
                 NuArcana.Init();
                 MatriochkAmmolet.Init();
                 TurtlezBeam.Add();
+                PeacemakerCarbine.Add();
 
                 Mashed.Add();
-                PeacemakerCarbine.Add();
                 PrismaticField.Init();
                 TurncoatRounds.Init();
-
+                AtlasTest.Add();
                 //modder tools
                 RoomTeller.Init();
 
