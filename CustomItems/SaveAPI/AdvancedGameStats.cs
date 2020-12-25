@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using FullSerializer;
 using UnityEngine;
 
-namespace ItemAPI
+namespace SaveAPI
 {
-    class AdvancedGameStats
+    /// <summary>
+    /// Class for storing game stats like tracked stats, tracked maximums and character-specific flags
+    /// </summary>
+    [fsObject]
+    public class AdvancedGameStats
     {
         public AdvancedGameStats()
         {
@@ -134,49 +139,11 @@ namespace ItemAPI
             }
         }
 
+        [fsProperty]
         private Dictionary<CustomTrackedStats, float> stats;
+        [fsProperty]
         private Dictionary<CustomTrackedMaximums, float> maxima;
+        [fsProperty]
         public HashSet<CustomCharacterSpecificGungeonFlags> m_flags;
-    }
-
-    public enum CustomCharacterSpecificGungeonFlags
-    {
-        NONE
-    }
-
-    public enum CustomTrackedStats
-    {
-        CUSTOMSTAT_SPREN_DETRANSFORMATIONS,
-        CUSTOMSTAT_LICHES_KILLED
-    }
-
-    public enum CustomTrackedMaximums
-    {
-    }
-
-    public class CustomTrackedMaximumsComparer : IEqualityComparer<CustomTrackedMaximums>
-    {
-        public bool Equals(CustomTrackedMaximums x, CustomTrackedMaximums y)
-        {
-            return x == y;
-        }
-
-        public int GetHashCode(CustomTrackedMaximums obj)
-        {
-            return (int)obj;
-        }
-    }
-
-    public class CustomTrackedStatsComparer : IEqualityComparer<CustomTrackedStats>
-    {
-        public bool Equals(CustomTrackedStats x, CustomTrackedStats y)
-        {
-            return x == y;
-        }
-
-        public int GetHashCode(CustomTrackedStats obj)
-        {
-            return (int)obj;
-        }
     }
 }

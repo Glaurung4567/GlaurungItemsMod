@@ -276,54 +276,6 @@ namespace ItemAPI
 			return Path.Combine(Path.Combine(a, b), c);
 		}
 
-		public static void SetupUnlockOnCustomFlag(this PickupObject self, CustomDungeonFlags flag, bool requiredFlagValue)
-		{
-			EncounterTrackable encounterTrackable = self.encounterTrackable;
-			if (encounterTrackable.prerequisites == null)
-			{
-				encounterTrackable.prerequisites = new DungeonPrerequisite[1];
-				encounterTrackable.prerequisites[0] = new AdvancedDungeonPrerequisite
-				{
-					advancedPrerequisiteType = AdvancedDungeonPrerequisite.AdvancedPrerequisiteType.CUSTOM_FLAG,
-					requireCustomFlag = requiredFlagValue,
-					customFlagToCheck = flag
-				};
-			}
-			else
-			{
-				encounterTrackable.prerequisites = encounterTrackable.prerequisites.Concat(new DungeonPrerequisite[] { new AdvancedDungeonPrerequisite
-				{
-					advancedPrerequisiteType = AdvancedDungeonPrerequisite.AdvancedPrerequisiteType.CUSTOM_FLAG,
-					requireCustomFlag = requiredFlagValue,
-					customFlagToCheck = flag
-				}}).ToArray();
-			}
-			EncounterDatabaseEntry databaseEntry = EncounterDatabase.GetEntry(encounterTrackable.EncounterGuid);
-			if (!string.IsNullOrEmpty(databaseEntry.ProxyEncounterGuid))
-			{
-				databaseEntry.ProxyEncounterGuid = "";
-			}
-			if (databaseEntry.prerequisites == null)
-			{
-				databaseEntry.prerequisites = new DungeonPrerequisite[1];
-				databaseEntry.prerequisites[0] = new AdvancedDungeonPrerequisite
-				{
-					advancedPrerequisiteType = AdvancedDungeonPrerequisite.AdvancedPrerequisiteType.CUSTOM_FLAG,
-					requireCustomFlag = requiredFlagValue,
-					customFlagToCheck = flag
-				};
-			}
-			else
-			{
-				databaseEntry.prerequisites = databaseEntry.prerequisites.Concat(new DungeonPrerequisite[] { new AdvancedDungeonPrerequisite
-				{
-					advancedPrerequisiteType = AdvancedDungeonPrerequisite.AdvancedPrerequisiteType.CUSTOM_FLAG,
-					requireCustomFlag = requiredFlagValue,
-					customFlagToCheck = flag
-				}}).ToArray();
-			}
-		}
-
 		public static void MakeOffset(this tk2dSpriteDefinition def, Vector2 offset)
 		{
 			float x = offset.x;

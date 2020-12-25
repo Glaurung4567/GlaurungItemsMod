@@ -71,9 +71,6 @@
   <ItemGroup>
     <Compile Include="Items\AmmoletOfWonder.cs" />
     <Compile Include="ItemAPI\EasyGoopDefinition.cs" />
-    <Compile Include="ItemAPI\SaveSpAPI\AdvancedDungeonPrerequisite .cs" />
-    <Compile Include="ItemAPI\SaveSpAPI\AdvancedGameStats.cs" />
-    <Compile Include="ItemAPI\SaveSpAPI\AdvancedGameStatsManager.cs" />
     <Compile Include="ItemAPI\AdvancedStringDB.cs" />
     <Compile Include="ItemAPI\AdvancedTransformGunSynergyProcessor .cs" />
     <Compile Include="ItemAPI\CompanionBuilder.cs" />
@@ -84,11 +81,7 @@
     <Compile Include="ItemAPI\EnemyGuidDatabase.cs" />
     <Compile Include="ItemAPI\FakePrefab\FakePrefab.cs" />
     <Compile Include="ItemAPI\FakePrefab\FakePrefabHooks.cs" />
-    <Compile Include="ItemAPI\SaveSpAPI\CustomGungeonFlags.cs" />
-    <Compile Include="ItemAPI\SaveSpAPI\CustomGungoFlagsComparer.cs" />
-    <Compile Include="ItemAPI\SaveSpAPI\LoadHelper.cs" />
     <Compile Include="ItemAPI\SpecialBlankModificationItem.cs" />
-    <Compile Include="ItemAPI\SpecialFoyerShop.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
     <Compile Include="Items\AtlasTest.cs" />
     <Compile Include="Items\ItemParts\CustomMechaRatTailScript.cs" />
@@ -154,6 +147,25 @@
     <Compile Include="Items\IndecisiveGun.cs" />
     <Compile Include="Items\Yoink.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SaveAPI\AdvancedGameStats.cs" />
+    <Compile Include="SaveAPI\AdvancedGameStatsManager.cs" />
+    <Compile Include="SaveAPI\AdvancedMidGameSaveData.cs" />
+    <Compile Include="SaveAPI\BreachShopTool.cs" />
+    <Compile Include="SaveAPI\CustomDungeonPrerequisite.cs" />
+    <Compile Include="SaveAPI\CustomHuntQuest.cs" />
+    <Compile Include="SaveAPI\CustomHuntQuests.cs" />
+    <Compile Include="SaveAPI\Enums\Comparers\CustomDungeonFlagsComparer.cs" />
+    <Compile Include="SaveAPI\Enums\Comparers\CustomTrackedMaximumsComparer.cs" />
+    <Compile Include="SaveAPI\Enums\Comparers\CustomTrackedStatsComparer.cs" />
+    <Compile Include="SaveAPI\Enums\CustomCharacterSpecificGungeonFlags.cs" />
+    <Compile Include="SaveAPI\Enums\CustomDungeonFlags.cs" />
+    <Compile Include="SaveAPI\Enums\CustomTrackedMaximums.cs" />
+    <Compile Include="SaveAPI\Enums\CustomTrackedStats.cs" />
+    <Compile Include="SaveAPI\JammedEnemyState.cs" />
+    <Compile Include="SaveAPI\SaveAPIManager.cs" />
+    <Compile Include="SaveAPI\SaveTools.cs" />
+    <Compile Include="SaveAPI\SpecialAIActor.cs" />
+    <Compile Include="SaveAPI\SpecialPickupObject.cs" />
     <Compile Include="Tools.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -4,8 +4,11 @@ using System.Linq;
 using System.Reflection;
 using EnemyAPI;
 using GlaurungItems.Items;
+using Gungeon;
 using ItemAPI;
 using MonoMod.RuntimeDetour;
+using SaveAPI;
+using CustomDungeonFlags = SaveAPI.CustomDungeonFlags;
 
 namespace GlaurungItems
 {
@@ -17,7 +20,8 @@ namespace GlaurungItems
 
         public override void Init()
         {
-            AdvancedGameStatsManager.AdvancedGameSave = new SaveManager.SaveType
+            SaveAPIManager.Setup("GlaurungItems");
+            /*AdvancedGameStatsManager.AdvancedGameSave = new SaveManager.SaveType
             {
                 filePattern = "Slot{0}.glaurungSave",
                 encrypted = true,
@@ -41,7 +45,7 @@ namespace GlaurungItems
                 typeof(GlaurungItems).GetMethod("MainMenuAwakeHook")
             );
             //Toolbox.specialeverything = this.LoadAssetBundleFromLiterallyAnywhere();
-            AdvancedGameStatsManager.Init();
+            AdvancedGameStatsManager.Init();*/
         }
 
         public override void Start()
@@ -60,7 +64,6 @@ namespace GlaurungItems
                 ItemBuilder.Init();
                 Hooks.Init();
                 EnemyAPITools.Init();
-                SpecialFoyerShops.DoSetup();
                 SpecialBlankModificationItem.InitHooks();
                 EasyGoopDefinitions.DefineDefaultGoops();
 
@@ -109,7 +112,9 @@ namespace GlaurungItems
                 //my own items modif based on cel's modif of the gilded hydra
                 AddModifGungeonItems.Init();
 
-                SpecialFoyerShops.AddBaseMetaShopTier(ETGMod.Databases.Items["Chainer"].PickupObjectId, 10, ETGMod.Databases.Items["Shambles"].PickupObjectId, 25, ETGMod.Databases.Items["Yoink"].PickupObjectId, 75);
+                Game.Items["gl:peacemaker_carbine"].SetupUnlockOnCustomFlag(CustomDungeonFlags.GLAURUNG_PEACEMAKER_FLAG, true);
+                Game.Items["gl:peacemaker_carbine"].AddItemToTrorcMetaShop(10);
+                //SpecialFoyerShops.AddBaseMetaShopTier(ETGMod.Databases.Items["Chainer"].PickupObjectId, 10, ETGMod.Databases.Items["Shambles"].PickupObjectId, 25, ETGMod.Databases.Items["Yoink"].PickupObjectId, 75);
 
                 // synergies 
                 GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]

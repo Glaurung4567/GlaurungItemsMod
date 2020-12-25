@@ -25,7 +25,7 @@ namespace GlaurungItems.Items
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 2500f);
 			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.Curse, 0.5f, 0);
 			item.quality = ItemQuality.S;
-			Toolbox.SetupUnlockOnCustomFlag(item, CustomDungeonFlags.ITEMSPECIFIC_YOINK, true);
+			//Toolbox.SetupUnlockOnCustomFlag(item, CustomDungeonFlags.ITEMSPECIFIC_YOINK, true);
 		}
 
 		protected override void DoEffect(PlayerController user)

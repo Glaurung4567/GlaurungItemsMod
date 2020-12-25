@@ -6,10 +6,8 @@ using Object = UnityEngine.Object;
 
 namespace ItemAPI
 {
-	// Token: 0x020000A4 RID: 164
 	public class AdvancedHoveringGunSynergyProcessor : MonoBehaviour
 	{
-		// Token: 0x060004A2 RID: 1186 RVA: 0x00034240 File Offset: 0x00032440
 		public AdvancedHoveringGunSynergyProcessor()
 		{
 			this.FireCooldown = 1f;
@@ -28,13 +26,11 @@ namespace ItemAPI
 			this.m_item = base.GetComponent<PassiveItem>();
 		}
 
-		// Token: 0x060004A4 RID: 1188 RVA: 0x000342BC File Offset: 0x000324BC
 		private bool IsInitialized(int index)
 		{
 			return this.m_initialized.Count > index && this.m_initialized[index];
 		}
 
-		// Token: 0x060004A5 RID: 1189 RVA: 0x000342EC File Offset: 0x000324EC
 		public void Update()
 		{
 			bool flag = this.Trigger == AdvancedHoveringGunSynergyProcessor.TriggerStyle.CONSTANT;
@@ -275,7 +271,6 @@ namespace ItemAPI
 			}
 		}
 
-		// Token: 0x060004AD RID: 1197 RVA: 0x00034A08 File Offset: 0x00032C08
 		private void Disable(int index)
 		{
 			bool flag = this.m_hovers[index];
@@ -285,7 +280,6 @@ namespace ItemAPI
 			}
 		}
 
-		// Token: 0x060004AE RID: 1198 RVA: 0x00034A44 File Offset: 0x00032C44
 		private void DisableAll()
 		{
 			for (int i = 0; i < this.m_hovers.Count; i++)
@@ -300,7 +294,6 @@ namespace ItemAPI
 			this.m_initialized.Clear();
 		}
 
-		// Token: 0x060004AF RID: 1199 RVA: 0x00034AB4 File Offset: 0x00032CB4
 		public void OnDestroy()
 		{
 			bool flag = this.m_actionsLinked && this.m_cachedLinkedPlayer;
@@ -312,7 +305,6 @@ namespace ItemAPI
 			}
 		}
 
-		// Token: 0x04000203 RID: 515
 		public string RequiredSynergy;
 
 		// Token: 0x04000204 RID: 516

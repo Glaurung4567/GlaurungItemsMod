@@ -20,8 +20,7 @@ namespace GlaurungItems.Items
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 500f);
 			item.quality = ItemQuality.A;
-			item.AddItemToTrorcMetaShop(5);//second argument is the position in the shop item list
-			Toolbox.SetupUnlockOnCustomFlag(item, CustomDungeonFlags.ITEMSPECIFIC_NEURALIZER, true);
+			//Toolbox.SetupUnlockOnCustomFlag(item, CustomDungeonFlags.ITEMSPECIFIC_NEURALIZER, true);
 		}
 
 		protected override void DoEffect(PlayerController user)
