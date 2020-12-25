@@ -79,7 +79,6 @@ namespace GlaurungItems.Items
                 if(aiactor && aiactor.healthHaver && aiactor.healthHaver.IsAlive)
                 {
                     this.targetedEnemy = aiactor;
-                    Tools.Print(targetedEnemy, "ffffff", true);
                 }               
             }
         }
@@ -176,7 +175,7 @@ namespace GlaurungItems.Items
         }
 
         private bool HasReloaded;
-        private static int baseMagSize = 30;
+        private static int baseMagSize = 20;
         private static float baseAngleVar = 5f;
         private static float baseDmgMultiplier = 6f;
         private static ProjectileModule.ShootStyle baseShootStyle = ProjectileModule.ShootStyle.Automatic;
