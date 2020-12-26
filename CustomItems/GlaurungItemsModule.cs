@@ -75,11 +75,11 @@ namespace GlaurungItems
                 MatriochkAmmolet.Init();
                 TurtlezBeam.Add();
                 PeacemakerCarbine.Add();
-
                 SwissArmyRifle.Add();
-                PrismaticField.Init();
-                TurncoatRounds.Init();
-                Atlas.Add();
+                
+                //PrismaticField.Init();
+                //TurncoatRounds.Init();
+                //Atlas.Add();
 
                 //modder tools
                 RoomTeller.Init();
@@ -110,6 +110,10 @@ namespace GlaurungItems
                 {
                     new SynergyHub.BulletScriptGunSynergy1()
                 }).ToArray<AdvancedSynergyEntry>();
+                /*GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
+                {
+                    new SynergyHub.TurncoatRoundsSynergy()
+                }).ToArray<AdvancedSynergyEntry>();*/
 
                 GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
                 {

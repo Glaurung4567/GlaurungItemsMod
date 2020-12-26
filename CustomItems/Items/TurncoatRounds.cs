@@ -108,7 +108,12 @@ namespace GlaurungItems.Items
 
         private void OnPostProcessProjectile(Projectile proj)
         {
-			if(Random.value <= 0.1f)
+			float maxValForBetrayal = 0.1f;
+			if(inflicter.PlayerHasActiveSynergy("Money money money"))
+            {
+				maxValForBetrayal = 0.2f;
+			}
+			if(Random.value <= maxValForBetrayal)
             {
 				GameManager.Instance.StartCoroutine(this.ChangeProjectileTarget(proj));
 			}

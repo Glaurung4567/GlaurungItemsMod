@@ -18,7 +18,7 @@ namespace GlaurungItems.Items
 			string shortDesc = "All life begins and ends with Nu";
 			string longDesc = "A long forgotten technique used by strange immortal spheric creatures, it allows the user to put the target just at death door without killing them, no matter how tough they are... unless they are immune to this effect.";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.quality = PickupObject.ItemQuality.B;
+			item.quality = PickupObject.ItemQuality.C;
 			NuArcana.ID = item.PickupObjectId;
 		}
 
@@ -62,10 +62,10 @@ namespace GlaurungItems.Items
 			bool canTrigger = UnityEngine.Random.value < BraveMathCollege.SliceProbability(procChance, tickrate);
 			if (stillAlive && canTrigger)
 			{
-				if (aiActor.healthHaver && aiActor.healthHaver.IsAlive && !aiActor.healthHaver.IsBoss && UnityEngine.Random.value < 0.01f)
+				if (aiactor.healthHaver && aiactor.healthHaver.IsAlive && !aiactor.healthHaver.IsBoss && UnityEngine.Random.value < 0.01f)
 				{
-					aiActor.healthHaver.ForceSetCurrentHealth(1);
-					aiActor.SetOverrideOutlineColor(Color.cyan);
+					aiactor.healthHaver.ForceSetCurrentHealth(1);
+					aiactor.SetOverrideOutlineColor(Color.cyan);
 				}
 			}
 		}

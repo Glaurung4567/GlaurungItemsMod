@@ -85,7 +85,7 @@
     <Compile Include="Items\AddModifGungeonItems.cs" />
     <Compile Include="Items\Atlas.cs" />
     <Compile Include="Items\ItemParts\CustomMechaRatTailScript.cs" />
-    <Compile Include="Items\Mashed.cs" />
+    <Compile Include="Items\SwissArmyRifle.cs" />
     <Compile Include="Items\TurncoatRounds.cs" />
     <Compile Include="Items\old\Kragun.cs" />
     <Compile Include="Items\MatriochkAmmolet.cs" />

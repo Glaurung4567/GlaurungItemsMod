@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Gungeon;
+using System.Collections.Generic;
 
 namespace GlaurungItems.Items
 {
@@ -78,7 +79,6 @@ namespace GlaurungItems.Items
 
         public class SSTGunSynergy : AdvancedSynergyEntry
         {
-            // Token: 0x0600022C RID: 556 RVA: 0x00015230 File Offset: 0x00013430
             public SSTGunSynergy()
             {
                 this.NameKey = "Big Exploding Pew Pew !";
@@ -95,7 +95,6 @@ namespace GlaurungItems.Items
 
         public class BulletScriptGunSynergy1 : AdvancedSynergyEntry
         {
-            // Token: 0x0600022C RID: 556 RVA: 0x00015230 File Offset: 0x00013430
             public BulletScriptGunSynergy1()
             {
                 this.NameKey = "Who's da Boss now ?";
@@ -108,6 +107,22 @@ namespace GlaurungItems.Items
                     470, 469, 471, 468, 467
                 };
                 this.IgnoreLichEyeBullets = false;
+                this.statModifiers = new List<StatModifier>(0);
+                this.bonusSynergies = new List<CustomSynergyType>();
+            }
+        }
+
+        public class TurncoatRoundsSynergy : AdvancedSynergyEntry
+        {
+            public TurncoatRoundsSynergy()
+            {
+                this.NameKey = "Money money money";
+                this.MandatoryItemIDs = new List<int>
+                {
+                    Game.Items["gl:turncoat_rounds"].PickupObjectId,
+                    490
+                };
+                this.IgnoreLichEyeBullets = true;
                 this.statModifiers = new List<StatModifier>(0);
                 this.bonusSynergies = new List<CustomSynergyType>();
             }
