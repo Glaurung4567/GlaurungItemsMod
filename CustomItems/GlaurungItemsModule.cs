@@ -15,37 +15,12 @@ namespace GlaurungItems
     public class GlaurungItems : ETGModule
     {
         public bool setup;
-        private static string version = "1.3.0";
+        private static string version = "1.4.0";
         public static AdvancedStringDB Strings;
 
         public override void Init()
         {
             SaveAPIManager.Setup("GlaurungItems");
-            /*AdvancedGameStatsManager.AdvancedGameSave = new SaveManager.SaveType
-            {
-                filePattern = "Slot{0}.glaurungSave",
-                encrypted = true,
-                backupCount = 3,
-                backupPattern = "Slot{0}.glaurungBackup.{1}",
-                backupMinTimeMin = 45,
-                legacyFilePattern = "glaurungGameStatsSlot{0}.txt"
-            };
-            for (int i = 0; i < 3; i++)
-            {
-                SaveManager.SaveSlot saveSlot = (SaveManager.SaveSlot)i;
-                Toolbox.SafeMove(Path.Combine(SaveManager.OldSavePath, string.Format(AdvancedGameStatsManager.AdvancedGameSave.legacyFilePattern, saveSlot)), Path.Combine(SaveManager.OldSavePath,
-                    string.Format(AdvancedGameStatsManager.AdvancedGameSave.filePattern, saveSlot)), false);
-                Toolbox.SafeMove(Path.Combine(SaveManager.OldSavePath, string.Format(AdvancedGameStatsManager.AdvancedGameSave.filePattern, saveSlot)), Path.Combine(SaveManager.OldSavePath,
-                    string.Format(AdvancedGameStatsManager.AdvancedGameSave.filePattern, saveSlot)), false);
-                Toolbox.SafeMove(Toolbox.PathCombine(SaveManager.SavePath, "01", string.Format(AdvancedGameStatsManager.AdvancedGameSave.filePattern, saveSlot)), Path.Combine(SaveManager.SavePath,
-                    string.Format(AdvancedGameStatsManager.AdvancedGameSave.filePattern, saveSlot)), true);
-            }
-            Hook mainMenuAwakeHook = new Hook(
-                typeof(MainMenuFoyerController).GetMethod("InitializeMainMenu", BindingFlags.Public | BindingFlags.Instance),
-                typeof(GlaurungItems).GetMethod("MainMenuAwakeHook")
-            );
-            //Toolbox.specialeverything = this.LoadAssetBundleFromLiterallyAnywhere();
-            AdvancedGameStatsManager.Init();*/
         }
 
         public override void Start()
@@ -95,6 +70,7 @@ namespace GlaurungItems
                 IndecisiveGun.Add();
                 CreateTrap.Init();
                 MineCrafter.Init();
+
                 NuArcana.Init();
                 MatriochkAmmolet.Init();
                 TurtlezBeam.Add();
@@ -103,7 +79,8 @@ namespace GlaurungItems
                 Mashed.Add();
                 PrismaticField.Init();
                 TurncoatRounds.Init();
-                AtlasTest.Add();
+                Atlas.Add();
+
                 //modder tools
                 RoomTeller.Init();
 

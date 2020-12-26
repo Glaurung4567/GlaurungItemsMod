@@ -20,7 +20,6 @@ namespace GlaurungItems.Items
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 500f);
 			item.quality = ItemQuality.A;
-			//Toolbox.SetupUnlockOnCustomFlag(item, CustomDungeonFlags.ITEMSPECIFIC_NEURALIZER, true);
 		}
 
 		protected override void DoEffect(PlayerController user)

@@ -6,13 +6,13 @@ using Gungeon;
 
 namespace GlaurungItems.Items
 {
-    internal class AtlasTest : AdvancedGunBehavior
+    internal class Atlas : AdvancedGunBehavior
     {
         public static void Add()
         {
             Gun gun = ETGMod.Databases.Items.NewGun("Atlas Test", "atlastest");
             Game.Items.Rename("outdated_gun_mods:atlas_test", "gl:atlas_test");
-            gun.gameObject.AddComponent<AtlasTest>();
+            gun.gameObject.AddComponent<Atlas>();
             gun.SetShortDescription("WIP");
             gun.SetLongDescription("");
             gun.SetupSprite(null, "jpxfrd_idle_001", 8);
@@ -22,16 +22,15 @@ namespace GlaurungItems.Items
             gun.AddProjectileModuleFrom("klobb", true, false);
 
             gun.DefaultModule.ammoCost = 1;
-            gun.DefaultModule.angleVariance = AtlasTest.baseAngleVar;
-            gun.DefaultModule.shootStyle = AtlasTest.baseShootStyle;
+            gun.DefaultModule.angleVariance = Atlas.baseAngleVar;
+            gun.DefaultModule.shootStyle = Atlas.baseShootStyle;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 0.6f;
             gun.DefaultModule.cooldownTime = 0.1f;
-            gun.DefaultModule.numberOfShotsInClip = AtlasTest.baseMagSize;
+            gun.DefaultModule.numberOfShotsInClip = Atlas.baseMagSize;
             //gun.usesContinuousFireAnimation = true;
             gun.SetBaseMaxAmmo(400);
             gun.gunClass = GunClass.FULLAUTO;
-            gun.DefaultModule.burstShotCount = 1;
             gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
 
             gun.quality = PickupObject.ItemQuality.B;
@@ -43,7 +42,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.projectiles[0] = projectile;
 
             projectile.baseData.damage = 1;
-            projectile.baseData.damage *= AtlasTest.baseDmgMultiplier;
+            projectile.baseData.damage *= Atlas.baseDmgMultiplier;
             projectile.baseData.speed *= 1.5f;
             projectile.baseData.force *= 1f;
             projectile.baseData.range *= 3f;
@@ -62,11 +61,11 @@ namespace GlaurungItems.Items
                 LockOnHomingModifier homing = projectile.gameObject.GetOrAddComponent<LockOnHomingModifier>();
                 homing.HomingRadius = 50;
                 homing.lockOnTarget = targetedEnemy;
-                homing.AngularVelocity = 700;
+                homing.AngularVelocity = 600;
             }
             else
             {
-                projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.OnProjectileHitEnemy));
+               projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.OnProjectileHitEnemy));
             }
             base.PostProcessProjectile(projectile);
         }
@@ -162,11 +161,11 @@ namespace GlaurungItems.Items
             }
             else
             {
-                this.gun.DefaultModule.shootStyle = AtlasTest.baseShootStyle;
-                this.gun.DefaultModule.angleVariance = AtlasTest.baseAngleVar;
-                this.gun.DefaultModule.numberOfShotsInClip = AtlasTest.baseMagSize;
+                this.gun.DefaultModule.shootStyle = Atlas.baseShootStyle;
+                this.gun.DefaultModule.angleVariance = Atlas.baseAngleVar;
+                this.gun.DefaultModule.numberOfShotsInClip = Atlas.baseMagSize;
                 this.gun.DefaultModule.projectiles[0].baseData.damage = 1;
-                this.gun.DefaultModule.projectiles[0].baseData.damage *= AtlasTest.baseDmgMultiplier;
+                this.gun.DefaultModule.projectiles[0].baseData.damage *= Atlas.baseDmgMultiplier;
 
                 if ((this.gun.CurrentOwner is PlayerController) && (this.gun.CurrentOwner as PlayerController).carriedConsumables != null) { (this.gun.CurrentOwner as PlayerController).carriedConsumables.ForceUpdateUI(); }
 

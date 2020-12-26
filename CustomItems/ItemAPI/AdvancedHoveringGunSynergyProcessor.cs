@@ -170,7 +170,6 @@ namespace ItemAPI
 			}
 		}
 
-		// Token: 0x060004A8 RID: 1192 RVA: 0x000346EE File Offset: 0x000328EE
 		private IEnumerator ActiveItemDisable(int index, PlayerController player)
 		{
 			yield return null;
@@ -182,7 +181,6 @@ namespace ItemAPI
 			yield break;
 		}
 
-		// Token: 0x060004A9 RID: 1193 RVA: 0x0003470B File Offset: 0x0003290B
 		private IEnumerator TimedDisable(int index, float duration)
 		{
 			yield return new WaitForSeconds(duration);
@@ -190,7 +188,6 @@ namespace ItemAPI
 			yield break;
 		}
 
-		// Token: 0x060004AA RID: 1194 RVA: 0x00034728 File Offset: 0x00032928
 		private void OnDisable()
 		{
 			this.DisableAll();
@@ -307,83 +304,56 @@ namespace ItemAPI
 
 		public string RequiredSynergy;
 
-		// Token: 0x04000204 RID: 516
 		public int TargetGunID;
 
-		// Token: 0x04000205 RID: 517
 		public bool UsesMultipleGuns;
 
-		// Token: 0x04000206 RID: 518
 		public int[] TargetGunIDs;
 
-		// Token: 0x04000207 RID: 519
 		public HoveringGunController.HoverPosition PositionType;
 
-		// Token: 0x04000208 RID: 520
 		public HoveringGunController.AimType AimType;
 
-		// Token: 0x04000209 RID: 521
 		public HoveringGunController.FireType FireType;
 
-		// Token: 0x0400020A RID: 522
 		public float FireCooldown;
 
-		// Token: 0x0400020B RID: 523
 		public float FireDuration;
 
-		// Token: 0x0400020C RID: 524
 		public bool OnlyOnEmptyReload;
 
-		// Token: 0x0400020D RID: 525
 		public string ShootAudioEvent;
 
-		// Token: 0x0400020E RID: 526
 		public string OnEveryShotAudioEvent;
 
-		// Token: 0x0400020F RID: 527
 		public string FinishedShootingAudioEvent;
 
-		// Token: 0x04000210 RID: 528
 		public AdvancedHoveringGunSynergyProcessor.TriggerStyle Trigger;
 
-		// Token: 0x04000211 RID: 529
 		public int NumToTrigger;
 
-		// Token: 0x04000212 RID: 530
 		public float TriggerDuration;
 
-		// Token: 0x04000213 RID: 531
 		public bool ConsumesTargetGunAmmo;
 
-		// Token: 0x04000214 RID: 532
 		public float ChanceToConsumeTargetGunAmmo;
 
-		// Token: 0x04000215 RID: 533
 		private bool m_actionsLinked;
 
-		// Token: 0x04000216 RID: 534
 		private PlayerController m_cachedLinkedPlayer;
 
-		// Token: 0x04000217 RID: 535
 		private Gun m_gun;
 
-		// Token: 0x04000218 RID: 536
 		private PassiveItem m_item;
 
-		// Token: 0x04000219 RID: 537
 		private List<HoveringGunController> m_hovers;
 
-		// Token: 0x0400021A RID: 538
 		private List<bool> m_initialized;
 
-		// Token: 0x02000110 RID: 272
 		public enum TriggerStyle
 		{
-			// Token: 0x0400050A RID: 1290
 			CONSTANT,
-			// Token: 0x0400050B RID: 1291
 			ON_DAMAGE,
-			// Token: 0x0400050C RID: 1292
 			ON_ACTIVE_ITEM
 		}
 	}
