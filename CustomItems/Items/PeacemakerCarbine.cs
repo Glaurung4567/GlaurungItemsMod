@@ -72,6 +72,32 @@ namespace GlaurungItems.Items
             ETGMod.Databases.Items.Add(gun, null, "ANY");
         }
 
+        protected override void OnPickup(PlayerController player)
+        {
+            base.OnPickup(player);
+            player.GunChanged += this.OnGunChanged;
+        }
+
+        protected override void OnPostDrop(PlayerController player)
+        {
+            player.GunChanged -= this.OnGunChanged;
+            base.OnPostDrop(player);
+        }
+
+        private void OnGunChanged(Gun oldGun, Gun newGun, bool arg3)
+        {
+            LiveAmmoItem liveammo = PickupObjectDatabase.GetById(414).GetComponent<LiveAmmoItem>();
+
+            if (this.gun && this.gun.CurrentOwner)
+            {
+                PlayerController player = this.gun.CurrentOwner as PlayerController;
+                if (newGun == this.gun)
+                {
+                    altFireOn = false;
+                }
+            }
+        }
+
         public override void OnFinishAttack(PlayerController player, Gun gun)
         {
             base.OnFinishAttack(player, gun);
@@ -166,7 +192,7 @@ namespace GlaurungItems.Items
         private static float baseAngleVar = 3f;
         private static ProjectileModule.ShootStyle baseShootStyle = ProjectileModule.ShootStyle.Automatic;
 
-        [SerializeField]
+        //[SerializeField]
         private bool altFireOn;
     }
 }
