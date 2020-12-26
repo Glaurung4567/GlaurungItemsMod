@@ -13,14 +13,14 @@ namespace GlaurungItems.Items
 	{
 		public static void Add()
 		{
-			Gun gun = ETGMod.Databases.Items.NewGun("Swiss Army Rifle", "jpxfrd");
+			Gun gun = ETGMod.Databases.Items.NewGun("Swiss Army Rifle", "swissrifle");
 			Game.Items.Rename("outdated_gun_mods:swiss_army_rifle", "gl:swiss_army_rifle");
 			gun.gameObject.AddComponent<Mashed>();
 			GunExt.SetShortDescription(gun, "Shoot Style: Yes");
 			GunExt.SetLongDescription(gun, "A gun packed with different fire modes usable all at once to be able to handle any situation.");
-			GunExt.SetupSprite(gun, null, "jpxfrd_idle_001", 8);
-			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 12);
-			GunExt.SetAnimationFPS(gun, gun.chargeAnimation, 3);
+			GunExt.SetupSprite(gun, null, "swissrifle_idle_001", 8);
+			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 24);
+			GunExt.SetAnimationFPS(gun, gun.chargeAnimation, 12);
 
 			gun.reloadTime = 1f;
 			gun.SetBaseMaxAmmo(maxAmmo);
@@ -28,7 +28,7 @@ namespace GlaurungItems.Items
 			gun.usesContinuousFireAnimation = true;
 			//gun.gunClass = GunClass.BEAM;
 			gun.muzzleFlashEffects = null;
-
+			gun.barrelOffset.transform.localPosition = new Vector3(1.675f, 0.475f, 0f);
 
 			//beam
 			GunExt.AddProjectileModuleFrom(gun, PickupObjectDatabase.GetById(87) as Gun, true, false);
@@ -57,6 +57,8 @@ namespace GlaurungItems.Items
 			}
 			beam.penetration = 10;
 			beam.PenetratesCover = true;
+			beam.usesChargeDelay = true;
+			beam.chargeDelay = 0.4f;
 			beam.projectile.baseData.range = 3f;
 			beam.homingRadius = 0;
 			beam.homingAngularVelocity = 0;
