@@ -76,7 +76,7 @@ namespace GlaurungItems
                 TurtlezBeam.Add();
                 PeacemakerCarbine.Add();
 
-                Mashed.Add();
+                SwissArmyRifle.Add();
                 PrismaticField.Init();
                 TurncoatRounds.Init();
                 Atlas.Add();
