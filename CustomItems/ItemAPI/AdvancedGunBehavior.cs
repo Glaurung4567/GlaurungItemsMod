@@ -4,10 +4,8 @@ using UnityEngine;
 
 namespace ItemAPI
 {
-	// Token: 0x02000017 RID: 23
 	internal class AdvancedGunBehavior : MonoBehaviour
 	{
-		// Token: 0x060000B4 RID: 180 RVA: 0x000082C0 File Offset: 0x000064C0
 		protected virtual void Update()
 		{
 			bool flag = this.Player != null;
@@ -205,9 +203,6 @@ namespace ItemAPI
 			}
 		}
 
-		// Token: 0x17000003 RID: 3
-		// (get) Token: 0x060000C8 RID: 200 RVA: 0x00008730 File Offset: 0x00006930
-		// (set) Token: 0x060000C9 RID: 201 RVA: 0x00008770 File Offset: 0x00006970
 		public float HeroSwordCooldown
 		{
 			get
@@ -272,16 +267,12 @@ namespace ItemAPI
 		// Token: 0x04000068 RID: 104
 		protected bool preventNormalFireAudio;
 
-		// Token: 0x04000069 RID: 105
 		protected bool preventNormalReloadAudio;
 
-		// Token: 0x0400006A RID: 106
 		protected string overrrideNormalFireAudio;
 
-		// Token: 0x0400006B RID: 107
 		protected string overrideNormalReloadAudio;
 
-		// Token: 0x0400006C RID: 108
 		private static FieldInfo heroSwordCooldown = typeof(Gun).GetField("HeroSwordCooldown", BindingFlags.Instance | BindingFlags.NonPublic);
 	}
 }
