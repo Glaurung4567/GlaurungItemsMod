@@ -20,9 +20,9 @@ namespace GlaurungItems.Items
 			GunExt.SetLongDescription(gun, "A gun packed with different fire modes usable all at once to be able to handle any situation.");
 			GunExt.SetupSprite(gun, null, "swissrifle_idle_001", 8);
 			GunExt.SetAnimationFPS(gun, gun.shootAnimation, 24);
-			GunExt.SetAnimationFPS(gun, gun.chargeAnimation, 12);
+			GunExt.SetAnimationFPS(gun, gun.chargeAnimation, 36);
 
-			gun.reloadTime = 1f;
+			gun.reloadTime = 1.5f;
 			gun.SetBaseMaxAmmo(maxAmmo);
 			gun.quality = PickupObject.ItemQuality.B;
 			gun.usesContinuousFireAnimation = true;
@@ -296,6 +296,6 @@ namespace GlaurungItems.Items
 		private bool fireSoundCooldown;
 		private bool fullyCharged;
 		private bool HasReloaded;
-		private static int maxAmmo = 1000;
+		private static int maxAmmo = 700;
 	}
 }
