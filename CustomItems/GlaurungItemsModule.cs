@@ -81,11 +81,10 @@ namespace GlaurungItems
                 TurncoatRounds.Init();
                 Atlas.Add();
                 BulletkinMagnum.Init();
+                //GunDeadArmyStronghold.Init();
 
                 //modder tools
                 RoomTeller.Init();
-
-                //GunDeadArmyStronghold.Init();
 
                 //my own items modif based on cel's modif of the gilded hydra
                 AddModifGungeonItems.Init();

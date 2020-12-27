@@ -13,21 +13,26 @@ namespace GlaurungItems.Items
 		public static void Init()
 		{
 			string text = "Bulletkin Magnum";
-			string resourcePath = "GlaurungItems/Resources/acme_crate";
+			string resourcePath = "GlaurungItems/Resources/magnum";
 			GameObject gameObject = new GameObject(text);
 			BulletkinMagnum item = gameObject.AddComponent<BulletkinMagnum>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
-			string shortDesc = "Joys of Pooling";
+			string shortDesc = "Misuse turned Feature";
 			string longDesc = "";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 100f);
-			item.quality = ItemQuality.D;
+			item.quality = ItemQuality.C;
 		}
 
-		protected override void DoEffect(PlayerController user)
+        public override bool CanBeUsed(PlayerController user)
+        {
+            return user && user.CurrentGun != null && base.CanBeUsed(user);
+        }
+
+        protected override void DoEffect(PlayerController user)
 		{
 			GameObject gameObject = new GameObject();
-			gameObject.transform.position = user.CenterPosition;
+			gameObject.transform.position = user.AimCenter;
 			//(user.CurrentGun == null) ? 0f : user.CurrentGun.CurrentAngle)
 			BulletScriptSource source = gameObject.GetOrAddComponent<BulletScriptSource>();
 			gameObject.AddComponent<BulletSourceKiller>();
@@ -49,12 +54,12 @@ namespace GlaurungItems.Items
 		{
 			if (projectile)
 			{
-				projectile.collidesWithPlayer = false;
 				projectile.collidesWithEnemies = true;
 				if (this.LastOwner)
 				{
 					projectile.Owner = this.LastOwner;
 					this.LastOwner.DoPostProcessProjectile(projectile);
+					projectile.collidesWithPlayer = true; //doesn't seem to work
 				}
 			}
 		}
@@ -68,7 +73,7 @@ namespace GlaurungItems.Items
 		protected override IEnumerator Top()
 		{
 			float aimDirection = BulletkinMagnum.playerGunCurrentAngle;
-			this.Fire(new Direction(aimDirection, DirectionType.Absolute, -1f), new Speed(5f, SpeedType.Absolute), null);
+			this.Fire(new Direction(aimDirection, DirectionType.Absolute, -1f), new Speed(6f, SpeedType.Absolute), null);
 			yield return this.Wait(40);
 			yield break;
 		}
