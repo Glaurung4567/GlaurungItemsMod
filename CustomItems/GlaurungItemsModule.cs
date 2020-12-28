@@ -77,10 +77,11 @@ namespace GlaurungItems
                 PeacemakerCarbine.Add();
                 SwissArmyRifle.Add();
                 
+
                 PrismaticField.Init();
                 TurncoatRounds.Init();
                 Atlas.Add();
-                BulletkinMagnum.Init();
+                InfiltratorRounds.Init();
                 //GunDeadArmyStronghold.Init();
 
                 //modder tools

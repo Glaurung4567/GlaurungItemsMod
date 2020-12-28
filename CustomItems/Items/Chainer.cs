@@ -180,7 +180,6 @@ namespace GlaurungItems.Items
 				if (aiactor.healthHaver != null)
 				{
 					aiactor.healthHaver.PreventAllDamage = true;
-					//aiactor.OverrideBuffEffectPosition
 				}
 
 				if (aiactor.bulletBank != null)
@@ -222,7 +221,7 @@ namespace GlaurungItems.Items
 			{
 				return; //to prevent the OnPostProcessProjectile from affecting enemies projectiles
 			}
-			proj.AdjustPlayerProjectileTint(Color.grey, 0);
+			//proj.AdjustPlayerProjectileTint(Color.grey, 0);
 
 			proj.Owner = this.gun.CurrentOwner; //to allow the projectile damage modif, otherwise it stays at 10 for some reasons
 

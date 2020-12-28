@@ -21,19 +21,21 @@ namespace GlaurungItems.Items
             //gun.SetAnimationFPS(gun.idleAnimation, 8);
             gun.AddProjectileModuleFrom("klobb", true, false);
 
+            gun.SetBaseMaxAmmo(360);
+            gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
+            gun.barrelOffset.transform.localPosition = new Vector3(1.875f, 0.625f, 0f);
+            gun.quality = PickupObject.ItemQuality.B;
+            gun.reloadTime = 1f;
+
             gun.DefaultModule.ammoCost = PeacemakerCarbine.baseAmmoCost;
             gun.DefaultModule.preventFiringDuringCharge = true;
             gun.DefaultModule.triggerCooldownForAnyChargeAmount = true;
             gun.DefaultModule.angleVariance = PeacemakerCarbine.baseAngleVar;
             gun.DefaultModule.shootStyle = PeacemakerCarbine.baseShootStyle;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
-            gun.reloadTime = 1.5f;
+            gun.DefaultModule.preventFiringDuringCharge = true;
             gun.DefaultModule.cooldownTime = 0.1f; 
             gun.DefaultModule.numberOfShotsInClip = PeacemakerCarbine.baseMagSize;
-            gun.SetBaseMaxAmmo(360);
-            gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
-            gun.barrelOffset.transform.localPosition = new Vector3(1.875f, 0.625f, 0f);
-            gun.quality = PickupObject.ItemQuality.B;
 
             Projectile projectile = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(31) as Gun).DefaultModule.projectiles[0]);
             projectile.gameObject.SetActive(false);
