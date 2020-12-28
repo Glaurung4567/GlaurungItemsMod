@@ -222,5 +222,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\bulletkin_magnum_active.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\prismatic_field.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

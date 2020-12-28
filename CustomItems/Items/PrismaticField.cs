@@ -11,7 +11,7 @@ namespace GlaurungItems.Items
 		public static void Init()
 		{
 			string text = "Prismatic Field";
-			string resourcePath = "GlaurungItems/Resources/acme_crate";
+			string resourcePath = "GlaurungItems/Resources/prismatic_field";
 			GameObject gameObject = new GameObject(text);
 			PrismaticField item = gameObject.AddComponent<PrismaticField>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
