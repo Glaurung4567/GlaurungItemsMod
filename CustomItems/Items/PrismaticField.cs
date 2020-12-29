@@ -16,7 +16,7 @@ namespace GlaurungItems.Items
 			PrismaticField item = gameObject.AddComponent<PrismaticField>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
 			string shortDesc = "Sphere and Spray Combined";
-			string longDesc = "";
+			string longDesc = "Create an aura of chaotic magical energies around the user. Used by a Gungeoneer expert in evocation magic who liked to fight at close range, even though he was squishy...";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 500f);
 			item.quality = ItemQuality.B;

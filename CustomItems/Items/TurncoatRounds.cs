@@ -11,12 +11,12 @@ namespace GlaurungItems.Items
 		public static void Init()
 		{
 			string name = "Turncoat Rounds";
-			string resourcePath = "GlaurungItems/Resources/acme_crate";
+			string resourcePath = "GlaurungItems/Resources/turncoat_rounds";
 			GameObject gameObject = new GameObject(name);
 			TurncoatRounds item = gameObject.AddComponent<TurncoatRounds>();
 			ItemBuilder.AddSpriteToObject(name, resourcePath, gameObject);
 			string shortDesc = "Minority World";
-			string longDesc = "";
+			string longDesc = "Those bullets try to convince other rounds to join the winning side, with more or less success.";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.quality = PickupObject.ItemQuality.A;
 		}

@@ -80,6 +80,7 @@ namespace GlaurungItems
 
                 PrismaticField.Init();
                 TurncoatRounds.Init();
+
                 Atlas.Add();
                 InfiltratorRounds.Init();
                 //GunDeadArmyStronghold.Init();

@@ -225,5 +225,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\prismatic_field.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\turncoat_rounds.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
