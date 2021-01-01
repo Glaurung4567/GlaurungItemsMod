@@ -10,11 +10,12 @@ namespace GlaurungItems.Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("Atlas Test", "atlastest");
-            Game.Items.Rename("outdated_gun_mods:atlas_test", "gl:atlas_test");
+            Gun gun = ETGMod.Databases.Items.NewGun("Linc", "linc");
+            Game.Items.Rename("outdated_gun_mods:linc", "gl:linc");
             gun.gameObject.AddComponent<Atlas>();
-            gun.SetShortDescription("WIP");
-            gun.SetLongDescription("");
+            gun.SetShortDescription("Power is Pizza");
+            gun.SetLongDescription("This gun was created by a reborn weapons manufacturing corporation in a distant galaxy. The signature feature of their guns is a smart projectile tracking system. " +
+                "\n \nThis one can fire rounds or a non damaging projectile which mark nearby enemies, which will make the standart projectiles home on marked enemies, one at a time.");
             gun.SetupSprite(null, "jpxfrd_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
@@ -106,14 +107,14 @@ namespace GlaurungItems.Items
             Exploder.Explode(proj.LastPosition, firework, Vector2.zero, null, true, CoreDamageTypes.None, false);
             if (this.gun.CurrentOwner && this.gun.CurrentOwner is PlayerController &&
                 (this.gun.CurrentOwner as PlayerController).CurrentRoom != null
-                && (this.gun.CurrentOwner as PlayerController).CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All).Count > 0)
+                && (this.gun.CurrentOwner as PlayerController).CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All) != null)
             {
                 List<AIActor> actorsInRoom = (this.gun.CurrentOwner as PlayerController).CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All);
                 targetedEnnemies = new List<AIActor>();
                 foreach (AIActor actor in actorsInRoom)
                 {
                     //Tools.Print(Vector2.Distance(actor.transform.position, proj.transform.position), "ffffff", true);
-                    if(Vector2.Distance(actor.transform.position, proj.transform.position) <= 4)
+                    if(Vector2.Distance(actor.transform.position, proj.transform.position) <= 3.5f)
                     {
                         targetedEnnemies.Add(actor);
                     }
