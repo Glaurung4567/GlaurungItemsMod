@@ -56,23 +56,30 @@ namespace GlaurungItems.Items
 
         public override void PostProcessProjectile(Projectile projectile)
         {
+            base.PostProcessProjectile(projectile);
             if (!altFireOn)
             {
-                LockOnHomingModifier homing = projectile.gameObject.GetOrAddComponent<LockOnHomingModifier>();
-                homing.HomingRadius = 50;
-                homing.lockOnTarget = targetedEnemy;
-                homing.AngularVelocity = 600;
+                foreach(AIActor actor in targetedEnnemies)
+                {
+                    if(actor && actor.healthHaver && actor.healthHaver.IsAlive)
+                    {
+                        LockOnHomingModifier homing = projectile.gameObject.GetOrAddComponent<LockOnHomingModifier>();
+                        homing.HomingRadius = 50;
+                        homing.lockOnTarget = actor;
+                        homing.AngularVelocity = 600;
+                        return;
+                    }
+                }
             }
             else
             {
                 projectile.OnDestruction += Projectile_OnDestruction;
-                projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.OnProjectileHitEnemy));
             }
-            base.PostProcessProjectile(projectile);
         }
 
         private void Projectile_OnDestruction(Projectile proj)
         {
+            //from cel fireworkRifle
             AIActor Firecracker = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["m80_kin"]);
             ExplosionData firework = new ExplosionData
             {
@@ -99,29 +106,18 @@ namespace GlaurungItems.Items
             Exploder.Explode(proj.LastPosition, firework, Vector2.zero, null, true, CoreDamageTypes.None, false);
             if (this.gun.CurrentOwner && this.gun.CurrentOwner is PlayerController &&
                 (this.gun.CurrentOwner as PlayerController).CurrentRoom != null
-                && (this.gun.CurrentOwner as PlayerController).CurrentRoom.GetActiveEnemiesCount(Dungeonator.RoomHandler.ActiveEnemyType.All) > 0)
+                && (this.gun.CurrentOwner as PlayerController).CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All).Count > 0)
             {
                 List<AIActor> actorsInRoom = (this.gun.CurrentOwner as PlayerController).CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All);
                 targetedEnnemies = new List<AIActor>();
                 foreach (AIActor actor in actorsInRoom)
                 {
-                    if(Vector3.Distance(actor.transform.position, proj.transform.position) <= 2)
+                    //Tools.Print(Vector2.Distance(actor.transform.position, proj.transform.position), "ffffff", true);
+                    if(Vector2.Distance(actor.transform.position, proj.transform.position) <= 4)
                     {
                         targetedEnnemies.Add(actor);
                     }
                 }
-            }
-        }
-
-        public void OnProjectileHitEnemy(Projectile proj, SpeculativeRigidbody enemy, bool fatal)
-        {
-            if (enemy != null)
-            {
-                AIActor aiactor = enemy.aiActor;
-                if(aiactor && aiactor.healthHaver && aiactor.healthHaver.IsAlive)
-                {
-                    this.targetedEnemy = aiactor;
-                }               
             }
         }
 
@@ -142,6 +138,7 @@ namespace GlaurungItems.Items
         {
             if (user != null)
             {
+                targetedEnnemies = new List<AIActor>();
             }
         }
 
@@ -219,49 +216,13 @@ namespace GlaurungItems.Items
         private bool HasReloaded;
         private static int baseMagSize = 20;
         private static float baseAngleVar = 5f;
-        private static float baseDmgMultiplier = 6f;
+        private static float baseDmgMultiplier = 4f;
         private static ProjectileModule.ShootStyle baseShootStyle = ProjectileModule.ShootStyle.Automatic;
         [SerializeField]
         private bool altFireOn;
         [SerializeField]
-        private AIActor targetedEnemy;
-
-        private List<AIActor> targetedEnnemies;
+        private List<AIActor> targetedEnnemies = new List<AIActor>();
     }
-
-
-    //---------------------------------------------------------------------------------
-    public class AtlasProjMod : MonoBehaviour
-    {
-        public AtlasProjMod()
-        {
-            
-        }
-
-        private void Awake()
-        {
-            this.m_Projectile = base.GetComponent<Projectile>();
-            
-        }
-
-        private void Update()
-        {
-            foreach(AIActor actor in targetedEnemies)
-            {
-                if(Vector3.Distance(actor.CenterPosition, m_Projectile.transform.position) <= 5 && m_Projectile.gameObject.GetComponent<LockOnHomingModifier>() == null)
-                {
-                    LockOnHomingModifier homing = m_Projectile.gameObject.GetOrAddComponent<LockOnHomingModifier>();
-                    homing.HomingRadius = 50;
-                    homing.lockOnTarget = actor;
-                    homing.AngularVelocity = 700;
-                    Tools.Print("tes", "ffffff", true);
-                    return;
-                }
-            }
-        }
-
-        public Projectile m_Projectile;
-        public List<AIActor> targetedEnemies;
-    }
-
 }
+
+
