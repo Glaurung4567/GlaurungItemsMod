@@ -65,9 +65,52 @@ namespace GlaurungItems.Items
             }
             else
             {
-               projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.OnProjectileHitEnemy));
+                projectile.OnDestruction += Projectile_OnDestruction;
+                projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.OnProjectileHitEnemy));
             }
             base.PostProcessProjectile(projectile);
+        }
+
+        private void Projectile_OnDestruction(Projectile proj)
+        {
+            AIActor Firecracker = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["m80_kin"]);
+            ExplosionData firework = new ExplosionData
+            {
+                damageRadius = 1.5f,
+                damageToPlayer = 0f,
+                doDamage = false,
+                damage = 0,
+                doExplosionRing = true,
+                doDestroyProjectiles = false,
+                doForce = false,
+                debrisForce = 0,
+                pushRadius = 0,
+                force = 0,
+                preventPlayerForce = true,
+                explosionDelay = 0f,
+                usesComprehensiveDelay = false,
+                doScreenShake = false,
+                playDefaultSFX = true,
+                effect = Firecracker.GetComponent<ExplodeOnDeath>().explosionData.effect,
+                //AssetBundle assetBundle = ResourceManager.LoadAssetBundle("shared_auto_001");
+                //  GameObject TestingVFX = assetBundle.LoadAsset<GameObject>("VFX_Dust_Explosion");
+            };
+
+            Exploder.Explode(proj.LastPosition, firework, Vector2.zero, null, true, CoreDamageTypes.None, false);
+            if (this.gun.CurrentOwner && this.gun.CurrentOwner is PlayerController &&
+                (this.gun.CurrentOwner as PlayerController).CurrentRoom != null
+                && (this.gun.CurrentOwner as PlayerController).CurrentRoom.GetActiveEnemiesCount(Dungeonator.RoomHandler.ActiveEnemyType.All) > 0)
+            {
+                List<AIActor> actorsInRoom = (this.gun.CurrentOwner as PlayerController).CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All);
+                targetedEnnemies = new List<AIActor>();
+                foreach (AIActor actor in actorsInRoom)
+                {
+                    if(Vector3.Distance(actor.transform.position, proj.transform.position) <= 2)
+                    {
+                        targetedEnnemies.Add(actor);
+                    }
+                }
+            }
         }
 
         public void OnProjectileHitEnemy(Projectile proj, SpeculativeRigidbody enemy, bool fatal)
@@ -182,6 +225,8 @@ namespace GlaurungItems.Items
         private bool altFireOn;
         [SerializeField]
         private AIActor targetedEnemy;
+
+        private List<AIActor> targetedEnnemies;
     }
 
 

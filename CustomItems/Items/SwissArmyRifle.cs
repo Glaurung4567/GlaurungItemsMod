@@ -27,7 +27,7 @@ namespace GlaurungItems.Items
 			gun.quality = PickupObject.ItemQuality.B;
 			gun.usesContinuousFireAnimation = true;
 			//gun.gunClass = GunClass.BEAM;
-			gun.muzzleFlashEffects = null;
+			gun.muzzleFlashEffects.type = VFXPoolType.None;
 			gun.barrelOffset.transform.localPosition = new Vector3(1.675f, 0.475f, 0f);
 
 			//beam

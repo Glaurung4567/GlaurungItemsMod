@@ -22,7 +22,7 @@ namespace GlaurungItems.Items
 			string shortDesc = "Misuse turned Feature";
 			string longDesc = "";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 1f);
+			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 100f);
 			item.quality = ItemQuality.D;
 			}
             catch (Exception e)
@@ -125,13 +125,14 @@ namespace GlaurungItems.Items
 			aiactor.aiShooter.ShootBulletScript(new CustomBulletScriptSelector(typeof(BulletkinMagnumScript)));
 			GameManager.Instance.StartCoroutine(this.RemoveCompanion(aiactor));*/
 		}
-
+		/*
         private IEnumerator RemoveCompanion(AIActor aiactor)
         {
 			yield return new WaitForSeconds(0.1f);
 			aiactor.EraseFromExistence(true);
 			yield break;
 		}
+		*/
 
         protected void OnProjCreated(Projectile projectile)
 		{
@@ -147,7 +148,7 @@ namespace GlaurungItems.Items
 					projectile.specRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.PlayerHitBox, CollisionLayer.PlayerBlocker, CollisionLayer.PlayerCollider));
 					projectile.collidesWithPlayer = false;
 					projectile.collidesWithEnemies = true;
-					projectile.baseData.damage *= 4;
+					projectile.baseData.damage *= 10;
 					projectile.UpdateCollisionMask();
 					//projectile.collidesWithPlayer = true; //doesn't seem to work
 				}
