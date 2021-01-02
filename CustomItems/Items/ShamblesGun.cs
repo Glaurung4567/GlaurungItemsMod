@@ -337,6 +337,10 @@ namespace GlaurungItems.Items
             }
         }
 
+        private void Update()
+        {
+
+        }
         private void ApplyStun(Projectile bullet, SpeculativeRigidbody enemy, bool fatal)
         {
             enemy.behaviorSpeculator.Stun(this.stunLength, this.doVFX);

@@ -119,7 +119,6 @@ namespace ItemAPI
 			}
 		}
 
-		// Token: 0x0600049D RID: 1181 RVA: 0x00034010 File Offset: 0x00032210
 		private void AttemptActivation(PlayerController ownerPlayer)
 		{
 			bool flag = this.EffectValid(ownerPlayer);

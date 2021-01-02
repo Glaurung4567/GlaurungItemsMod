@@ -16,7 +16,7 @@ namespace GlaurungItems.Items
             gun.SetShortDescription("Power is Pizza");
             gun.SetLongDescription("This gun was created by a reborn weapons manufacturing corporation in a distant galaxy. The signature feature of their guns is a smart projectile tracking system. " +
                 "\n \nThis one can fire rounds or a non damaging projectile which mark nearby enemies, which will make the standart projectiles home on marked enemies, one at a time.");
-            gun.SetupSprite(null, "jpxfrd_idle_001", 8);
+            gun.SetupSprite(null, "linc_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
             //gun.SetAnimationFPS(gun.idleAnimation, 8);
@@ -218,7 +218,7 @@ namespace GlaurungItems.Items
         private static int baseMagSize = 20;
         private static float baseAngleVar = 5f;
         private static float baseDmgMultiplier = 4f;
-        private static ProjectileModule.ShootStyle baseShootStyle = ProjectileModule.ShootStyle.Automatic;
+        private static ProjectileModule.ShootStyle baseShootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
         [SerializeField]
         private bool altFireOn;
         [SerializeField]
