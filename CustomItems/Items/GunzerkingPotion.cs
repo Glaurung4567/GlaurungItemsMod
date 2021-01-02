@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 
 namespace GlaurungItems.Items
 {
+	//error when primary gun is dumped need fix
 	class GunzerkingPotion : PlayerItem
 	{
 		public static void Init()
@@ -33,17 +34,18 @@ namespace GlaurungItems.Items
 			wasUsed = true;
 			if (user)
 			{
-				user.inventory.SetDualWielding(true, "gunzerking");
-				user.inventory.GunChangeForgiveness = true;
 				user.ChangeGun(1, false, false);
+				user.inventory.SetDualWielding(true, "gunzerking");
+				user.ChangeGun(1, false, false);
+				//user.inventory.GunChangeForgiveness = true;
 				//user.ChangeGun(-1, false, false);
-				user.inventory.GunChangeForgiveness = false;
+				//user.inventory.GunChangeForgiveness = false;
 			}
 		}
 
 		public override bool CanBeUsed(PlayerController user)
 		{
-			return !user.inventory.DualWielding && user.inventory.AllGuns != null && (user.inventory.AllGuns.Count > 1);
+			return !user.inventory.DualWielding && user.inventory.AllGuns != null && (user.inventory.AllGuns.Count > 1) && user.inventory.GunLocked.BaseValue == false;
 		}
 
 		private void EndEffect(PlayerController user)
