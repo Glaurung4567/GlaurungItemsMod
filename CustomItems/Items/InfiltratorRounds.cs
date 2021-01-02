@@ -37,8 +37,7 @@ namespace GlaurungItems.Items
         }
 
         protected override void DoEffect(PlayerController user)
-		{
-			
+		{	
 			GameObject gameObject = new GameObject();
 			gameObject.transform.position = user.AimCenter;
 			//(user.CurrentGun == null) ? 0f : user.CurrentGun.CurrentAngle)

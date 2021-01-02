@@ -83,6 +83,7 @@ namespace GlaurungItems
 
                 Atlas.Add();
                 InfiltratorRounds.Init();
+                GunzerkingPotion.Init();
                 //GunDeadArmyStronghold.Init();
 
                 //modder tools
