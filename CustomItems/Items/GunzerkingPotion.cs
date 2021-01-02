@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GlaurungItems.Items
 {
@@ -17,8 +18,8 @@ namespace GlaurungItems.Items
 			string shortDesc = "Sexual Tyrannosaurus";
 			string longDesc = "";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 500f);
-			item.quality = ItemQuality.S;
+			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 1);
+			item.quality = ItemQuality.C;
 		}
 
 		protected override void DoEffect(PlayerController user)
@@ -35,6 +36,7 @@ namespace GlaurungItems.Items
 				user.inventory.SetDualWielding(true, "gunzerking");
 				user.inventory.GunChangeForgiveness = true;
 				user.ChangeGun(1, false, false);
+				//user.ChangeGun(-1, false, false);
 				user.inventory.GunChangeForgiveness = false;
 			}
 		}
