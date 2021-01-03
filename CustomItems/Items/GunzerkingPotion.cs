@@ -1,5 +1,6 @@
 ﻿using ItemAPI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -20,7 +21,12 @@ namespace GlaurungItems.Items
 			string longDesc = "";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 1);
-			item.quality = ItemQuality.C;
+			item.quality = ItemQuality.A;
+		}
+
+		public override bool CanBeUsed(PlayerController user)
+		{
+			return !user.inventory.DualWielding && user.inventory.AllGuns != null && (user.inventory.AllGuns.Count > 1) && user.inventory.GunLocked.BaseValue == false;
 		}
 
 		protected override void DoEffect(PlayerController user)
@@ -35,54 +41,79 @@ namespace GlaurungItems.Items
 			if (user)
 			{
 				//user.inventory.GunLocked.SetOverride("gunzerking", true, null);
-				//user.ChangeToGunSlot(Random.Range(1, user.inventory.AllGuns.Count));
-				int currentGunIndex = user.inventory.AllGuns.IndexOf(user.CurrentGun);
-				int partnerID = 0;
-				if(user.inventory.AllGuns.Count == 2)
-                {
-					if(currentGunIndex == 0)
-                    {
-						partnerID = user.inventory.AllGuns[1].PickupObjectId;
-                    }
-                    else
-                    {
-						partnerID = user.inventory.AllGuns[0].PickupObjectId;
-					}
-                }
-                else
-                {
-					int randPartner = 0;
-					if(currentGunIndex == 0)
-                    {
-						randPartner = Random.Range(1, currentGunIndex);
-					}
-					else if (currentGunIndex == (user.inventory.AllGuns.Count - 1))
-                    {
-						randPartner = Random.Range(0, currentGunIndex);
-					}
-					else if (Random.value <= 0.5f)
-                    {
-						randPartner = Random.Range(0, currentGunIndex);
-                    }
-                    else
-                    {
-						randPartner = Random.Range(currentGunIndex+1, user.inventory.AllGuns.Count);
-					}
-					partnerID = user.inventory.AllGuns[randPartner].PickupObjectId;
-				}
-				DualWieldForcer dualWieldForcer = user.CurrentGun.gameObject.AddComponent<DualWieldForcer>();
-				dualWieldForcer.Gun = user.CurrentGun;
-				dualWieldForcer.PartnerGunID = partnerID;
-				dualWieldForcer.TargetPlayer = user;
+				SetDualWield(user);
+                //user.inventory.OnGunChanged += Inventory_OnGunChanged;
 				//user.inventory.GunChangeForgiveness = true;
 				//user.ChangeGun(-1, false, false);
 				//user.inventory.GunChangeForgiveness = false;
 			}
 		}
 
-		public override bool CanBeUsed(PlayerController user)
-		{
-			return !user.inventory.DualWielding && user.inventory.AllGuns != null && (user.inventory.AllGuns.Count > 1) && user.inventory.GunLocked.BaseValue == false;
+        private void Inventory_OnGunChanged(Gun previous, Gun current, Gun previousSecondary, Gun currentSecondary, bool newGun)
+        {
+
+            if (!cooldown)
+            {
+				if (previous.gameObject.GetComponent<DualWieldForcer>() != null)
+				{
+					Destroy(previous.gameObject.GetComponent<DualWieldForcer>());
+				}
+				GameManager.Instance.StartCoroutine(StartDualSwitch(base.LastOwner));
+            }
+		}
+
+        private IEnumerator StartDualSwitch(PlayerController user)
+        {
+			cooldown = true;
+			SetDualWield(user);
+			yield return new WaitForSeconds(0.1f);
+			cooldown = false;
+			yield break;
+		}
+
+		private void SetDualWield(PlayerController user)
+        {
+			//user.ChangeToGunSlot(Random.Range(1, user.inventory.AllGuns.Count));
+			int currentGunIndex = user.inventory.AllGuns.IndexOf(user.CurrentGun);
+			int partnerID = 0;
+			if (user.inventory.AllGuns.Count == 2)
+			{
+				if (currentGunIndex == 0)
+				{
+					partnerID = user.inventory.AllGuns[1].PickupObjectId;
+				}
+				else
+				{
+					partnerID = user.inventory.AllGuns[0].PickupObjectId;
+				}
+			}
+			else
+			{
+				int randPartner = 0;
+				if (currentGunIndex == 0)
+				{
+					randPartner = Random.Range(1, currentGunIndex);
+				}
+				else if (currentGunIndex == (user.inventory.AllGuns.Count - 1))
+				{
+					randPartner = Random.Range(0, currentGunIndex);
+				}
+				else if (Random.value <= 0.5f)
+				{
+					randPartner = Random.Range(0, currentGunIndex);
+				}
+				else
+				{
+					randPartner = Random.Range(currentGunIndex + 1, user.inventory.AllGuns.Count);
+				}
+				partnerID = user.inventory.AllGuns[randPartner].PickupObjectId;
+			}
+			DualWieldForcer dualWieldForcer = user.CurrentGun.gameObject.AddComponent<DualWieldForcer>();
+			dualWieldForcer.Gun = user.CurrentGun;
+			dualWieldForcer.PartnerGunID = partnerID;
+			dualWieldForcer.TargetPlayer = user;
+			//user.inventory.GunLocked.SetOverride("gunzerking", true, null);
+
 		}
 
 		private void EndEffect(PlayerController user)
@@ -93,9 +124,9 @@ namespace GlaurungItems.Items
 				{
 					Destroy(user.CurrentGun.gameObject.GetComponent<DualWieldForcer>());
                 }
+				//user.inventory.OnGunChanged -= Inventory_OnGunChanged;
+				user.ChangeGun(1);
 				//user.inventory.GunLocked.RemoveOverride("gunzerking");
-				user.stats.RecalculateStats(user, false, false);
-				user.ChangeGun(1, false, false);
 			}
 			wasUsed = false;
 		}
@@ -108,8 +139,9 @@ namespace GlaurungItems.Items
 
 		private float duration = 10f;
 		private bool wasUsed = false;
+		private bool cooldown;
 
-	}
+    }
 
 	/*-------------------------------------------from magic smoke----------------------------------------------*/
 	public class DualWieldForcer : MonoBehaviour
