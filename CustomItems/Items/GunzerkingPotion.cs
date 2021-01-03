@@ -40,13 +40,23 @@ namespace GlaurungItems.Items
 			wasUsed = true;
 			if (user)
 			{
+				user.inventory.FrameUpdate();
+				user.inventory.SwapDualGuns();
 				SetDualWield(user);
 			}
 		}
 
 		private void SetDualWield(PlayerController user)
         {
+			Tools.Print(user.inventory.CurrentGun.name, "ffffff", true);
+			if (user.inventory.CurrentSecondaryGun != null)
+            {
+				Tools.Print(user.inventory.CurrentSecondaryGun.name, "ffffff", true);
+            }
+
 			int currentGunIndex = user.inventory.AllGuns.IndexOf(user.CurrentGun);
+			Tools.Print(currentGunIndex, "ffffff", true);
+
 			int partnerID = 0;
 			if (user.inventory.AllGuns.Count == 2)
 			{
@@ -80,8 +90,12 @@ namespace GlaurungItems.Items
 				}
 				partnerID = user.inventory.AllGuns[randPartner].PickupObjectId;
 			}
+			Tools.Print(PickupObjectDatabase.GetById(partnerID).name, "ffffff", true);
+			Tools.Print(user.CurrentGun.name, "ffffff", true);
+			Tools.Print(user.inventory.AllGuns.Count, "ffffff", true);
+
 			GunzerkingDualWieldForcer dualWieldForcer = user.CurrentGun.gameObject.AddComponent<GunzerkingDualWieldForcer>();
-			dualWieldForcer.Gun = user.CurrentGun;
+			dualWieldForcer.gun = user.CurrentGun;
 			dualWieldForcer.PartnerGunID = partnerID;
 			dualWieldForcer.TargetPlayer = user;
 
@@ -99,12 +113,6 @@ namespace GlaurungItems.Items
 						Destroy(gun.gameObject.GetComponent<GunzerkingDualWieldForcer>());
 					}
 				}
-
-				/*user.ChangeGun(1);
-                if (user.inventory.DualWielding)
-                {
-					user.ChangeGun(-1);
-				}*/
 			}
 			wasUsed = false;
 		}
@@ -126,34 +134,26 @@ namespace GlaurungItems.Items
 	{
 		public void Activate()
 		{
-			bool flag = this.EffectValid(this.TargetPlayer);
-			bool flag2 = flag;
-			if (flag2)
+			if (this.EffectValid(this.TargetPlayer))
 			{
 				this.m_isCurrentlyActive = true;
 				this.TargetPlayer.inventory.SetDualWielding(true, "DualWieldForcer");
-				int indexForGun = this.GetIndexForGun(this.TargetPlayer, this.Gun.PickupObjectId);
+				int indexForGun = this.GetIndexForGun(this.TargetPlayer, this.gun.PickupObjectId);
 				int indexForGun2 = this.GetIndexForGun(this.TargetPlayer, this.PartnerGunID);
-				this.TargetPlayer.inventory.SwapDualGuns();
-				bool flag3 = indexForGun >= 0 && indexForGun2 >= 0;
-				bool flag4 = flag3;
-				if (flag4)
+				//this.TargetPlayer.inventory.SwapDualGuns();
+				if (indexForGun >= 0 && indexForGun2 >= 0)
 				{
 					while (this.TargetPlayer.inventory.CurrentGun.PickupObjectId != this.PartnerGunID)
 					{
 						this.TargetPlayer.inventory.ChangeGun(1, false, false);
 					}
 				}
-				this.TargetPlayer.inventory.SwapDualGuns();
-				bool flag5 = this.TargetPlayer.CurrentGun && !this.TargetPlayer.CurrentGun.gameObject.activeSelf;
-				bool flag6 = flag5;
-				if (flag6)
+				//this.TargetPlayer.inventory.SwapDualGuns();
+				if (this.TargetPlayer.CurrentGun && !this.TargetPlayer.CurrentGun.gameObject.activeSelf)
 				{
 					this.TargetPlayer.CurrentGun.gameObject.SetActive(true);
 				}
-				bool flag7 = this.TargetPlayer.CurrentSecondaryGun && !this.TargetPlayer.CurrentSecondaryGun.gameObject.activeSelf;
-				bool flag8 = flag7;
-				if (flag8)
+				if (this.TargetPlayer.CurrentSecondaryGun && !this.TargetPlayer.CurrentSecondaryGun.gameObject.activeSelf)
 				{
 					this.TargetPlayer.CurrentSecondaryGun.gameObject.SetActive(true);
 				}
@@ -164,7 +164,7 @@ namespace GlaurungItems.Items
 
 		public void Awake()
 		{
-			this.Gun = base.GetComponent<Gun>();
+			this.gun = base.GetComponent<Gun>();
 		}
 
 		private void CheckStatus()
@@ -173,9 +173,7 @@ namespace GlaurungItems.Items
 			bool flag = isCurrentlyActive;
 			if (flag)
 			{
-				bool flag2 = !this.PlayerUsingCorrectGuns() || !this.EffectValid(this.TargetPlayer);
-				bool flag3 = flag2;
-				if (flag3)
+				if (!this.PlayerUsingCorrectGuns() || !this.EffectValid(this.TargetPlayer))
 				{
 					Console.WriteLine("DISABLING EFFECT");
 					this.DisableEffect();
@@ -183,14 +181,10 @@ namespace GlaurungItems.Items
 			}
 			else
 			{
-				bool flag4 = this.Gun && this.Gun.CurrentOwner is PlayerController;
-				bool flag5 = flag4;
-				if (flag5)
+				if (this.gun && this.gun.CurrentOwner is PlayerController)
 				{
-					PlayerController playerController = this.Gun.CurrentOwner as PlayerController;
-					bool flag6 = playerController.inventory.DualWielding && playerController.CurrentSecondaryGun.PickupObjectId == this.Gun.PickupObjectId && playerController.CurrentGun.PickupObjectId == this.PartnerGunID;
-					bool flag7 = flag6;
-					if (flag7)
+					PlayerController playerController = this.gun.CurrentOwner as PlayerController;
+					if (playerController.inventory.DualWielding && playerController.CurrentSecondaryGun.PickupObjectId == this.gun.PickupObjectId && playerController.CurrentGun.PickupObjectId == this.PartnerGunID)
 					{
 						this.m_isCurrentlyActive = true;
 						this.TargetPlayer = playerController;
@@ -205,9 +199,7 @@ namespace GlaurungItems.Items
 
 		private void DisableEffect(bool forceDisable = false)
 		{
-			bool isCurrentlyActive = this.m_isCurrentlyActive;
-			bool flag = isCurrentlyActive;
-			if (flag || forceDisable)
+			if (this.m_isCurrentlyActive || forceDisable)
 			{
 				this.m_isCurrentlyActive = false;
 				this.TargetPlayer.inventory.GunLocked.RemoveOverride("gunzerking");
@@ -220,17 +212,15 @@ namespace GlaurungItems.Items
 
 		private bool EffectValid(PlayerController p)
 		{
-			bool flag = !p;
-			bool flag2 = flag;
 			bool result;
-			if (flag2)
+			if (!p)
 			{
 				Console.WriteLine("NULL PLAYER");
 				result = false;
 			}
 			else
 			{
-				bool flag3 = this.Gun.CurrentAmmo == 0;
+				bool flag3 = this.gun.CurrentAmmo == 0;
 				bool flag4 = flag3;
 				if (flag4)
 				{
@@ -297,7 +287,7 @@ namespace GlaurungItems.Items
 
 		private bool PlayerUsingCorrectGuns()
 		{
-			return this.Gun && this.Gun.CurrentOwner && this.TargetPlayer && this.TargetPlayer.inventory.DualWielding && (!(this.TargetPlayer.CurrentGun != this.Gun) || this.TargetPlayer.CurrentGun.PickupObjectId == this.PartnerGunID) && (!(this.TargetPlayer.CurrentSecondaryGun != this.Gun) || this.TargetPlayer.CurrentSecondaryGun.PickupObjectId == this.PartnerGunID);
+			return this.gun && this.gun.CurrentOwner && this.TargetPlayer && this.TargetPlayer.inventory.DualWielding && (!(this.TargetPlayer.CurrentGun != this.gun) || this.TargetPlayer.CurrentGun.PickupObjectId == this.PartnerGunID) && (!(this.TargetPlayer.CurrentSecondaryGun != this.gun) || this.TargetPlayer.CurrentSecondaryGun.PickupObjectId == this.PartnerGunID);
 		}
 
 		private void Update()
@@ -307,6 +297,8 @@ namespace GlaurungItems.Items
 
 		private void OnDestroy()
         {
+			Tools.Print(this.gun.name, "ffffff", true);
+			Tools.Print(PickupObjectDatabase.GetById(PartnerGunID).name, "ffffff", true);
 			DisableEffect(true);
 		}
 
@@ -314,7 +306,7 @@ namespace GlaurungItems.Items
 
 		public PlayerController TargetPlayer;
 
-		public Gun Gun;
+		public Gun gun;
 
 		private bool m_isCurrentlyActive;
 	}
