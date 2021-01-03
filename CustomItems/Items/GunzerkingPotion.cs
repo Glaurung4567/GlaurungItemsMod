@@ -40,40 +40,12 @@ namespace GlaurungItems.Items
 			wasUsed = true;
 			if (user)
 			{
-				//user.inventory.GunLocked.SetOverride("gunzerking", true, null);
 				SetDualWield(user);
-                //user.inventory.OnGunChanged += Inventory_OnGunChanged;
-				//user.inventory.GunChangeForgiveness = true;
-				//user.ChangeGun(-1, false, false);
-				//user.inventory.GunChangeForgiveness = false;
 			}
-		}
-
-        private void Inventory_OnGunChanged(Gun previous, Gun current, Gun previousSecondary, Gun currentSecondary, bool newGun)
-        {
-
-            if (!cooldown)
-            {
-				if (previous.gameObject.GetComponent<DualWieldForcer>() != null)
-				{
-					Destroy(previous.gameObject.GetComponent<DualWieldForcer>());
-				}
-				GameManager.Instance.StartCoroutine(StartDualSwitch(base.LastOwner));
-            }
-		}
-
-        private IEnumerator StartDualSwitch(PlayerController user)
-        {
-			cooldown = true;
-			SetDualWield(user);
-			yield return new WaitForSeconds(0.1f);
-			cooldown = false;
-			yield break;
 		}
 
 		private void SetDualWield(PlayerController user)
         {
-			//user.ChangeToGunSlot(Random.Range(1, user.inventory.AllGuns.Count));
 			int currentGunIndex = user.inventory.AllGuns.IndexOf(user.CurrentGun);
 			int partnerID = 0;
 			if (user.inventory.AllGuns.Count == 2)
@@ -108,11 +80,10 @@ namespace GlaurungItems.Items
 				}
 				partnerID = user.inventory.AllGuns[randPartner].PickupObjectId;
 			}
-			DualWieldForcer dualWieldForcer = user.CurrentGun.gameObject.AddComponent<DualWieldForcer>();
+			GunzerkingDualWieldForcer dualWieldForcer = user.CurrentGun.gameObject.AddComponent<GunzerkingDualWieldForcer>();
 			dualWieldForcer.Gun = user.CurrentGun;
 			dualWieldForcer.PartnerGunID = partnerID;
 			dualWieldForcer.TargetPlayer = user;
-			//user.inventory.GunLocked.SetOverride("gunzerking", true, null);
 
 		}
 
@@ -120,13 +91,20 @@ namespace GlaurungItems.Items
 		{
 			if (wasUsed && user)
 			{
-                if(user.CurrentGun.gameObject.GetComponent<DualWieldForcer>() != null)
-				{
-					Destroy(user.CurrentGun.gameObject.GetComponent<DualWieldForcer>());
-                }
-				//user.inventory.OnGunChanged -= Inventory_OnGunChanged;
-				user.ChangeGun(1);
-				//user.inventory.GunLocked.RemoveOverride("gunzerking");
+				foreach(Gun gun in user.inventory.AllGuns)
+                {
+					if (gun.gameObject.GetComponent<GunzerkingDualWieldForcer>() != null)
+					{
+						Tools.Print("endEffect destroy", "ffffff", true);
+						Destroy(gun.gameObject.GetComponent<GunzerkingDualWieldForcer>());
+					}
+				}
+
+				/*user.ChangeGun(1);
+                if (user.inventory.DualWielding)
+                {
+					user.ChangeGun(-1);
+				}*/
 			}
 			wasUsed = false;
 		}
@@ -144,7 +122,7 @@ namespace GlaurungItems.Items
     }
 
 	/*-------------------------------------------from magic smoke----------------------------------------------*/
-	public class DualWieldForcer : MonoBehaviour
+	public class GunzerkingDualWieldForcer : MonoBehaviour
 	{
 		public void Activate()
 		{
@@ -180,6 +158,7 @@ namespace GlaurungItems.Items
 					this.TargetPlayer.CurrentSecondaryGun.gameObject.SetActive(true);
 				}
 				this.TargetPlayer.GunChanged += this.HandleGunChanged;
+				this.TargetPlayer.inventory.GunLocked.SetOverride("gunzerking", true, null);
 			}
 		}
 
@@ -224,13 +203,14 @@ namespace GlaurungItems.Items
 			}
 		}
 
-		private void DisableEffect()
+		private void DisableEffect(bool forceDisable = false)
 		{
 			bool isCurrentlyActive = this.m_isCurrentlyActive;
 			bool flag = isCurrentlyActive;
-			if (flag)
+			if (flag || forceDisable)
 			{
 				this.m_isCurrentlyActive = false;
+				this.TargetPlayer.inventory.GunLocked.RemoveOverride("gunzerking");
 				this.TargetPlayer.inventory.SetDualWielding(false, "DualWieldForcer");
 				this.TargetPlayer.GunChanged -= this.HandleGunChanged;
 				this.TargetPlayer.stats.RecalculateStats(this.TargetPlayer, false, false);
@@ -327,7 +307,7 @@ namespace GlaurungItems.Items
 
 		private void OnDestroy()
         {
-			DisableEffect();
+			DisableEffect(true);
 		}
 
 		public int PartnerGunID;
