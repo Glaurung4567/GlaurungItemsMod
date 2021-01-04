@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -40,14 +41,16 @@ namespace GlaurungItems.Items
 			wasUsed = true;
 			if (user)
 			{
-				user.inventory.GunChangeForgiveness = true;
+				SetDualWield(user);
+				/*user.inventory.GunChangeForgiveness = true;
 				user.ChangeToGunSlot(0);
 				user.inventory.GunChangeForgiveness = false;
 
 				user.inventory.SetDualWielding(true, "gunzerk");
 				user.inventory.GunChangeForgiveness = true;
 				user.ChangeGun(-1, false, false);
-				user.inventory.GunChangeForgiveness = false;
+				user.inventory.GunChangeForgiveness = false;*/
+
 			}
 		}
 
@@ -55,14 +58,14 @@ namespace GlaurungItems.Items
 		{
 			if (wasUsed && user)
 			{
-				/*foreach(Gun gun in user.inventory.AllGuns)
+				foreach(Gun gun in user.inventory.AllGuns)
                 {
 					if (gun.gameObject.GetComponent<GunzerkingDualWieldForcer>() != null)
 					{
 						Destroy(gun.gameObject.GetComponent<GunzerkingDualWieldForcer>());
 					}
-				}*/
-				user.inventory.SetDualWielding(false, "gunzerk");
+				}
+				//user.inventory.SetDualWielding(false, "gunzerk");
 			}
 			wasUsed = false;
 		}
@@ -116,12 +119,20 @@ namespace GlaurungItems.Items
 			Tools.Print(user.CurrentGun.name, "ffffff", true);
 			Tools.Print(PickupObjectDatabase.GetById(partnerID).name, "ffffff", true);
 
-			/*GunzerkingDualWieldForcer dualWieldForcer = user.CurrentGun.gameObject.AddComponent<GunzerkingDualWieldForcer>();
+			Gun m_sec_gunz = (Gun)privateMSecGunzFieldInfo.GetValue(user.inventory);
+
+			if(m_sec_gunz != null)
+            {
+				privateMSecGunzFieldInfo.SetValue(user.inventory, user.CurrentGun);
+			}
+
+			GunzerkingDualWieldForcer dualWieldForcer = user.CurrentGun.gameObject.AddComponent<GunzerkingDualWieldForcer>();
 			dualWieldForcer.PartnerGunID = partnerID;
-			dualWieldForcer.TargetPlayer = user;*/			
+			dualWieldForcer.TargetPlayer = user;			
 		}
 
 
+		private static FieldInfo privateMSecGunzFieldInfo = typeof(GunInventory).GetField("m_currentSecondaryGun", BindingFlags.NonPublic | BindingFlags.Instance);
 
 		private float duration = 10f;
 		private bool wasUsed = false;
