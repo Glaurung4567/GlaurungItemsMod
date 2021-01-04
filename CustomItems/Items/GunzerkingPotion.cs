@@ -40,16 +40,43 @@ namespace GlaurungItems.Items
 			wasUsed = true;
 			if (user)
 			{
-				SetDualWield(user);
+				user.inventory.GunChangeForgiveness = true;
+				user.ChangeToGunSlot(0);
+				user.inventory.GunChangeForgiveness = false;
+
+				user.inventory.SetDualWielding(true, "gunzerk");
+				user.inventory.GunChangeForgiveness = true;
+				user.ChangeGun(-1, false, false);
+				user.inventory.GunChangeForgiveness = false;
 			}
+		}
+
+		private void EndEffect(PlayerController user)
+		{
+			if (wasUsed && user)
+			{
+				/*foreach(Gun gun in user.inventory.AllGuns)
+                {
+					if (gun.gameObject.GetComponent<GunzerkingDualWieldForcer>() != null)
+					{
+						Tools.Print("endEffect destroy", "ffffff", true);
+						Destroy(gun.gameObject.GetComponent<GunzerkingDualWieldForcer>());
+					}
+				}*/
+				user.inventory.SetDualWielding(false, "gunzerk");
+			}
+			wasUsed = false;
+		}
+
+		protected override void OnPreDrop(PlayerController user)
+		{
+			EndEffect(user);
+			base.OnPreDrop(user);
 		}
 
 		private void SetDualWield(PlayerController user)
         {
 			Tools.Print("-------------------------------------", "ffffff", true);
-
-			user.stats.RecalculateStats(user, true);
-			user.stats.RecalculateStatsInternal(user);
 
 			int currentGunIndex = user.inventory.AllGuns.IndexOf(user.CurrentGun);
 			
@@ -90,38 +117,15 @@ namespace GlaurungItems.Items
 			Tools.Print(user.CurrentGun.name, "ffffff", true);
 			Tools.Print(PickupObjectDatabase.GetById(partnerID).name, "ffffff", true);
 
-			GunzerkingDualWieldForcer dualWieldForcer = user.CurrentGun.gameObject.AddComponent<GunzerkingDualWieldForcer>();
-			//dualWieldForcer.gun = user.CurrentGun;
+			/*GunzerkingDualWieldForcer dualWieldForcer = user.CurrentGun.gameObject.AddComponent<GunzerkingDualWieldForcer>();
 			dualWieldForcer.PartnerGunID = partnerID;
-			dualWieldForcer.TargetPlayer = user;
+			dualWieldForcer.TargetPlayer = user;*/			
 		}
 
-		private void EndEffect(PlayerController user)
-		{
-			if (wasUsed && user)
-			{
-				foreach(Gun gun in user.inventory.AllGuns)
-                {
-					if (gun.gameObject.GetComponent<GunzerkingDualWieldForcer>() != null)
-					{
-						Tools.Print("endEffect destroy", "ffffff", true);
-						Destroy(gun.gameObject.GetComponent<GunzerkingDualWieldForcer>());
-					}
-				}
-			}
-			wasUsed = false;
-		}
 
-		protected override void OnPreDrop(PlayerController user)
-		{
-			EndEffect(user);
-			base.OnPreDrop(user);
-		}
 
 		private float duration = 10f;
 		private bool wasUsed = false;
-		private bool cooldown;
-
     }
 
 	/*-------------------------------------------from magic smoke----------------------------------------------*/
@@ -164,8 +168,9 @@ namespace GlaurungItems.Items
 
 					if(TargetPlayer.inventory.CurrentGun && TargetPlayer.inventory.CurrentSecondaryGun && TargetPlayer.inventory.CurrentGun != TargetPlayer.inventory.CurrentSecondaryGun)
                     {
-						this.TargetPlayer.inventory.SetDualWielding(false, "synergy");
-						this.TargetPlayer.inventory.SetDualWielding(true, "synergy");
+						//this.TargetPlayer.inventory.SetDualWielding(false, "synergy");
+						Tools.Print("----SecondDual----", "ffffff", true);
+						//return;
 					}
 
 
@@ -190,7 +195,6 @@ namespace GlaurungItems.Items
 						while (this.TargetPlayer.inventory.CurrentGun.PickupObjectId != this.PartnerGunID)
 						{
 							this.TargetPlayer.inventory.ChangeGun(1, false, false);
-							Tools.Print(TargetPlayer.inventory.CurrentGun.name, "ffffff", true);
 						}
 					}
 
