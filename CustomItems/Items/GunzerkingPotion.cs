@@ -59,7 +59,6 @@ namespace GlaurungItems.Items
                 {
 					if (gun.gameObject.GetComponent<GunzerkingDualWieldForcer>() != null)
 					{
-						Tools.Print("endEffect destroy", "ffffff", true);
 						Destroy(gun.gameObject.GetComponent<GunzerkingDualWieldForcer>());
 					}
 				}*/
