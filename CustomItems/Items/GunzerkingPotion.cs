@@ -8,7 +8,6 @@ using Random = UnityEngine.Random;
 
 namespace GlaurungItems.Items
 {
-	//error when primary gun is dumped need fix
 	class GunzerkingPotion : PlayerItem
 	{
 		public static void Init()
@@ -119,8 +118,9 @@ namespace GlaurungItems.Items
 			Tools.Print(user.CurrentGun.name, "ffffff", true);
 			Tools.Print(PickupObjectDatabase.GetById(partnerID).name, "ffffff", true);
 
+			//to fix an error when primary gun of previous gunzerk is dumped then trigger potion again, the previous gun is picked up wierdly
+			//it happens between the SetDualWielding true and SwapDualGuns of  the activate of GunzerkingDualWieldForcer
 			Gun m_sec_gunz = (Gun)privateMSecGunzFieldInfo.GetValue(user.inventory);
-
 			if(m_sec_gunz != null)
             {
 				privateMSecGunzFieldInfo.SetValue(user.inventory, user.CurrentGun);
@@ -179,7 +179,7 @@ namespace GlaurungItems.Items
 					if(TargetPlayer.inventory.CurrentGun && TargetPlayer.inventory.CurrentSecondaryGun && TargetPlayer.inventory.CurrentGun != TargetPlayer.inventory.CurrentSecondaryGun)
                     {
 						//this.TargetPlayer.inventory.SetDualWielding(false, "synergy");
-						Tools.Print("----SecondDual----", "ffffff", true);
+						Tools.Print("----SecondDualFuckfrickfraggingbastitch----", "ffffff", true);
 						//return;
 					}
 
