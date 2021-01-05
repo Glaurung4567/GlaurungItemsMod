@@ -82,15 +82,16 @@ namespace GlaurungItems.Items
 			int currentGunIndex = user.inventory.AllGuns.IndexOf(user.CurrentGun);
 			
 			int partnerID = 0;
+			Gun partnerGun = user.inventory.AllGuns[0];
 			if (user.inventory.AllGuns.Count == 2)
 			{
 				if (currentGunIndex == 0)
 				{
-					partnerID = user.inventory.AllGuns[1].PickupObjectId;
+					partnerGun = user.inventory.AllGuns[1];
 				}
 				else
 				{
-					partnerID = user.inventory.AllGuns[0].PickupObjectId;
+					partnerGun = user.inventory.AllGuns[0];
 				}
 			}
 			else
@@ -112,7 +113,18 @@ namespace GlaurungItems.Items
 				{
 					randPartner = Random.Range(currentGunIndex + 1, user.inventory.AllGuns.Count);
 				}
-				partnerID = user.inventory.AllGuns[randPartner].PickupObjectId;
+				partnerGun = user.inventory.AllGuns[randPartner];
+			}
+
+			if(user.CurrentGun.InfiniteAmmo == false && user.CurrentGun.CurrentAmmo < user.CurrentGun.AdjustedMaxAmmo)
+            {
+				user.CurrentGun.GainAmmo(user.CurrentGun.AdjustedMaxAmmo / 10);
+			}
+
+			partnerID = partnerGun.PickupObjectId;
+			if (partnerGun.InfiniteAmmo == false && partnerGun.CurrentAmmo < partnerGun.AdjustedMaxAmmo)
+			{
+				partnerGun.GainAmmo(user.CurrentGun.AdjustedMaxAmmo / 10);
 			}
 
 			//Tools.Print(user.CurrentGun.name, "ffffff", true);

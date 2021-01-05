@@ -141,7 +141,6 @@ namespace GlaurungItems
             {
                 Tools.PrintException(e);
             }
-
             ETGModConsole.Log($"Glaurung Items Pack {version} Initialized");
         }
 
