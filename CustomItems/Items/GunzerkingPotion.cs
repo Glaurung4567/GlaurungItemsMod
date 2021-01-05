@@ -26,7 +26,7 @@ namespace GlaurungItems.Items
 
 		public override bool CanBeUsed(PlayerController user)
 		{
-			return !user.inventory.DualWielding && user.inventory.AllGuns != null && (user.inventory.AllGuns.Count > 2) && user.inventory.GunLocked.BaseValue == false;
+			return !user.inventory.DualWielding && user.inventory.AllGuns != null && (user.inventory.AllGuns.Count > 1) && user.inventory.GunLocked.BaseValue == false;
 		}
 
 		protected override void DoEffect(PlayerController user)
@@ -77,7 +77,7 @@ namespace GlaurungItems.Items
 
 		private void SetDualWield(PlayerController user)
         {
-			Tools.Print("-------------------------------------", "ffffff", true);
+			//Tools.Print("-------------------------------------", "ffffff", true);
 
 			int currentGunIndex = user.inventory.AllGuns.IndexOf(user.CurrentGun);
 			
@@ -115,8 +115,8 @@ namespace GlaurungItems.Items
 				partnerID = user.inventory.AllGuns[randPartner].PickupObjectId;
 			}
 
-			Tools.Print(user.CurrentGun.name, "ffffff", true);
-			Tools.Print(PickupObjectDatabase.GetById(partnerID).name, "ffffff", true);
+			//Tools.Print(user.CurrentGun.name, "ffffff", true);
+			//Tools.Print(PickupObjectDatabase.GetById(partnerID).name, "ffffff", true);
 
 			//to fix an error when primary gun of previous gunzerk is dumped then trigger potion again, the previous gun is picked up wierdly
 			//it happens between the SetDualWielding true and SwapDualGuns of  the activate of GunzerkingDualWieldForcer
@@ -148,6 +148,7 @@ namespace GlaurungItems.Items
 				if (this.EffectValid(this.TargetPlayer))
 				{
 					this.m_isCurrentlyActive = true;
+					/*
 					Tools.Print("user guns", "ffffff", true);
 					Tools.Print(TargetPlayer.inventory.CurrentGun.name, "ffffff", true);
 					if (TargetPlayer.inventory.CurrentSecondaryGun)
@@ -162,9 +163,11 @@ namespace GlaurungItems.Items
 					{
 						Tools.Print(gun.name, "ffffff", true);
 					}
+					*/
 
 					this.TargetPlayer.inventory.SetDualWielding(true, "synergy");
 					
+					/*
 					Tools.Print("-------------user guns after dual", "ffffff", true);
 					Tools.Print(TargetPlayer.inventory.CurrentGun.name, "ffffff", true);
 					if (TargetPlayer.inventory.CurrentSecondaryGun)
@@ -175,7 +178,7 @@ namespace GlaurungItems.Items
 					{
 						Tools.Print("no dual", "ffffff", true);
 					}
-
+					*/
 					if(TargetPlayer.inventory.CurrentGun && TargetPlayer.inventory.CurrentSecondaryGun && TargetPlayer.inventory.CurrentGun != TargetPlayer.inventory.CurrentSecondaryGun)
                     {
 						//this.TargetPlayer.inventory.SetDualWielding(false, "synergy");
@@ -189,6 +192,7 @@ namespace GlaurungItems.Items
 					int indexForGun2 = this.GetIndexForGun(this.TargetPlayer, this.PartnerGunID);
 					this.TargetPlayer.inventory.SwapDualGuns();
 
+					/*
 					Tools.Print("---------------user guns after swap", "ffffff", true);
 					Tools.Print(TargetPlayer.inventory.CurrentGun.name, "ffffff", true);
 					if (TargetPlayer.inventory.CurrentSecondaryGun)
@@ -199,6 +203,7 @@ namespace GlaurungItems.Items
 					{
 						Tools.Print("no dual", "ffffff", true);
 					}
+					*/
 
 					if (indexForGun >= 0 && indexForGun2 >= 0)
 					{
@@ -208,6 +213,7 @@ namespace GlaurungItems.Items
 						}
 					}
 
+					/*
 					Tools.Print("-------------user guns after while", "ffffff", true);
 					Tools.Print(TargetPlayer.inventory.CurrentGun.name, "ffffff", true);
 					if (TargetPlayer.inventory.CurrentSecondaryGun)
@@ -218,9 +224,11 @@ namespace GlaurungItems.Items
 					{
 						Tools.Print("no dual", "ffffff", true);
 					}
+					*/
 
 					this.TargetPlayer.inventory.SwapDualGuns();
 
+					/*
 					Tools.Print("-------------------user guns after swap2", "ffffff", true);
 					Tools.Print(TargetPlayer.inventory.CurrentGun.name, "ffffff", true);
 					if (TargetPlayer.inventory.CurrentSecondaryGun)
@@ -231,6 +239,7 @@ namespace GlaurungItems.Items
 					{
 						Tools.Print("no dual", "ffffff", true);
 					}
+					*/
 
 					if (this.TargetPlayer.CurrentGun && !this.TargetPlayer.CurrentGun.gameObject.activeSelf)
 					{
