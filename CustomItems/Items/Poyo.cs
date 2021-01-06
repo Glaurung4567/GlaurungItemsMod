@@ -19,12 +19,55 @@ namespace GlaurungItems.Items
 			string longDesc = "Poyo poYo POyo PoYo";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 1);
-			item.quality = ItemQuality.A;
+			item.quality = ItemQuality.S;
 		}
 
 		protected override void DoEffect(PlayerController user)
 		{
+			float nearestEnemyPosition;
+			AIActor nomTarget = user.CurrentRoom.GetNearestEnemy(user.CenterPosition, out nearestEnemyPosition, true, true);
+			string nomTargetUuid = nomTarget.EnemyGuid;
 
+
+			RemovePowerUp();
+			PickupObject powerUp = null;
+
+			if (scattershots.Contains(nomTargetUuid))
+            {
+				powerUp = PickupObjectDatabase.GetById(241);
+
+			}
+			if(powerUp != null)
+            {
+				EncounterTrackable.SuppressNextNotification = true;
+				powerUpInstance = Instantiate(powerUp.gameObject).GetComponent<PickupObject>();
+				powerUpInstance.CanBeDropped = false;
+				powerUpInstance.CanBeSold = false;
+				LootEngine.TryGivePrefabToPlayer(powerUpInstance.gameObject, user, true);
+				
+				EncounterTrackable.SuppressNextNotification = false;
+			}
+
+			DEVOUR(nomTarget);
+
+
+		}
+
+		private void RemovePowerUp()
+        {
+            if (this.LastOwner && powerUpInstance && this.LastOwner.passiveItems != null)
+            {
+				//this.LastOwner.RemovePassiveItem(powerUpInstance.PickupObjectId);
+				for(int i = 0; i<this.LastOwner.passiveItems.Count; i++)
+                {
+					if(this.LastOwner.passiveItems[i].PickupObjectId == powerUpInstance.PickupObjectId && this.LastOwner.passiveItems[i].CanBeDropped == false)
+                    {
+						Destroy(this.LastOwner.passiveItems[i]);
+						powerUpInstance = null;
+						return;
+                    }
+                }
+			}
 		}
 
 		public override bool CanBeUsed(PlayerController user)
@@ -32,19 +75,32 @@ namespace GlaurungItems.Items
 			if (user.CurrentRoom != null && user.IsInCombat)
 			{
 				float nearestEnemyPosition;
-				AIActor yoinkTarget = user.CurrentRoom.GetNearestEnemy(user.CenterPosition, out nearestEnemyPosition, true, true);
-				if (yoinkTarget != null && nearestEnemyPosition < 3.5f) return true;
+				AIActor nomTarget = user.CurrentRoom.GetNearestEnemy(user.CenterPosition, out nearestEnemyPosition, true, true);
+				if (nomTarget != null && nearestEnemyPosition < 3.5f && nomTarget.healthHaver
+					&& !nomTarget.healthHaver.IsBoss && nomTarget.healthHaver.IsAlive) return true;
 			}
 			return false;
 		}
 
+        public override void Pickup(PlayerController player)
+        {
+            base.Pickup(player);
+            player.OnReceivedDamage += Player_OnReceivedDamage;
+        }
 
-		protected override void OnPreDrop(PlayerController user)
-		{
-			base.OnPreDrop(user);
+        private void Player_OnReceivedDamage(PlayerController player)
+        {
+			RemovePowerUp();
 		}
 
-		private void DEVOUR(AIActor target, float distance)
+		protected override void OnPreDrop(PlayerController player)
+		{
+			RemovePowerUp();
+			player.OnReceivedDamage -= Player_OnReceivedDamage;
+			base.OnPreDrop(player);
+		}
+
+		private void DEVOUR(AIActor target)
 		{
 			if (target != null && !target.healthHaver.IsBoss)
 			{
@@ -100,8 +156,10 @@ namespace GlaurungItems.Items
 			return gameObject2.transform;
 		}
 
-		private float duration = 5f;
-		private bool wasUsed = false;
+		private PickupObject powerUpInstance = null;
+		private static List<string> scattershots = new List<string> {
+			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+		};
 
 	}
 }

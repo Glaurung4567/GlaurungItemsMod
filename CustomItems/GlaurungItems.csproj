@@ -87,6 +87,7 @@
     <Compile Include="Items\GunzerkingPotion.cs" />
     <Compile Include="Items\InfiltratorRounds.cs" />
     <Compile Include="Items\ItemParts\CustomMechaRatTailScript.cs" />
+    <Compile Include="Items\Poyo.cs" />
     <Compile Include="Items\SwissArmyRifle.cs" />
     <Compile Include="Items\TurncoatRounds.cs" />
     <Compile Include="Items\old\Kragun.cs" />

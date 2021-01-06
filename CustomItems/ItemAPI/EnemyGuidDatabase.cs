@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ItemAPI
 {
-	public class EnemyGuidDatabase
+	public static class EnemyGuidDatabase
 	{
 		// from FrostAndGunfire mod by neighborino
 		public static Dictionary<string, string> Entries { get; set; } = new Dictionary<string, string>
