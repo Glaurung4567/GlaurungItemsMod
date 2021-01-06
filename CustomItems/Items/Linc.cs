@@ -6,13 +6,13 @@ using Gungeon;
 
 namespace GlaurungItems.Items
 {
-    internal class Atlas : AdvancedGunBehavior
+    internal class Linc : AdvancedGunBehavior
     {
         public static void Add()
         {
             Gun gun = ETGMod.Databases.Items.NewGun("Linc", "linc");
             Game.Items.Rename("outdated_gun_mods:linc", "gl:linc");
-            gun.gameObject.AddComponent<Atlas>();
+            gun.gameObject.AddComponent<Linc>();
             gun.SetShortDescription("Power is Pizza");
             gun.SetLongDescription("This gun was created by a reborn weapons manufacturing corporation in a distant galaxy. The signature feature of their guns is a smart projectile tracking system. " +
                 "\n \nThis one can fire rounds or a non damaging projectile which mark nearby enemies, which will make the standart projectiles home on marked enemies, one at a time.");
@@ -23,12 +23,12 @@ namespace GlaurungItems.Items
             gun.AddProjectileModuleFrom("klobb", true, false);
 
             gun.DefaultModule.ammoCost = 1;
-            gun.DefaultModule.angleVariance = Atlas.baseAngleVar;
-            gun.DefaultModule.shootStyle = Atlas.baseShootStyle;
+            gun.DefaultModule.angleVariance = Linc.baseAngleVar;
+            gun.DefaultModule.shootStyle = Linc.baseShootStyle;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 0.6f;
             gun.DefaultModule.cooldownTime = 0.1f;
-            gun.DefaultModule.numberOfShotsInClip = Atlas.baseMagSize;
+            gun.DefaultModule.numberOfShotsInClip = Linc.baseMagSize;
             //gun.usesContinuousFireAnimation = true;
             gun.SetBaseMaxAmmo(400);
             gun.gunClass = GunClass.FULLAUTO;
@@ -43,7 +43,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.projectiles[0] = projectile;
 
             projectile.baseData.damage = 1;
-            projectile.baseData.damage *= Atlas.baseDmgMultiplier;
+            projectile.baseData.damage *= Linc.baseDmgMultiplier;
             projectile.baseData.speed *= 1.5f;
             projectile.baseData.force *= 1f;
             projectile.baseData.range *= 3f;
@@ -202,11 +202,11 @@ namespace GlaurungItems.Items
             }
             else
             {
-                this.gun.DefaultModule.shootStyle = Atlas.baseShootStyle;
-                this.gun.DefaultModule.angleVariance = Atlas.baseAngleVar;
-                this.gun.DefaultModule.numberOfShotsInClip = Atlas.baseMagSize;
+                this.gun.DefaultModule.shootStyle = Linc.baseShootStyle;
+                this.gun.DefaultModule.angleVariance = Linc.baseAngleVar;
+                this.gun.DefaultModule.numberOfShotsInClip = Linc.baseMagSize;
                 this.gun.DefaultModule.projectiles[0].baseData.damage = 1;
-                this.gun.DefaultModule.projectiles[0].baseData.damage *= Atlas.baseDmgMultiplier;
+                this.gun.DefaultModule.projectiles[0].baseData.damage *= Linc.baseDmgMultiplier;
 
                 if ((this.gun.CurrentOwner is PlayerController) && (this.gun.CurrentOwner as PlayerController).carriedConsumables != null) { (this.gun.CurrentOwner as PlayerController).carriedConsumables.ForceUpdateUI(); }
 

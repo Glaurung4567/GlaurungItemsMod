@@ -18,7 +18,7 @@ namespace GlaurungItems.Items
 			GunzerkingPotion item = gameObject.AddComponent<GunzerkingPotion>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
 			string shortDesc = "Sexual Tyrannosaurus";
-			string longDesc = "";
+			string longDesc = "A potion allowing the drinker to temporary replicate the prowesses of the legendary Gunzerkers.";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 1);
 			item.quality = ItemQuality.A;
@@ -194,7 +194,7 @@ namespace GlaurungItems.Items
 					if(TargetPlayer.inventory.CurrentGun && TargetPlayer.inventory.CurrentSecondaryGun && TargetPlayer.inventory.CurrentGun != TargetPlayer.inventory.CurrentSecondaryGun)
                     {
 						//this.TargetPlayer.inventory.SetDualWielding(false, "synergy");
-						Tools.Print("----SecondDualFuckfrickfraggingbastitch----", "ffffff", true);
+						Tools.Print("----SecondDualGunzerkingFuckfrickfraggingbastitch----", "ffffff", true);
 						//return;
 					}
 
