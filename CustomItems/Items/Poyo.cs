@@ -40,7 +40,7 @@ namespace GlaurungItems.Items
 			if(powerUp != null)
             {
 				EncounterTrackable.SuppressNextNotification = true;
-				powerUpInstance = Instantiate(powerUp.gameObject).GetComponent<PickupObject>();
+				powerUpInstance = Instantiate(powerUp.gameObject, Vector2.zero, Quaternion.identity).GetComponent<PickupObject>();
 				powerUpInstance.CanBeDropped = false;
 				powerUpInstance.CanBeSold = false;
 				LootEngine.TryGivePrefabToPlayer(powerUpInstance.gameObject, user, true);
@@ -62,8 +62,13 @@ namespace GlaurungItems.Items
                 {
 					if(this.LastOwner.passiveItems[i].PickupObjectId == powerUpInstance.PickupObjectId && this.LastOwner.passiveItems[i].CanBeDropped == false)
                     {
-						Destroy(this.LastOwner.passiveItems[i]);
+						PassiveItem pu = this.LastOwner.passiveItems[i];
+						this.LastOwner.passiveItems.RemoveAt(i);
+						GameUIRoot.Instance.RemovePassiveItemFromDock(pu);
+						UnityEngine.Object.Destroy(pu);
+						this.LastOwner.stats.RecalculateStats(this.LastOwner);
 						powerUpInstance = null;
+						Tools.Print("ow ow ow", "ffffff", true);
 						return;
                     }
                 }
