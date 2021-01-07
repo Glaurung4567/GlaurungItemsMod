@@ -20,7 +20,7 @@ namespace GlaurungItems.Items
 			string shortDesc = "Sexual Tyrannosaurus";
 			string longDesc = "A potion allowing the drinker to temporary replicate the prowesses of the legendary Gunzerkers.";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 1);
+			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 800);
 			item.quality = ItemQuality.A;
 		}
 

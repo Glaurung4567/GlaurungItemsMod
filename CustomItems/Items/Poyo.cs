@@ -68,6 +68,36 @@ namespace GlaurungItems.Items
 				powerUp = PickupObjectDatabase.GetById(434);
 			}
 
+			if (ghostsbulls.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(172);
+			}
+			
+			if (scarfs.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(436);
+			}
+
+			if (sixs.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(407);
+			}
+
+			if (bouncys.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(288);
+			}
+			
+			if (blankies.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(579);
+			}
+			
+			if (cats.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(817);
+			}
+
 			if (books.Contains(nomTargetUuid))
 			{
 				if(Random.value <= 0.5)
@@ -219,7 +249,7 @@ namespace GlaurungItems.Items
 		};
 
 		private static List<string> icecubes = new List<string> {
-			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+			EnemyGuidDatabase.Entries["mountain_cube"]
 		};
 		
 		private static List<string> books = new List<string> {
@@ -236,6 +266,31 @@ namespace GlaurungItems.Items
 		
 		private static List<string> idols = new List<string> {
 			EnemyGuidDatabase.Entries["shambling_round"]
+		};
+
+		private static List<string> ghostsbulls = new List<string> {
+			EnemyGuidDatabase.Entries["shambling_round"]
+		};
+		
+		private static List<string> scarfs = new List<string> {
+			EnemyGuidDatabase.Entries["phaser_spider"]
+		};
+
+		private static List<string> sixs = new List<string> {
+			EnemyGuidDatabase.Entries["phaser_spider"]
+		};
+
+		private static List<string> bouncys = new List<string> {
+			EnemyGuidDatabase.Entries["phaser_spider"]
+		};
+
+		private static List<string> blankies = new List<string> {
+			EnemyGuidDatabase.Entries["bombshee"]
+		};
+		
+		private static List<string> cats = new List<string> {
+			EnemyGuidDatabase.Entries["bullet_kings_toadie"],
+			EnemyGuidDatabase.Entries["bullet_kings_toadie_revenge"]
 		};
 
 	}
