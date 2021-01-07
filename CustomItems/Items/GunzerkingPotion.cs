@@ -13,7 +13,7 @@ namespace GlaurungItems.Items
 		public static void Init()
 		{
 			string text = "Gunzerking Potion";
-			string resourcePath = "GlaurungItems/Resources/acme_crate";
+			string resourcePath = "GlaurungItems/Resources/gunzerking_potion";
 			GameObject gameObject = new GameObject(text);
 			GunzerkingPotion item = gameObject.AddComponent<GunzerkingPotion>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);

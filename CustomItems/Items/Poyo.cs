@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GlaurungItems.Items
 {
@@ -35,9 +36,51 @@ namespace GlaurungItems.Items
 			if (scattershots.Contains(nomTargetUuid))
             {
 				powerUp = PickupObjectDatabase.GetById(241);
-
 			}
-			if(powerUp != null)
+
+			if (kaboomrounds.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(304);
+			}
+			
+			if (lasersights.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(273);
+			}
+			
+			if (icecubes.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(170);
+			}
+			
+			if (standards.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(529);
+			}
+			
+			if (springheels.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(526);
+			}
+			
+			if (idols.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(434);
+			}
+
+			if (books.Contains(nomTargetUuid))
+			{
+				if(Random.value <= 0.5)
+                {
+					powerUp = PickupObjectDatabase.GetById(487);
+				}
+                else
+                {
+					powerUp = PickupObjectDatabase.GetById(354);
+				}
+			}
+
+			if (powerUp != null)
             {
 				EncounterTrackable.SuppressNextNotification = true;
 				powerUpInstance = Instantiate(powerUp.gameObject, Vector2.zero, Quaternion.identity).GetComponent<PickupObject>();
@@ -162,8 +205,37 @@ namespace GlaurungItems.Items
 		}
 
 		private PickupObject powerUpInstance = null;
+		
 		private static List<string> scattershots = new List<string> {
 			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+		};
+
+		private static List<string> kaboomrounds = new List<string> {
+			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+		};
+
+		private static List<string> lasersights = new List<string> {
+			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+		};
+
+		private static List<string> icecubes = new List<string> {
+			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+		};
+		
+		private static List<string> books = new List<string> {
+			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+		};
+
+		private static List<string> springheels = new List<string> {
+			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+		};
+
+		private static List<string> standards = new List<string> {
+			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+		};
+		
+		private static List<string> idols = new List<string> {
+			EnemyGuidDatabase.Entries["shambling_round"]
 		};
 
 	}
