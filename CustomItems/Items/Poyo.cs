@@ -29,6 +29,19 @@ namespace GlaurungItems.Items
 			AIActor nomTarget = user.CurrentRoom.GetNearestEnemy(user.CenterPosition, out nearestEnemyPosition, true, true);
 			string nomTargetUuid = nomTarget.EnemyGuid;
 
+			/*
+			AIActor orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["titan_bullet_kin_boss"]);
+			IntVector2? intVector = new IntVector2?(user.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
+			AIActor aiactor = AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
+
+			orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["kalibullet"]);
+			intVector = new IntVector2?(user.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
+			AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
+			
+			orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["kbullet"]);
+			intVector = new IntVector2?(user.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
+			AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
+			*/
 
 			RemovePowerUp();
 			PickupObject powerUp = null;
@@ -97,6 +110,62 @@ namespace GlaurungItems.Items
 			{
 				powerUp = PickupObjectDatabase.GetById(817);
 			}
+			
+			if (backpacks.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(133);
+			}
+			
+			if (crutchs.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(240);
+			}
+			
+			if (rollingeyez.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(284);
+			}
+			
+			if (homings.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(190);
+			}
+			
+			if (orbitalz.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(661);
+			}
+			
+			if (zombiez.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(528);
+			}
+			
+			if (biolegs.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(114);
+			}
+			
+			if (numbertwoz.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(326);
+			}
+			
+			if (backupz.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(287);
+			}
+			
+			if (cursedbullz.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(571);
+			}
+
+			if (flaks.Contains(nomTargetUuid))
+			{
+				if(!user.HasPassiveItem(531))
+				powerUp = PickupObjectDatabase.GetById(531);
+			}
 
 			if (books.Contains(nomTargetUuid))
 			{
@@ -141,7 +210,6 @@ namespace GlaurungItems.Items
 						UnityEngine.Object.Destroy(pu);
 						this.LastOwner.stats.RecalculateStats(this.LastOwner);
 						powerUpInstance = null;
-						Tools.Print("ow ow ow", "ffffff", true);
 						return;
                     }
                 }
@@ -183,7 +251,7 @@ namespace GlaurungItems.Items
 			if (target != null && !target.healthHaver.IsBoss)
 			{
 				GameManager.Instance.Dungeon.StartCoroutine(this.HandleEnemySuck(target));
-				target.EraseFromExistence(true);
+				target.EraseFromExistenceWithRewards(true);
 			}
 		}
 		private IEnumerator HandleEnemySuck(AIActor target)
@@ -237,15 +305,18 @@ namespace GlaurungItems.Items
 		private PickupObject powerUpInstance = null;
 		
 		private static List<string> scattershots = new List<string> {
-			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+			EnemyGuidDatabase.Entries["red_shotgun_kin"],
+			EnemyGuidDatabase.Entries["red_shotgun_kin"],
 		};
 
 		private static List<string> kaboomrounds = new List<string> {
-			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+			EnemyGuidDatabase.Entries["dynamite_kin"],
+			EnemyGuidDatabase.Entries["grenade_kin"]
 		};
 
 		private static List<string> lasersights = new List<string> {
-			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+			EnemyGuidDatabase.Entries["sniper_shell"],
+			EnemyGuidDatabase.Entries["professional"]
 		};
 
 		private static List<string> icecubes = new List<string> {
@@ -253,15 +324,19 @@ namespace GlaurungItems.Items
 		};
 		
 		private static List<string> books = new List<string> {
-			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+			EnemyGuidDatabase.Entries["bookllet"],
+			EnemyGuidDatabase.Entries["blue_bookllet"],
+			EnemyGuidDatabase.Entries["green_bookllet"],
+			EnemyGuidDatabase.Entries["tablet_bookllett"]
 		};
 
 		private static List<string> springheels = new List<string> {
-			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+			EnemyGuidDatabase.Entries["gun_cultist"]
 		};
 
 		private static List<string> standards = new List<string> {
-			EnemyGuidDatabase.Entries["red_shotgun_kin"]
+			EnemyGuidDatabase.Entries["gunsinger"],
+			EnemyGuidDatabase.Entries["aged_gunsinger"]
 		};
 		
 		private static List<string> idols = new List<string> {
@@ -269,7 +344,7 @@ namespace GlaurungItems.Items
 		};
 
 		private static List<string> ghostsbulls = new List<string> {
-			EnemyGuidDatabase.Entries["shambling_round"]
+			EnemyGuidDatabase.Entries["hollowpoint"]
 		};
 		
 		private static List<string> scarfs = new List<string> {
@@ -277,15 +352,67 @@ namespace GlaurungItems.Items
 		};
 
 		private static List<string> sixs = new List<string> {
-			EnemyGuidDatabase.Entries["phaser_spider"]
+			EnemyGuidDatabase.Entries["fallen_bullet_kin"]
 		};
 
 		private static List<string> bouncys = new List<string> {
-			EnemyGuidDatabase.Entries["phaser_spider"]
+			EnemyGuidDatabase.Entries["rubber_kin"],
+			EnemyGuidDatabase.Entries["creech"]
 		};
 
 		private static List<string> blankies = new List<string> {
 			EnemyGuidDatabase.Entries["bombshee"]
+		};
+		
+		private static List<string> flaks = new List<string> {
+			EnemyGuidDatabase.Entries["blobulon"],
+			EnemyGuidDatabase.Entries["blobuloid"],
+			EnemyGuidDatabase.Entries["king_bullat"]
+		};
+		
+		private static List<string> backpacks = new List<string> {
+			EnemyGuidDatabase.Entries["tarnisher"]
+		};
+		
+		private static List<string> numbertwoz = new List<string> {
+			EnemyGuidDatabase.Entries["bandana_bullet_kin"]
+		};
+
+		private static List<string> crutchs = new List<string> {
+			EnemyGuidDatabase.Entries["veteran_bullet_kin"],
+			EnemyGuidDatabase.Entries["veteran_shotgun_kin"]
+		};
+		
+		private static List<string> homings = new List<string> {
+			EnemyGuidDatabase.Entries["bombshee"]
+		};
+		
+		private static List<string> rollingeyez = new List<string> {
+			EnemyGuidDatabase.Entries["lead_maiden"],
+			EnemyGuidDatabase.Entries["minelet"],
+			EnemyGuidDatabase.Entries["gat"]
+		};
+		
+		private static List<string> orbitalz = new List<string> {
+			EnemyGuidDatabase.Entries["skusket"]
+		};
+		
+		private static List<string> biolegs = new List<string> {
+			EnemyGuidDatabase.Entries["bullet_mech"]
+		};
+		
+		private static List<string> backupz = new List<string> {
+			EnemyGuidDatabase.Entries["grip_master"]
+		};
+		
+		private static List<string> cursedbullz = new List<string> {
+			EnemyGuidDatabase.Entries["jammomancer"],
+			EnemyGuidDatabase.Entries["jamerlengo"]
+		};
+		
+		private static List<string> zombiez = new List<string> {
+			EnemyGuidDatabase.Entries["spent"],
+			EnemyGuidDatabase.Entries["gummy_spent"]
 		};
 		
 		private static List<string> cats = new List<string> {
