@@ -26,7 +26,7 @@ namespace GlaurungItems.Items
 
 		public override bool CanBeUsed(PlayerController user)
 		{
-			return !user.inventory.DualWielding && user.inventory.AllGuns != null && (user.inventory.AllGuns.Count > 1) && user.inventory.GunLocked.BaseValue == false;
+			return !user.inventory.DualWielding && user.CurrentGun && !user.CurrentGun.IsEmpty && user.inventory.AllGuns != null && (user.inventory.AllGuns.Count > 1) && user.inventory.GunLocked.BaseValue == false;
 		}
 
 		protected override void DoEffect(PlayerController user)

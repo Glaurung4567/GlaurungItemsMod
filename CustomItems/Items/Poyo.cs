@@ -160,6 +160,21 @@ namespace GlaurungItems.Items
 			{
 				powerUp = PickupObjectDatabase.GetById(571);
 			}
+			
+			if (shelletonz.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(818);
+			}
+			
+			if (chancebz.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(521);
+			}
+			
+			if (babymimics.Contains(nomTargetUuid))
+			{
+				powerUp = PickupObjectDatabase.GetById(664);
+			}
 
 			if (flaks.Contains(nomTargetUuid))
 			{
@@ -176,6 +191,18 @@ namespace GlaurungItems.Items
                 else
                 {
 					powerUp = PickupObjectDatabase.GetById(354);
+				}
+			}
+			
+			if (berds.Contains(nomTargetUuid))
+			{
+				if(Random.value <= 0.5)
+                {
+					powerUp = PickupObjectDatabase.GetById(572);
+				}
+                else
+                {
+					powerUp = PickupObjectDatabase.GetById(632);
 				}
 			}
 
@@ -384,7 +411,8 @@ namespace GlaurungItems.Items
 		};
 		
 		private static List<string> homings = new List<string> {
-			EnemyGuidDatabase.Entries["bombshee"]
+			EnemyGuidDatabase.Entries["gunzookie"],
+			EnemyGuidDatabase.Entries["gunzockie"]
 		};
 		
 		private static List<string> rollingeyez = new List<string> {
@@ -418,6 +446,30 @@ namespace GlaurungItems.Items
 		private static List<string> cats = new List<string> {
 			EnemyGuidDatabase.Entries["bullet_kings_toadie"],
 			EnemyGuidDatabase.Entries["bullet_kings_toadie_revenge"]
+		};
+		
+		private static List<string> shelletonz = new List<string> {
+			EnemyGuidDatabase.Entries["shelleton"],
+		};
+		
+		private static List<string> chancebz = new List<string> {
+			EnemyGuidDatabase.Entries["chancebulon"],
+		};
+		
+		private static List<string> berds = new List<string> {
+			EnemyGuidDatabase.Entries["gigi"],
+			EnemyGuidDatabase.Entries["bird_parrot"]
+		};
+		
+		private static List<string> babymimics = new List<string> {
+			EnemyGuidDatabase.Entries["brown_chest_mimic"],
+			EnemyGuidDatabase.Entries["blue_chest_mimic"],
+			EnemyGuidDatabase.Entries["green_chest_mimic"],
+			EnemyGuidDatabase.Entries["red_chest_mimic"],
+			EnemyGuidDatabase.Entries["black_chest_mimic"],
+			EnemyGuidDatabase.Entries["rat_chest_mimic"],
+			EnemyGuidDatabase.Entries["pedestal_mimic"],
+			EnemyGuidDatabase.Entries["wall_mimic"]
 		};
 
 	}
