@@ -187,6 +187,21 @@ namespace GlaurungItems.Items
 				{
 					powerUp = PickupObjectDatabase.GetById(500);
 				}
+				
+				if (bloodbrood.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(285);
+				}
+				
+				if (fatbullz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(277);
+				}
+				
+				if (heavybullz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(111);
+				}
 			
 				if (babymimics.Contains(nomTargetUuid))
 				{
@@ -436,7 +451,8 @@ namespace GlaurungItems.Items
 		};
 
 		private static List<string> ghostsbulls = new List<string> {
-			EnemyGuidDatabase.Entries["hollowpoint"]
+			EnemyGuidDatabase.Entries["hollowpoint"],
+			EnemyGuidDatabase.Entries["spectre"],
 		};
 		
 		private static List<string> scarfs = new List<string> {
@@ -533,6 +549,20 @@ namespace GlaurungItems.Items
 		
 		private static List<string> hotleadz = new List<string> {
 			EnemyGuidDatabase.Entries["coaler"],
+		};
+		
+		private static List<string> bloodbrood = new List<string> {
+			EnemyGuidDatabase.Entries["bloodbulon"],
+		};
+		
+		private static List<string> fatbullz = new List<string> {
+			EnemyGuidDatabase.Entries["titan_bullet_kin"],
+			EnemyGuidDatabase.Entries["titan_bullet_kin_boss"],
+			EnemyGuidDatabase.Entries["titaness_bullet_kin_boss"],
+		};
+		
+		private static List<string> heavybullz = new List<string> {
+			EnemyGuidDatabase.Entries["gun_nut"],
 		};
 		
 		private static List<string> holsterz = new List<string> {
