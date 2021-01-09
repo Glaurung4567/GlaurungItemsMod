@@ -43,182 +43,200 @@ namespace GlaurungItems.Items
 			AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
 			*/
 
-			RemovePowerUp();
-			PickupObject powerUp = null;
-
-			if (scattershots.Contains(nomTargetUuid))
+			if(nomTarget.healthHaver.IsAlive && !nomTarget.healthHaver.IsBoss)
             {
-				powerUp = PickupObjectDatabase.GetById(241);
-			}
+				RemovePowerUp();
+				PickupObject powerUp = null;
 
-			if (kaboomrounds.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(304);
-			}
-			
-			if (lasersights.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(273);
-			}
-			
-			if (icecubes.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(170);
-			}
-			
-			if (standards.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(529);
-			}
-			
-			if (springheels.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(526);
-			}
-			
-			if (idols.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(434);
-			}
-
-			if (ghostsbulls.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(172);
-			}
-			
-			if (scarfs.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(436);
-			}
-
-			if (sixs.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(407);
-			}
-
-			if (bouncys.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(288);
-			}
-			
-			if (blankies.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(579);
-			}
-			
-			if (cats.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(817);
-			}
-			
-			if (backpacks.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(133);
-			}
-			
-			if (crutchs.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(240);
-			}
-			
-			if (rollingeyez.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(284);
-			}
-			
-			if (homings.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(190);
-			}
-			
-			if (orbitalz.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(661);
-			}
-			
-			if (zombiez.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(528);
-			}
-			
-			if (biolegs.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(114);
-			}
-			
-			if (numbertwoz.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(326);
-			}
-			
-			if (backupz.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(287);
-			}
-			
-			if (cursedbullz.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(571);
-			}
-			
-			if (shelletonz.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(818);
-			}
-			
-			if (chancebz.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(521);
-			}
-			
-			if (babymimics.Contains(nomTargetUuid))
-			{
-				powerUp = PickupObjectDatabase.GetById(664);
-			}
-
-			if (flaks.Contains(nomTargetUuid))
-			{
-				if(!user.HasPassiveItem(531))
-				powerUp = PickupObjectDatabase.GetById(531);
-			}
-
-			if (books.Contains(nomTargetUuid))
-			{
-				if(Random.value <= 0.5)
-                {
-					powerUp = PickupObjectDatabase.GetById(487);
+				if (scattershots.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(241);
 				}
-                else
-                {
-					powerUp = PickupObjectDatabase.GetById(354);
-				}
-			}
-			
-			if (berds.Contains(nomTargetUuid))
-			{
-				if(Random.value <= 0.5)
-                {
-					powerUp = PickupObjectDatabase.GetById(572);
-				}
-                else
-                {
-					powerUp = PickupObjectDatabase.GetById(632);
-				}
-			}
 
-			if (powerUp != null)
-            {
-				EncounterTrackable.SuppressNextNotification = true;
-				powerUpInstance = Instantiate(powerUp.gameObject, Vector2.zero, Quaternion.identity).GetComponent<PickupObject>();
-				powerUpInstance.CanBeDropped = false;
-				powerUpInstance.CanBeSold = false;
-				LootEngine.TryGivePrefabToPlayer(powerUpInstance.gameObject, user, true);
+				if (kaboomrounds.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(304);
+				}
+			
+				if (lasersights.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(273);
+				}
+			
+				if (icecubes.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(170);
+				}
+			
+				if (standards.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(529);
+				}
+			
+				if (springheels.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(526);
+				}
+			
+				if (idols.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(434);
+				}
+
+				if (ghostsbulls.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(172);
+				}
+			
+				if (scarfs.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(436);
+				}
+
+				if (sixs.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(407);
+				}
+
+				if (bouncys.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(288);
+				}
+			
+				if (blankies.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(579);
+				}
+			
+				if (cats.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(817);
+				}
+			
+				if (backpacks.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(133);
+				}
+			
+				if (crutchs.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(240);
+				}
+			
+				if (rollingeyez.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(190);
+				}
+			
+				if (homings.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(284);
+				}
+			
+				if (orbitalz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(661);
+				}
+			
+				if (zombiez.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(528);
+				}
+			
+				if (biolegs.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(114);
+				}
+			
+				if (numbertwoz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(326);
+				}
+			
+				if (backupz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(287);
+				}
+			
+				if (cursedbullz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(571);
+				}
+			
+				if (shelletonz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(818);
+				}
+			
+				if (chancebz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(521);
+				}
+			
+				if (fairyz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(310);
+				}
+			
+				if (hotleadz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(295);
+				}
+			
+				if (holsterz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(500);
+				}
+			
+				if (babymimics.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(664);
+				}
+
+				if (flaks.Contains(nomTargetUuid))
+				{
+					if(!user.HasPassiveItem(531))
+					powerUp = PickupObjectDatabase.GetById(531);
+				}
+
+				if (books.Contains(nomTargetUuid))
+				{
+					if(Random.value <= 0.5)
+					{
+						powerUp = PickupObjectDatabase.GetById(487);
+					}
+					else
+					{
+						powerUp = PickupObjectDatabase.GetById(354);
+					}
+				}
+			
+				if (berds.Contains(nomTargetUuid))
+				{
+					if(Random.value <= 0.5)
+					{
+						powerUp = PickupObjectDatabase.GetById(572);
+					}
+					else
+					{
+						powerUp = PickupObjectDatabase.GetById(632);
+					}
+				}
+
+				if (powerUp != null)
+				{
+					powerUpId = powerUp.PickupObjectId;
+					EncounterTrackable.SuppressNextNotification = true;
+					powerUpInstance = Instantiate(powerUp.gameObject, Vector2.zero, Quaternion.identity).GetComponent<PassiveItem>();
+					powerUpInstance.CanBeDropped = false;
+					powerUpInstance.CanBeSold = false;
+					LootEngine.TryGivePrefabToPlayer(powerUpInstance.gameObject, user, true);
 				
-				EncounterTrackable.SuppressNextNotification = false;
+					EncounterTrackable.SuppressNextNotification = false;
+				}
+
+				DEVOUR(nomTarget);
 			}
-
-			DEVOUR(nomTarget);
-
 
 		}
 
@@ -229,7 +247,10 @@ namespace GlaurungItems.Items
 				//this.LastOwner.RemovePassiveItem(powerUpInstance.PickupObjectId);
 				for(int i = 0; i<this.LastOwner.passiveItems.Count; i++)
                 {
-					if(this.LastOwner.passiveItems[i].PickupObjectId == powerUpInstance.PickupObjectId && this.LastOwner.passiveItems[i].CanBeDropped == false)
+					if(this.LastOwner.passiveItems[i].PickupObjectId == powerUpInstance.PickupObjectId 
+						&& this.LastOwner.passiveItems[i].CanBeDropped == false
+						&& this.LastOwner.passiveItems[i].CanBeSold == false
+						)
                     {
 						PassiveItem pu = this.LastOwner.passiveItems[i];
 						this.LastOwner.passiveItems.RemoveAt(i);
@@ -259,19 +280,57 @@ namespace GlaurungItems.Items
         {
             base.Pickup(player);
             player.OnReceivedDamage += Player_OnReceivedDamage;
-        }
+			GameManager.Instance.OnNewLevelFullyLoaded += this.RechargePerFloor;
+
+		}
+
+		protected override void OnPreDrop(PlayerController player)
+		{
+			RemovePowerUp();
+			GameManager.Instance.OnNewLevelFullyLoaded -= this.RechargePerFloor;
+			player.OnReceivedDamage -= Player_OnReceivedDamage;
+			base.OnPreDrop(player);
+		}
+
+		private void RechargePerFloor()
+        {
+			Tools.Print(powerUpInstance == null, "ffffff", true);
+			if(powerUpId >= 0)
+            {
+				if (this.LastOwner &&  this.LastOwner.passiveItems != null)
+				{
+					//this.LastOwner.RemovePassiveItem(powerUpInstance.PickupObjectId);
+					for (int i = 0; i < this.LastOwner.passiveItems.Count; i++)
+					{
+						if (this.LastOwner.passiveItems[i].PickupObjectId == powerUpId && this.LastOwner.passiveItems[i].CanBeDropped == false && this.LastOwner.passiveItems[i].CanBeSold == false)
+						{
+							PassiveItem pu = this.LastOwner.passiveItems[i];
+							this.LastOwner.passiveItems.RemoveAt(i);
+							GameUIRoot.Instance.RemovePassiveItemFromDock(pu);
+							UnityEngine.Object.Destroy(pu);
+							this.LastOwner.stats.RecalculateStats(this.LastOwner);
+							powerUpInstance = null;
+
+							EncounterTrackable.SuppressNextNotification = true;
+							PickupObject powerUp = PickupObjectDatabase.GetById(powerUpId);
+							powerUpInstance = Instantiate(powerUp.gameObject, Vector2.zero, Quaternion.identity).GetComponent<PassiveItem>();
+							powerUpInstance.CanBeDropped = false;
+							powerUpInstance.CanBeSold = false;
+							LootEngine.TryGivePrefabToPlayer(powerUpInstance.gameObject, this.LastOwner, true);
+							EncounterTrackable.SuppressNextNotification = false;
+							return;
+						}
+					}
+				}
+			}
+		}
 
         private void Player_OnReceivedDamage(PlayerController player)
         {
 			RemovePowerUp();
 		}
 
-		protected override void OnPreDrop(PlayerController player)
-		{
-			RemovePowerUp();
-			player.OnReceivedDamage -= Player_OnReceivedDamage;
-			base.OnPreDrop(player);
-		}
+
 
 		private void DEVOUR(AIActor target)
 		{
@@ -329,11 +388,17 @@ namespace GlaurungItems.Items
 			return gameObject2.transform;
 		}
 
-		private PickupObject powerUpInstance = null;
+		[SerializeField]
+		private PassiveItem powerUpInstance;
+		
+		[SerializeField]
+		private int powerUpId = -5;
+
+
 		
 		private static List<string> scattershots = new List<string> {
 			EnemyGuidDatabase.Entries["red_shotgun_kin"],
-			EnemyGuidDatabase.Entries["red_shotgun_kin"],
+			EnemyGuidDatabase.Entries["blue_shotgun_kin"],
 		};
 
 		private static List<string> kaboomrounds = new List<string> {
@@ -450,6 +515,7 @@ namespace GlaurungItems.Items
 		
 		private static List<string> shelletonz = new List<string> {
 			EnemyGuidDatabase.Entries["shelleton"],
+			EnemyGuidDatabase.Entries["ammomancer"]
 		};
 		
 		private static List<string> chancebz = new List<string> {
@@ -459,6 +525,18 @@ namespace GlaurungItems.Items
 		private static List<string> berds = new List<string> {
 			EnemyGuidDatabase.Entries["gigi"],
 			EnemyGuidDatabase.Entries["bird_parrot"]
+		};
+		
+		private static List<string> fairyz = new List<string> {
+			EnemyGuidDatabase.Entries["pot_fairy"],
+		};
+		
+		private static List<string> hotleadz = new List<string> {
+			EnemyGuidDatabase.Entries["coaler"],
+		};
+		
+		private static List<string> holsterz = new List<string> {
+			EnemyGuidDatabase.Entries["beadie"],
 		};
 		
 		private static List<string> babymimics = new List<string> {
