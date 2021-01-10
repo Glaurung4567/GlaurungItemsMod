@@ -420,7 +420,6 @@ namespace GlaurungItems.Items
 
 		private void RechargePerFloor()
         {
-			Tools.Print(powerUpInstance == null, "ffffff", true);
 			if(powerUpId >= 0)
             {
 				if (this.LastOwner &&  this.LastOwner.passiveItems != null)
