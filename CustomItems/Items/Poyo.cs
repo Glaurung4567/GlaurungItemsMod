@@ -202,6 +202,16 @@ namespace GlaurungItems.Items
 				{
 					powerUp = PickupObjectDatabase.GetById(580);
 				}
+				
+				if (heavybooty.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(256);
+				}
+				
+				if (gunjurers.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(456);
+				}
 			
 				if (lichiez.Contains(nomTargetUuid))
 				{
@@ -453,7 +463,8 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["bookllet"],
 			EnemyGuidDatabase.Entries["blue_bookllet"],
 			EnemyGuidDatabase.Entries["green_bookllet"],
-			EnemyGuidDatabase.Entries["tablet_bookllett"]
+			EnemyGuidDatabase.Entries["tablet_bookllett"],
+			EnemyGuidDatabase.Entries["lore_gunjurer"],
 		};
 
 		private static List<string> springheels = new List<string> {
@@ -591,6 +602,16 @@ namespace GlaurungItems.Items
 		
 		private static List<string> lichiez = new List<string> {
 			EnemyGuidDatabase.Entries["revolvenant"],
+		};
+		
+		private static List<string> heavybooty = new List<string> {
+			EnemyGuidDatabase.Entries["lead_cube"],
+		};
+		
+		private static List<string> gunjurers = new List<string> {
+			EnemyGuidDatabase.Entries["apprentice_gunjurer"],
+			EnemyGuidDatabase.Entries["gunjurer"],
+			EnemyGuidDatabase.Entries["high_gunjurer"],
 		};
 		
 		private static List<string> mimics = new List<string> {
