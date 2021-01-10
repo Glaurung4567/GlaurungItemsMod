@@ -433,6 +433,8 @@ namespace GlaurungItems.Items
 							PassiveItem pu = this.LastOwner.passiveItems[i];
 							this.LastOwner.passiveItems.RemoveAt(i);
 							GameUIRoot.Instance.RemovePassiveItemFromDock(pu);
+							DebrisObject deb = pu.Drop(this.LastOwner);
+							deb.ForceDestroyAndMaybeRespawn();
 							UnityEngine.Object.Destroy(pu);
 							this.LastOwner.stats.RecalculateStats(this.LastOwner);
 							powerUpInstance = null;
