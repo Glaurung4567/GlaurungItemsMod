@@ -248,6 +248,18 @@ namespace GlaurungItems.Items
 						powerUp = PickupObjectDatabase.GetById(664);
 					}
 				}
+				
+				if (vegiez.Contains(nomTargetUuid))
+				{
+					if (Random.value <= 0.5)
+					{
+						powerUp = PickupObjectDatabase.GetById(258);
+					}
+					else
+					{
+						powerUp = PickupObjectDatabase.GetById(253);
+					}
+				}
 
 				if (flaks.Contains(nomTargetUuid))
 				{
@@ -699,6 +711,11 @@ namespace GlaurungItems.Items
 		private static readonly List<string> looterz = new List<string> {
 			EnemyGuidDatabase.Entries["key_bullet_kin"],
 			EnemyGuidDatabase.Entries["chance_bullet_kin"],
+		};
+		
+		private static readonly List<string> vegiez = new List<string> {
+			EnemyGuidDatabase.Entries["fungun"],
+			EnemyGuidDatabase.Entries["spogre"],
 		};
 		
 		private static List<string> mimics = new List<string> {
