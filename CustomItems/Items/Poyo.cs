@@ -115,11 +115,6 @@ namespace GlaurungItems.Items
 					powerUp = PickupObjectDatabase.GetById(240);
 				}
 			
-				if (rollingeyez.Contains(nomTargetUuid))
-				{
-					powerUp = PickupObjectDatabase.GetById(190);
-				}
-			
 				if (homings.Contains(nomTargetUuid))
 				{
 					powerUp = PickupObjectDatabase.GetById(284);
@@ -314,7 +309,19 @@ namespace GlaurungItems.Items
 						powerUp = PickupObjectDatabase.GetById(655);
 					}
 				}
-				
+
+				if (invinciblez.Contains(nomTargetUuid))
+				{
+					if (Random.value <= 0.5)
+					{
+						powerUp = PickupObjectDatabase.GetById(190);
+					}
+					else
+					{
+						powerUp = PickupObjectDatabase.GetById(634);
+					}
+				}
+
 				if (looterz.Contains(nomTargetUuid))
 				{
 					int lootz = Random.Range(0, 5);
@@ -372,6 +379,8 @@ namespace GlaurungItems.Items
 						PassiveItem pu = this.LastOwner.passiveItems[i];
 						this.LastOwner.passiveItems.RemoveAt(i);
 						GameUIRoot.Instance.RemovePassiveItemFromDock(pu);
+						DebrisObject deb = pu.Drop(this.LastOwner);
+						deb.ForceDestroyAndMaybeRespawn();
 						UnityEngine.Object.Destroy(pu);
 						this.LastOwner.stats.RecalculateStats(this.LastOwner);
 						powerUpInstance = null;
@@ -604,7 +613,7 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["gunzockie"]
 		};
 		
-		private static readonly List<string> rollingeyez = new List<string> {
+		private static readonly List<string> invinciblez = new List<string> {
 			EnemyGuidDatabase.Entries["lead_maiden"],
 			EnemyGuidDatabase.Entries["minelet"],
 			EnemyGuidDatabase.Entries["gat"]
