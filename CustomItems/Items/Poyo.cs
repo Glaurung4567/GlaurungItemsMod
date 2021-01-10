@@ -68,11 +68,6 @@ namespace GlaurungItems.Items
 					powerUp = PickupObjectDatabase.GetById(170);
 				}
 			
-				if (standards.Contains(nomTargetUuid))
-				{
-					powerUp = PickupObjectDatabase.GetById(529);
-				}
-			
 				if (springheels.Contains(nomTargetUuid))
 				{
 					powerUp = PickupObjectDatabase.GetById(526);
@@ -113,10 +108,7 @@ namespace GlaurungItems.Items
 					powerUp = PickupObjectDatabase.GetById(817);
 				}
 			
-				if (backpacks.Contains(nomTargetUuid))
-				{
-					powerUp = PickupObjectDatabase.GetById(133);
-				}
+
 			
 				if (crutchs.Contains(nomTargetUuid))
 				{
@@ -227,6 +219,11 @@ namespace GlaurungItems.Items
 				{
 					powerUp = PickupObjectDatabase.GetById(204);
 				}
+				
+				if (batteries.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(410);
+				}
 			
 				if (lichiez.Contains(nomTargetUuid))
 				{
@@ -269,6 +266,18 @@ namespace GlaurungItems.Items
 						powerUp = PickupObjectDatabase.GetById(354);
 					}
 				}
+				
+				if (singers.Contains(nomTargetUuid))
+				{
+					if(Random.value <= 0.5)
+					{
+						powerUp = PickupObjectDatabase.GetById(119);
+					}
+					else
+					{
+						powerUp = PickupObjectDatabase.GetById(529);
+					}
+				}
 			
 				if (berds.Contains(nomTargetUuid))
 				{
@@ -280,6 +289,43 @@ namespace GlaurungItems.Items
 					{
 						powerUp = PickupObjectDatabase.GetById(632);
 					}
+				}
+				
+				if (backpacks.Contains(nomTargetUuid))
+				{
+					if(Random.value <= 0.5)
+					{
+						powerUp = PickupObjectDatabase.GetById(133);
+					}
+					else
+					{
+						powerUp = PickupObjectDatabase.GetById(655);
+					}
+				}
+				
+				if (looterz.Contains(nomTargetUuid))
+				{
+					int lootz = Random.Range(0, 5);
+                    switch (lootz)
+                    {
+						case 0:
+							powerUp = PickupObjectDatabase.GetById(140);//master of unlocking
+							break;
+						case 1:
+							powerUp = PickupObjectDatabase.GetById(214);//coin croin
+							break;
+						case 2:
+							powerUp = PickupObjectDatabase.GetById(254);//ring of chest friendhip
+							break;
+						case 3:
+							powerUp = PickupObjectDatabase.GetById(164);//Heart Synthesizer
+							break;
+						case 4:
+							powerUp = PickupObjectDatabase.GetById(450);//Armor Synthesizer
+							break;
+						default:
+							break;
+                    }
 				}
 
 				if (powerUp != null)
@@ -482,53 +528,57 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["lore_gunjurer"],
 		};
 
-		private static List<string> springheels = new List<string> {
+		private static readonly List<string> springheels = new List<string> {
 			EnemyGuidDatabase.Entries["gun_cultist"]
 		};
 
-		private static List<string> standards = new List<string> {
+		private static readonly List<string> singers = new List<string> {
 			EnemyGuidDatabase.Entries["gunsinger"],
 			EnemyGuidDatabase.Entries["aged_gunsinger"]
 		};
 		
-		private static List<string> idols = new List<string> {
+		private static readonly List<string> idols = new List<string> {
 			EnemyGuidDatabase.Entries["shambling_round"]
 		};
 
-		private static List<string> ghostsbulls = new List<string> {
+		private static readonly List<string> ghostsbulls = new List<string> {
 			EnemyGuidDatabase.Entries["hollowpoint"],
 			EnemyGuidDatabase.Entries["spectre"],
 		};
 		
-		private static List<string> scarfs = new List<string> {
+		private static readonly List<string> scarfs = new List<string> {
 			EnemyGuidDatabase.Entries["phaser_spider"]
 		};
 
-		private static List<string> sixs = new List<string> {
+		private static readonly List<string> sixs = new List<string> {
 			EnemyGuidDatabase.Entries["fallen_bullet_kin"]
 		};
 
-		private static List<string> bouncys = new List<string> {
+		private static readonly List<string> bouncys = new List<string> {
 			EnemyGuidDatabase.Entries["rubber_kin"],
 			EnemyGuidDatabase.Entries["creech"]
 		};
 
-		private static List<string> blankies = new List<string> {
+		private static readonly List<string> blankies = new List<string> {
 			EnemyGuidDatabase.Entries["bombshee"]
 		};
 		
-		private static List<string> flaks = new List<string> {
+		private static readonly List<string> batteries = new List<string> {
+			EnemyGuidDatabase.Entries["tazie"]
+		};
+		
+		private static readonly List<string> flaks = new List<string> {
 			EnemyGuidDatabase.Entries["blobulon"],
 			EnemyGuidDatabase.Entries["blobuloid"],
 			EnemyGuidDatabase.Entries["king_bullat"],
 			EnemyGuidDatabase.Entries["poisbuloid"],
 		};
 		
-		private static List<string> backpacks = new List<string> {
+		private static readonly List<string> backpacks = new List<string> {
 			EnemyGuidDatabase.Entries["tarnisher"]
 		};
 		
-		private static List<string> numbertwoz = new List<string> {
+		private static readonly List<string> numbertwoz = new List<string> {
 			EnemyGuidDatabase.Entries["bandana_bullet_kin"]
 		};
 
@@ -644,6 +694,11 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["apprentice_gunjurer"],
 			EnemyGuidDatabase.Entries["gunjurer"],
 			EnemyGuidDatabase.Entries["high_gunjurer"],
+		};
+		
+		private static readonly List<string> looterz = new List<string> {
+			EnemyGuidDatabase.Entries["key_bullet_kin"],
+			EnemyGuidDatabase.Entries["chance_bullet_kin"],
 		};
 		
 		private static List<string> mimics = new List<string> {
