@@ -212,6 +212,16 @@ namespace GlaurungItems.Items
 				{
 					powerUp = PickupObjectDatabase.GetById(456);
 				}
+				
+				if (angrubullz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(323);
+				}
+				
+				if (frostbullz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(278);
+				}
 			
 				if (lichiez.Contains(nomTargetUuid))
 				{
@@ -516,99 +526,109 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["bandana_bullet_kin"]
 		};
 
-		private static List<string> crutchs = new List<string> {
+		private static readonly List<string> crutchs = new List<string> {
 			EnemyGuidDatabase.Entries["veteran_bullet_kin"],
 			EnemyGuidDatabase.Entries["veteran_shotgun_kin"]
 		};
 		
-		private static List<string> homings = new List<string> {
+		private static readonly List<string> homings = new List<string> {
 			EnemyGuidDatabase.Entries["gunzookie"],
 			EnemyGuidDatabase.Entries["gunzockie"]
 		};
 		
-		private static List<string> rollingeyez = new List<string> {
+		private static readonly List<string> rollingeyez = new List<string> {
 			EnemyGuidDatabase.Entries["lead_maiden"],
 			EnemyGuidDatabase.Entries["minelet"],
 			EnemyGuidDatabase.Entries["gat"]
 		};
 		
-		private static List<string> orbitalz = new List<string> {
+		private static readonly List<string> orbitalz = new List<string> {
 			EnemyGuidDatabase.Entries["skusket"]
 		};
 		
-		private static List<string> biolegs = new List<string> {
+		private static readonly List<string> biolegs = new List<string> {
 			EnemyGuidDatabase.Entries["bullet_mech"]
 		};
 		
-		private static List<string> backupz = new List<string> {
+		private static readonly List<string> backupz = new List<string> {
 			EnemyGuidDatabase.Entries["grip_master"]
 		};
 		
-		private static List<string> cursedbullz = new List<string> {
+		private static readonly List<string> cursedbullz = new List<string> {
 			EnemyGuidDatabase.Entries["jammomancer"],
 			EnemyGuidDatabase.Entries["jamerlengo"]
 		};
 		
-		private static List<string> zombiez = new List<string> {
+		private static readonly List<string> zombiez = new List<string> {
 			EnemyGuidDatabase.Entries["spent"],
 			EnemyGuidDatabase.Entries["gummy_spent"]
 		};
 		
-		private static List<string> cats = new List<string> {
+		private static readonly List<string> cats = new List<string> {
 			EnemyGuidDatabase.Entries["bullet_kings_toadie"],
 			EnemyGuidDatabase.Entries["bullet_kings_toadie_revenge"]
 		};
 		
-		private static List<string> shelletonz = new List<string> {
+		private static readonly List<string> shelletonz = new List<string> {
 			EnemyGuidDatabase.Entries["shelleton"],
 			EnemyGuidDatabase.Entries["ammomancer"]
 		};
 		
-		private static List<string> chancebz = new List<string> {
+		private static readonly List<string> chancebz = new List<string> {
 			EnemyGuidDatabase.Entries["chancebulon"],
 		};
 		
-		private static List<string> berds = new List<string> {
+		private static readonly List<string> berds = new List<string> {
 			EnemyGuidDatabase.Entries["gigi"],
 			EnemyGuidDatabase.Entries["bird_parrot"]
 		};
 		
-		private static List<string> fairyz = new List<string> {
+		private static readonly List<string> fairyz = new List<string> {
 			EnemyGuidDatabase.Entries["pot_fairy"],
 		};
 		
-		private static List<string> hotleadz = new List<string> {
+		private static readonly List<string> hotleadz = new List<string> {
 			EnemyGuidDatabase.Entries["coaler"],
+			EnemyGuidDatabase.Entries["muzzle_wisp"],
+			EnemyGuidDatabase.Entries["muzzle_flare"],
 		};
 		
-		private static List<string> bloodbrood = new List<string> {
+		private static readonly List<string> bloodbrood = new List<string> {
 			EnemyGuidDatabase.Entries["bloodbulon"],
 		};
 		
-		private static List<string> fatbullz = new List<string> {
+		private static readonly List<string> fatbullz = new List<string> {
 			EnemyGuidDatabase.Entries["titan_bullet_kin"],
 			EnemyGuidDatabase.Entries["titan_bullet_kin_boss"],
 			EnemyGuidDatabase.Entries["titaness_bullet_kin_boss"],
 		};
 		
-		private static List<string> junkanz = new List<string> {
+		private static readonly List<string> junkanz = new List<string> {
 			EnemyGuidDatabase.Entries["gun_nut"],
 			EnemyGuidDatabase.Entries["spectral_gun_nut"]
 		};
 		
-		private static List<string> holsterz = new List<string> {
+		private static readonly List<string> holsterz = new List<string> {
 			EnemyGuidDatabase.Entries["beadie"],
 		};
 		
-		private static List<string> lichiez = new List<string> {
+		private static readonly List<string> lichiez = new List<string> {
 			EnemyGuidDatabase.Entries["revolvenant"],
 		};
 		
-		private static List<string> heavybooty = new List<string> {
+		private static readonly List<string> heavybooty = new List<string> {
 			EnemyGuidDatabase.Entries["lead_cube"],
 		};
+
+        private static readonly List<string> angrubullz = new List<string> {
+			EnemyGuidDatabase.Entries["leadbulon"],
+		};
 		
-		private static List<string> gunjurers = new List<string> {
+		private static readonly List<string> frostbullz = new List<string> {
+			EnemyGuidDatabase.Entries["blizzbulon"],
+		};
+		
+		private static readonly List<string> gunjurers = new List<string> {
 			EnemyGuidDatabase.Entries["apprentice_gunjurer"],
 			EnemyGuidDatabase.Entries["gunjurer"],
 			EnemyGuidDatabase.Entries["high_gunjurer"],
