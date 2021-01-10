@@ -222,6 +222,11 @@ namespace GlaurungItems.Items
 				{
 					powerUp = PickupObjectDatabase.GetById(278);
 				}
+				
+				if (irradiatedleadz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(204);
+				}
 			
 				if (lichiez.Contains(nomTargetUuid))
 				{
@@ -626,6 +631,10 @@ namespace GlaurungItems.Items
 		
 		private static readonly List<string> frostbullz = new List<string> {
 			EnemyGuidDatabase.Entries["blizzbulon"],
+		};
+		
+		private static readonly List<string> irradiatedleadz = new List<string> {
+			EnemyGuidDatabase.Entries["mutant_bullet_kin"],
 		};
 		
 		private static readonly List<string> gunjurers = new List<string> {
