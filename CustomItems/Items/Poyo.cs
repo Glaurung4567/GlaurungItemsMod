@@ -198,14 +198,33 @@ namespace GlaurungItems.Items
 					powerUp = PickupObjectDatabase.GetById(277);
 				}
 				
-				if (heavybullz.Contains(nomTargetUuid))
+				if (junkanz.Contains(nomTargetUuid))
 				{
-					powerUp = PickupObjectDatabase.GetById(111);
+					powerUp = PickupObjectDatabase.GetById(580);
 				}
 			
-				if (babymimics.Contains(nomTargetUuid))
+				if (lichiez.Contains(nomTargetUuid))
 				{
-					powerUp = PickupObjectDatabase.GetById(664);
+					if (Random.value <= 0.7)
+					{
+						powerUp = PickupObjectDatabase.GetById(213);
+					}
+					else
+					{
+						powerUp = PickupObjectDatabase.GetById(815);
+					}
+				}
+			
+				if (mimics.Contains(nomTargetUuid))
+				{
+					if (Random.value <= 0.5)
+					{
+						powerUp = PickupObjectDatabase.GetById(293);
+					}
+					else
+					{
+						powerUp = PickupObjectDatabase.GetById(664);
+					}
 				}
 
 				if (flaks.Contains(nomTargetUuid))
@@ -561,15 +580,20 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["titaness_bullet_kin_boss"],
 		};
 		
-		private static List<string> heavybullz = new List<string> {
+		private static List<string> junkanz = new List<string> {
 			EnemyGuidDatabase.Entries["gun_nut"],
+			EnemyGuidDatabase.Entries["spectral_gun_nut"]
 		};
 		
 		private static List<string> holsterz = new List<string> {
 			EnemyGuidDatabase.Entries["beadie"],
 		};
 		
-		private static List<string> babymimics = new List<string> {
+		private static List<string> lichiez = new List<string> {
+			EnemyGuidDatabase.Entries["revolvenant"],
+		};
+		
+		private static List<string> mimics = new List<string> {
 			EnemyGuidDatabase.Entries["brown_chest_mimic"],
 			EnemyGuidDatabase.Entries["blue_chest_mimic"],
 			EnemyGuidDatabase.Entries["green_chest_mimic"],
