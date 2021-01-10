@@ -520,7 +520,8 @@ namespace GlaurungItems.Items
 		private static List<string> flaks = new List<string> {
 			EnemyGuidDatabase.Entries["blobulon"],
 			EnemyGuidDatabase.Entries["blobuloid"],
-			EnemyGuidDatabase.Entries["king_bullat"]
+			EnemyGuidDatabase.Entries["king_bullat"],
+			EnemyGuidDatabase.Entries["poisbuloid"],
 		};
 		
 		private static List<string> backpacks = new List<string> {
@@ -635,6 +636,8 @@ namespace GlaurungItems.Items
 		
 		private static readonly List<string> irradiatedleadz = new List<string> {
 			EnemyGuidDatabase.Entries["mutant_bullet_kin"],
+			EnemyGuidDatabase.Entries["poisbulon"],
+			EnemyGuidDatabase.Entries["poisbulin"],
 		};
 		
 		private static readonly List<string> gunjurers = new List<string> {
