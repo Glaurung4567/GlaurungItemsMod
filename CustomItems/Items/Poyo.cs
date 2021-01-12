@@ -29,18 +29,6 @@ namespace GlaurungItems.Items
 			AIActor nomTarget = user.CurrentRoom.GetNearestEnemy(user.CenterPosition, out nearestEnemyPosition, true, true);
 			string nomTargetUuid = nomTarget.EnemyGuid;
 
-			
-			AIActor orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["gummy_spent"]);
-			foreach (AttackBehaviorBase att in EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["hollowpoint"]).behaviorSpeculator.AttackBehaviors)
-			{
-				if (att is TeleportBehavior)
-				{
-					orLoadByGuid.behaviorSpeculator.AttackBehaviors.Add(att);
-				}
-			}
-			IntVector2? intVector = new IntVector2?(user.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
-			AIActor aiactor = AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
-
 			if (nomTarget.healthHaver.IsAlive && !nomTarget.healthHaver.IsBoss)
             {
 				RemovePowerUp();
@@ -453,6 +441,7 @@ namespace GlaurungItems.Items
         private void Player_OnReceivedDamage(PlayerController player)
         {
 			RemovePowerUp();
+			powerUpId = -5;
 		}
 
 
