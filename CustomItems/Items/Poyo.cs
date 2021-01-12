@@ -444,8 +444,6 @@ namespace GlaurungItems.Items
 			powerUpId = -5;
 		}
 
-
-
 		private void DEVOUR(AIActor target)
 		{
 			if (target != null && !target.healthHaver.IsBoss)
