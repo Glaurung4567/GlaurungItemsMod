@@ -17,9 +17,10 @@ namespace GlaurungItems.Items
 			Poyo item = gameObject.AddComponent<Poyo>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
 			string shortDesc = "Nom nom nom";
-			string longDesc = "Poyo poYo POyo PoYo";
+			//https://www.youtube.com/watch?v=srDKPk-2SjI
+			string longDesc = "Give the user a fraction of the tremendous absorption and copy powers of a strange giant sentient amoeba.";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 1);
+			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 1000);
 			item.quality = ItemQuality.S;
 		}
 
