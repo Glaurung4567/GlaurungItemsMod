@@ -29,21 +29,19 @@ namespace GlaurungItems.Items
 			AIActor nomTarget = user.CurrentRoom.GetNearestEnemy(user.CenterPosition, out nearestEnemyPosition, true, true);
 			string nomTargetUuid = nomTarget.EnemyGuid;
 
-			/*
-			AIActor orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["titan_bullet_kin_boss"]);
+			
+			AIActor orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["gummy_spent"]);
+			foreach (AttackBehaviorBase att in EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["hollowpoint"]).behaviorSpeculator.AttackBehaviors)
+			{
+				if (att is TeleportBehavior)
+				{
+					orLoadByGuid.behaviorSpeculator.AttackBehaviors.Add(att);
+				}
+			}
 			IntVector2? intVector = new IntVector2?(user.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
 			AIActor aiactor = AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
 
-			orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["kalibullet"]);
-			intVector = new IntVector2?(user.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
-			AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
-			
-			orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["kbullet"]);
-			intVector = new IntVector2?(user.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
-			AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
-			*/
-
-			if(nomTarget.healthHaver.IsAlive && !nomTarget.healthHaver.IsBoss)
+			if (nomTarget.healthHaver.IsAlive && !nomTarget.healthHaver.IsBoss)
             {
 				RemovePowerUp();
 				PickupObject powerUp = null;
