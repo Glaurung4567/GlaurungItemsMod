@@ -82,8 +82,10 @@ namespace GlaurungItems
                 TurncoatRounds.Init();
                 Linc.Add();
                 GunzerkingPotion.Init();
-                InfiltratorRounds.Init();
                 Poyo.Init();
+
+                //InfiltratorRounds.Init();
+
                 //GunDeadArmyStronghold.Init();
 
                 //modder tools
