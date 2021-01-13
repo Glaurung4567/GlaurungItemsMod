@@ -206,6 +206,11 @@ namespace GlaurungItems.Items
 				{
 					powerUp = PickupObjectDatabase.GetById(410);
 				}
+				
+				if (militarytrainingz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(354);
+				}
 			
 				if (lichiez.Contains(nomTargetUuid))
 				{
@@ -247,18 +252,6 @@ namespace GlaurungItems.Items
 				{
 					if(!user.HasPassiveItem(531))
 					powerUp = PickupObjectDatabase.GetById(531);
-				}
-
-				if (books.Contains(nomTargetUuid))
-				{
-					if(Random.value <= 0.5)
-					{
-						powerUp = PickupObjectDatabase.GetById(487);
-					}
-					else
-					{
-						powerUp = PickupObjectDatabase.GetById(354);
-					}
 				}
 				
 				if (singers.Contains(nomTargetUuid))
@@ -332,6 +325,55 @@ namespace GlaurungItems.Items
 						default:
 							break;
                     }
+				}
+
+				if (books.Contains(nomTargetUuid))
+				{
+					if (Random.value <= 0.5)
+					{
+						powerUp = PickupObjectDatabase.GetById(487);
+					}
+					else
+					{
+						powerUp = PickupObjectDatabase.GetById(354);
+					}
+
+					int lootz = Random.Range(0, 5);
+					switch (lootz)
+					{
+						case 0:
+							powerUp = PickupObjectDatabase.GetById(487);
+							break;
+						case 1:
+							powerUp = PickupObjectDatabase.GetById(354);
+							break;
+						case 2:
+							powerUp = PickupObjectDatabase.GetById(396);
+							break;
+						case 3:
+							powerUp = PickupObjectDatabase.GetById(397);
+							break;
+						case 4:
+							powerUp = PickupObjectDatabase.GetById(398);
+							break;
+						case 5:
+							powerUp = PickupObjectDatabase.GetById(399);
+							break;
+						case 6:
+							powerUp = PickupObjectDatabase.GetById(400);
+							break;
+						case 7:
+							powerUp = PickupObjectDatabase.GetById(465);
+							break;
+						case 8:
+							powerUp = PickupObjectDatabase.GetById(666);
+							break;
+						case 9:
+							powerUp = PickupObjectDatabase.GetById(633);
+							break;
+						default:
+							break;
+					}
 				}
 
 				if (powerUp != null)
@@ -555,7 +597,8 @@ namespace GlaurungItems.Items
 		};
 		
 		private static readonly List<string> scarfs = new List<string> {
-			EnemyGuidDatabase.Entries["phaser_spider"]
+			EnemyGuidDatabase.Entries["phaser_spider"],
+			EnemyGuidDatabase.Entries["wizbang"],
 		};
 
 		private static readonly List<string> sixs = new List<string> {
@@ -588,6 +631,11 @@ namespace GlaurungItems.Items
 		
 		private static readonly List<string> numbertwoz = new List<string> {
 			EnemyGuidDatabase.Entries["bandana_bullet_kin"]
+		};
+
+		private static readonly List<string> militarytrainingz = new List<string> {
+			EnemyGuidDatabase.Entries["treadnaughts_bullet_kin"],
+			EnemyGuidDatabase.Entries["summoned_treadnaughts_bullet_kin"],
 		};
 
 		private static readonly List<string> crutchs = new List<string> {
