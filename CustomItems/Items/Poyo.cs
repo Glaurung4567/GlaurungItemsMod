@@ -669,7 +669,8 @@ namespace GlaurungItems.Items
 		
 		private static readonly List<string> junkanz = new List<string> {
 			EnemyGuidDatabase.Entries["gun_nut"],
-			EnemyGuidDatabase.Entries["spectral_gun_nut"]
+			EnemyGuidDatabase.Entries["spectral_gun_nut"],
+			EnemyGuidDatabase.Entries["poopulon"],
 		};
 		
 		private static readonly List<string> holsterz = new List<string> {
