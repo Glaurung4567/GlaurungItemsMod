@@ -1,4 +1,5 @@
-﻿using ItemAPI;
+﻿using Gungeon;
+using ItemAPI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -211,6 +212,16 @@ namespace GlaurungItems.Items
 				{
 					powerUp = PickupObjectDatabase.GetById(354);
 				}
+				
+				if (yellowz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(570);
+				}
+				
+				if (defectivez.Contains(nomTargetUuid))
+				{
+					powerUp = Game.Items["gl:infiltrator_rounds"];
+				}
 			
 				if (lichiez.Contains(nomTargetUuid))
 				{
@@ -329,16 +340,7 @@ namespace GlaurungItems.Items
 
 				if (books.Contains(nomTargetUuid))
 				{
-					if (Random.value <= 0.5)
-					{
-						powerUp = PickupObjectDatabase.GetById(487);
-					}
-					else
-					{
-						powerUp = PickupObjectDatabase.GetById(354);
-					}
-
-					int lootz = Random.Range(0, 5);
+					int lootz = Random.Range(0, 10);
 					switch (lootz)
 					{
 						case 0:
@@ -554,6 +556,7 @@ namespace GlaurungItems.Items
 		private static List<string> scattershots = new List<string> {
 			EnemyGuidDatabase.Entries["red_shotgun_kin"],
 			EnemyGuidDatabase.Entries["blue_shotgun_kin"],
+			EnemyGuidDatabase.Entries["ashen_shotgun_kin"],
 		};
 
 		private static List<string> kaboomrounds = new List<string> {
@@ -640,7 +643,8 @@ namespace GlaurungItems.Items
 
 		private static readonly List<string> crutchs = new List<string> {
 			EnemyGuidDatabase.Entries["veteran_bullet_kin"],
-			EnemyGuidDatabase.Entries["veteran_shotgun_kin"]
+			EnemyGuidDatabase.Entries["veteran_shotgun_kin"],
+			EnemyGuidDatabase.Entries["ashen_bullet_kin"]
 		};
 		
 		private static readonly List<string> homings = new List<string> {
@@ -761,6 +765,14 @@ namespace GlaurungItems.Items
 		private static readonly List<string> vegiez = new List<string> {
 			EnemyGuidDatabase.Entries["fungun"],
 			EnemyGuidDatabase.Entries["spogre"],
+		};
+		
+		private static readonly List<string> defectivez = new List<string> {
+			EnemyGuidDatabase.Entries["shroomer"],
+		};
+		
+		private static readonly List<string> yellowz = new List<string> {
+			EnemyGuidDatabase.Entries["hooded_bullet"],
 		};
 		
 		private static List<string> mimics = new List<string> {
