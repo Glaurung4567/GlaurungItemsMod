@@ -225,7 +225,12 @@ namespace GlaurungItems.Items
 				
 				if (defectivez.Contains(nomTargetUuid))
 				{
-					powerUp = Game.Items["gl:infiltrator_rounds"];
+					powerUp = Game.Items["gl:turncoat_rounds"];
+				}
+				
+				if (abbeyz.Contains(nomTargetUuid))
+				{
+					powerUp = Game.Items["gl:banishing_bullets"];
 				}
 			
 				if (lichiez.Contains(nomTargetUuid))
@@ -784,6 +789,10 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["killithid"],
 		};
 		
+		private static readonly List<string> abbeyz = new List<string> {
+			EnemyGuidDatabase.Entries["cardinal"],
+		};
+		
 		private static List<string> mimics = new List<string> {
 			EnemyGuidDatabase.Entries["brown_chest_mimic"],
 			EnemyGuidDatabase.Entries["blue_chest_mimic"],
@@ -802,7 +811,6 @@ namespace GlaurungItems.Items
 		flesh cube
 		dead blow
 		misfire beastt
-		killithid
 		agonizer
 		mine
 		bell
