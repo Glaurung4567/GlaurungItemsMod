@@ -223,6 +223,11 @@ namespace GlaurungItems.Items
 					powerUp = PickupObjectDatabase.GetById(631);
 				}
 				
+				if (illuzions.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(352);
+				}
+				
 				if (defectivez.Contains(nomTargetUuid))
 				{
 					powerUp = Game.Items["gl:turncoat_rounds"];
@@ -791,6 +796,10 @@ namespace GlaurungItems.Items
 		
 		private static readonly List<string> abbeyz = new List<string> {
 			EnemyGuidDatabase.Entries["cardinal"],
+		};
+		
+		private static readonly List<string> illuzions = new List<string> {
+			EnemyGuidDatabase.Entries["misfire_beast"],
 		};
 		
 		private static List<string> mimics = new List<string> {
