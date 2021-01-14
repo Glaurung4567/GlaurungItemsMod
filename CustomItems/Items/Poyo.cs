@@ -218,6 +218,11 @@ namespace GlaurungItems.Items
 					powerUp = PickupObjectDatabase.GetById(570);
 				}
 				
+				if (montipiz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(631);
+				}
+				
 				if (defectivez.Contains(nomTargetUuid))
 				{
 					powerUp = Game.Items["gl:infiltrator_rounds"];
@@ -775,6 +780,10 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["hooded_bullet"],
 		};
 		
+		private static readonly List<string> montipiz = new List<string> {
+			EnemyGuidDatabase.Entries["killithid"],
+		};
+		
 		private static List<string> mimics = new List<string> {
 			EnemyGuidDatabase.Entries["brown_chest_mimic"],
 			EnemyGuidDatabase.Entries["blue_chest_mimic"],
@@ -785,6 +794,21 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["pedestal_mimic"],
 			EnemyGuidDatabase.Entries["wall_mimic"]
 		};
+
+		/*
+		det
+		tombstoner
+		bullet shark
+		flesh cube
+		dead blow
+		misfire beastt
+		killithid
+		agonizer
+		mine
+		bell
+
+
+		*/
 
 	}
 }
