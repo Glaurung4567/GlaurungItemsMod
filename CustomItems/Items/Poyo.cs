@@ -228,6 +228,11 @@ namespace GlaurungItems.Items
 					powerUp = PickupObjectDatabase.GetById(352);
 				}
 				
+				if (chainz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(298);
+				}
+				
 				if (defectivez.Contains(nomTargetUuid))
 				{
 					powerUp = Game.Items["gl:turncoat_rounds"];
@@ -641,6 +646,7 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["blobuloid"],
 			EnemyGuidDatabase.Entries["king_bullat"],
 			EnemyGuidDatabase.Entries["poisbuloid"],
+			EnemyGuidDatabase.Entries["shotgrub"],
 		};
 		
 		private static readonly List<string> backpacks = new List<string> {
@@ -746,6 +752,7 @@ namespace GlaurungItems.Items
 		
 		private static readonly List<string> lichiez = new List<string> {
 			EnemyGuidDatabase.Entries["revolvenant"],
+			EnemyGuidDatabase.Entries["tombstoner"],
 		};
 		
 		private static readonly List<string> heavybooty = new List<string> {
@@ -802,6 +809,10 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["misfire_beast"],
 		};
 		
+		private static readonly List<string> chainz = new List<string> {
+			EnemyGuidDatabase.Entries["executioner"],
+		};
+		
 		private static List<string> mimics = new List<string> {
 			EnemyGuidDatabase.Entries["brown_chest_mimic"],
 			EnemyGuidDatabase.Entries["blue_chest_mimic"],
@@ -815,14 +826,17 @@ namespace GlaurungItems.Items
 
 		/*
 		det
+		shotgrub
 		tombstoner
 		bullet shark
 		flesh cube
 		dead blow
 		agonizer
-		mine
+		mines claymore
 		bell
-
+		gummy
+		skullet
+		skullmet
 
 		*/
 
