@@ -233,6 +233,11 @@ namespace GlaurungItems.Items
 					powerUp = PickupObjectDatabase.GetById(298);
 				}
 				
+				if (runpeager.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(451);
+				}
+				
 				if (defectivez.Contains(nomTargetUuid))
 				{
 					powerUp = Game.Items["gl:turncoat_rounds"];
@@ -813,6 +818,10 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["executioner"],
 		};
 		
+		private static readonly List<string> runpeager = new List<string> {
+			EnemyGuidDatabase.Entries["gunreaper"],
+		};
+		
 		private static List<string> mimics = new List<string> {
 			EnemyGuidDatabase.Entries["brown_chest_mimic"],
 			EnemyGuidDatabase.Entries["blue_chest_mimic"],
@@ -826,8 +835,6 @@ namespace GlaurungItems.Items
 
 		/*
 		det
-		shotgrub
-		tombstoner
 		bullet shark
 		flesh cube
 		dead blow
@@ -837,7 +844,7 @@ namespace GlaurungItems.Items
 		gummy
 		skullet
 		skullmet
-
+		gunreaper
 		*/
 
 	}
