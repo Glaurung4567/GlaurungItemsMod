@@ -819,7 +819,6 @@ namespace GlaurungItems.Items
 		bullet shark
 		flesh cube
 		dead blow
-		misfire beastt
 		agonizer
 		mine
 		bell
