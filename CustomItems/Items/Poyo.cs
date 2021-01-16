@@ -40,11 +40,6 @@ namespace GlaurungItems.Items
 				{
 					powerUp = PickupObjectDatabase.GetById(241);
 				}
-
-				if (kaboomrounds.Contains(nomTargetUuid))
-				{
-					powerUp = PickupObjectDatabase.GetById(304);
-				}
 			
 				if (lasersights.Contains(nomTargetUuid))
 				{
@@ -238,6 +233,16 @@ namespace GlaurungItems.Items
 					powerUp = PickupObjectDatabase.GetById(451);
 				}
 				
+				if (sharkz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(523);
+				}
+				
+				if (angeriererz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(524);
+				}
+				
 				if (defectivez.Contains(nomTargetUuid))
 				{
 					powerUp = Game.Items["gl:turncoat_rounds"];
@@ -271,7 +276,7 @@ namespace GlaurungItems.Items
 						powerUp = PickupObjectDatabase.GetById(664);
 					}
 				}
-				
+
 				if (vegiez.Contains(nomTargetUuid))
 				{
 					if (Random.value <= 0.5)
@@ -335,6 +340,25 @@ namespace GlaurungItems.Items
 					else
 					{
 						powerUp = PickupObjectDatabase.GetById(634);
+					}
+				}
+
+				if (kaboomrerz.Contains(nomTargetUuid))
+				{
+					int lootz = Random.Range(0, 3);
+					switch (lootz)
+					{
+						case 0:
+							powerUp = PickupObjectDatabase.GetById(304);
+							break;
+						case 1:
+							powerUp = PickupObjectDatabase.GetById(290);//coin croin
+							break;
+						case 2:
+							powerUp = PickupObjectDatabase.GetById(312);//ring of chest friendhip
+							break;
+						default:
+							break;
 					}
 				}
 
@@ -582,11 +606,13 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["red_shotgun_kin"],
 			EnemyGuidDatabase.Entries["blue_shotgun_kin"],
 			EnemyGuidDatabase.Entries["ashen_shotgun_kin"],
+			EnemyGuidDatabase.Entries["mutant_shotgun_kin"],
 		};
 
-		private static List<string> kaboomrounds = new List<string> {
+		private static List<string> kaboomrerz = new List<string> {
 			EnemyGuidDatabase.Entries["dynamite_kin"],
-			EnemyGuidDatabase.Entries["grenade_kin"]
+			EnemyGuidDatabase.Entries["grenade_kin"],
+			EnemyGuidDatabase.Entries["mine_flayers_claymore"],
 		};
 
 		private static List<string> lasersights = new List<string> {
@@ -816,10 +842,20 @@ namespace GlaurungItems.Items
 		
 		private static readonly List<string> chainz = new List<string> {
 			EnemyGuidDatabase.Entries["executioner"],
+			EnemyGuidDatabase.Entries["chain_gunner"],
 		};
 		
 		private static readonly List<string> runpeager = new List<string> {
 			EnemyGuidDatabase.Entries["gunreaper"],
+		};
+		
+		private static readonly List<string> angeriererz = new List<string> {
+			EnemyGuidDatabase.Entries["agonizer"],
+		};
+		
+		private static readonly List<string> sharkz = new List<string> {
+			EnemyGuidDatabase.Entries["bullet_shark"],
+			EnemyGuidDatabase.Entries["great_bullet_shark"],
 		};
 		
 		private static List<string> mimics = new List<string> {
@@ -835,16 +871,15 @@ namespace GlaurungItems.Items
 
 		/*
 		det
-		bullet shark
 		flesh cube
 		dead blow
-		agonizer
 		mines claymore
 		bell
 		gummy
 		skullet
 		skullmet
-		gunreaper
+		cubulon
+		cubulead
 		*/
 
 	}
