@@ -31,6 +31,20 @@ namespace GlaurungItems.Items
 			AIActor nomTarget = user.CurrentRoom.GetNearestEnemy(user.CenterPosition, out nearestEnemyPosition, true, true);
 			string nomTargetUuid = nomTarget.EnemyGuid;
 
+			
+			AIActor orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["titan_bullet_kin_boss"]);
+			IntVector2? intVector = new IntVector2?(user.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
+			AIActor aiactor = AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
+			
+			orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["fusebot"]);
+			intVector = new IntVector2?(user.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
+			AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
+
+			orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["mouser"]);
+			intVector = new IntVector2?(user.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
+			AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
+			
+
 			if (nomTarget.healthHaver.IsAlive && !nomTarget.healthHaver.IsBoss)
             {
 				RemovePowerUp();
@@ -759,6 +773,8 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["coaler"],
 			EnemyGuidDatabase.Entries["muzzle_wisp"],
 			EnemyGuidDatabase.Entries["muzzle_flare"],
+			EnemyGuidDatabase.Entries["candle_kin"],
+			EnemyGuidDatabase.Entries["candle_guy"],
 		};
 		
 		private static readonly List<string> bloodbrood = new List<string> {
@@ -880,6 +896,8 @@ namespace GlaurungItems.Items
 		skullmet
 		cubulon
 		cubulead
+		fusebot
+		mouser
 		*/
 
 	}
