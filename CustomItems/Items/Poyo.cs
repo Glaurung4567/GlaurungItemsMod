@@ -257,6 +257,11 @@ namespace GlaurungItems.Items
 					powerUp = PickupObjectDatabase.GetById(524);
 				}
 				
+				if (hugz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(414);
+				}
+				
 				if (defectivez.Contains(nomTargetUuid))
 				{
 					powerUp = Game.Items["gl:turncoat_rounds"];
@@ -627,6 +632,14 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["dynamite_kin"],
 			EnemyGuidDatabase.Entries["grenade_kin"],
 			EnemyGuidDatabase.Entries["mine_flayers_claymore"],
+			EnemyGuidDatabase.Entries["det"],
+			EnemyGuidDatabase.Entries["x_det"],
+			EnemyGuidDatabase.Entries["diagonal_x_det"],
+			EnemyGuidDatabase.Entries["vertical_det"],
+			EnemyGuidDatabase.Entries["diagonal_det"],
+			EnemyGuidDatabase.Entries["horizontal_det"],
+			EnemyGuidDatabase.Entries["vertical_x_det"],
+			EnemyGuidDatabase.Entries["horizontal_x_det"],
 		};
 
 		private static List<string> lasersights = new List<string> {
@@ -652,7 +665,8 @@ namespace GlaurungItems.Items
 
 		private static readonly List<string> singers = new List<string> {
 			EnemyGuidDatabase.Entries["gunsinger"],
-			EnemyGuidDatabase.Entries["aged_gunsinger"]
+			EnemyGuidDatabase.Entries["aged_gunsinger"],
+			EnemyGuidDatabase.Entries["mine_flayers_bell"]
 		};
 		
 		private static readonly List<string> idols = new List<string> {
@@ -743,7 +757,10 @@ namespace GlaurungItems.Items
 		
 		private static readonly List<string> zombiez = new List<string> {
 			EnemyGuidDatabase.Entries["spent"],
-			EnemyGuidDatabase.Entries["gummy_spent"]
+			EnemyGuidDatabase.Entries["gummy_spent"],
+			EnemyGuidDatabase.Entries["skullet"],
+			EnemyGuidDatabase.Entries["skullmet"],
+			EnemyGuidDatabase.Entries["gummy"],
 		};
 		
 		private static readonly List<string> cats = new List<string> {
@@ -775,6 +792,7 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["muzzle_flare"],
 			EnemyGuidDatabase.Entries["candle_kin"],
 			EnemyGuidDatabase.Entries["candle_guy"],
+			EnemyGuidDatabase.Entries["flesh_cube"],
 		};
 		
 		private static readonly List<string> bloodbrood = new List<string> {
@@ -874,6 +892,12 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["great_bullet_shark"],
 		};
 		
+		private static readonly List<string> hugz = new List<string> {
+			EnemyGuidDatabase.Entries["mouser"],
+			EnemyGuidDatabase.Entries["fusebot"],
+			EnemyGuidDatabase.Entries["blobulin"],
+		};
+		
 		private static List<string> mimics = new List<string> {
 			EnemyGuidDatabase.Entries["brown_chest_mimic"],
 			EnemyGuidDatabase.Entries["blue_chest_mimic"],
@@ -886,18 +910,10 @@ namespace GlaurungItems.Items
 		};
 
 		/*
-		det
 		flesh cube
 		dead blow
-		mines claymore
-		bell
-		gummy
-		skullet
-		skullmet
 		cubulon
 		cubulead
-		fusebot
-		mouser
 		*/
 
 	}
