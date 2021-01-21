@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using ItemAPI;
+using EnemyAPI;
 using Dungeonator;
 using Random = UnityEngine.Random;
 using System.Collections;

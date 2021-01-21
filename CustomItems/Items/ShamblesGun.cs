@@ -6,6 +6,7 @@ using Dungeonator;
 using Gungeon;
 using UnityEngine;
 using ItemAPI;
+using EnemyAPI;
 using Random = UnityEngine.Random;
 
 namespace GlaurungItems.Items

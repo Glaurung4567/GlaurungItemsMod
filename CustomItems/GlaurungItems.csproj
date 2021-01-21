@@ -75,10 +75,10 @@
     <Compile Include="ItemAPI\AdvancedTransformGunSynergyProcessor .cs" />
     <Compile Include="ItemAPI\CompanionBuilder.cs" />
     <Compile Include="ItemAPI\CustomSynergies.cs" />
-    <Compile Include="ItemAPI\EnemyAPI\Hooks.cs" />
-    <Compile Include="ItemAPI\EnemyAPI\OverrideBehavior.cs" />
-    <Compile Include="ItemAPI\EnemyAPI\EnemyAPITools.cs" />
-    <Compile Include="ItemAPI\EnemyGuidDatabase.cs" />
+    <Compile Include="EnemyAPI\Hooks.cs" />
+    <Compile Include="EnemyAPI\OverrideBehavior.cs" />
+    <Compile Include="EnemyAPI\EnemyAPITools.cs" />
+    <Compile Include="EnemyAPI\EnemyGuidDatabase.cs" />
     <Compile Include="ItemAPI\FakePrefab\FakePrefab.cs" />
     <Compile Include="ItemAPI\FakePrefab\FakePrefabHooks.cs" />
     <Compile Include="ItemAPI\SpecialBlankModificationItem.cs" />

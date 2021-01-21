@@ -1,6 +1,7 @@
 ﻿using ItemAPI;
 using System;
 using UnityEngine;
+using EnemyAPI;
 
 namespace GlaurungItems.Items
 {

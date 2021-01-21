@@ -1,5 +1,6 @@
 ﻿using ItemAPI;
 using System;
+using EnemyAPI;
 using Random = UnityEngine.Random;
 using UnityEngine;
 using System.Collections;
