@@ -31,7 +31,7 @@ namespace GlaurungItems.Items
 			AIActor nomTarget = user.CurrentRoom.GetNearestEnemy(user.CenterPosition, out nearestEnemyPosition, true, true);
 			string nomTargetUuid = nomTarget.EnemyGuid;
 
-			
+			/*
 			AIActor orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["titan_bullet_kin_boss"]);
 			IntVector2? intVector = new IntVector2?(user.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
 			AIActor aiactor = AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
@@ -43,7 +43,7 @@ namespace GlaurungItems.Items
 			orLoadByGuid = EnemyDatabase.GetOrLoadByGuid(EnemyGuidDatabase.Entries["mouser"]);
 			intVector = new IntVector2?(user.CurrentRoom.GetRandomVisibleClearSpot(2, 2));
 			AIActor.Spawn(orLoadByGuid.aiActor, intVector.Value, GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(intVector.Value), true, AIActor.AwakenAnimationType.Default, true);
-			
+			*/
 
 			if (nomTarget.healthHaver.IsAlive && !nomTarget.healthHaver.IsBoss)
             {
@@ -360,6 +360,12 @@ namespace GlaurungItems.Items
 					{
 						powerUp = PickupObjectDatabase.GetById(634);
 					}
+				}
+
+				if (cubz.Contains(nomTargetUuid))
+				{
+					powerUp = PickupObjectDatabase.GetById(473);
+					//(powerUp as PlayerItem).OnPreDropEvent
 				}
 
 				if (kaboomrerz.Contains(nomTargetUuid))
@@ -898,6 +904,11 @@ namespace GlaurungItems.Items
 			EnemyGuidDatabase.Entries["blobulin"],
 		};
 		
+		private static readonly List<string> cubz = new List<string> {
+			EnemyGuidDatabase.Entries["cubulon"],
+			EnemyGuidDatabase.Entries["cubulead"],
+		};
+		
 		private static List<string> mimics = new List<string> {
 			EnemyGuidDatabase.Entries["brown_chest_mimic"],
 			EnemyGuidDatabase.Entries["blue_chest_mimic"],
@@ -910,7 +921,6 @@ namespace GlaurungItems.Items
 		};
 
 		/*
-		flesh cube
 		dead blow
 		cubulon
 		cubulead
