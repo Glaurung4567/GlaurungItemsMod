@@ -1,12 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using EnemyAPI;
 using GlaurungItems.Items;
 using Gungeon;
 using ItemAPI;
-using MonoMod.RuntimeDetour;
 using SaveAPI;
 using CustomDungeonFlags = SaveAPI.CustomDungeonFlags;
 
@@ -15,7 +12,7 @@ namespace GlaurungItems
     public class GlaurungItems : ETGModule
     {
         public bool setup;
-        private static string version = "1.4.0";
+        private static string version = "1.5.0";
         public static AdvancedStringDB Strings;
 
         public override void Init()

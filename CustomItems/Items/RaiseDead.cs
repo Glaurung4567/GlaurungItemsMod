@@ -30,7 +30,8 @@ namespace GlaurungItems.Items
             string spentEnemyGuid = EnemyGuidDatabase.Entries["spent"];
             int additionalSpent = Random.Range(1, 4);
             int totalOfSpentSpawned = this.numberOfSpentSummoned + additionalSpent;
-            if (isInRoom && user.CurrentRoom.GetActiveEnemies(0) != null)
+            if (isInRoom && user.CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All) != null
+                && user.CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All).Count > 0)
 			{
                 for(int i=0; i< totalOfSpentSpawned; i++)
                 {
