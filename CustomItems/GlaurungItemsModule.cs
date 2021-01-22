@@ -74,7 +74,6 @@ namespace GlaurungItems
                 PeacemakerCarbine.Add();
                 SwissArmyRifle.Add();
                 
-
                 PrismaticField.Init();
                 TurncoatRounds.Init();
                 Linc.Add();
