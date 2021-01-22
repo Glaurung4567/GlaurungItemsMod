@@ -26,7 +26,7 @@ namespace GlaurungItems.Items
             //These two lines determines the description of your gun, ".SetShortDescription" being the description that appears when you pick up the gun and ".SetLongDescription" being the description in the Ammonomicon entry. 
             gun.SetShortDescription("Room");
             gun.SetLongDescription("A gun prototype made with the intent to switch the places of the user and the target.\n \n" +
-                "After the first few attemps and the death of one too many testers, the creator added as many safeties as he could think of for the user and the target (yes he was really paranoïd), " +
+                "After the first few attemps and the death of one too many testers, the creator added as many safeties as he could think of for the user and the target (yes he was really paranoid), " +
                 "so be warned now the gun doesn't always work.");
             
             // This is required, unless you want to use the sprites of the base gun.

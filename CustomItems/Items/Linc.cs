@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ItemAPI;
 using Gungeon;
+using System;
 
 namespace GlaurungItems.Items
 {
@@ -15,7 +16,7 @@ namespace GlaurungItems.Items
             gun.gameObject.AddComponent<Linc>();
             gun.SetShortDescription("Power is Pizza");
             gun.SetLongDescription("This gun was created by a reborn weapons manufacturing corporation in a distant galaxy. The signature feature of their guns is a smart projectile tracking system. " +
-                "\n \nThis one can fire rounds or a non damaging projectile which mark nearby enemies, which will make the standart projectiles home on marked enemies, one at a time.");
+                "\n \nThis one can fire rounds or a non damaging projectile which mark nearby enemies when it's reloaded with a full mag, which will make the standard projectiles home on marked enemies, one at a time.");
             gun.SetupSprite(null, "linc_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
@@ -34,7 +35,7 @@ namespace GlaurungItems.Items
             gun.gunClass = GunClass.FULLAUTO;
             gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
 
-            gun.quality = PickupObject.ItemQuality.B;
+            gun.quality = PickupObject.ItemQuality.C;
 
             Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
             projectile.gameObject.SetActive(false);
@@ -48,7 +49,6 @@ namespace GlaurungItems.Items
             projectile.baseData.force *= 1f;
             projectile.baseData.range *= 3f;
             projectile.transform.parent = gun.barrelOffset;
-
 
             //projectile.SetProjectileSpriteRight("build_projectile", 5, 5);
 
@@ -114,7 +114,7 @@ namespace GlaurungItems.Items
                 foreach (AIActor actor in actorsInRoom)
                 {
                     //Tools.Print(Vector2.Distance(actor.transform.position, proj.transform.position), "ffffff", true);
-                    if(Vector2.Distance(actor.transform.position, proj.transform.position) <= 3.5f)
+                    if(Vector2.Distance(actor.transform.position, proj.transform.position) <= 3.5f &&  actor.healthHaver && actor.healthHaver.IsAlive)
                     {
                         targetedEnnemies.Add(actor);
                     }
@@ -166,6 +166,22 @@ namespace GlaurungItems.Items
                 {
                     this.HasReloaded = true;
                 }
+                if(gun.CurrentOwner is PlayerController)
+                {
+                    if(oldAmmo < 0 && currAmmo < 0)
+                    {
+                        oldAmmo = currAmmo = gun.CurrentAmmo;
+                    }
+                    else
+                    {
+                        currAmmo = gun.CurrentAmmo;
+                        if(currAmmo > oldAmmo)
+                        {
+                            altFireOn = false;
+                        }
+                        oldAmmo = currAmmo;
+                    }
+                }
             }
         }
 
@@ -215,6 +231,8 @@ namespace GlaurungItems.Items
         }
 
         private bool HasReloaded;
+        private int oldAmmo = -10;
+        private int currAmmo = -10;
         private static int baseMagSize = 20;
         private static float baseAngleVar = 5f;
         private static float baseDmgMultiplier = 4f;

@@ -19,7 +19,7 @@ namespace GlaurungItems.Items
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
 			string shortDesc = "Nom nom nom";
 			//https://www.youtube.com/watch?v=srDKPk-2SjI
-			string longDesc = "Give the user a fraction of the tremendous absorption and copy powers of a strange giant sentient amoeba.";
+			string longDesc = "Gives the user a fraction of the tremendous absorption and copy powers of a strange giant sentient amoeba.";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 1000);
 			item.quality = ItemQuality.S;
@@ -485,6 +485,7 @@ namespace GlaurungItems.Items
 						this.LastOwner.passiveItems.RemoveAt(i);
 						GameUIRoot.Instance.RemovePassiveItemFromDock(pu);
 						DebrisObject deb = pu.Drop(this.LastOwner);
+						pu.GetRidOfMinimapIcon();
 						deb.ForceDestroyAndMaybeRespawn();
 						UnityEngine.Object.Destroy(pu);
 						this.LastOwner.stats.RecalculateStats(this.LastOwner);

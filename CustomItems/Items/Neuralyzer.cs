@@ -77,6 +77,5 @@ namespace GlaurungItems.Items
 
 		private float duration = 5f;
 		private bool wasUsed = false;
-
 	}
 }
