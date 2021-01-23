@@ -120,8 +120,10 @@ namespace GlaurungItems.Items
                 }
                 if (GameStatsManager.Instance.IsRainbowRun && chest.IsRainbowChest)
                 {
-					this.AddStat(PlayerStats.StatType.Curse, 2.5f);
-                }
+					//this.AddStat(PlayerStats.StatType.Curse, 2.5f);
+					user.stats.SetBaseStatValue(PlayerStats.StatType.Curse, user.stats.GetStatValue(PlayerStats.StatType.Curse) + 2f, user);
+
+				}
 				foreach (PickupObject content in contents) 
 				{
 					if (content is Gun) 
