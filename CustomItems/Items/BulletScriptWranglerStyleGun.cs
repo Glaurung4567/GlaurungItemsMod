@@ -18,7 +18,7 @@ namespace GlaurungItems.Items
 			Game.Items.Rename("outdated_gun_mods:gunjuring_encyclopedia", "gl:gunjuring_encyclopedia");
 			gun.gameObject.AddComponent<GunjuringEncyclopedia>();
 			gun.SetShortDescription("Janky");
-			gun.SetLongDescription("A book used by one of the few ArchGunjurers. \n \nIt fires random attack patterns from different Gundead.");
+			gun.SetLongDescription("A book only accessible by one of the few ArchGunjurers. \n \nIt fires random attack patterns from different Gundead.");
 			gun.SetupSprite(null, "book_idle_001", 8);
 			gun.SetAnimationFPS(gun.shootAnimation, 12);
 			GunExt.SetAnimationFPS(gun, gun.reloadAnimation, 12);

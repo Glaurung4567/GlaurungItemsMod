@@ -114,8 +114,9 @@ namespace GlaurungItems.Items
                 foreach (AIActor actor in actorsInRoom)
                 {
                     //Tools.Print(Vector2.Distance(actor.transform.position, proj.transform.position), "ffffff", true);
-                    if(Vector2.Distance(actor.transform.position, proj.transform.position) <= 3.5f &&  actor.healthHaver && actor.healthHaver.IsAlive)
+                    if(Vector2.Distance(actor.transform.position, proj.transform.position) <= 6f &&  actor.healthHaver && actor.healthHaver.IsAlive)
                     {
+                        //Tools.Print(actor.ActorName, "ffffff", true);
                         targetedEnnemies.Add(actor);
                     }
                 }

@@ -502,7 +502,7 @@ namespace GlaurungItems.Items
 			{
 				float nearestEnemyPosition;
 				AIActor nomTarget = user.CurrentRoom.GetNearestEnemy(user.CenterPosition, out nearestEnemyPosition, true, true);
-				if (nomTarget != null && nearestEnemyPosition < 3.5f && nomTarget.healthHaver
+				if (nomTarget != null && nearestEnemyPosition < 4.5f && nomTarget.healthHaver
 					&& !nomTarget.healthHaver.IsBoss && nomTarget.healthHaver.IsAlive) return true;
 			}
 			return false;
