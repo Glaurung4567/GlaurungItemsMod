@@ -63,7 +63,7 @@ namespace GlaurungItems.Items
         {
             //Tools.Print(chargeFraction, "ffffff", true);
             if(gun.CurrentAmmo > 0 && chargeFraction > 0 && chargeFraction < 1) {
-                if (chargeFraction >= 0.1 && chargeFraction < 0.3)
+                if (chargeFraction >= 0.08 && chargeFraction < 0.28)
                 {
                     Projectile component = this.GetGrenadeProjectile(player);
                     if (component != null)
@@ -85,7 +85,7 @@ namespace GlaurungItems.Items
                     }
                     this.GunConsumeAmmo();
                 }
-                else if (chargeFraction >= 0.3 && chargeFraction < 0.6)
+                else if (chargeFraction >= 0.28 && chargeFraction < 0.58)
                 {
                     Projectile component = this.GetGrenadeProjectile(player);
                     if (component != null)
@@ -103,7 +103,7 @@ namespace GlaurungItems.Items
                     }
                     this.GunConsumeAmmo();
                 }
-                else if (chargeFraction >= 0.6 && chargeFraction < 0.95)
+                else if (chargeFraction >= 0.58 && chargeFraction < 0.93)
                 {
                     Projectile component = this.GetGrenadeProjectile(player);
                     if (component != null)
@@ -119,7 +119,7 @@ namespace GlaurungItems.Items
                     }
                     this.GunConsumeAmmo();
                 }
-                else if (chargeFraction >= 0.95 && chargeFraction < 1)
+                else if (chargeFraction >= 0.93 && chargeFraction < 1)
                 {
                     Projectile component = this.GetGrenadeProjectile(player);
                     if (component != null)
