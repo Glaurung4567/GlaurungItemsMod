@@ -187,8 +187,8 @@ namespace GlaurungItems.Items
 			foreach(Gun gun in user.inventory.AllGuns) { excludedGunsIds.Add(gun.PickupObjectId); }
 
 			LootEngine.TryGiveGunToPlayer(PickupObjectDatabase.GetRandomGunOfQualities(new System.Random(), excludedGunsIds, selectedQuality).gameObject, user, true);
-
-			this.AddStat(PlayerStats.StatType.Curse, 1f);
+			user.stats.SetBaseStatValue(PlayerStats.StatType.Curse, user.stats.GetStatValue(PlayerStats.StatType.Curse) + 0.5f, user);
+			//this.AddStat(PlayerStats.StatType.Curse, 1f);
 			user.stats.RecalculateStats(user, false);
 
 			yoinkedTargets.Add(yoinkTarget);

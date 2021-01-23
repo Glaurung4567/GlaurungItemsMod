@@ -89,7 +89,7 @@ namespace GlaurungItems.Items
                 {
                     aiactor.OverrideHitEnemies = true;
                     aiactor.CollisionDamage = 1f;
-                    aiactor.CollisionDamageTypes = (CoreDamageTypes)64;
+                    aiactor.CollisionDamageTypes = CoreDamageTypes.Electric;
                 }
                 if (aiactor.gameObject.GetComponent<SpawnEnemyOnDeath>()) // to deal with spent spawning other spent on death
                 {
