@@ -17,7 +17,7 @@ namespace GlaurungItems.Items
 			KillStreakBullets item = gameObject.AddComponent<KillStreakBullets>();
 			ItemBuilder.AddSpriteToObject(name, resourcePath, gameObject);
 			string shortDesc = "Monster Kill";
-			string longDesc = "Give boosts the more kills you get in a short time window. Theses bullets were used by a maniac who ravished in endless slaughter.";
+			string longDesc = "Gives boosts the more kills you get in a short time window. These bullets were used by a maniac who ravished in endless slaughter.";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.quality = PickupObject.ItemQuality.A;
 			KillStreakBullets.ID = item.PickupObjectId;
