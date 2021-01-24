@@ -68,12 +68,13 @@ namespace GlaurungItems.Items
 			if (base.LastOwner && isActive)
 			{
 				PlayerController user = base.LastOwner;
-				if (this.CurrentDamageCooldown < 1)
+				if (this.CurrentDamageCooldown > 0)
 				{
 					if (user.IsDodgeRolling && !isCurrentlyDodgeRolling)
 					{
 						if (playerPositionsDuringActivation.Count > 0)
 						{
+							this.CurrentDamageCooldown -= 100f;
 							isCurrentlyDodgeRolling = true;
 							actions.Add(actionsToBeRecorded.Dodgeroll);
 							dodgeRollDirection.Add(user.transform.position - playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
@@ -83,14 +84,22 @@ namespace GlaurungItems.Items
 					else if (user.IsFiring && !user.IsDodgeRolling)
 					{
 						isCurrentlyDodgeRolling = false;
+
 						actions.Add(actionsToBeRecorded.Shooting);
 						aimDirectionWhileFiring.Add(user.unadjustedAimPoint.XY() - user.CenterPosition);
+						this.CurrentDamageCooldown -= 100f;
 					}
 					else if (!user.IsDodgeRolling)
 					{
 						isCurrentlyDodgeRolling = false;
+
 						actions.Add(actionsToBeRecorded.Moving);
 						playerPositionsDuringActivation.Add(user.transform.position);
+						int lenPos = playerPositionsDuringActivation.Count;
+						if (lenPos > 1 && playerPositionsDuringActivation[lenPos - 2] != playerPositionsDuringActivation[lenPos -1])
+                        {
+							this.CurrentDamageCooldown -= 2f;
+						}
 					}
 				}
 
@@ -120,6 +129,7 @@ namespace GlaurungItems.Items
 					user.forceAimPoint = aimDirectionWhileFiring[0];
 					user.CurrentGun.ForceFireProjectile(user.CurrentGun.DefaultModule.projectiles[0]);
 					yield return null;
+					user.forceAimPoint = null;
 					aimDirectionWhileFiring.RemoveAt(0);
 				}
 			}
