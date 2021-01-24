@@ -80,9 +80,7 @@ namespace GlaurungItems
                 GunzerkingPotion.Init();
                 Poyo.Init();
 
-                //fix poyo and linc
-
-                //Turn.Init();
+                Turn.Init();
                 //InfiltratorRounds.Init();
 
                 //GunDeadArmyStronghold.Init();

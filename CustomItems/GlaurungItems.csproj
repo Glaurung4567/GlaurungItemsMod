@@ -90,7 +90,7 @@
     <Compile Include="Items\old\OverkillBullets.cs" />
     <Compile Include="Items\Poyo.cs" />
     <Compile Include="Items\SwissArmyRifle.cs" />
-    <Compile Include="Items\Turn.cs" />
+    <Compile Include="Items\old\Turn.cs" />
     <Compile Include="Items\TurncoatRounds.cs" />
     <Compile Include="Items\old\Kragun.cs" />
     <Compile Include="Items\MatriochkAmmolet.cs" />

@@ -923,8 +923,7 @@ namespace GlaurungItems.Items
 
 		/*
 		dead blow
-		cubulon
-		cubulead
+		r&g dept enemies
 		*/
 
 	}

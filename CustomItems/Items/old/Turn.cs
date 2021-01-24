@@ -18,15 +18,15 @@ namespace GlaurungItems.Items
 	{
 		public static void Init()
 		{
-			string text = "Turn";
+			string text = "Turns";
 			string resourcePath = "GlaurungItems/Resources/neuralyzer";
 			GameObject gameObject = new GameObject(text);
-			Neuralyzer item = gameObject.AddComponent<Neuralyzer>();
+			Turn item = gameObject.AddComponent<Turn>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
 			string shortDesc = "In circles";
 			string longDesc = "";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 500f);
+			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 0f);
 			item.quality = ItemQuality.A;
 		}
 
@@ -34,10 +34,15 @@ namespace GlaurungItems.Items
 		{
             if (!isActive)
             {
+				actions = new List<string>();
 				isActive = true;
             }
             else
             {
+				foreach(string act in actions)
+                {
+					Tools.Print(act, "ffffff", true);
+                }
 				isActive = false;
             }
 		}
@@ -57,25 +62,35 @@ namespace GlaurungItems.Items
         public override void Update()
         {
             base.Update();
-            if (base.LastOwner)
+            if (base.LastOwner && isActive)
             {
 				PlayerController user = base.LastOwner;
-                if (user.IsDodgeRolling)
+                if (user.IsDodgeRolling && !isCurrentlyDodgeRolling)
                 {
-
-                }
-				else if (user.IsFiring)
+					isCurrentlyDodgeRolling = true;
+					actions.Add(actionsToBeRecorded[0]);
+				}
+				else if (user.IsFiring && !user.IsDodgeRolling)
                 {
-
-                }
-				else if (!user.IsStationary)
+					isCurrentlyDodgeRolling = false;
+					actions.Add(actionsToBeRecorded[1]);
+				}
+				else if (!user.IsDodgeRolling)
                 {
-
-                }
-            }
+					isCurrentlyDodgeRolling = false;
+					actions.Add(actionsToBeRecorded[2]);
+				}
+			}
         }
 
         private bool isActive = false;
+		private bool isCurrentlyDodgeRolling = false;
 		private List<string> actions = new List<string>();
+		private readonly static string[] actionsToBeRecorded = new string[]
+		{
+			"dodgeroll",
+			"shooting",
+			"moving",
+		};
 	}
 }
