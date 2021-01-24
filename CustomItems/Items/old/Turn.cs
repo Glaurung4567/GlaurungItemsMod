@@ -13,6 +13,14 @@ cannot interact with interactables while using turn
 immunity to fire/poison/contact dmg while using turn
 give the transistor during turn and lock it
 
+To do
+Recharge item with actions
+Stop time
+Give transistor, prevent drop and lock
+Fire gun save
+Make user intangible
+Prevent interactions 
+
 */
 namespace GlaurungItems.Items
 {
@@ -20,7 +28,7 @@ namespace GlaurungItems.Items
 	{
 		public static void Init()
 		{
-			string text = "Turns";
+			string text = "Transistor";
 			string resourcePath = "GlaurungItems/Resources/neuralyzer";
 			GameObject gameObject = new GameObject(text);
 			Turn item = gameObject.AddComponent<Turn>();
@@ -28,7 +36,7 @@ namespace GlaurungItems.Items
 			string shortDesc = "In circles";
 			string longDesc = "";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 0f);
+			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 1000f);
 			item.quality = ItemQuality.B;
 		}
 
@@ -45,12 +53,12 @@ namespace GlaurungItems.Items
             else
             {
 				user.WarpToPoint(startingTurnPosition);
-				GameManager.Instance.StartCoroutine(doTurn(user));
+				GameManager.Instance.StartCoroutine(DoTurn(user));
 				isActive = false;
 			}
 		}
 
-        private IEnumerator doTurn(PlayerController user)
+        private IEnumerator DoTurn(PlayerController user)
         {
 			foreach (actionsToBeRecorded act in actions)
 			{
@@ -59,11 +67,10 @@ namespace GlaurungItems.Items
 				{
 					user.ForceStartDodgeRoll(dodgeRollDirection[0]);
 					dodgeRollDirection.RemoveAt(0);
-					yield return new WaitForSeconds(1f);
+					yield return new WaitForSeconds(0.8f);
 				}
 				if (act == actionsToBeRecorded.Moving)
 				{
-
 					user.ForceMoveToPoint(playerPositionsDuringActivation[0]);
 					yield return null;
 					playerPositionsDuringActivation.RemoveAt(0);
@@ -74,7 +81,7 @@ namespace GlaurungItems.Items
 
         public override bool CanBeUsed(PlayerController user)
 		{
-			return !user.IsInCombat && !user.HasPassiveItem(436);
+			return !user.IsInCombat;// && !user.HasPassiveItem(436);
 		}
 
 		protected override void OnPreDrop(PlayerController user)
@@ -89,28 +96,32 @@ namespace GlaurungItems.Items
             if (base.LastOwner && isActive)
             {
 				PlayerController user = base.LastOwner;
-                if (user.IsDodgeRolling && !isCurrentlyDodgeRolling)
+				if (this.CurrentDamageCooldown < 1)
                 {
-					if(playerPositionsDuringActivation.Count > 0)
-                    {
-						isCurrentlyDodgeRolling = true;
-						actions.Add(actionsToBeRecorded.Dodgeroll);
-						dodgeRollDirection.Add(user.transform.position - playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
+					if (user.IsDodgeRolling && !isCurrentlyDodgeRolling)
+					{
+						if (playerPositionsDuringActivation.Count > 0)
+						{
+							isCurrentlyDodgeRolling = true;
+							actions.Add(actionsToBeRecorded.Dodgeroll);
+							dodgeRollDirection.Add(user.transform.position - playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
+						}
+
 					}
-					
+					else if (user.IsFiring && !user.IsDodgeRolling)
+					{
+						isCurrentlyDodgeRolling = false;
+						actions.Add(actionsToBeRecorded.Shooting);
+
+					}
+					else if (!user.IsDodgeRolling)
+					{
+						isCurrentlyDodgeRolling = false;
+						actions.Add(actionsToBeRecorded.Moving);
+						playerPositionsDuringActivation.Add(user.transform.position);
+					}
 				}
-				else if (user.IsFiring && !user.IsDodgeRolling)
-                {
-					isCurrentlyDodgeRolling = false;
-					actions.Add(actionsToBeRecorded.Shooting);
-					
-				}
-				else if (!user.IsDodgeRolling)
-                {
-					isCurrentlyDodgeRolling = false;
-					actions.Add(actionsToBeRecorded.Moving);
-					playerPositionsDuringActivation.Add(user.transform.position);
-				}
+				
 			}
         }
 
