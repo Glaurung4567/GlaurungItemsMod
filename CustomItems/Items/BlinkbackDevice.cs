@@ -1,5 +1,4 @@
-﻿using Dungeonator;
-using ItemAPI;
+﻿using ItemAPI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -302,7 +301,6 @@ namespace GlaurungItems.Items
 			base.OnDestroy();
 		}
 
-		// Token: 0x0600018C RID: 396 RVA: 0x0000BE94 File Offset: 0x0000A094
 		private void SpawnNewShadow()
 		{
 			bool flag = this.m_inactiveShadows.Count == 0;
@@ -360,7 +358,6 @@ namespace GlaurungItems.Items
 			}
 		}
 
-		// Token: 0x0600018D RID: 397 RVA: 0x0000C194 File Offset: 0x0000A394
 		private void CreateInactiveShadow()
 		{
 			GameObject gameObject = new GameObject("after image");

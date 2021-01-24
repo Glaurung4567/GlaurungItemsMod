@@ -23,7 +23,7 @@ namespace GlaurungItems.Items
 			item.quality = PickupObject.ItemQuality.C;
 			item.AddPassiveStatModifier(PlayerStats.StatType.Accuracy, 0.3f, StatModifier.ModifyMethod.ADDITIVE);
 			item.AddPassiveStatModifier(PlayerStats.StatType.Coolness, -2f, StatModifier.ModifyMethod.ADDITIVE);
-			item.AddPassiveStatModifier(PlayerStats.StatType.DodgeRollDistanceMultiplier, -1.2f, StatModifier.ModifyMethod.MULTIPLICATIVE);
+			item.AddPassiveStatModifier(PlayerStats.StatType.DodgeRollDistanceMultiplier, -1f, StatModifier.ModifyMethod.MULTIPLICATIVE);
 		}
 
 		public override void Pickup(PlayerController player)

@@ -13,7 +13,7 @@ namespace GlaurungItems.Items
 		public static void Init()
 		{
 			string text = "Poyo";
-			string resourcePath = "GlaurungItems/Resources/neuralyzer";
+			string resourcePath = "GlaurungItems/Resources/poyo";
 			GameObject gameObject = new GameObject(text);
 			Poyo item = gameObject.AddComponent<Poyo>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
