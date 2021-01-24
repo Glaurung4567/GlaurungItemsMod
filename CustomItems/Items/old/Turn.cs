@@ -35,6 +35,7 @@ namespace GlaurungItems.Items
             if (!isActive)
             {
 				actions = new List<string>();
+				startingTurnPosition = user.transform.position;
 				isActive = true;
             }
             else
@@ -85,6 +86,7 @@ namespace GlaurungItems.Items
 
         private bool isActive = false;
 		private bool isCurrentlyDodgeRolling = false;
+		private Vector3 startingTurnPosition;
 		private List<string> actions = new List<string>();
 		private readonly static string[] actionsToBeRecorded = new string[]
 		{
