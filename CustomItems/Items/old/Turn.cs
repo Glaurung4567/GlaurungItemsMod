@@ -11,7 +11,7 @@ on second use tp back to where the user was then redo the travel really fast
 
 cannot interact with interactables while using turn
 immunity to fire/poison/contact dmg while using turn
-give the transistor during turn and lock it
+give the transistor during turn and lock it (charge weapon)
 
 To do
 Recharge item with actions
@@ -20,6 +20,7 @@ Give transistor, prevent drop and lock
 Fire gun save
 Make user intangible
 Prevent interactions 
+Rewind action
 
 */
 namespace GlaurungItems.Items
@@ -28,7 +29,7 @@ namespace GlaurungItems.Items
 	{
 		public static void Init()
 		{
-			string text = "Transistor";
+			string text = "Turns";
 			string resourcePath = "GlaurungItems/Resources/neuralyzer";
 			GameObject gameObject = new GameObject(text);
 			Turn item = gameObject.AddComponent<Turn>();
@@ -44,10 +45,13 @@ namespace GlaurungItems.Items
 		{
             if (!isActive)
             {
+				startingTurnPosition = user.transform.position;
+
 				actions = new List<actionsToBeRecorded>();
 				dodgeRollDirection = new List<Vector2>();
 				playerPositionsDuringActivation = new List<Vector3>();
-				startingTurnPosition = user.transform.position;
+				aimDirectionWhileFiring = new List<Vector2>();
+
 				isActive = true;
             }
             else
@@ -58,7 +62,43 @@ namespace GlaurungItems.Items
 			}
 		}
 
-        private IEnumerator DoTurn(PlayerController user)
+		public override void Update()
+		{
+			base.Update();
+			if (base.LastOwner && isActive)
+			{
+				PlayerController user = base.LastOwner;
+				if (this.CurrentDamageCooldown < 1)
+				{
+					if (user.IsDodgeRolling && !isCurrentlyDodgeRolling)
+					{
+						if (playerPositionsDuringActivation.Count > 0)
+						{
+							isCurrentlyDodgeRolling = true;
+							actions.Add(actionsToBeRecorded.Dodgeroll);
+							dodgeRollDirection.Add(user.transform.position - playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
+						}
+
+					}
+					else if (user.IsFiring && !user.IsDodgeRolling)
+					{
+						isCurrentlyDodgeRolling = false;
+						actions.Add(actionsToBeRecorded.Shooting);
+						aimDirectionWhileFiring.Add(user.unadjustedAimPoint.XY() - user.CenterPosition);
+					}
+					else if (!user.IsDodgeRolling)
+					{
+						isCurrentlyDodgeRolling = false;
+						actions.Add(actionsToBeRecorded.Moving);
+						playerPositionsDuringActivation.Add(user.transform.position);
+					}
+				}
+
+			}
+		}
+
+
+		private IEnumerator DoTurn(PlayerController user)
         {
 			foreach (actionsToBeRecorded act in actions)
 			{
@@ -75,6 +115,13 @@ namespace GlaurungItems.Items
 					yield return null;
 					playerPositionsDuringActivation.RemoveAt(0);
 				}
+				if(act == actionsToBeRecorded.Shooting)
+                {
+					user.forceAimPoint = aimDirectionWhileFiring[0];
+					user.CurrentGun.ForceFireProjectile(user.CurrentGun.DefaultModule.projectiles[0]);
+					yield return null;
+					aimDirectionWhileFiring.RemoveAt(0);
+				}
 			}
 			yield break;
 		}
@@ -90,40 +137,6 @@ namespace GlaurungItems.Items
 			base.OnPreDrop(user);
 		}
 
-        public override void Update()
-        {
-            base.Update();
-            if (base.LastOwner && isActive)
-            {
-				PlayerController user = base.LastOwner;
-				if (this.CurrentDamageCooldown < 1)
-                {
-					if (user.IsDodgeRolling && !isCurrentlyDodgeRolling)
-					{
-						if (playerPositionsDuringActivation.Count > 0)
-						{
-							isCurrentlyDodgeRolling = true;
-							actions.Add(actionsToBeRecorded.Dodgeroll);
-							dodgeRollDirection.Add(user.transform.position - playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
-						}
-
-					}
-					else if (user.IsFiring && !user.IsDodgeRolling)
-					{
-						isCurrentlyDodgeRolling = false;
-						actions.Add(actionsToBeRecorded.Shooting);
-
-					}
-					else if (!user.IsDodgeRolling)
-					{
-						isCurrentlyDodgeRolling = false;
-						actions.Add(actionsToBeRecorded.Moving);
-						playerPositionsDuringActivation.Add(user.transform.position);
-					}
-				}
-				
-			}
-        }
 
         private bool isActive = false;
 		private bool isCurrentlyDodgeRolling = false;
@@ -138,5 +151,6 @@ namespace GlaurungItems.Items
 
 		private List<Vector2> dodgeRollDirection = new List<Vector2>();
 		private List<Vector3> playerPositionsDuringActivation = new List<Vector3>();
+		private List<Vector2> aimDirectionWhileFiring = new List<Vector2>();
     }
 }
