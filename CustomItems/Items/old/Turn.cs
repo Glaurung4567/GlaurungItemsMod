@@ -14,13 +14,14 @@ immunity to fire/poison/contact dmg while using turn
 give the transistor during turn and lock it (charge weapon)
 
 To do
-Recharge item with actions
+Recharge item with actions ok
 Stop time
 Give transistor, prevent drop and lock
 Fire gun save
 Make user intangible
 Prevent interactions 
-Rewind action
+Prevent blanks
+Cancel action
 
 */
 namespace GlaurungItems.Items
@@ -86,7 +87,8 @@ namespace GlaurungItems.Items
 						isCurrentlyDodgeRolling = false;
 
 						actions.Add(actionsToBeRecorded.Shooting);
-						aimDirectionWhileFiring.Add(user.unadjustedAimPoint.XY() - user.CenterPosition);
+						Vector2 aim = user.unadjustedAimPoint.XY() - user.CenterPosition;
+						aimDirectionWhileFiring.Add(aim);
 						this.CurrentDamageCooldown -= 100f;
 					}
 					else if (!user.IsDodgeRolling)
@@ -109,6 +111,7 @@ namespace GlaurungItems.Items
 
 		private IEnumerator DoTurn(PlayerController user)
         {
+			user.SetInputOverride("turn");
 			foreach (actionsToBeRecorded act in actions)
 			{
 				//Tools.Print(act, "ffffff", true);
@@ -133,6 +136,7 @@ namespace GlaurungItems.Items
 					aimDirectionWhileFiring.RemoveAt(0);
 				}
 			}
+			user.ClearInputOverride("turn");
 			yield break;
 		}
 
