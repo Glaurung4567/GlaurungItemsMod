@@ -855,6 +855,10 @@ namespace EnemyAPI
 				"metal_cube_guy",
 				"ba928393c8ed47819c2c5f593100a5bc"
 			},
+			{
+				"test_dummy",
+				"5fa8c86a65234b538cd022f726af2aea"
+			},
 		};
 	}
 }

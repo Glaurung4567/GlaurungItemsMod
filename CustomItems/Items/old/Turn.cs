@@ -87,7 +87,7 @@ namespace GlaurungItems.Items
 						isCurrentlyDodgeRolling = false;
 
 						actions.Add(actionsToBeRecorded.Shooting);
-						Vector2 aim = user.unadjustedAimPoint.XY() - user.CenterPosition;
+						Vector2 aim = new Vector2((user.unadjustedAimPoint.XY() - user.CenterPosition).x, (user.unadjustedAimPoint.XY() - user.CenterPosition).y);
 						aimDirectionWhileFiring.Add(aim);
 						this.CurrentDamageCooldown -= 100f;
 					}
@@ -100,7 +100,7 @@ namespace GlaurungItems.Items
 						int lenPos = playerPositionsDuringActivation.Count;
 						if (lenPos > 1 && playerPositionsDuringActivation[lenPos - 2] != playerPositionsDuringActivation[lenPos -1])
                         {
-							this.CurrentDamageCooldown -= 2f;
+							this.CurrentDamageCooldown -= .5f;
 						}
 					}
 				}
@@ -119,23 +119,36 @@ namespace GlaurungItems.Items
 				{
 					user.ForceStartDodgeRoll(dodgeRollDirection[0]);
 					dodgeRollDirection.RemoveAt(0);
-					yield return new WaitForSeconds(0.8f);
+					yield return new WaitForSeconds(1f);
 				}
+
 				if (act == actionsToBeRecorded.Moving)
 				{
-					user.ForceMoveToPoint(playerPositionsDuringActivation[0]);
+					if(playerPositionsDuringActivation.Count > 1 && playerPositionsDuringActivation[0] != playerPositionsDuringActivation[1])
+                    {
+						user.ForceMoveToPoint(playerPositionsDuringActivation[0]);
+					}else if (playerPositionsDuringActivation.Count == 1)
+                    {
+						user.ForceMoveToPoint(playerPositionsDuringActivation[0]);
+					}
 					yield return null;
 					playerPositionsDuringActivation.RemoveAt(0);
 				}
+
 				if(act == actionsToBeRecorded.Shooting)
                 {
-					user.forceAimPoint = aimDirectionWhileFiring[0];
-					user.CurrentGun.ForceFireProjectile(user.CurrentGun.DefaultModule.projectiles[0]);
+					user.ClearInputOverride("turn");
 					yield return null;
+					//user.forceAimPoint = aimDirectionWhileFiring[0];
+					user.CurrentGun.HandleAimRotation(aimDirectionWhileFiring[0], false, 0);
+					user.CurrentGun.ForceFireProjectile(user.CurrentGun.DefaultModule.projectiles[0]);
 					user.forceAimPoint = null;
+					yield return null;
+					user.SetInputOverride("turn");
 					aimDirectionWhileFiring.RemoveAt(0);
 				}
 			}
+			yield return null;
 			user.ClearInputOverride("turn");
 			yield break;
 		}
