@@ -16,6 +16,7 @@ give the transistor during turn and lock it (charge weapon)
 To do
 Recharge item with actions ok
 Stop time
+increase game speed
 Give transistor, prevent drop and lock
 Fire gun save
 Make user intangible
@@ -47,23 +48,29 @@ namespace GlaurungItems.Items
             if (!isActive)
             {
 				startingTurnPosition = user.transform.position;
-
+                user.PostProcessProjectile += User_PostProcessProjectile;
+				
 				actions = new List<actionsToBeRecorded>();
 				dodgeRollDirection = new List<Vector2>();
 				playerPositionsDuringActivation = new List<Vector3>();
 				aimDirectionWhileFiring = new List<Vector2>();
+				gunAngleWhenFired = new List<float>();
+				projsFired = new List<Projectile>();
 
 				isActive = true;
             }
             else
             {
 				user.WarpToPoint(startingTurnPosition);
+				user.PostProcessProjectile -= User_PostProcessProjectile;
 				GameManager.Instance.StartCoroutine(DoTurn(user));
 				isActive = false;
 			}
 		}
 
-		public override void Update()
+
+
+        public override void Update()
 		{
 			base.Update();
 			if (base.LastOwner && isActive)
@@ -87,8 +94,9 @@ namespace GlaurungItems.Items
 						isCurrentlyDodgeRolling = false;
 
 						actions.Add(actionsToBeRecorded.Shooting);
-						Vector2 aim = new Vector2((user.unadjustedAimPoint.XY() - user.CenterPosition).x, (user.unadjustedAimPoint.XY() - user.CenterPosition).y);
+						Vector2 aim = (user.unadjustedAimPoint.XY() - user.CenterPosition);
 						aimDirectionWhileFiring.Add(aim);
+						gunAngleWhenFired.Add(user.CurrentGun.CurrentAngle);
 						this.CurrentDamageCooldown -= 100f;
 					}
 					else if (!user.IsDodgeRolling)
@@ -112,9 +120,11 @@ namespace GlaurungItems.Items
 		private IEnumerator DoTurn(PlayerController user)
         {
 			user.SetInputOverride("turn");
+			user.CurrentInputState = PlayerInputState.NoInput;
+
+
 			foreach (actionsToBeRecorded act in actions)
 			{
-				//Tools.Print(act, "ffffff", true);
 				if (act == actionsToBeRecorded.Dodgeroll)
 				{
 					user.ForceStartDodgeRoll(dodgeRollDirection[0]);
@@ -137,18 +147,25 @@ namespace GlaurungItems.Items
 
 				if(act == actionsToBeRecorded.Shooting)
                 {
+					/*
 					user.ClearInputOverride("turn");
 					yield return null;
-					//user.forceAimPoint = aimDirectionWhileFiring[0];
-					user.CurrentGun.HandleAimRotation(aimDirectionWhileFiring[0], false, 0);
+					user.forceAimPoint = aimDirectionWhileFiring[0];
 					user.CurrentGun.ForceFireProjectile(user.CurrentGun.DefaultModule.projectiles[0]);
 					user.forceAimPoint = null;
 					yield return null;
 					user.SetInputOverride("turn");
 					aimDirectionWhileFiring.RemoveAt(0);
+					*/
+					GameObject gameObject = SpawnManager.SpawnProjectile(user.CurrentGun.DefaultModule.projectiles[0].gameObject, user.sprite.WorldCenter, Quaternion.Euler(0f, 0f, gunAngleWhenFired[0]), true);
+					Projectile projectile = gameObject.GetComponent<Projectile>();
+					user.DoPostProcessProjectile(projectile);
+					projsFired.RemoveAt(0);
+					gunAngleWhenFired.RemoveAt(0);
 				}
 			}
 			yield return null;
+			user.CurrentInputState = PlayerInputState.AllInput;
 			user.ClearInputOverride("turn");
 			yield break;
 		}
@@ -164,10 +181,29 @@ namespace GlaurungItems.Items
 			base.OnPreDrop(user);
 		}
 
+		private void User_PostProcessProjectile(Projectile proj, float arg2)
+		{
+            if (!hasFired)
+            {
+				hasFired = true;
+				projsFired.Add(proj);
+				GameManager.Instance.StartCoroutine(ResetHasFired());
+			}
+			proj.DieInAir(true, false, false);
+		}
+
+		private IEnumerator ResetHasFired()
+        {
+			yield return null;
+			hasFired = false;
+			yield break;
+		}
 
         private bool isActive = false;
 		private bool isCurrentlyDodgeRolling = false;
+		private bool hasFired = false;
 		private Vector3 startingTurnPosition;
+
 		private enum actionsToBeRecorded
 		{
 			Dodgeroll,
@@ -179,5 +215,7 @@ namespace GlaurungItems.Items
 		private List<Vector2> dodgeRollDirection = new List<Vector2>();
 		private List<Vector3> playerPositionsDuringActivation = new List<Vector3>();
 		private List<Vector2> aimDirectionWhileFiring = new List<Vector2>();
+		private List<float> gunAngleWhenFired = new List<float>();
+		private List<Projectile> projsFired = new List<Projectile>();
     }
 }
