@@ -104,7 +104,6 @@ namespace GlaurungItems.Items
 					{
 						isCurrentlyDodgeRolling = false;
 
-
 						int lenPos = playerPositionsDuringActivation.Count;
 						if (lenPos > 1 && playerPositionsDuringActivation[lenPos - 1] != user.transform.position)
                         {
@@ -112,7 +111,7 @@ namespace GlaurungItems.Items
 							playerPositionsDuringActivation.Add(user.transform.position);
 							this.CurrentDamageCooldown -= 1f;
                         }
-                        else
+                        else if(lenPos <= 1)
                         {
 							actions.Add(actionsToBeRecorded.Moving);
 							playerPositionsDuringActivation.Add(user.transform.position);
