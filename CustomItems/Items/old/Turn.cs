@@ -15,9 +15,9 @@ give the transistor during turn and lock it (charge weapon)
 
 To do
 Recharge item with actions ok
-remove idle movement
+remove idle movement ok
 Stop time
-increase game speed
+increase game speed ok
 Give transistor, prevent drop and lock
 Fire gun save
 Make user intangible
@@ -58,18 +58,35 @@ namespace GlaurungItems.Items
 				gunAngleWhenFired = new List<float>();
 				projsFired = new List<Projectile>();
 
+                if (user.IsFlying)
+                {
+					wasFlyingAtTheStart = true;
+                }
+                else
+                {
+					user.SetIsFlying(true, "turn");
+                }
+
 				isActive = true;
             }
             else
             {
 				user.WarpToPoint(startingTurnPosition);
+
 				user.PostProcessProjectile -= User_PostProcessProjectile;
+				if (!wasFlyingAtTheStart)
+                {
+					user.SetIsFlying(false, "turn");
+                }
+                else
+                {
+					wasFlyingAtTheStart = false;
+                }
+
 				GameManager.Instance.StartCoroutine(DoTurn(user));
 				isActive = false;
 			}
 		}
-
-
 
         public override void Update()
 		{
@@ -122,7 +139,6 @@ namespace GlaurungItems.Items
 			}
 		}
 
-
 		private IEnumerator DoTurn(PlayerController user)
         {
 			user.SetInputOverride("turn");
@@ -174,6 +190,7 @@ namespace GlaurungItems.Items
 					*/
 				}
 			}
+
 			yield return null;
 			Time.timeScale = 1;
 			user.CurrentInputState = PlayerInputState.AllInput;
@@ -183,7 +200,12 @@ namespace GlaurungItems.Items
 
         public override bool CanBeUsed(PlayerController user)
 		{
-			return !user.IsInCombat;// && !user.HasPassiveItem(436);
+			return !user.IsInCombat 
+				&& user.CurrentRoom != null
+				&& !user.CurrentRoom.IsSealed
+				//&& ((!isActive && !user.inventory.GunLocked.Value) || (isActive && user.inventory.GunLocked.Value))
+				&& !user.HasPassiveItem(436) //bloodied scarf
+				;
 		}
 
 		protected override void OnPreDrop(PlayerController user)
@@ -213,6 +235,7 @@ namespace GlaurungItems.Items
         private bool isActive = false;
 		private bool isCurrentlyDodgeRolling = false;
 		private bool hasFired = false;
+		private bool wasFlyingAtTheStart = false;
 		private Vector3 startingTurnPosition;
 
 		private enum actionsToBeRecorded
