@@ -15,6 +15,7 @@ give the transistor during turn and lock it (charge weapon)
 
 To do
 Recharge item with actions ok
+remove idle movement
 Stop time
 increase game speed
 Give transistor, prevent drop and lock
@@ -94,7 +95,7 @@ namespace GlaurungItems.Items
 						isCurrentlyDodgeRolling = false;
 
 						actions.Add(actionsToBeRecorded.Shooting);
-						Vector2 aim = (user.unadjustedAimPoint.XY() - user.CenterPosition);
+						Vector2 aim = (user.unadjustedAimPoint.XY());// - user.CenterPosition);
 						aimDirectionWhileFiring.Add(aim);
 						gunAngleWhenFired.Add(user.CurrentGun.CurrentAngle);
 						this.CurrentDamageCooldown -= 100f;
@@ -103,12 +104,18 @@ namespace GlaurungItems.Items
 					{
 						isCurrentlyDodgeRolling = false;
 
-						actions.Add(actionsToBeRecorded.Moving);
-						playerPositionsDuringActivation.Add(user.transform.position);
+
 						int lenPos = playerPositionsDuringActivation.Count;
-						if (lenPos > 1 && playerPositionsDuringActivation[lenPos - 2] != playerPositionsDuringActivation[lenPos -1])
+						if (lenPos > 1 && playerPositionsDuringActivation[lenPos - 1] != user.transform.position)
                         {
-							this.CurrentDamageCooldown -= .5f;
+							actions.Add(actionsToBeRecorded.Moving);
+							playerPositionsDuringActivation.Add(user.transform.position);
+							this.CurrentDamageCooldown -= 1f;
+                        }
+                        else
+                        {
+							actions.Add(actionsToBeRecorded.Moving);
+							playerPositionsDuringActivation.Add(user.transform.position);
 						}
 					}
 				}
@@ -121,8 +128,7 @@ namespace GlaurungItems.Items
         {
 			user.SetInputOverride("turn");
 			user.CurrentInputState = PlayerInputState.NoInput;
-
-
+			Time.timeScale = 1.2f;
 			foreach (actionsToBeRecorded act in actions)
 			{
 				if (act == actionsToBeRecorded.Dodgeroll)
@@ -147,24 +153,30 @@ namespace GlaurungItems.Items
 
 				if(act == actionsToBeRecorded.Shooting)
                 {
-					/*
-					user.ClearInputOverride("turn");
+					user.unadjustedAimPoint = aimDirectionWhileFiring[0];
+					user.ForceStaticFaceDirection(aimDirectionWhileFiring[0]);
+					GameObject gameObject = SpawnManager.SpawnProjectile(user.CurrentGun.DefaultModule.projectiles[0].gameObject, user.sprite.WorldCenter, Quaternion.Euler(0f, 0f, gunAngleWhenFired[0]), true);
+					Projectile projectile = gameObject.GetComponent<Projectile>();
+					projectile.transform.parent = user.CurrentGun.barrelOffset;
+					user.DoPostProcessProjectile(projectile);
+					//user.CurrentGun.HandleAimRotation(aimDirectionWhileFiring[0]);
+					//user.CurrentGun.ForceFireProjectile(user.CurrentGun.DefaultModule.projectiles[0]);
+					//user.forceAimPoint = null;
 					yield return null;
-					user.forceAimPoint = aimDirectionWhileFiring[0];
-					user.CurrentGun.ForceFireProjectile(user.CurrentGun.DefaultModule.projectiles[0]);
-					user.forceAimPoint = null;
-					yield return null;
-					user.SetInputOverride("turn");
 					aimDirectionWhileFiring.RemoveAt(0);
-					*/
+					gunAngleWhenFired.RemoveAt(0);
+
+					/*
 					GameObject gameObject = SpawnManager.SpawnProjectile(user.CurrentGun.DefaultModule.projectiles[0].gameObject, user.sprite.WorldCenter, Quaternion.Euler(0f, 0f, gunAngleWhenFired[0]), true);
 					Projectile projectile = gameObject.GetComponent<Projectile>();
 					user.DoPostProcessProjectile(projectile);
 					projsFired.RemoveAt(0);
 					gunAngleWhenFired.RemoveAt(0);
+					*/
 				}
 			}
 			yield return null;
+			Time.timeScale = 1;
 			user.CurrentInputState = PlayerInputState.AllInput;
 			user.ClearInputOverride("turn");
 			yield break;
