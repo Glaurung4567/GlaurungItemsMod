@@ -54,7 +54,7 @@ namespace GlaurungItems.Items
 				actions = new List<actionsToBeRecorded>();
 				dodgeRollDirection = new List<Vector2>();
 				playerPositionsDuringActivation = new List<Vector3>();
-				aimDirectionWhileFiring = new List<Vector2>();
+				aimDirectionWhileFiring = new List<Vector3>();
 				gunAngleWhenFired = new List<float>();
 				projsFired = new List<Projectile>();
 
@@ -112,7 +112,7 @@ namespace GlaurungItems.Items
 						isCurrentlyDodgeRolling = false;
 
 						actions.Add(actionsToBeRecorded.Shooting);
-						Vector2 aim = (user.unadjustedAimPoint.XY());// - user.CenterPosition);
+						Vector3 aim = (user.unadjustedAimPoint);// - user.CenterPosition);
 						aimDirectionWhileFiring.Add(aim);
 						gunAngleWhenFired.Add(user.CurrentGun.CurrentAngle);
 						this.CurrentDamageCooldown -= 100f;
@@ -135,7 +135,6 @@ namespace GlaurungItems.Items
 						}
 					}
 				}
-
 			}
 		}
 
@@ -170,14 +169,15 @@ namespace GlaurungItems.Items
                 {
 					user.unadjustedAimPoint = aimDirectionWhileFiring[0];
 					user.ForceStaticFaceDirection(aimDirectionWhileFiring[0]);
+					user.ForceIdleFacePoint(aimDirectionWhileFiring[0]);
+					user.CurrentGun.HandleAimRotation(aimDirectionWhileFiring[0]);
 					GameObject gameObject = SpawnManager.SpawnProjectile(user.CurrentGun.DefaultModule.projectiles[0].gameObject, user.sprite.WorldCenter, Quaternion.Euler(0f, 0f, gunAngleWhenFired[0]), true);
 					Projectile projectile = gameObject.GetComponent<Projectile>();
 					projectile.transform.parent = user.CurrentGun.barrelOffset;
 					user.DoPostProcessProjectile(projectile);
-					//user.CurrentGun.HandleAimRotation(aimDirectionWhileFiring[0]);
 					//user.CurrentGun.ForceFireProjectile(user.CurrentGun.DefaultModule.projectiles[0]);
 					//user.forceAimPoint = null;
-					yield return null;
+					yield return new WaitForSeconds(0.2f);
 					aimDirectionWhileFiring.RemoveAt(0);
 					gunAngleWhenFired.RemoveAt(0);
 
@@ -248,7 +248,7 @@ namespace GlaurungItems.Items
 
 		private List<Vector2> dodgeRollDirection = new List<Vector2>();
 		private List<Vector3> playerPositionsDuringActivation = new List<Vector3>();
-		private List<Vector2> aimDirectionWhileFiring = new List<Vector2>();
+		private List<Vector3> aimDirectionWhileFiring = new List<Vector3>();
 		private List<float> gunAngleWhenFired = new List<float>();
 		private List<Projectile> projsFired = new List<Projectile>();
     }
