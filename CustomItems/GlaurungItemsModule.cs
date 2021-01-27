@@ -81,6 +81,7 @@ namespace GlaurungItems
                 Poyo.Init();
 
                 Turn.Init();
+                BulletScriptSourceGun.Add();
                 //InfiltratorRounds.Init();
 
                 //GunDeadArmyStronghold.Init();
