@@ -65,6 +65,7 @@ namespace GlaurungItems.Items
                 else
                 {
 					user.SetIsFlying(true, "turn");
+					user.AdditionalCanDodgeRollWhileFlying.SetOverride("turn", true);
                 }
 
 				isActive = true;
@@ -77,8 +78,9 @@ namespace GlaurungItems.Items
 				if (!wasFlyingAtTheStart)
                 {
 					user.SetIsFlying(false, "turn");
-                }
-                else
+					user.AdditionalCanDodgeRollWhileFlying.RemoveOverride("turn");
+				}
+				else
                 {
 					wasFlyingAtTheStart = false;
                 }
@@ -167,6 +169,7 @@ namespace GlaurungItems.Items
 
 				if(act == actionsToBeRecorded.Shooting)
                 {
+					yield return null;
 					user.unadjustedAimPoint = aimDirectionWhileFiring[0];
 					user.ForceStaticFaceDirection(aimDirectionWhileFiring[0]);
 					user.ForceIdleFacePoint(aimDirectionWhileFiring[0]);
