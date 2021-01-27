@@ -164,7 +164,7 @@ namespace GlaurungItems.Items
 		{
 			this.EndOnBlank = true;
 			this.FireSquare();
-			AimDirectionSet(GunjuringEncyclopedia.playerGunCurrentAngle);// this.AimDirection;
+			AimDirectionSet(BulletScriptSourceGun.playerGunCurrentAngle);// this.AimDirection;
 			yield return this.Wait(15);
 			float distanceToTarget = (this.BulletManager.PlayerPosition() - this.Position).magnitude;
 			if (distanceToTarget > 4.5f)
