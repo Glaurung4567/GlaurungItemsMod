@@ -16,7 +16,7 @@ give the transistor during turn and lock it (charge weapon)
 To do
 Recharge item with actions ok
 remove idle movement ok
-Stop time look at aged bell
+Stop time look at aged bell ok yiss !
 increase game speed ok
 Give transistor, prevent drop and lock
 Fire gun save ok
@@ -25,7 +25,7 @@ Make user intangible
 Prevent interactions 
 Prevent blanks
 Cancel action
-end turn if onleavecombat
+end turn early if onleavecombat, ondrop
 */
 namespace GlaurungItems.Items
 {
