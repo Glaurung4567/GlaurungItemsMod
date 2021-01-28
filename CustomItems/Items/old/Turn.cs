@@ -16,16 +16,18 @@ give the transistor during turn and lock it (charge weapon)
 To do
 Recharge item with actions ok
 remove idle movement ok
-Stop time look at aged bell ok yiss !
+Stop time look at aged bell yiss ok
 increase game speed ok
-Give transistor, prevent drop and lock
 Fire gun save ok
 Make user fly ok
+Give transistor, prevent drop and lock
+Prevent inventory modif
+
 Make user intangible
 Prevent interactions 
 Prevent blanks
 Cancel action
-end turn early if onleavecombat, ondrop
+end turn early if onleavecombat, ondrop, onitemswitch
 */
 namespace GlaurungItems.Items
 {
@@ -49,7 +51,6 @@ namespace GlaurungItems.Items
 		{
 			if (!isActive)
             {
-				//PlayerItem.AllowDamageCooldownOnActive = true;
 				startingTurnPosition = user.transform.position;
                 user.PostProcessProjectile += User_PostProcessProjectile;
 				
