@@ -16,19 +16,20 @@ give the transistor during turn and lock it (charge weapon)
 To do
 Recharge item with actions ok
 remove idle movement ok
-Stop time
+Stop time look at aged bell
 increase game speed ok
 Give transistor, prevent drop and lock
-Fire gun save
+Fire gun save ok
+Make user fly ok
 Make user intangible
 Prevent interactions 
 Prevent blanks
 Cancel action
-
+end turn if onleavecombat
 */
 namespace GlaurungItems.Items
 {
-    class Turn : PlayerItem
+    class Turn : CustomRadialSlowItem
 	{
 		public static void Init()
 		{
@@ -46,8 +47,9 @@ namespace GlaurungItems.Items
 
 		protected override void DoEffect(PlayerController user)
 		{
-            if (!isActive)
+			if (!isActive)
             {
+				//PlayerItem.AllowDamageCooldownOnActive = true;
 				startingTurnPosition = user.transform.position;
                 user.PostProcessProjectile += User_PostProcessProjectile;
 				
@@ -68,11 +70,19 @@ namespace GlaurungItems.Items
 					user.AdditionalCanDodgeRollWhileFlying.SetOverride("turn", true);
                 }
 
+				user.healthHaver.IsVulnerable = false;
+				user.specRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider));
+
 				isActive = true;
-            }
+				stopLocalTime = true;
+			}
             else
             {
 				user.WarpToPoint(startingTurnPosition);
+
+				user.healthHaver.IsVulnerable = true;
+				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider));
+
 
 				user.PostProcessProjectile -= User_PostProcessProjectile;
 				if (!wasFlyingAtTheStart)
@@ -88,6 +98,7 @@ namespace GlaurungItems.Items
 				GameManager.Instance.StartCoroutine(DoTurn(user));
 				isActive = false;
 			}
+			base.DoEffect(user);
 		}
 
         public override void Update()
@@ -174,6 +185,7 @@ namespace GlaurungItems.Items
 					user.ForceStaticFaceDirection(aimDirectionWhileFiring[0]);
 					user.ForceIdleFacePoint(aimDirectionWhileFiring[0]);
 					user.CurrentGun.HandleAimRotation(aimDirectionWhileFiring[0]);
+					
 					GameObject gameObject = SpawnManager.SpawnProjectile(user.CurrentGun.DefaultModule.projectiles[0].gameObject, user.sprite.WorldCenter, Quaternion.Euler(0f, 0f, gunAngleWhenFired[0]), true);
 					Projectile projectile = gameObject.GetComponent<Projectile>();
 					projectile.transform.parent = user.CurrentGun.barrelOffset;
@@ -183,14 +195,6 @@ namespace GlaurungItems.Items
 					yield return new WaitForSeconds(0.2f);
 					aimDirectionWhileFiring.RemoveAt(0);
 					gunAngleWhenFired.RemoveAt(0);
-
-					/*
-					GameObject gameObject = SpawnManager.SpawnProjectile(user.CurrentGun.DefaultModule.projectiles[0].gameObject, user.sprite.WorldCenter, Quaternion.Euler(0f, 0f, gunAngleWhenFired[0]), true);
-					Projectile projectile = gameObject.GetComponent<Projectile>();
-					user.DoPostProcessProjectile(projectile);
-					projsFired.RemoveAt(0);
-					gunAngleWhenFired.RemoveAt(0);
-					*/
 				}
 			}
 
@@ -198,14 +202,15 @@ namespace GlaurungItems.Items
 			Time.timeScale = 1;
 			user.CurrentInputState = PlayerInputState.AllInput;
 			user.ClearInputOverride("turn");
+			stopLocalTime = false;
 			yield break;
 		}
 
         public override bool CanBeUsed(PlayerController user)
 		{
-			return !user.IsInCombat 
+			return user.IsInCombat 
 				&& user.CurrentRoom != null
-				&& !user.CurrentRoom.IsSealed
+				&& user.CurrentRoom.IsSealed
 				//&& ((!isActive && !user.inventory.GunLocked.Value) || (isActive && user.inventory.GunLocked.Value))
 				&& !user.HasPassiveItem(436) //bloodied scarf
 				;

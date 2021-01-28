@@ -83,6 +83,7 @@
     <Compile Include="ItemAPI\FakePrefab\FakePrefabHooks.cs" />
     <Compile Include="ItemAPI\SpecialBlankModificationItem.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
+    <Compile Include="Items\ItemParts\CustomRadialSlowItem.cs" />
     <Compile Include="Items\Linc.cs" />
     <Compile Include="Items\GunzerkingPotion.cs" />
     <Compile Include="Items\InfiltratorRounds.cs" />
