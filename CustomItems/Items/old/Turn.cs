@@ -27,7 +27,7 @@ Make user intangible
 Prevent interactions 
 Prevent blanks
 Cancel action
-end turn early if onleavecombat, ondrop, onitemswitch, onchangedroom
+end turn early if onleavecombat, ondrop, onitemswitch, onchangedroom, onNoEnemy
 */
 namespace GlaurungItems.Items
 {
@@ -189,7 +189,7 @@ namespace GlaurungItems.Items
 					
 					GameObject gameObject = SpawnManager.SpawnProjectile(user.CurrentGun.DefaultModule.projectiles[0].gameObject, user.sprite.WorldCenter, Quaternion.Euler(0f, 0f, gunAngleWhenFired[0]), true);
 					Projectile projectile = gameObject.GetComponent<Projectile>();
-					projectile.transform.parent = user.CurrentGun.barrelOffset;
+					//projectile.transform.parent = user.CurrentGun.barrelOffset;
 					user.DoPostProcessProjectile(projectile);
 					//user.CurrentGun.ForceFireProjectile(user.CurrentGun.DefaultModule.projectiles[0]);
 					//user.forceAimPoint = null;
@@ -230,8 +230,12 @@ namespace GlaurungItems.Items
 				hasFired = true;
 				projsFired.Add(proj);
 				GameManager.Instance.StartCoroutine(ResetHasFired());
+				proj.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
+            }
+            else
+            {
+				proj.DieInAir(true, false, false);
 			}
-			proj.DieInAir(true, false, false);
 		}
 
 		private IEnumerator ResetHasFired()
