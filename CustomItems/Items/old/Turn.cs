@@ -27,7 +27,7 @@ Make user intangible
 Prevent interactions 
 Prevent blanks
 Cancel action
-end turn early if onleavecombat, ondrop, onitemswitch, onchangedroom, onNoEnemy
+end turn early if onleavecombat, ondrop, onitemswitch, onchangedroom, onNoEnemy, onReinforcement
 */
 namespace GlaurungItems.Items
 {
@@ -156,7 +156,7 @@ namespace GlaurungItems.Items
         {
 			user.SetInputOverride("turn");
 			user.CurrentInputState = PlayerInputState.NoInput;
-			Time.timeScale = 1.2f;
+			Time.timeScale = 1.6f;
 			foreach (actionsToBeRecorded act in actions)
 			{
 				if (act == actionsToBeRecorded.Dodgeroll)
@@ -168,12 +168,11 @@ namespace GlaurungItems.Items
 
 				if (act == actionsToBeRecorded.Moving)
 				{
-					if(playerPositionsDuringActivation.Count > 1 && playerPositionsDuringActivation[0] != playerPositionsDuringActivation[1])
+					if((playerPositionsDuringActivation.Count > 1 && playerPositionsDuringActivation[0] != playerPositionsDuringActivation[1]) 
+						|| playerPositionsDuringActivation.Count == 1)
                     {
-						user.ForceMoveToPoint(playerPositionsDuringActivation[0]);
-					}else if (playerPositionsDuringActivation.Count == 1)
-                    {
-						user.ForceMoveToPoint(playerPositionsDuringActivation[0]);
+						//user.ForceMoveToPoint(playerPositionsDuringActivation[0]);
+						user.WarpToPoint(playerPositionsDuringActivation[0]);
 					}
 					yield return null;
 					playerPositionsDuringActivation.RemoveAt(0);
