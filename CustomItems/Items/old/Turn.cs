@@ -27,7 +27,7 @@ Make user intangible
 Prevent interactions 
 Prevent blanks
 Cancel action
-end turn early if onleavecombat, ondrop, onitemswitch
+end turn early if onleavecombat, ondrop, onitemswitch, onchangedroom
 */
 namespace GlaurungItems.Items
 {
@@ -72,7 +72,7 @@ namespace GlaurungItems.Items
                 }
 
 				user.healthHaver.IsVulnerable = false;
-				user.specRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider));
+				user.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
 
 				isActive = true;
 				stopLocalTime = true;
@@ -82,7 +82,7 @@ namespace GlaurungItems.Items
 				user.WarpToPoint(startingTurnPosition);
 
 				user.healthHaver.IsVulnerable = true;
-				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider));
+				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(collisionMask);
 
 
 				user.PostProcessProjectile -= User_PostProcessProjectile;
@@ -241,7 +241,10 @@ namespace GlaurungItems.Items
 			yield break;
 		}
 
-        private bool isActive = false;
+		private static int collisionMask = CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider, 
+			CollisionLayer.EnemyBulletBlocker, CollisionLayer.BulletBreakable, CollisionLayer.Projectile, CollisionLayer.Pickup, CollisionLayer.BeamBlocker);
+
+		private bool isActive = false;
 		private bool isCurrentlyDodgeRolling = false;
 		private bool hasFired = false;
 		private bool wasFlyingAtTheStart = false;
