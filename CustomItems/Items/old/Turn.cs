@@ -242,7 +242,8 @@ namespace GlaurungItems.Items
 		}
 
 		private static int collisionMask = CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider, 
-			CollisionLayer.EnemyBulletBlocker, CollisionLayer.BulletBreakable, CollisionLayer.Projectile, CollisionLayer.Pickup, CollisionLayer.BeamBlocker);
+			CollisionLayer.EnemyBulletBlocker, CollisionLayer.BulletBreakable, CollisionLayer.Projectile, CollisionLayer.Pickup, 
+			CollisionLayer.BeamBlocker);
 
 		private bool isActive = false;
 		private bool isCurrentlyDodgeRolling = false;
