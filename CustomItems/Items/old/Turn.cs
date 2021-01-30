@@ -160,14 +160,29 @@ namespace GlaurungItems.Items
 					user.CurrentInputState = PlayerInputState.NoMovement;
 				}
 
-				if (Key(GungeonActions.GungeonActionType.Reload) && KeyTime(GungeonActions.GungeonActionType.Reload) > 1.25f)
+				if (Key(GungeonActions.GungeonActionType.Reload) && KeyTime(GungeonActions.GungeonActionType.Reload) > 1f && !cancelActionCooldown)
 				{
+					cancelActionCooldown = true;
+					if(actions.Count > 0)
+                    {
+						int actionsLen = actions.Count;
+						if (actions[actionsLen - 1] == actionsToBeRecorded.Shooting)
+                        {
 
+                        }
+						else if (actions[actionsLen - 1] == actionsToBeRecorded.Dodgeroll)
+                        {
+
+                        }
+
+					}
+					GameManager.Instance.StartCoroutine(CancelCooldownCoroutine());
 				}
 			}
 		}
 
-		private IEnumerator DoTurn(PlayerController user)
+
+        private IEnumerator DoTurn(PlayerController user)
         {
 			
 			user.SetInputOverride("turn");
@@ -260,6 +275,13 @@ namespace GlaurungItems.Items
 			yield break;
 		}
 
+		private IEnumerator CancelCooldownCoroutine()
+		{
+			yield return new WaitForSeconds(2f);
+			cancelActionCooldown = false;
+			yield break;
+		}
+
 		public float KeyTime(GungeonActions.GungeonActionType action)
 		{
 			return BraveInput.GetInstanceForPlayer(LastOwner.PlayerIDX).ActiveActions.GetActionFromType(action).PressedDuration;
@@ -281,8 +303,11 @@ namespace GlaurungItems.Items
 
 		private bool isRecordTimeActive = false;
 		private bool isReplayTimeActive = false;
+
 		private bool isCurrentlyDodgeRolling = false;
 		private bool hasFired = false;
+		private bool cancelActionCooldown = false;
+
 		private bool wasFlyingAtTheStart = false;
 		private Vector3 startingTurnPosition;
 
