@@ -20,13 +20,13 @@ Stop time look at aged bell yiss ok
 increase game speed ok
 Fire gun save ok
 Make user fly ok
+Make user intangible ok
+No movement when record full
 Give transistor, prevent drop and lock
 Prevent inventory modif
 
-Make user intangible
 Prevent interactions 
 Prevent blanks
-Cancel action
 end turn early if onleavecombat, ondrop, onitemswitch, onchangedroom, onNoEnemy, onReinforcement
 */
 namespace GlaurungItems.Items
@@ -49,7 +49,7 @@ namespace GlaurungItems.Items
 
 		protected override void DoEffect(PlayerController user)
 		{
-			if (!isActive)
+			if (!isRecordTimeActive)
             {
 				startingTurnPosition = user.transform.position;
                 user.PostProcessProjectile += User_PostProcessProjectile;
@@ -74,7 +74,7 @@ namespace GlaurungItems.Items
 				user.healthHaver.IsVulnerable = false;
 				user.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
 
-				isActive = true;
+				isRecordTimeActive = true;
 				stopLocalTime = true;
 			}
             else
@@ -97,7 +97,7 @@ namespace GlaurungItems.Items
                 }
 
 				GameManager.Instance.StartCoroutine(DoTurn(user));
-				isActive = false;
+				isRecordTimeActive = false;
 			}
 			base.DoEffect(user);
 		}
@@ -105,11 +105,15 @@ namespace GlaurungItems.Items
         public override void Update()
 		{
 			base.Update();
-			if (base.LastOwner && isActive)
+			if (base.LastOwner && isRecordTimeActive)
 			{
 				PlayerController user = base.LastOwner;
+				
 				if (this.CurrentDamageCooldown > 0)
 				{
+
+					user.CurrentInputState = PlayerInputState.AllInput;
+
 					if (user.IsDodgeRolling && !isCurrentlyDodgeRolling)
 					{
 						if (playerPositionsDuringActivation.Count > 0)
@@ -121,6 +125,7 @@ namespace GlaurungItems.Items
 						}
 
 					}
+
 					else if (user.IsFiring && !user.IsDodgeRolling)
 					{
 						isCurrentlyDodgeRolling = false;
@@ -131,6 +136,7 @@ namespace GlaurungItems.Items
 						gunAngleWhenFired.Add(user.CurrentGun.CurrentAngle);
 						this.CurrentDamageCooldown -= 100f;
 					}
+
 					else if (!user.IsDodgeRolling)
 					{
 						isCurrentlyDodgeRolling = false;
@@ -148,12 +154,22 @@ namespace GlaurungItems.Items
 							playerPositionsDuringActivation.Add(user.transform.position);
 						}
 					}
+                }
+                else
+                {
+					user.CurrentInputState = PlayerInputState.NoMovement;
+				}
+
+				if (Key(GungeonActions.GungeonActionType.Reload) && KeyTime(GungeonActions.GungeonActionType.Reload) > 1.25f)
+				{
+
 				}
 			}
 		}
 
 		private IEnumerator DoTurn(PlayerController user)
         {
+			
 			user.SetInputOverride("turn");
 			user.CurrentInputState = PlayerInputState.NoInput;
 			Time.timeScale = 1.6f;
@@ -218,7 +234,7 @@ namespace GlaurungItems.Items
 
 		protected override void OnPreDrop(PlayerController user)
 		{
-			isActive = false;
+			isRecordTimeActive = false;
 			base.OnPreDrop(user);
 		}
 
@@ -244,11 +260,27 @@ namespace GlaurungItems.Items
 			yield break;
 		}
 
+		public float KeyTime(GungeonActions.GungeonActionType action)
+		{
+			return BraveInput.GetInstanceForPlayer(LastOwner.PlayerIDX).ActiveActions.GetActionFromType(action).PressedDuration;
+		}
+
+		public bool KeyDown(GungeonActions.GungeonActionType action)
+		{
+			return BraveInput.GetInstanceForPlayer(LastOwner.PlayerIDX).ActiveActions.GetActionFromType(action).WasPressed;
+		}
+
+		public bool Key(GungeonActions.GungeonActionType action)
+		{
+			return BraveInput.GetInstanceForPlayer(LastOwner.PlayerIDX).ActiveActions.GetActionFromType(action).IsPressed;
+		}
+
 		private static int collisionMask = CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider, 
 			CollisionLayer.EnemyBulletBlocker, CollisionLayer.BulletBreakable, CollisionLayer.Projectile, CollisionLayer.Pickup, 
 			CollisionLayer.BeamBlocker);
 
-		private bool isActive = false;
+		private bool isRecordTimeActive = false;
+		private bool isReplayTimeActive = false;
 		private bool isCurrentlyDodgeRolling = false;
 		private bool hasFired = false;
 		private bool wasFlyingAtTheStart = false;
