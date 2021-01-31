@@ -19,7 +19,7 @@ namespace GlaurungItems.Items
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
             //gun.SetAnimationFPS(gun.idleAnimation, 8);
-            gun.AddProjectileModuleFrom((PickupObjectDatabase.GetById(223) as Gun), true, false);
+            gun.AddProjectileModuleFrom((PickupObjectDatabase.GetById(97) as Gun), true, false);
 
             gun.DefaultModule.ammoCost = 1;
             gun.DefaultModule.angleVariance = 0f;
@@ -40,23 +40,23 @@ namespace GlaurungItems.Items
             FakePrefab.MarkAsFakePrefab(projectile.gameObject);
             UnityEngine.Object.DontDestroyOnLoad(projectile);
             gun.DefaultModule.projectiles[0] = projectile;
-            projectile.baseData.damage *= 4f;
+            projectile.baseData.damage *= 1.3f;
             projectile.baseData.speed *= 1.5f;
             projectile.baseData.force *= 0f;
-            projectile.baseData.range *= 0.25f;
+            projectile.baseData.range *= 0.15f;
             projectile.transform.parent = gun.barrelOffset;
 
-            Projectile projectile2 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(390) as Gun).DefaultModule.projectiles[0]);
+            Projectile projectile2 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(383) as Gun).DefaultModule.projectiles[0]);
             projectile2.gameObject.SetActive(false);
             FakePrefab.MarkAsFakePrefab(projectile2.gameObject);
             UnityEngine.Object.DontDestroyOnLoad(projectile2);
-            projectile2.baseData.damage *= 4f;
+            projectile2.baseData.damage *= 1f;
             projectile2.baseData.speed *= 1f;
             projectile2.baseData.force *= 0f;
-            projectile2.baseData.range *= 1.25f;
+            projectile2.baseData.range *= 1f;
             projectile2.transform.parent = gun.barrelOffset;
 
-            Projectile projectile3 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(541) as Gun).DefaultModule.projectiles[0]);
+            Projectile projectile3 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(541) as Gun).DefaultModule.chargeProjectiles[0].Projectile);
             projectile3.gameObject.SetActive(false);
             FakePrefab.MarkAsFakePrefab(projectile3.gameObject);
             UnityEngine.Object.DontDestroyOnLoad(projectile3);
@@ -64,6 +64,8 @@ namespace GlaurungItems.Items
             projectile3.baseData.speed *= 1f;
             projectile3.baseData.force *= 0.25f;
             projectile3.baseData.range *= 1.25f;
+            projectile3.ChangeTintColorShader(0, Color.blue);
+            projectile3.AdjustPlayerProjectileTint(Color.blue, 0);
             projectile3.transform.parent = gun.barrelOffset;
 
             ProjectileModule.ChargeProjectile chargeProj1 = new ProjectileModule.ChargeProjectile()
