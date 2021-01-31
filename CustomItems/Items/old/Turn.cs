@@ -178,7 +178,7 @@ namespace GlaurungItems.Items
                         {
 							actions.RemoveAt(actionsLen - 1);
 							aimDirectionWhileFiring.RemoveAt(aimDirectionWhileFiring.Count - 1);
-							gunAngleWhenFired.Add(gunAngleWhenFired.Count - 1);
+							gunAngleWhenFired.RemoveAt(gunAngleWhenFired.Count - 1);
 							this.CurrentDamageCooldown += shootCost1;
 						}
 
@@ -187,7 +187,8 @@ namespace GlaurungItems.Items
 							actions.RemoveAt(actions.Count - 1);
 							actions.RemoveAt(actions.Count - 1);
 							aimDirectionWhileFiring.RemoveAt(aimDirectionWhileFiring.Count - 1);
-							gunAngleWhenFired.Add(gunAngleWhenFired.Count - 1);
+							gunAngleWhenFired.RemoveAt(gunAngleWhenFired.Count - 1);
+
 							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 2]);
 							playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
 							this.CurrentDamageCooldown += (shootCost1 + movementCost);
@@ -206,6 +207,7 @@ namespace GlaurungItems.Items
 							actions.RemoveAt(actions.Count- 1);
 							actions.RemoveAt(actions.Count- 1);
 							dodgeRollDirection.RemoveAt(dodgeRollDirection.Count - 1);
+
 							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 2]);
 							playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
 							this.CurrentDamageCooldown += (dodgerollCost + movementCost);
