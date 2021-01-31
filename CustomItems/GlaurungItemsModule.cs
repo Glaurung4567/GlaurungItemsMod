@@ -80,6 +80,7 @@ namespace GlaurungItems
                 GunzerkingPotion.Init();
                 Poyo.Init();
 
+                Transistor.Add();
                 Turn.Init();
                 //InfiltratorRounds.Init();
 

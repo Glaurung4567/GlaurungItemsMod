@@ -20,13 +20,13 @@ Stop time look at aged bell yiss ok
 increase game speed ok
 Fire gun save ok
 Make user fly ok
-Make user intangible ok
 No movement when record full ok
-Cancel action
+Cancel action during record ok
+
 Prevent companions, coop or orbital intervention
 Give transistor, prevent drop and lock
+Prevent enemy spawn mob or proj on death
 Prevent inventory modif
-
 Prevent interactions 
 Prevent blanks
 end turn early if onleavecombat, ondrop, onitemswitch, onchangedroom, onNoEnemy, onReinforcement
@@ -166,13 +166,13 @@ namespace GlaurungItems.Items
 					user.CurrentInputState = PlayerInputState.NoMovement;
 				}
 
-				if (Key(GungeonActions.GungeonActionType.Reload) && KeyTime(GungeonActions.GungeonActionType.Reload) > 1f && !cancelActionCooldown)
+				if (Key(GungeonActions.GungeonActionType.Reload) && KeyTime(GungeonActions.GungeonActionType.Reload) > 0.75f && !cancelActionCooldown)
 				{
 					cancelActionCooldown = true;
 					if(actions.Count > 0)
                     {
 						int actionsLen = actions.Count;
-						Tools.Print(actions[actionsLen - 1], "ffffff", true);
+						//Tools.Print(actions[actionsLen - 1], "ffffff", true);
 
 						if (actions[actionsLen - 1] == actionsToBeRecorded.Shooting)
                         {
@@ -339,7 +339,7 @@ namespace GlaurungItems.Items
 
 		private IEnumerator CancelCooldownCoroutine()
 		{
-			yield return new WaitForSeconds(2f);
+			yield return new WaitForSeconds(1.25f);
 			cancelActionCooldown = false;
 			yield break;
 		}

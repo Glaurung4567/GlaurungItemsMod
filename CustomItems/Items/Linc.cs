@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using ItemAPI;
 using Gungeon;
-using System;
 
 namespace GlaurungItems.Items
 {
