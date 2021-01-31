@@ -52,7 +52,8 @@ namespace GlaurungItems.Items
 			if (!isRecordTimeActive)
             {
 				startingTurnPosition = user.transform.position;
-                user.PostProcessProjectile += User_PostProcessProjectile;
+
+				user.PostProcessProjectile += User_PostProcessProjectile;
 				
 				actions = new List<actionsToBeRecorded>();
 				dodgeRollDirection = new List<Vector2>();
@@ -61,7 +62,10 @@ namespace GlaurungItems.Items
 				gunAngleWhenFired = new List<float>();
 				projsFired = new List<Projectile>();
 
-                if (user.IsFlying)
+				actions.Add(actionsToBeRecorded.Moving);
+				playerPositionsDuringActivation.Add(user.transform.position);
+
+				if (user.IsFlying)
                 {
 					wasFlyingAtTheStart = true;
                 }
@@ -166,14 +170,54 @@ namespace GlaurungItems.Items
 					if(actions.Count > 0)
                     {
 						int actionsLen = actions.Count;
+						Tools.Print(actions[actionsLen - 1], "ffffff", true);
+
 						if (actions[actionsLen - 1] == actionsToBeRecorded.Shooting)
                         {
 
                         }
+
 						else if (actions[actionsLen - 1] == actionsToBeRecorded.Dodgeroll)
                         {
+							actions.RemoveAt(actionsLen - 1);
+							dodgeRollDirection.RemoveAt(dodgeRollDirection.Count - 1);
+							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
+							this.CurrentDamageCooldown += 100f;
+						}
 
-                        }
+						else if (actionsLen > 2 && actions[actionsLen - 1] == actionsToBeRecorded.Moving && actions[actionsLen - 2] == actionsToBeRecorded.Dodgeroll)
+						{
+							actions.RemoveAt(actions.Count- 1);
+							actions.RemoveAt(actions.Count- 1);
+							dodgeRollDirection.RemoveAt(dodgeRollDirection.Count - 1);
+							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 2]);
+							playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
+							this.CurrentDamageCooldown += 101f;
+						}
+
+						else if (actions[actionsLen - 1] == actionsToBeRecorded.Moving && actionsLen > 1)
+						{
+							int nbOfMovesToRemove = 1;
+							for(int i = actionsLen - 1; i > 1; i--)
+                            {
+								if(actions[i] == actionsToBeRecorded.Moving && actions[i-1] == actionsToBeRecorded.Moving)
+                                {
+									nbOfMovesToRemove++;
+                                }
+                                else
+                                {
+									break;
+                                }
+                            }
+							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - nbOfMovesToRemove]);
+							while(nbOfMovesToRemove > 0)
+                            {
+								nbOfMovesToRemove--;
+								actions.RemoveAt(actions.Count - 1);
+								playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
+								this.CurrentDamageCooldown += 1f;
+							}
+						}
 
 					}
 					GameManager.Instance.StartCoroutine(CancelCooldownCoroutine());
@@ -212,15 +256,15 @@ namespace GlaurungItems.Items
 				if(act == actionsToBeRecorded.Shooting)
                 {
 					yield return null;
-					user.unadjustedAimPoint = aimDirectionWhileFiring[0];
-					user.ForceStaticFaceDirection(aimDirectionWhileFiring[0]);
-					user.ForceIdleFacePoint(aimDirectionWhileFiring[0]);
-					user.CurrentGun.HandleAimRotation(aimDirectionWhileFiring[0]);
+                    //user.unadjustedaimpoint = aimdirectionwhilefiring[0];
+                    //user.forcestaticfacedirection(aimdirectionwhilefiring[0]);
+                    //user.forceidlefacepoint(aimdirectionwhilefiring[0]);
+                    user.CurrentGun.HandleAimRotation(aimDirectionWhileFiring[0]);
 					
 					GameObject gameObject = SpawnManager.SpawnProjectile(user.CurrentGun.DefaultModule.projectiles[0].gameObject, user.sprite.WorldCenter, Quaternion.Euler(0f, 0f, gunAngleWhenFired[0]), true);
 					Projectile projectile = gameObject.GetComponent<Projectile>();
-					//projectile.transform.parent = user.CurrentGun.barrelOffset;
 					user.DoPostProcessProjectile(projectile);
+					//projectile.transform.parent = user.CurrentGun.barrelOffset;
 					//user.CurrentGun.ForceFireProjectile(user.CurrentGun.DefaultModule.projectiles[0]);
 					//user.forceAimPoint = null;
 					yield return new WaitForSeconds(0.2f);
@@ -282,6 +326,7 @@ namespace GlaurungItems.Items
 			yield break;
 		}
 
+		//from kyle's ileveler app
 		public float KeyTime(GungeonActions.GungeonActionType action)
 		{
 			return BraveInput.GetInstanceForPlayer(LastOwner.PlayerIDX).ActiveActions.GetActionFromType(action).PressedDuration;
@@ -297,6 +342,8 @@ namespace GlaurungItems.Items
 			return BraveInput.GetInstanceForPlayer(LastOwner.PlayerIDX).ActiveActions.GetActionFromType(action).IsPressed;
 		}
 
+
+		//------------------------------
 		private static int collisionMask = CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider, 
 			CollisionLayer.EnemyBulletBlocker, CollisionLayer.BulletBreakable, CollisionLayer.Projectile, CollisionLayer.Pickup, 
 			CollisionLayer.BeamBlocker);
