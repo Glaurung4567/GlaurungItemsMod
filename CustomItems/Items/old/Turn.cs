@@ -21,7 +21,9 @@ increase game speed ok
 Fire gun save ok
 Make user fly ok
 Make user intangible ok
-No movement when record full
+No movement when record full ok
+Cancel action
+Prevent companions, coop or orbital intervention
 Give transistor, prevent drop and lock
 Prevent inventory modif
 
@@ -122,7 +124,7 @@ namespace GlaurungItems.Items
 					{
 						if (playerPositionsDuringActivation.Count > 0)
 						{
-							this.CurrentDamageCooldown -= 100f;
+							this.CurrentDamageCooldown -= dodgerollCost;
 							isCurrentlyDodgeRolling = true;
 							actions.Add(actionsToBeRecorded.Dodgeroll);
 							dodgeRollDirection.Add(user.transform.position - playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
@@ -138,10 +140,10 @@ namespace GlaurungItems.Items
 						Vector3 aim = (user.unadjustedAimPoint);// - user.CenterPosition);
 						aimDirectionWhileFiring.Add(aim);
 						gunAngleWhenFired.Add(user.CurrentGun.CurrentAngle);
-						this.CurrentDamageCooldown -= 100f;
+						this.CurrentDamageCooldown -= shootCost1;
 					}
 
-					else if (!user.IsDodgeRolling)
+					else if (!user.IsDodgeRolling) //for movement recording
 					{
 						isCurrentlyDodgeRolling = false;
 
@@ -150,7 +152,7 @@ namespace GlaurungItems.Items
                         {
 							actions.Add(actionsToBeRecorded.Moving);
 							playerPositionsDuringActivation.Add(user.transform.position);
-							this.CurrentDamageCooldown -= 1f;
+							this.CurrentDamageCooldown -= movementCost;
                         }
                         else if(lenPos <= 1)
                         {
@@ -174,15 +176,29 @@ namespace GlaurungItems.Items
 
 						if (actions[actionsLen - 1] == actionsToBeRecorded.Shooting)
                         {
+							actions.RemoveAt(actionsLen - 1);
+							aimDirectionWhileFiring.RemoveAt(aimDirectionWhileFiring.Count - 1);
+							gunAngleWhenFired.Add(gunAngleWhenFired.Count - 1);
+							this.CurrentDamageCooldown += shootCost1;
+						}
 
-                        }
+						else if (actionsLen > 2 && actions[actionsLen - 1] == actionsToBeRecorded.Moving && actions[actionsLen - 2] == actionsToBeRecorded.Shooting)
+						{
+							actions.RemoveAt(actions.Count - 1);
+							actions.RemoveAt(actions.Count - 1);
+							aimDirectionWhileFiring.RemoveAt(aimDirectionWhileFiring.Count - 1);
+							gunAngleWhenFired.Add(gunAngleWhenFired.Count - 1);
+							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 2]);
+							playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
+							this.CurrentDamageCooldown += (shootCost1 + movementCost);
+						}
 
 						else if (actions[actionsLen - 1] == actionsToBeRecorded.Dodgeroll)
                         {
 							actions.RemoveAt(actionsLen - 1);
 							dodgeRollDirection.RemoveAt(dodgeRollDirection.Count - 1);
 							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
-							this.CurrentDamageCooldown += 100f;
+							this.CurrentDamageCooldown += dodgerollCost;
 						}
 
 						else if (actionsLen > 2 && actions[actionsLen - 1] == actionsToBeRecorded.Moving && actions[actionsLen - 2] == actionsToBeRecorded.Dodgeroll)
@@ -192,7 +208,7 @@ namespace GlaurungItems.Items
 							dodgeRollDirection.RemoveAt(dodgeRollDirection.Count - 1);
 							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 2]);
 							playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
-							this.CurrentDamageCooldown += 101f;
+							this.CurrentDamageCooldown += (dodgerollCost + movementCost);
 						}
 
 						else if (actions[actionsLen - 1] == actionsToBeRecorded.Moving && actionsLen > 1)
@@ -215,7 +231,7 @@ namespace GlaurungItems.Items
 								nbOfMovesToRemove--;
 								actions.RemoveAt(actions.Count - 1);
 								playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
-								this.CurrentDamageCooldown += 1f;
+								this.CurrentDamageCooldown += movementCost;
 							}
 						}
 
@@ -348,22 +364,27 @@ namespace GlaurungItems.Items
 			CollisionLayer.EnemyBulletBlocker, CollisionLayer.BulletBreakable, CollisionLayer.Projectile, CollisionLayer.Pickup, 
 			CollisionLayer.BeamBlocker);
 
-		private bool isRecordTimeActive = false;
-		private bool isReplayTimeActive = false;
-
-		private bool isCurrentlyDodgeRolling = false;
-		private bool hasFired = false;
-		private bool cancelActionCooldown = false;
-
-		private bool wasFlyingAtTheStart = false;
-		private Vector3 startingTurnPosition;
-
 		private enum actionsToBeRecorded
 		{
 			Dodgeroll,
 			Shooting,
 			Moving,
 		};
+
+		private float dodgerollCost = 100f;
+		private float movementCost = 1f;
+		private float shootCost1 = 100f;
+
+		private bool isRecordTimeActive = false;
+		private bool isReplayTimeActive = false;
+
+		private bool wasFlyingAtTheStart = false;
+		private Vector3 startingTurnPosition;
+
+		private bool isCurrentlyDodgeRolling = false;
+		private bool hasFired = false;
+		private bool cancelActionCooldown = false;
+
 		private List<actionsToBeRecorded> actions = new List<actionsToBeRecorded>();
 
 		private List<Vector2> dodgeRollDirection = new List<Vector2>();
