@@ -385,9 +385,9 @@ namespace GlaurungItems.Items
 			Moving,
 		};
 
-		private float dodgerollCost = 100f;
-		private float movementCost = 1f;
-		private float shootCost1 = 100f;
+		private readonly static float dodgerollCost = 100f;
+		private readonly static float movementCost = .5f;
+		private readonly static float shootCost1 = 100f;
 
 		private bool isRecordTimeActive = false;
 		private bool isReplayTimeActive = false;
