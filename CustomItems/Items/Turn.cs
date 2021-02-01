@@ -23,9 +23,10 @@ Fire gun save ok
 Make user fly ok
 No movement when record full ok
 Cancel action during record ok
-
-Prevent companions, coop or orbital intervention
 Give transistor, prevent drop and lock
+
+See boss collision
+Prevent companions, coop or orbital intervention
 Prevent enemy spawn mob or proj on death
 Prevent inventory modif
 Prevent interactions 
@@ -80,11 +81,11 @@ namespace GlaurungItems.Items
 
 				user.healthHaver.IsVulnerable = false;
 				user.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
+				user.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
 
-				Gun usb = Game.Items["gl:usb_swordgun"] as Gun;
-				transistorGun = user.inventory.AddGunToInventory(usb, true);
-				transistorGun.CanBeDropped = false;
-				transistorGun.CanBeSold = false;
+				transistorGunInstance = user.inventory.AddGunToInventory(usb, true);
+				transistorGunInstance.CanBeDropped = false;
+				transistorGunInstance.CanBeSold = false;
 				user.inventory.GunLocked.SetOverride("turn", true, null);
 
 				isRecordTimeActive = true;
@@ -96,6 +97,7 @@ namespace GlaurungItems.Items
 
 				user.healthHaver.IsVulnerable = true;
 				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(collisionMask);
+				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(collisionMask2);
 
 
 				user.PostProcessProjectile -= User_PostProcessProjectile;
@@ -302,8 +304,8 @@ namespace GlaurungItems.Items
 
 			Time.timeScale = 1;
 			user.inventory.GunLocked.RemoveOverride("turn");
-			user.inventory.DestroyGun(transistorGun);
-			this.transistorGun = null;
+			user.inventory.DestroyGun(transistorGunInstance);
+			this.transistorGunInstance = null;
 			user.CurrentInputState = PlayerInputState.AllInput;
 			user.ClearInputOverride("turn");
 			stopLocalTime = false;
@@ -335,6 +337,7 @@ namespace GlaurungItems.Items
 				projsFired.Add(proj);
 				GameManager.Instance.StartCoroutine(ResetHasFired());
 				proj.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
+				proj.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
             }
             else
             {
@@ -375,9 +378,10 @@ namespace GlaurungItems.Items
 
 		//------------------------------
 		private static int collisionMask = CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider, 
-			CollisionLayer.EnemyBulletBlocker, CollisionLayer.BulletBreakable, CollisionLayer.Projectile, CollisionLayer.Pickup, 
+			CollisionLayer.EnemyBulletBlocker, CollisionLayer.EnemyBlocker, CollisionLayer.Projectile, CollisionLayer.Pickup, 
 			CollisionLayer.BeamBlocker);
-
+		private static int collisionMask2 = CollisionMask.LayerToMask(CollisionLayer.BulletBlocker, CollisionLayer.BulletBreakable,
+			CollisionLayer.PlayerBlocker, CollisionLayer.PlayerCollider);
 		private enum actionsToBeRecorded
 		{
 			Dodgeroll,
@@ -388,13 +392,15 @@ namespace GlaurungItems.Items
 		private readonly static float dodgerollCost = 100f;
 		private readonly static float movementCost = .5f;
 		private readonly static float shootCost1 = 100f;
+		private Gun usb = Game.Items["gl:usb_swordgun"] as Gun;
+
 
 		private bool isRecordTimeActive = false;
 		private bool isReplayTimeActive = false;
 
 		private bool wasFlyingAtTheStart = false;
 		private Vector3 startingTurnPosition;
-		private Gun transistorGun;
+		private Gun transistorGunInstance;
 
 		private bool isCurrentlyDodgeRolling = false;
 		private bool hasFired = false;
