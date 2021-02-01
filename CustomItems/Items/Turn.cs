@@ -26,7 +26,7 @@ Cancel action during record ok
 Give transistor, prevent drop and lock ok
 See boss collision ok
 
-Prevent companions, coop or orbital intervention
+Prevent companions, coop, goop or orbital intervention
 Prevent enemy spawn mob or proj on death
 Prevent inventory modif
 Prevent interactions 
@@ -64,7 +64,7 @@ namespace GlaurungItems.Items
 				playerPositionsDuringActivation = new List<Vector3>();
 				aimDirectionWhileFiring = new List<Vector3>();
 				gunAngleWhenFired = new List<float>();
-				projsFired = new List<Projectile>();
+				projsFired = new List<int>();
 
 				actions.Add(actionsToBeRecorded.Moving);
 				playerPositionsDuringActivation.Add(user.transform.position);
@@ -334,16 +334,46 @@ namespace GlaurungItems.Items
 		{
             if (!hasFired)
             {
+				PlayerController user = this.LastOwner;
 				hasFired = true;
-				projsFired.Add(proj);
+				int projNb = 0;
+				List<string> validProjs = new List<string>{
+					usb.DefaultModule.chargeProjectiles[0].Projectile.name + "(Clone)",
+					usb.DefaultModule.chargeProjectiles[1].Projectile.name + "(Clone)",
+					usb.DefaultModule.chargeProjectiles[2].Projectile.name + "(Clone)"
+				};
+                if (validProjs.Contains(proj.name))
+                {
+					if (proj.name == usb.DefaultModule.chargeProjectiles[0].Projectile.name + "(Clone)")
+					{
+						projNb = 0;
+					}
+					else if ((proj.name == usb.DefaultModule.chargeProjectiles[1].Projectile.name + "(Clone)"))
+					{
+						projNb = 1;
+					}
+					else if ((proj.name == usb.DefaultModule.chargeProjectiles[2].Projectile.name + "(Clone)"))
+					{
+						projNb = 2;
+					}
+					projsFired.Add(projNb);
+
+					Projectile projCopy = usb.DefaultModule.chargeProjectiles[projNb].Projectile;
+					GameObject gameObject = SpawnManager.SpawnProjectile(projCopy.gameObject, user.sprite.WorldCenter, Quaternion.Euler(0f, 0f, user.CurrentGun.CurrentAngle), true);
+					Projectile projectileInst = gameObject.GetComponent<Projectile>();
+					projectileInst.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
+					projectileInst.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
+					if(projNb == 2)
+                    {
+						projectileInst.CurseSparks = true;
+                    }
+				}
+
 				GameManager.Instance.StartCoroutine(ResetHasFired());
-				proj.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
-				proj.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
+
             }
-            else
-            {
-				proj.DieInAir(true, false, false);
-			}
+
+			proj.DieInAir(true, false, false);
 		}
 
 		private IEnumerator ResetHasFired()
@@ -413,6 +443,6 @@ namespace GlaurungItems.Items
 		private List<Vector3> playerPositionsDuringActivation = new List<Vector3>();
 		private List<Vector3> aimDirectionWhileFiring = new List<Vector3>();
 		private List<float> gunAngleWhenFired = new List<float>();
-		private List<Projectile> projsFired = new List<Projectile>();
+		private List<int> projsFired = new List<int>();
     }
 }
