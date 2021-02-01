@@ -23,9 +23,9 @@ Fire gun save ok
 Make user fly ok
 No movement when record full ok
 Cancel action during record ok
-Give transistor, prevent drop and lock
+Give transistor, prevent drop and lock ok
+See boss collision ok
 
-See boss collision
 Prevent companions, coop or orbital intervention
 Prevent enemy spawn mob or proj on death
 Prevent inventory modif
@@ -90,8 +90,9 @@ namespace GlaurungItems.Items
 
 				isRecordTimeActive = true;
 				stopLocalTime = true;
+				Exploder.DoDistortionWave(user.CenterPosition, 0.4f, 0.15f, this.EffectRadius, 0.4f);
 			}
-            else
+			else
             {
 				user.WarpToPoint(startingTurnPosition);
 
@@ -318,7 +319,7 @@ namespace GlaurungItems.Items
 			return user.IsInCombat 
 				&& user.CurrentRoom != null
 				&& user.CurrentRoom.IsSealed
-				//&& ((!isActive && !user.inventory.GunLocked.Value) || (isActive && user.inventory.GunLocked.Value))
+				&& ((!isRecordTimeActive && !user.inventory.GunLocked.Value) || (isRecordTimeActive && user.inventory.GunLocked.Value))
 				&& !user.HasPassiveItem(436) //bloodied scarf
 				;
 		}

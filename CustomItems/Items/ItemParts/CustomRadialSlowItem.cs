@@ -9,7 +9,7 @@ namespace GlaurungItems.Items
 		public CustomRadialSlowItem()
 		{
 			this.HoldTime = 5f;
-			this.OutTime = 3f;
+			this.OutTime = 2f;
 			this.EffectRadius = 30f;
 			this.MaxTimeModifier = 0f;
 		}
@@ -17,7 +17,7 @@ namespace GlaurungItems.Items
 		// Token: 0x06007714 RID: 30484 RVA: 0x002E8A24 File Offset: 0x002E6C24
 		protected override void DoEffect(PlayerController user)
 		{
-			AkSoundEngine.PostEvent("Play_OBJ_time_bell_01", base.gameObject);
+			//AkSoundEngine.PostEvent("Play_OBJ_time_bell_01", base.gameObject);
 			base.DoEffect(user);
 		}
 
