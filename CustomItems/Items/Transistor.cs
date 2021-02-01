@@ -64,8 +64,6 @@ namespace GlaurungItems.Items
             projectile3.baseData.speed *= 1f;
             projectile3.baseData.force *= 0.25f;
             projectile3.baseData.range *= 1.25f;
-            projectile3.ChangeTintColorShader(0, Color.blue);
-            projectile3.AdjustPlayerProjectileTint(Color.blue, 0);
             projectile3.transform.parent = gun.barrelOffset;
 
             ProjectileModule.ChargeProjectile chargeProj1 = new ProjectileModule.ChargeProjectile()
@@ -96,6 +94,19 @@ namespace GlaurungItems.Items
             //projectile.SetProjectileSpriteRight("build_projectile", 5, 5);
 
             ETGMod.Databases.Items.Add(gun, null, "ANY");
+        }
+
+        public override void PostProcessProjectile(Projectile projectile)
+        {
+            Tools.Print(projectile.name, "ffffff", true);
+            Tools.Print(this.gun.DefaultModule.chargeProjectiles[2].Projectile.name, "ffffff", true);
+
+            if (projectile.name == this.gun.DefaultModule.chargeProjectiles[2].Projectile.name + "(Clone)")
+            {
+                Tools.Print("test ?", "ffffff", true);
+                projectile.AdjustPlayerProjectileTint(Color.blue, 0);
+            }
+            base.PostProcessProjectile(projectile);
         }
 
         // boilerplate stuff
