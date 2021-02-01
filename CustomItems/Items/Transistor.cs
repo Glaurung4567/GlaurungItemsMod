@@ -43,7 +43,7 @@ namespace GlaurungItems.Items
             projectile.baseData.damage *= 1.3f;
             projectile.baseData.speed *= 1.5f;
             projectile.baseData.force *= 0f;
-            projectile.baseData.range *= 0.15f;
+            projectile.baseData.range = 5.15f;
             projectile.transform.parent = gun.barrelOffset;
 
             Projectile projectile2 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(383) as Gun).DefaultModule.projectiles[0]);
@@ -64,6 +64,7 @@ namespace GlaurungItems.Items
             projectile3.baseData.speed *= 1f;
             projectile3.baseData.force *= 0.25f;
             projectile3.baseData.range *= 1.25f;
+            projectile3.CurseSparks = true;
             projectile3.transform.parent = gun.barrelOffset;
 
             ProjectileModule.ChargeProjectile chargeProj1 = new ProjectileModule.ChargeProjectile()
@@ -98,13 +99,9 @@ namespace GlaurungItems.Items
 
         public override void PostProcessProjectile(Projectile projectile)
         {
-            Tools.Print(projectile.name, "ffffff", true);
-            Tools.Print(this.gun.DefaultModule.chargeProjectiles[2].Projectile.name, "ffffff", true);
-
             if (projectile.name == this.gun.DefaultModule.chargeProjectiles[2].Projectile.name + "(Clone)")
             {
-                Tools.Print("test ?", "ffffff", true);
-                projectile.AdjustPlayerProjectileTint(Color.blue, 0);
+                projectile.CurseSparks = true;
             }
             base.PostProcessProjectile(projectile);
         }
