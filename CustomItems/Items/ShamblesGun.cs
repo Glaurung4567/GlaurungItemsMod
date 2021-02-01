@@ -177,8 +177,6 @@ namespace GlaurungItems.Items
 
         private void OnGunChanged(Gun oldGun, Gun newGun, bool arg3)
         {
-            LiveAmmoItem liveammo = PickupObjectDatabase.GetById(414).GetComponent<LiveAmmoItem>();
-
             if (this.gun && this.gun.CurrentOwner)
             {
                 PlayerController player = this.gun.CurrentOwner as PlayerController;

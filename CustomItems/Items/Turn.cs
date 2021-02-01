@@ -1,4 +1,5 @@
-﻿using ItemAPI;
+﻿using Gungeon;
+using ItemAPI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,7 +38,7 @@ namespace GlaurungItems.Items
 	{
 		public static void Init()
 		{
-			string text = "Turns";
+			string text = "Transistor";
 			string resourcePath = "GlaurungItems/Resources/neuralyzer";
 			GameObject gameObject = new GameObject(text);
 			Turn item = gameObject.AddComponent<Turn>();
@@ -46,7 +47,7 @@ namespace GlaurungItems.Items
 			string longDesc = "";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 1000f);
-			item.quality = ItemQuality.B;
+			item.quality = ItemQuality.A;
 		}
 
 		protected override void DoEffect(PlayerController user)
@@ -80,6 +81,12 @@ namespace GlaurungItems.Items
 				user.healthHaver.IsVulnerable = false;
 				user.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
 
+				Gun usb = Game.Items["gl:usb_swordgun"] as Gun;
+				transistorGun = user.inventory.AddGunToInventory(usb, true);
+				transistorGun.CanBeDropped = false;
+				transistorGun.CanBeSold = false;
+				user.inventory.GunLocked.SetOverride("turn", true, null);
+
 				isRecordTimeActive = true;
 				stopLocalTime = true;
 			}
@@ -101,9 +108,9 @@ namespace GlaurungItems.Items
                 {
 					wasFlyingAtTheStart = false;
                 }
-
-				GameManager.Instance.StartCoroutine(DoTurn(user));
 				isRecordTimeActive = false;
+				isReplayTimeActive = true;
+				GameManager.Instance.StartCoroutine(DoTurn(user));
 			}
 			base.DoEffect(user);
 		}
@@ -292,10 +299,15 @@ namespace GlaurungItems.Items
 			}
 
 			yield return null;
+
 			Time.timeScale = 1;
+			user.inventory.GunLocked.RemoveOverride("turn");
+			user.inventory.DestroyGun(transistorGun);
+			this.transistorGun = null;
 			user.CurrentInputState = PlayerInputState.AllInput;
 			user.ClearInputOverride("turn");
 			stopLocalTime = false;
+			isReplayTimeActive = false;
 			yield break;
 		}
 
@@ -382,6 +394,7 @@ namespace GlaurungItems.Items
 
 		private bool wasFlyingAtTheStart = false;
 		private Vector3 startingTurnPosition;
+		private Gun transistorGun;
 
 		private bool isCurrentlyDodgeRolling = false;
 		private bool hasFired = false;

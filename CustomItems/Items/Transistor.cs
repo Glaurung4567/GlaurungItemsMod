@@ -10,10 +10,10 @@ namespace GlaurungItems.Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("Transistor", "transistor");
-            Game.Items.Rename("outdated_gun_mods:transistor", "gl:transistor");
+            Gun gun = ETGMod.Databases.Items.NewGun("USB Swordgun", "usbswordgun");
+            Game.Items.Rename("outdated_gun_mods:usb_swordgun", "gl:usb_swordgun");
             gun.gameObject.AddComponent<Transistor>();
-            gun.SetShortDescription("USB Swordgun Thingy");
+            gun.SetShortDescription("");
             gun.SetLongDescription("");
             gun.SetupSprite(null, "jpxfrd_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
@@ -46,11 +46,11 @@ namespace GlaurungItems.Items
             projectile.baseData.range = 5.15f;
             projectile.transform.parent = gun.barrelOffset;
 
-            Projectile projectile2 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(383) as Gun).DefaultModule.projectiles[0]);
+            Projectile projectile2 = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(156) as Gun).DefaultModule.projectiles[0]);
             projectile2.gameObject.SetActive(false);
             FakePrefab.MarkAsFakePrefab(projectile2.gameObject);
             UnityEngine.Object.DontDestroyOnLoad(projectile2);
-            projectile2.baseData.damage *= 1f;
+            projectile2.baseData.damage *= 1.5f;
             projectile2.baseData.speed *= 1f;
             projectile2.baseData.force *= 0f;
             projectile2.baseData.range *= 1f;
@@ -106,6 +106,50 @@ namespace GlaurungItems.Items
             base.PostProcessProjectile(projectile);
         }
 
+        protected override void OnPickup(PlayerController player)
+        {
+            base.OnPickup(player);
+            this.GiveElectricDamageImmunity(player); //to add contact damage immunity when the gun is held
+            player.GunChanged += this.OnGunChanged;
+        }
+
+        protected override void OnPostDrop(PlayerController player)
+        {
+            player.GunChanged -= this.OnGunChanged;
+            this.RemoveElectricDamageImmunity(player);
+            base.OnPostDrop(player);
+        }
+
+        private void OnGunChanged(Gun oldGun, Gun newGun, bool arg3)
+        {
+            if (this.gun && this.gun.CurrentOwner)
+            {
+                PlayerController player = this.gun.CurrentOwner as PlayerController;
+                if (newGun == this.gun)
+                {
+                    this.GiveElectricDamageImmunity(player);
+                }
+                else
+                {
+                    this.RemoveElectricDamageImmunity(player);
+                }
+            }
+        }
+
+        private void GiveElectricDamageImmunity(PlayerController player)
+        {
+            this.m_electricityImmunity = new DamageTypeModifier();
+            this.m_electricityImmunity.damageMultiplier = 0f;
+            this.m_electricityImmunity.damageType = CoreDamageTypes.Electric;
+            player.healthHaver.damageTypeModifiers.Add(this.m_electricityImmunity);
+        }
+
+        private void RemoveElectricDamageImmunity(PlayerController player)
+        {
+            player.healthHaver.damageTypeModifiers.Remove(this.m_electricityImmunity);
+        }
+
+
         // boilerplate stuff
         //This block of code allows us to change the reload sounds.
         public override void OnPostFired(PlayerController player, Gun gun)
@@ -146,6 +190,7 @@ namespace GlaurungItems.Items
 
         private bool HasReloaded;
         private static int baseMaxAmmo = 1000;
+        private DamageTypeModifier m_electricityImmunity;
 
     }
 }
