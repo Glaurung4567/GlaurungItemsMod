@@ -23,9 +23,12 @@ Fire gun save ok
 Make user fly ok
 No movement when record full ok
 Cancel action during record ok
-Give transistor, prevent drop and lock ok
-See boss collision ok
+Give usb swordgun, prevent drop and lock ok
+Fix boss collision ok
+Fire all projectiles of the usb swordgun
 
+Check items interactions
+Set dmgCooldown to max
 Prevent companions, coop, goop or orbital intervention
 Prevent enemy spawn mob or proj on death
 Prevent inventory modif
@@ -134,10 +137,10 @@ namespace GlaurungItems.Items
 					{
 						if (playerPositionsDuringActivation.Count > 0)
 						{
-							this.CurrentDamageCooldown -= dodgerollCost;
 							isCurrentlyDodgeRolling = true;
 							actions.Add(actionsToBeRecorded.Dodgeroll);
 							dodgeRollDirection.Add(user.transform.position - playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
+							this.CurrentDamageCooldown -= Math.Min(dodgerollCost, CurrentDamageCooldown);
 						}
 
 					}
@@ -146,11 +149,7 @@ namespace GlaurungItems.Items
 					{
 						isCurrentlyDodgeRolling = false;
 
-						actions.Add(actionsToBeRecorded.Shooting);
-						Vector3 aim = (user.unadjustedAimPoint);// - user.CenterPosition);
-						aimDirectionWhileFiring.Add(aim);
-						gunAngleWhenFired.Add(user.CurrentGun.CurrentAngle);
-						this.CurrentDamageCooldown -= shootCost1;
+						//this.CurrentDamageCooldown -= shootCost1;
 					}
 
 					else if (!user.IsDodgeRolling) //for movement recording
@@ -162,7 +161,7 @@ namespace GlaurungItems.Items
                         {
 							actions.Add(actionsToBeRecorded.Moving);
 							playerPositionsDuringActivation.Add(user.transform.position);
-							this.CurrentDamageCooldown -= movementCost;
+							this.CurrentDamageCooldown -= Math.Min(movementCost, CurrentDamageCooldown);
                         }
                         else if(lenPos <= 1)
                         {
@@ -189,7 +188,8 @@ namespace GlaurungItems.Items
 							actions.RemoveAt(actionsLen - 1);
 							aimDirectionWhileFiring.RemoveAt(aimDirectionWhileFiring.Count - 1);
 							gunAngleWhenFired.RemoveAt(gunAngleWhenFired.Count - 1);
-							this.CurrentDamageCooldown += shootCost1;
+							this.CurrentDamageCooldown += shootCosts[projsFired[projsFired.Count - 1]];
+							projsFired.RemoveAt(projsFired.Count - 1);
 						}
 
 						else if (actionsLen > 2 && actions[actionsLen - 1] == actionsToBeRecorded.Moving && actions[actionsLen - 2] == actionsToBeRecorded.Shooting)
@@ -201,7 +201,8 @@ namespace GlaurungItems.Items
 
 							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 2]);
 							playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
-							this.CurrentDamageCooldown += (shootCost1 + movementCost);
+							this.CurrentDamageCooldown += (shootCosts[projsFired[projsFired.Count - 1]] + movementCost);
+							projsFired.RemoveAt(projsFired.Count - 1);
 						}
 
 						else if (actions[actionsLen - 1] == actionsToBeRecorded.Dodgeroll)
@@ -289,15 +290,20 @@ namespace GlaurungItems.Items
                     //user.forceidlefacepoint(aimdirectionwhilefiring[0]);
                     user.CurrentGun.HandleAimRotation(aimDirectionWhileFiring[0]);
 					
-					GameObject gameObject = SpawnManager.SpawnProjectile(user.CurrentGun.DefaultModule.projectiles[0].gameObject, user.sprite.WorldCenter, Quaternion.Euler(0f, 0f, gunAngleWhenFired[0]), true);
+					GameObject gameObject = SpawnManager.SpawnProjectile(usb.DefaultModule.chargeProjectiles[projsFired[0]].Projectile.gameObject, user.CurrentGun.barrelOffset.position, Quaternion.Euler(0f, 0f, gunAngleWhenFired[0]), true);
 					Projectile projectile = gameObject.GetComponent<Projectile>();
+					if(projsFired[0] == 2)
+                    {
+						projectile.CurseSparks = true;
+                    }
+					projectile.transform.parent = user.CurrentGun.barrelOffset;
 					user.DoPostProcessProjectile(projectile);
-					//projectile.transform.parent = user.CurrentGun.barrelOffset;
 					//user.CurrentGun.ForceFireProjectile(user.CurrentGun.DefaultModule.projectiles[0]);
 					//user.forceAimPoint = null;
 					yield return new WaitForSeconds(0.2f);
 					aimDirectionWhileFiring.RemoveAt(0);
 					gunAngleWhenFired.RemoveAt(0);
+					projsFired.RemoveAt(0);
 				}
 			}
 
@@ -320,7 +326,7 @@ namespace GlaurungItems.Items
 				&& user.CurrentRoom != null
 				&& user.CurrentRoom.IsSealed
 				&& ((!isRecordTimeActive && !user.inventory.GunLocked.Value) || (isRecordTimeActive && user.inventory.GunLocked.Value))
-				&& !user.HasPassiveItem(436) //bloodied scarf
+				//&& !user.HasPassiveItem(436) //bloodied scarf
 				;
 		}
 
@@ -342,28 +348,35 @@ namespace GlaurungItems.Items
 					usb.DefaultModule.chargeProjectiles[1].Projectile.name + "(Clone)",
 					usb.DefaultModule.chargeProjectiles[2].Projectile.name + "(Clone)"
 				};
-                if (validProjs.Contains(proj.name))
+                if (validProjs.Contains(proj.name) && isRecordTimeActive && CurrentDamageCooldown > 0)
                 {
-					if (proj.name == usb.DefaultModule.chargeProjectiles[0].Projectile.name + "(Clone)")
+					if (proj.name == validProjs[0])
 					{
 						projNb = 0;
 					}
-					else if ((proj.name == usb.DefaultModule.chargeProjectiles[1].Projectile.name + "(Clone)"))
+					else if (proj.name == validProjs[1])
 					{
 						projNb = 1;
 					}
-					else if ((proj.name == usb.DefaultModule.chargeProjectiles[2].Projectile.name + "(Clone)"))
+					else if (proj.name == validProjs[2])
 					{
 						projNb = 2;
 					}
 					projsFired.Add(projNb);
+					actions.Add(actionsToBeRecorded.Shooting);
+					Vector3 aim = (user.unadjustedAimPoint);// - user.CenterPosition);
+					aimDirectionWhileFiring.Add(aim);
+					gunAngleWhenFired.Add(user.CurrentGun.CurrentAngle);
+					this.CurrentDamageCooldown -= Math.Min(shootCosts[projNb], CurrentDamageCooldown);
+
 
 					Projectile projCopy = usb.DefaultModule.chargeProjectiles[projNb].Projectile;
-					GameObject gameObject = SpawnManager.SpawnProjectile(projCopy.gameObject, user.sprite.WorldCenter, Quaternion.Euler(0f, 0f, user.CurrentGun.CurrentAngle), true);
+					GameObject gameObject = SpawnManager.SpawnProjectile(projCopy.gameObject, user.CurrentGun.barrelOffset.position, Quaternion.Euler(0f, 0f, user.CurrentGun.CurrentAngle), true);
 					Projectile projectileInst = gameObject.GetComponent<Projectile>();
 					projectileInst.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
 					projectileInst.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
-					if(projNb == 2)
+					projectileInst.transform.parent = user.CurrentGun.barrelOffset;
+					if (projNb == 2)
                     {
 						projectileInst.CurseSparks = true;
                     }
@@ -422,7 +435,11 @@ namespace GlaurungItems.Items
 
 		private readonly static float dodgerollCost = 100f;
 		private readonly static float movementCost = .5f;
-		private readonly static float shootCost1 = 100f;
+		private readonly static float[] shootCosts = {
+			40f,
+			200f,
+			500f
+		};
 		private Gun usb = Game.Items["gl:usb_swordgun"] as Gun;
 
 

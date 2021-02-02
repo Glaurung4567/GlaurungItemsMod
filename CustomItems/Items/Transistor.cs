@@ -26,7 +26,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Charged;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 0f;
-            gun.DefaultModule.cooldownTime = 0.1f;
+            gun.DefaultModule.cooldownTime = 0.2f;
             gun.DefaultModule.numberOfShotsInClip = Transistor.baseMaxAmmo;
             gun.SetBaseMaxAmmo(Transistor.baseMaxAmmo);
             gun.InfiniteAmmo = true;
