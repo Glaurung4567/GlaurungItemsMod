@@ -411,7 +411,7 @@ namespace GlaurungItems.Items
 					aimDirectionWhileFiring.Add(aim);
 					gunAngleWhenFired.Add(user.CurrentGun.CurrentAngle);
 					float c = Math.Min(shootCosts[projNb], CurrentDamageCooldown);
-					if (c < dodgerollCost)
+					if (c < shootCosts[projNb])
 					{
 						notFullLastActionCost = c;
 					}
