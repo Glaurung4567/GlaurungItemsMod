@@ -25,10 +25,10 @@ No movement when record full ok
 Cancel action during record ok
 Give usb swordgun, prevent drop and lock ok
 Fix boss collision ok
-Fire all projectiles of the usb swordgun
+Fire all projectiles of the usb swordgun ok
+Prevent dmgCooldown to go over max with last action
 
 Check items interactions
-Set dmgCooldown to max
 Prevent companions, coop, goop or orbital intervention
 Prevent enemy spawn mob or proj on death
 Prevent inventory modif
