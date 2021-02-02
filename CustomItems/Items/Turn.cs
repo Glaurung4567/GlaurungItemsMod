@@ -140,7 +140,12 @@ namespace GlaurungItems.Items
 							isCurrentlyDodgeRolling = true;
 							actions.Add(actionsToBeRecorded.Dodgeroll);
 							dodgeRollDirection.Add(user.transform.position - playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
-							this.CurrentDamageCooldown -= Math.Min(dodgerollCost, CurrentDamageCooldown);
+							float c = Math.Min(dodgerollCost, CurrentDamageCooldown);
+							if(c < dodgerollCost)
+                            {
+								notFullLastActionCost = c;
+							}
+							this.CurrentDamageCooldown -= c;
 						}
 
 					}
@@ -188,7 +193,17 @@ namespace GlaurungItems.Items
 							actions.RemoveAt(actionsLen - 1);
 							aimDirectionWhileFiring.RemoveAt(aimDirectionWhileFiring.Count - 1);
 							gunAngleWhenFired.RemoveAt(gunAngleWhenFired.Count - 1);
-							this.CurrentDamageCooldown += shootCosts[projsFired[projsFired.Count - 1]];
+
+							if (notFullLastActionCost > -999)
+							{
+								this.CurrentDamageCooldown += notFullLastActionCost;
+								notFullLastActionCost = -999;
+							}
+							else
+							{
+								this.CurrentDamageCooldown += shootCosts[projsFired[projsFired.Count - 1]];
+							}
+
 							projsFired.RemoveAt(projsFired.Count - 1);
 						}
 
@@ -201,7 +216,17 @@ namespace GlaurungItems.Items
 
 							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 2]);
 							playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
-							this.CurrentDamageCooldown += (shootCosts[projsFired[projsFired.Count - 1]] + movementCost);
+							
+							if (notFullLastActionCost > -999)
+							{
+								this.CurrentDamageCooldown += (notFullLastActionCost + movementCost);
+								notFullLastActionCost = -999;
+							}
+							else
+							{
+								this.CurrentDamageCooldown += (shootCosts[projsFired[projsFired.Count - 1]] + movementCost);
+							}
+
 							projsFired.RemoveAt(projsFired.Count - 1);
 						}
 
@@ -210,7 +235,16 @@ namespace GlaurungItems.Items
 							actions.RemoveAt(actionsLen - 1);
 							dodgeRollDirection.RemoveAt(dodgeRollDirection.Count - 1);
 							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
-							this.CurrentDamageCooldown += dodgerollCost;
+
+							if (notFullLastActionCost > -999)
+							{
+								this.CurrentDamageCooldown += notFullLastActionCost;
+								notFullLastActionCost = -999;
+							}
+							else
+							{
+								this.CurrentDamageCooldown += dodgerollCost;
+							}
 						}
 
 						else if (actionsLen > 2 && actions[actionsLen - 1] == actionsToBeRecorded.Moving && actions[actionsLen - 2] == actionsToBeRecorded.Dodgeroll)
@@ -221,7 +255,16 @@ namespace GlaurungItems.Items
 
 							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 2]);
 							playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
-							this.CurrentDamageCooldown += (dodgerollCost + movementCost);
+							
+							if(notFullLastActionCost > -999)
+                            {
+								this.CurrentDamageCooldown += (notFullLastActionCost + movementCost);
+								notFullLastActionCost = -999;
+							}
+                            else
+                            {
+								this.CurrentDamageCooldown += (dodgerollCost + movementCost);
+							}
 						}
 
 						else if (actions[actionsLen - 1] == actionsToBeRecorded.Moving && actionsLen > 1)
@@ -367,7 +410,12 @@ namespace GlaurungItems.Items
 					Vector3 aim = (user.unadjustedAimPoint);// - user.CenterPosition);
 					aimDirectionWhileFiring.Add(aim);
 					gunAngleWhenFired.Add(user.CurrentGun.CurrentAngle);
-					this.CurrentDamageCooldown -= Math.Min(shootCosts[projNb], CurrentDamageCooldown);
+					float c = Math.Min(shootCosts[projNb], CurrentDamageCooldown);
+					if (c < dodgerollCost)
+					{
+						notFullLastActionCost = c;
+					}
+					this.CurrentDamageCooldown -= c;
 
 
 					Projectile projCopy = usb.DefaultModule.chargeProjectiles[projNb].Projectile;
@@ -453,6 +501,7 @@ namespace GlaurungItems.Items
 		private bool isCurrentlyDodgeRolling = false;
 		private bool hasFired = false;
 		private bool cancelActionCooldown = false;
+		private float notFullLastActionCost = -999;
 
 		private List<actionsToBeRecorded> actions = new List<actionsToBeRecorded>();
 
