@@ -50,7 +50,7 @@ namespace GlaurungItems.Items
 			Turn item = gameObject.AddComponent<Turn>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
 			string shortDesc = "In circles";
-			string longDesc = "";
+			string longDesc = "On first use, ";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 1000f);
 			item.quality = ItemQuality.A;
@@ -95,7 +95,7 @@ namespace GlaurungItems.Items
 
 				isRecordTimeActive = true;
 				stopLocalTime = true;
-				Exploder.DoDistortionWave(user.CenterPosition, 0.4f, 0.15f, this.EffectRadius, 0.4f);
+				Exploder.DoDistortionWave(user.CenterPosition, 0.4f, 0.15f, this.EffectRadius, .7f);
 			}
 			else
             {
@@ -299,8 +299,65 @@ namespace GlaurungItems.Items
 			}
 		}
 
+		private void User_PostProcessProjectile(Projectile proj, float arg2)
+		{
+			if (!hasFired)
+			{
+				PlayerController user = this.LastOwner;
+				hasFired = true;
+				int projNb = 0;
+				List<string> validProjs = new List<string>{
+					usb.DefaultModule.chargeProjectiles[0].Projectile.name + "(Clone)",
+					usb.DefaultModule.chargeProjectiles[1].Projectile.name + "(Clone)",
+					usb.DefaultModule.chargeProjectiles[2].Projectile.name + "(Clone)"
+				};
+				if (validProjs.Contains(proj.name) && isRecordTimeActive && CurrentDamageCooldown > 0)
+				{
+					if (proj.name == validProjs[0])
+					{
+						projNb = 0;
+					}
+					else if (proj.name == validProjs[1])
+					{
+						projNb = 1;
+					}
+					else if (proj.name == validProjs[2])
+					{
+						projNb = 2;
+					}
+					projsFired.Add(projNb);
+					actions.Add(actionsToBeRecorded.Shooting);
+					Vector3 aim = (user.unadjustedAimPoint);// - user.CenterPosition);
+					aimDirectionWhileFiring.Add(aim);
+					gunAngleWhenFired.Add(user.CurrentGun.CurrentAngle);
+					float c = Math.Min(shootCosts[projNb], CurrentDamageCooldown);
+					if (c < shootCosts[projNb])
+					{
+						notFullLastActionCost = c;
+					}
+					this.CurrentDamageCooldown -= c;
 
-        private IEnumerator DoTurn(PlayerController user)
+
+					Projectile projCopy = usb.DefaultModule.chargeProjectiles[projNb].Projectile;
+					GameObject gameObject = SpawnManager.SpawnProjectile(projCopy.gameObject, user.CurrentGun.barrelOffset.position, Quaternion.Euler(0f, 0f, user.CurrentGun.CurrentAngle), true);
+					Projectile projectileInst = gameObject.GetComponent<Projectile>();
+					projectileInst.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
+					projectileInst.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
+					projectileInst.transform.parent = user.CurrentGun.barrelOffset;
+					if (projNb == 2)
+					{
+						projectileInst.CurseSparks = true;
+					}
+				}
+
+				GameManager.Instance.StartCoroutine(ResetHasFired());
+
+			}
+
+			proj.DieInAir(true, false, false);
+		}
+
+		private IEnumerator DoTurn(PlayerController user)
         {
 			
 			user.SetInputOverride("turn");
@@ -381,63 +438,6 @@ namespace GlaurungItems.Items
 			base.OnPreDrop(user);
 		}
 
-		private void User_PostProcessProjectile(Projectile proj, float arg2)
-		{
-            if (!hasFired)
-            {
-				PlayerController user = this.LastOwner;
-				hasFired = true;
-				int projNb = 0;
-				List<string> validProjs = new List<string>{
-					usb.DefaultModule.chargeProjectiles[0].Projectile.name + "(Clone)",
-					usb.DefaultModule.chargeProjectiles[1].Projectile.name + "(Clone)",
-					usb.DefaultModule.chargeProjectiles[2].Projectile.name + "(Clone)"
-				};
-                if (validProjs.Contains(proj.name) && isRecordTimeActive && CurrentDamageCooldown > 0)
-                {
-					if (proj.name == validProjs[0])
-					{
-						projNb = 0;
-					}
-					else if (proj.name == validProjs[1])
-					{
-						projNb = 1;
-					}
-					else if (proj.name == validProjs[2])
-					{
-						projNb = 2;
-					}
-					projsFired.Add(projNb);
-					actions.Add(actionsToBeRecorded.Shooting);
-					Vector3 aim = (user.unadjustedAimPoint);// - user.CenterPosition);
-					aimDirectionWhileFiring.Add(aim);
-					gunAngleWhenFired.Add(user.CurrentGun.CurrentAngle);
-					float c = Math.Min(shootCosts[projNb], CurrentDamageCooldown);
-					if (c < shootCosts[projNb])
-					{
-						notFullLastActionCost = c;
-					}
-					this.CurrentDamageCooldown -= c;
-
-
-					Projectile projCopy = usb.DefaultModule.chargeProjectiles[projNb].Projectile;
-					GameObject gameObject = SpawnManager.SpawnProjectile(projCopy.gameObject, user.CurrentGun.barrelOffset.position, Quaternion.Euler(0f, 0f, user.CurrentGun.CurrentAngle), true);
-					Projectile projectileInst = gameObject.GetComponent<Projectile>();
-					projectileInst.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
-					projectileInst.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
-					projectileInst.transform.parent = user.CurrentGun.barrelOffset;
-					if (projNb == 2)
-                    {
-						projectileInst.CurseSparks = true;
-                    }
-				}
-
-				GameManager.Instance.StartCoroutine(ResetHasFired());
-
-            }
-
-			proj.DieInAir(true, false, false);
-		}
 
 		private IEnumerator ResetHasFired()
         {
@@ -448,7 +448,7 @@ namespace GlaurungItems.Items
 
 		private IEnumerator CancelCooldownCoroutine()
 		{
-			yield return new WaitForSeconds(1.25f);
+			yield return new WaitForSeconds(1f);
 			cancelActionCooldown = false;
 			yield break;
 		}

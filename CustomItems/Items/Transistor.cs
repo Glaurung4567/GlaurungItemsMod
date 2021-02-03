@@ -62,7 +62,7 @@ namespace GlaurungItems.Items
             UnityEngine.Object.DontDestroyOnLoad(projectile3);
             projectile3.baseData.damage *= 1f;
             projectile3.baseData.speed *= 1f;
-            projectile3.baseData.force *= 0.25f;
+            projectile3.baseData.force *= 0.5f;
             projectile3.baseData.range *= 1.25f;
             projectile3.CurseSparks = true;
             projectile3.transform.parent = gun.barrelOffset;
@@ -76,7 +76,7 @@ namespace GlaurungItems.Items
             ProjectileModule.ChargeProjectile chargeProj2 = new ProjectileModule.ChargeProjectile()
             {
                 Projectile = projectile2,
-                ChargeTime = 1f,
+                ChargeTime = .5f,
                 AmmoCost = 2,
             };
             ProjectileModule.ChargeProjectile chargeProj3 = new ProjectileModule.ChargeProjectile()
@@ -149,6 +149,11 @@ namespace GlaurungItems.Items
             player.healthHaver.damageTypeModifiers.Remove(this.m_electricityImmunity);
         }
 
+        public override void OnFinishAttack(PlayerController player, Gun gun)
+        {
+            gun.PreventNormalFireAudio = true;
+            AkSoundEngine.PostEvent("Play_WPN_sflaser_shot_01", gameObject);
+        }
 
         // boilerplate stuff
         //This block of code allows us to change the reload sounds.
@@ -157,7 +162,6 @@ namespace GlaurungItems.Items
             //This determines what sound you want to play when you fire a gun.
             //Sounds names are based on the Gungeon sound dump, which can be found at EnterTheGungeon/Etg_Data/StreamingAssets/Audio/GeneratedSoundBanks/Windows/sfx.txt
             gun.PreventNormalFireAudio = true;
-            AkSoundEngine.PostEvent("Play_WPN_beretta_shot_01", gameObject);
         }
 
         protected override void Update()
