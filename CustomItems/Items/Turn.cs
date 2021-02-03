@@ -26,7 +26,9 @@ Cancel action during record ok
 Give usb swordgun, prevent drop and lock ok
 Fix boss collision ok
 Fire all projectiles of the usb swordgun ok
-Prevent dmgCooldown to go over max with last action
+Prevent dmgCooldown to go over max with last action ok
+
+see if cancel works
 
 Check items interactions
 Prevent companions, coop, goop or orbital intervention

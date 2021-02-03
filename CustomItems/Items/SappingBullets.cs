@@ -83,7 +83,10 @@ namespace GlaurungItems.Items
 			if (enemy != null && !fatal)
 			{
 				AIActor aiactor = enemy.aiActor;
-				SapTarget(aiactor);
+                if (enemy.aiActor)
+                {
+					SapTarget(aiactor);
+				}
 				//Tools.Print(aiActor.EnemyGuid, "ffffff", true);
 			}
 		}
@@ -144,7 +147,7 @@ namespace GlaurungItems.Items
 					m_aiActor.ForceFall();
                 }
 
-				if(m_aiActor && m_aiActor.healthHaver && m_aiActor.healthHaver.IsAlive && m_aiActor.ParentRoom != null && m_aiActor.ParentRoom.RoomGoops.Count > 0)
+				if(m_aiActor && m_aiActor.healthHaver && m_aiActor.healthHaver.IsAlive && m_aiActor.ParentRoom != null && m_aiActor.ParentRoom.RoomGoops != null && m_aiActor.ParentRoom.RoomGoops.Count > 0)
                 {
 					List<DeadlyDeadlyGoopManager> goopManagers = m_aiActor.ParentRoom.RoomGoops;
 					//int i = 0;
