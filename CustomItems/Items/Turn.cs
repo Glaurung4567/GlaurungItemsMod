@@ -28,14 +28,16 @@ Fix boss collision ok
 Fire all projectiles of the usb swordgun ok
 Prevent dmgCooldown to go over max with last action ok
 Check death during replay fun ok
+Remove goops ok
+end turn early if ondrop ok
 
 see if cancel works properly
 
-Check items interactions
 Prevent companions, coop, goop or orbital intervention
 Prevent enemy spawn mob/proj on death or refreeze
 Prevent inventory modif
 Prevent interactions 
+Check items interactions
 Prevent blanks
 end turn early if onleavecombat, ondrop, PlayerItem.onitemswitch/PC.CurrentItem, onchangedroom, onNoEnemy, onReinforcement
 */
@@ -474,10 +476,9 @@ namespace GlaurungItems.Items
 					wasFlyingAtTheStart = false;
 				}
 
-				this.damageCooldown = turnCooldown;
-
 				stopLocalTime = false;
 				isRecordTimeActive = false;
+				this.damageCooldown = 0;
 			}
 
 			else if(isReplayTimeActive)
@@ -499,8 +500,14 @@ namespace GlaurungItems.Items
 			base.OnPreDrop(user);
 		}
 
+        public override void OnItemSwitched(PlayerController user)
+        {
+			CancelEarly(user);
+            base.OnItemSwitched(user);
+        }
 
-		private IEnumerator ResetHasFired()
+
+        private IEnumerator ResetHasFired()
         {
 			yield return null;
 			hasFired = false;
