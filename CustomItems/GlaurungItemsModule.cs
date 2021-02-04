@@ -83,7 +83,6 @@ namespace GlaurungItems
                 Transistor.Add();
                 Turn.Init();
                 //InfiltratorRounds.Init();
-
                 //GunDeadArmyStronghold.Init();
 
                 //modder tools

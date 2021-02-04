@@ -27,16 +27,17 @@ Give usb swordgun, prevent drop and lock ok
 Fix boss collision ok
 Fire all projectiles of the usb swordgun ok
 Prevent dmgCooldown to go over max with last action ok
+Check death during replay fun ok
 
-see if cancel works
+see if cancel works properly
 
 Check items interactions
 Prevent companions, coop, goop or orbital intervention
-Prevent enemy spawn mob or proj on death
+Prevent enemy spawn mob/proj on death or refreeze
 Prevent inventory modif
 Prevent interactions 
 Prevent blanks
-end turn early if onleavecombat, ondrop, onitemswitch, onchangedroom, onNoEnemy, onReinforcement
+end turn early if onleavecombat, ondrop, PlayerItem.onitemswitch/PC.CurrentItem, onchangedroom, onNoEnemy, onReinforcement
 */
 namespace GlaurungItems.Items
 {
@@ -64,6 +65,16 @@ namespace GlaurungItems.Items
 
 				user.PostProcessProjectile += User_PostProcessProjectile;
 				
+				if(user.CurrentRoom != null && user.CurrentRoom.RoomGoops != null && user.CurrentRoom.RoomGoops.Count > 0)
+                {
+					List<DeadlyDeadlyGoopManager> goopManagers = user.CurrentRoom.RoomGoops;
+					//int i = 0;
+					foreach (DeadlyDeadlyGoopManager goopManager in goopManagers)
+					{
+						goopManager.RemoveGoopCircle(user.CenterPosition, 30f);
+					}
+				}
+
 				actions = new List<actionsToBeRecorded>();
 				dodgeRollDirection = new List<Vector2>();
 				playerPositionsDuringActivation = new List<Vector3>();
@@ -104,7 +115,6 @@ namespace GlaurungItems.Items
 				user.healthHaver.IsVulnerable = true;
 				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(collisionMask);
 				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(collisionMask2);
-
 
 				user.PostProcessProjectile -= User_PostProcessProjectile;
 				if (!wasFlyingAtTheStart)
@@ -296,6 +306,7 @@ namespace GlaurungItems.Items
 					}
 					GameManager.Instance.StartCoroutine(CancelCooldownCoroutine());
 				}
+
 			}
 		}
 
@@ -357,6 +368,7 @@ namespace GlaurungItems.Items
 			proj.DieInAir(true, false, false);
 		}
 
+
 		private IEnumerator DoTurn(PlayerController user)
         {
 			
@@ -365,6 +377,10 @@ namespace GlaurungItems.Items
 			Time.timeScale = 1.6f;
 			foreach (actionsToBeRecorded act in actions)
 			{
+                if (!isReplayTimeActive)
+                {
+					break;
+                }
 				if (act == actionsToBeRecorded.Dodgeroll)
 				{
 					user.ForceStartDodgeRoll(dodgeRollDirection[0]);
