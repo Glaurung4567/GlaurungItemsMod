@@ -439,7 +439,9 @@ namespace GlaurungItems.Items
 				user.inventory.GunLocked.RemoveOverride("turn");
 				user.inventory.DestroyGun(transistorGunInstance);
 				this.transistorGunInstance = null;
+
 				user.CurrentInputState = PlayerInputState.AllInput;
+
 				user.healthHaver.IsVulnerable = true;
 				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(collisionMask);
 				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(collisionMask2);
@@ -461,6 +463,7 @@ namespace GlaurungItems.Items
 				stopLocalTime = false;
 				isRecordTimeActive = false;
 			}
+
 			else if(isReplayTimeActive)
 			{
 				Time.timeScale = 1;
