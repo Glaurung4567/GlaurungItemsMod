@@ -52,7 +52,7 @@ namespace GlaurungItems.Items
 			string shortDesc = "In circles";
 			string longDesc = "On first use, ";
 			item.SetupItem(shortDesc, longDesc, "gl");
-			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 1000f);
+			item.SetCooldownType(ItemBuilder.CooldownType.Damage, turnCooldown);
 			item.quality = ItemQuality.A;
 		}
 
@@ -432,9 +432,51 @@ namespace GlaurungItems.Items
 				;
 		}
 
+		private void CancelEarly(PlayerController user)
+        {
+            if (isRecordTimeActive)
+            {
+				user.inventory.GunLocked.RemoveOverride("turn");
+				user.inventory.DestroyGun(transistorGunInstance);
+				this.transistorGunInstance = null;
+				user.CurrentInputState = PlayerInputState.AllInput;
+				user.healthHaver.IsVulnerable = true;
+				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(collisionMask);
+				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(collisionMask2);
+
+
+				user.PostProcessProjectile -= User_PostProcessProjectile;
+				if (!wasFlyingAtTheStart)
+				{
+					user.SetIsFlying(false, "turn");
+					user.AdditionalCanDodgeRollWhileFlying.RemoveOverride("turn");
+				}
+				else
+				{
+					wasFlyingAtTheStart = false;
+				}
+
+				this.damageCooldown = turnCooldown;
+
+				stopLocalTime = false;
+				isRecordTimeActive = false;
+			}
+			else if(isReplayTimeActive)
+			{
+				Time.timeScale = 1;
+				user.inventory.GunLocked.RemoveOverride("turn");
+				user.inventory.DestroyGun(transistorGunInstance);
+				this.transistorGunInstance = null;
+				user.CurrentInputState = PlayerInputState.AllInput;
+				user.ClearInputOverride("turn");
+				stopLocalTime = false;
+				isReplayTimeActive = false;
+			}
+		}
+
 		protected override void OnPreDrop(PlayerController user)
 		{
-			isRecordTimeActive = false;
+			CancelEarly(user);
 			base.OnPreDrop(user);
 		}
 
@@ -483,6 +525,7 @@ namespace GlaurungItems.Items
 			Moving,
 		};
 
+		private readonly static float turnCooldown = 1000f;
 		private readonly static float dodgerollCost = 100f;
 		private readonly static float movementCost = .5f;
 		private readonly static float[] shootCosts = {
