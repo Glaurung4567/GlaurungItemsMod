@@ -3,6 +3,7 @@ using ItemAPI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 /*
@@ -33,6 +34,7 @@ end turn early if ondrop ok
 end turn early if PlayerItem.onitemswitch/PC.CurrentItem ok
 
 see if cancel works properly
+remove player projs at start
 
 Prevent companions, coop or orbital intervention
 Prevent enemy spawn mob/proj on death or refreeze
@@ -78,6 +80,17 @@ namespace GlaurungItems.Items
 					}
 				}
 
+				//from SilencerInstance
+				ReadOnlyCollection<Projectile> allProjectiles = StaticReferenceManager.AllProjectiles;
+				for (int l = allProjectiles.Count - 1; l >= 0; l--)
+				{
+					Projectile projectile = allProjectiles[l];
+					if (projectile.Owner is PlayerController)
+					{
+						projectile.ForceDestruction();
+					}
+				}
+
 				actions = new List<actionsToBeRecorded>();
 				dodgeRollDirection = new List<Vector2>();
 				playerPositionsDuringActivation = new List<Vector3>();
@@ -112,6 +125,7 @@ namespace GlaurungItems.Items
 				stopLocalTime = true;
 				Exploder.DoDistortionWave(user.CenterPosition, 0.4f, 0.15f, this.EffectRadius, .7f);
 			}
+
 			else
             {
 				user.WarpToPoint(startingTurnPosition);
