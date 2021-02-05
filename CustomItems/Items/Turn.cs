@@ -30,16 +30,17 @@ Prevent dmgCooldown to go over max with last action ok
 Check death during replay fun ok
 Remove goops ok
 end turn early if ondrop ok
+end turn early if PlayerItem.onitemswitch/PC.CurrentItem ok
 
 see if cancel works properly
 
-Prevent companions, coop, goop or orbital intervention
+Prevent companions, coop or orbital intervention
 Prevent enemy spawn mob/proj on death or refreeze
 Prevent inventory modif
 Prevent interactions 
 Check items interactions
 Prevent blanks
-end turn early if onleavecombat, ondrop, PlayerItem.onitemswitch/PC.CurrentItem, onchangedroom, onNoEnemy, onReinforcement
+end turn early if onleavecombat, onchangedroom, onNoEnemy, onReinforcement
 */
 namespace GlaurungItems.Items
 {
@@ -48,7 +49,7 @@ namespace GlaurungItems.Items
 		public static void Init()
 		{
 			string text = "Transistor";
-			string resourcePath = "GlaurungItems/Resources/neuralyzer";
+			string resourcePath = "GlaurungItems/Resources/turn";
 			GameObject gameObject = new GameObject(text);
 			Turn item = gameObject.AddComponent<Turn>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
@@ -81,6 +82,7 @@ namespace GlaurungItems.Items
 				dodgeRollDirection = new List<Vector2>();
 				playerPositionsDuringActivation = new List<Vector3>();
 				aimDirectionWhileFiring = new List<Vector3>();
+				projsPositions = new List<Vector3>();
 				gunAngleWhenFired = new List<float>();
 				projsFired = new List<int>();
 
@@ -207,6 +209,7 @@ namespace GlaurungItems.Items
 							actions.RemoveAt(actionsLen - 1);
 							aimDirectionWhileFiring.RemoveAt(aimDirectionWhileFiring.Count - 1);
 							gunAngleWhenFired.RemoveAt(gunAngleWhenFired.Count - 1);
+							projsPositions.RemoveAt(projsPositions.Count - 1);
 
 							if (notFullLastActionCost > -999)
 							{
@@ -227,6 +230,7 @@ namespace GlaurungItems.Items
 							actions.RemoveAt(actions.Count - 1);
 							aimDirectionWhileFiring.RemoveAt(aimDirectionWhileFiring.Count - 1);
 							gunAngleWhenFired.RemoveAt(gunAngleWhenFired.Count - 1);
+							projsPositions.RemoveAt(projsPositions.Count - 1);
 
 							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 2]);
 							playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
@@ -343,6 +347,7 @@ namespace GlaurungItems.Items
 					Vector3 aim = (user.unadjustedAimPoint);// - user.CenterPosition);
 					aimDirectionWhileFiring.Add(aim);
 					gunAngleWhenFired.Add(user.CurrentGun.CurrentAngle);
+					projsPositions.Add(user.CurrentGun.barrelOffset.position);
 					float c = Math.Min(shootCosts[projNb], CurrentDamageCooldown);
 					if (c < shootCosts[projNb])
 					{
@@ -410,13 +415,13 @@ namespace GlaurungItems.Items
                     //user.forceidlefacepoint(aimdirectionwhilefiring[0]);
                     user.CurrentGun.HandleAimRotation(aimDirectionWhileFiring[0]);
 					
-					GameObject gameObject = SpawnManager.SpawnProjectile(usb.DefaultModule.chargeProjectiles[projsFired[0]].Projectile.gameObject, user.CurrentGun.barrelOffset.position, Quaternion.Euler(0f, 0f, gunAngleWhenFired[0]), true);
+					GameObject gameObject = SpawnManager.SpawnProjectile(usb.DefaultModule.chargeProjectiles[projsFired[0]].Projectile.gameObject, projsPositions[0], Quaternion.Euler(0f, 0f, gunAngleWhenFired[0]), true);
 					Projectile projectile = gameObject.GetComponent<Projectile>();
 					if(projsFired[0] == 2)
                     {
 						projectile.CurseSparks = true;
                     }
-					projectile.transform.parent = user.CurrentGun.barrelOffset;
+					//projectile.transform.parent.position = projsPositions[0];
 					user.DoPostProcessProjectile(projectile);
 					//user.CurrentGun.ForceFireProjectile(user.CurrentGun.DefaultModule.projectiles[0]);
 					//user.forceAimPoint = null;
@@ -424,6 +429,7 @@ namespace GlaurungItems.Items
 					aimDirectionWhileFiring.RemoveAt(0);
 					gunAngleWhenFired.RemoveAt(0);
 					projsFired.RemoveAt(0);
+					projsPositions.RemoveAt(0);
 				}
 			}
 
@@ -579,6 +585,7 @@ namespace GlaurungItems.Items
 		private List<Vector2> dodgeRollDirection = new List<Vector2>();
 		private List<Vector3> playerPositionsDuringActivation = new List<Vector3>();
 		private List<Vector3> aimDirectionWhileFiring = new List<Vector3>();
+		private List<Vector3> projsPositions = new List<Vector3>();
 		private List<float> gunAngleWhenFired = new List<float>();
 		private List<int> projsFired = new List<int>();
     }

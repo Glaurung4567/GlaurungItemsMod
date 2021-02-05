@@ -10,12 +10,12 @@ namespace GlaurungItems.Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("USB Swordgun", "usbswordgun");
+            Gun gun = ETGMod.Databases.Items.NewGun("USB Swordgun", "transistorgun");
             Game.Items.Rename("outdated_gun_mods:usb_swordgun", "gl:usb_swordgun");
             gun.gameObject.AddComponent<Transistor>();
             gun.SetShortDescription("");
             gun.SetLongDescription("");
-            gun.SetupSprite(null, "jpxfrd_idle_001", 8);
+            gun.SetupSprite(null, "transistorgun_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
             //gun.SetAnimationFPS(gun.idleAnimation, 8);

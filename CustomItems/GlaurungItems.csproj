@@ -240,5 +240,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\poyo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\turn.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
