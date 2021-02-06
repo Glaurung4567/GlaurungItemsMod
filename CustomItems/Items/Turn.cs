@@ -32,9 +32,9 @@ Check death during replay fun ok
 Remove goops ok
 end turn early if ondrop ok
 end turn early if PlayerItem.onitemswitch/PC.CurrentItem ok
+remove player projs at start ok
 
 see if cancel works properly
-remove player projs at start
 
 Prevent companions, coop or orbital intervention
 Prevent enemy spawn mob/proj on death or refreeze
