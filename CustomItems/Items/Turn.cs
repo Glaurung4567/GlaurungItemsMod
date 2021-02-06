@@ -99,6 +99,14 @@ namespace GlaurungItems.Items
 				projsPositions = new List<Vector3>();
 				gunAngleWhenFired = new List<float>();
 				projsFired = new List<int>();
+				compsCanTargetEnemiesSave = new Dictionary<AIActor, bool>();
+
+				List<AIActor> comps = user.companions;
+				foreach(AIActor comp in comps)
+                {
+					compsCanTargetEnemiesSave.Add(comp, comp.CanTargetEnemies);
+					comp.CanTargetEnemies = false;
+                }
 
 				//for the possibility of dodgerolling at the start
 				actions.Add(actionsToBeRecorded.Moving);
@@ -152,6 +160,8 @@ namespace GlaurungItems.Items
 			}
 			base.DoEffect(user);
 		}
+
+
 
         public override void Update()
 		{
@@ -332,6 +342,8 @@ namespace GlaurungItems.Items
 			}
 		}
 
+
+		//-----------
 		private void User_PostProcessProjectile(Projectile proj, float arg2)
 		{
 			if (!hasFired)
@@ -382,6 +394,7 @@ namespace GlaurungItems.Items
 		}
 
 
+		//-------------
 		private IEnumerator DoTurn(PlayerController user)
         {
 			
@@ -441,16 +454,11 @@ namespace GlaurungItems.Items
 
 			yield return null;
 
-			Time.timeScale = 1;
-			user.inventory.GunLocked.RemoveOverride("turn");
-			user.inventory.DestroyGun(transistorGunInstance);
-			this.transistorGunInstance = null;
-			user.CurrentInputState = PlayerInputState.AllInput;
-			user.ClearInputOverride("turn");
-			stopLocalTime = false;
-			isReplayTimeActive = false;
+			ReplayTimeEnd(user);
+
 			yield break;
 		}
+
 
         public override bool CanBeUsed(PlayerController user)
 		{
@@ -489,22 +497,32 @@ namespace GlaurungItems.Items
 
 				stopLocalTime = false;
 				isRecordTimeActive = false;
+
+				ResetCompanionsCanTargetEnemies(user);
+
 				this.damageCooldown = 0;
 				user.WarpToPoint(startingTurnPosition);
 			}
 
 			else if(isReplayTimeActive)
 			{
-				Time.timeScale = 1;
-
-				user.inventory.GunLocked.RemoveOverride("turn");
-				user.inventory.DestroyGun(transistorGunInstance);
-				this.transistorGunInstance = null;
-				user.CurrentInputState = PlayerInputState.AllInput;
-				user.ClearInputOverride("turn");
-				stopLocalTime = false;
-				isReplayTimeActive = false;
+				ReplayTimeEnd(user);
 			}
+		}
+
+		private void ReplayTimeEnd(PlayerController user)
+        {
+			Time.timeScale = 1;
+
+			ResetCompanionsCanTargetEnemies(user);
+            
+			user.inventory.GunLocked.RemoveOverride("turn");
+			user.inventory.DestroyGun(transistorGunInstance);
+			this.transistorGunInstance = null;
+			user.CurrentInputState = PlayerInputState.AllInput;
+			user.ClearInputOverride("turn");
+			stopLocalTime = false;
+			isReplayTimeActive = false;
 		}
 
 		protected override void OnPreDrop(PlayerController user)
@@ -531,6 +549,19 @@ namespace GlaurungItems.Items
 			yield return new WaitForSeconds(1f);
 			cancelActionCooldown = false;
 			yield break;
+		}
+
+		private void ResetCompanionsCanTargetEnemies(PlayerController user)
+        {
+			foreach (AIActor actor in compsCanTargetEnemiesSave.Keys)
+			{
+				if (user.companions.Contains(actor))
+				{
+					bool can = false;
+					compsCanTargetEnemiesSave.TryGetValue(actor, out can);
+					actor.CanTargetEnemies = can;
+				}
+			}
 		}
 
 		//from kyle's ileveler app
@@ -585,6 +616,8 @@ namespace GlaurungItems.Items
 		private float notFullLastActionCost = -999;
 
 		private List<actionsToBeRecorded> actions = new List<actionsToBeRecorded>();
+
+		private Dictionary<AIActor, bool> compsCanTargetEnemiesSave = new Dictionary<AIActor, bool>();
 
 		private List<Vector2> dodgeRollDirection = new List<Vector2>();
 		private List<Vector3> playerPositionsDuringActivation = new List<Vector3>();
