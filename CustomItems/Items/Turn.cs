@@ -70,6 +70,7 @@ namespace GlaurungItems.Items
 
 				user.PostProcessProjectile += User_PostProcessProjectile;
 				
+				//remove goops at start
 				if(user.CurrentRoom != null && user.CurrentRoom.RoomGoops != null && user.CurrentRoom.RoomGoops.Count > 0)
                 {
 					List<DeadlyDeadlyGoopManager> goopManagers = user.CurrentRoom.RoomGoops;
@@ -80,7 +81,7 @@ namespace GlaurungItems.Items
 					}
 				}
 
-				//from SilencerInstance
+				//from SilencerInstance to remove the user projectiles at turn activation
 				ReadOnlyCollection<Projectile> allProjectiles = StaticReferenceManager.AllProjectiles;
 				for (int l = allProjectiles.Count - 1; l >= 0; l--)
 				{
@@ -91,6 +92,12 @@ namespace GlaurungItems.Items
 					}
 				}
 
+				List<IPlayerOrbital> iouns = user.orbitals;
+				foreach(IPlayerOrbital ioun in iouns)
+                {
+					//ioun.ToggleRenderer(false);
+                }
+
 				actions = new List<actionsToBeRecorded>();
 				dodgeRollDirection = new List<Vector2>();
 				playerPositionsDuringActivation = new List<Vector3>();
@@ -99,6 +106,7 @@ namespace GlaurungItems.Items
 				gunAngleWhenFired = new List<float>();
 				projsFired = new List<int>();
 
+				//for the possibility of dodgerolling at the start
 				actions.Add(actionsToBeRecorded.Moving);
 				playerPositionsDuringActivation.Add(user.transform.position);
 
@@ -336,6 +344,7 @@ namespace GlaurungItems.Items
 			{
 				PlayerController user = this.LastOwner;
 				hasFired = true;
+
 				int projNb = 0;
 				List<string> validProjs = new List<string>{
 					usb.DefaultModule.chargeProjectiles[0].Projectile.name + "(Clone)",
@@ -344,18 +353,8 @@ namespace GlaurungItems.Items
 				};
 				if (validProjs.Contains(proj.name) && isRecordTimeActive && CurrentDamageCooldown > 0)
 				{
-					if (proj.name == validProjs[0])
-					{
-						projNb = 0;
-					}
-					else if (proj.name == validProjs[1])
-					{
-						projNb = 1;
-					}
-					else if (proj.name == validProjs[2])
-					{
-						projNb = 2;
-					}
+					projNb = validProjs.IndexOf(proj.name);
+
 					projsFired.Add(projNb);
 					actions.Add(actionsToBeRecorded.Shooting);
 					Vector3 aim = (user.unadjustedAimPoint);// - user.CenterPosition);
@@ -484,7 +483,6 @@ namespace GlaurungItems.Items
 				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(collisionMask);
 				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(collisionMask2);
 
-
 				user.PostProcessProjectile -= User_PostProcessProjectile;
 				if (!wasFlyingAtTheStart)
 				{
@@ -499,11 +497,19 @@ namespace GlaurungItems.Items
 				stopLocalTime = false;
 				isRecordTimeActive = false;
 				this.damageCooldown = 0;
+				user.WarpToPoint(startingTurnPosition);
 			}
 
 			else if(isReplayTimeActive)
 			{
 				Time.timeScale = 1;
+
+				List<IPlayerOrbital> iouns = user.orbitals;
+				foreach (IPlayerOrbital ioun in iouns)
+				{
+					ioun.ToggleRenderer(true);
+				}
+
 				user.inventory.GunLocked.RemoveOverride("turn");
 				user.inventory.DestroyGun(transistorGunInstance);
 				this.transistorGunInstance = null;
