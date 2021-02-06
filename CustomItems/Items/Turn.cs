@@ -92,12 +92,6 @@ namespace GlaurungItems.Items
 					}
 				}
 
-				List<IPlayerOrbital> iouns = user.orbitals;
-				foreach(IPlayerOrbital ioun in iouns)
-                {
-					//ioun.ToggleRenderer(false);
-                }
-
 				actions = new List<actionsToBeRecorded>();
 				dodgeRollDirection = new List<Vector2>();
 				playerPositionsDuringActivation = new List<Vector3>();
@@ -361,13 +355,13 @@ namespace GlaurungItems.Items
 					aimDirectionWhileFiring.Add(aim);
 					gunAngleWhenFired.Add(user.CurrentGun.CurrentAngle);
 					projsPositions.Add(user.CurrentGun.barrelOffset.position);
+					
 					float c = Math.Min(shootCosts[projNb], CurrentDamageCooldown);
 					if (c < shootCosts[projNb])
 					{
 						notFullLastActionCost = c;
 					}
 					this.CurrentDamageCooldown -= c;
-
 
 					Projectile projCopy = usb.DefaultModule.chargeProjectiles[projNb].Projectile;
 					GameObject gameObject = SpawnManager.SpawnProjectile(projCopy.gameObject, user.CurrentGun.barrelOffset.position, Quaternion.Euler(0f, 0f, user.CurrentGun.CurrentAngle), true);
@@ -382,7 +376,6 @@ namespace GlaurungItems.Items
 				}
 
 				GameManager.Instance.StartCoroutine(ResetHasFired());
-
 			}
 
 			proj.DieInAir(true, false, false);
@@ -504,12 +497,6 @@ namespace GlaurungItems.Items
 			{
 				Time.timeScale = 1;
 
-				List<IPlayerOrbital> iouns = user.orbitals;
-				foreach (IPlayerOrbital ioun in iouns)
-				{
-					ioun.ToggleRenderer(true);
-				}
-
 				user.inventory.GunLocked.RemoveOverride("turn");
 				user.inventory.DestroyGun(transistorGunInstance);
 				this.transistorGunInstance = null;
@@ -531,7 +518,6 @@ namespace GlaurungItems.Items
 			CancelEarly(user);
             base.OnItemSwitched(user);
         }
-
 
         private IEnumerator ResetHasFired()
         {
@@ -563,7 +549,6 @@ namespace GlaurungItems.Items
 			return BraveInput.GetInstanceForPlayer(LastOwner.PlayerIDX).ActiveActions.GetActionFromType(action).IsPressed;
 		}
 
-
 		//------------------------------
 		private static int collisionMask = CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider, 
 			CollisionLayer.EnemyBulletBlocker, CollisionLayer.EnemyBlocker, CollisionLayer.Projectile, CollisionLayer.Pickup, 
@@ -585,8 +570,7 @@ namespace GlaurungItems.Items
 			200f,
 			500f
 		};
-		private Gun usb = Game.Items["gl:usb_swordgun"] as Gun;
-
+		private Gun usb = Game.Items["gl:usb_gun"] as Gun;
 
 		private bool isRecordTimeActive = false;
 		private bool isReplayTimeActive = false;

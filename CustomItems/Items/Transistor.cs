@@ -10,8 +10,8 @@ namespace GlaurungItems.Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("USB Swordgun", "transistorgun");
-            Game.Items.Rename("outdated_gun_mods:usb_swordgun", "gl:usb_swordgun");
+            Gun gun = ETGMod.Databases.Items.NewGun("USB Gun", "transistorgun");
+            Game.Items.Rename("outdated_gun_mods:usb_gun", "gl:usb_gun");
             gun.gameObject.AddComponent<Transistor>();
             gun.SetShortDescription("");
             gun.SetLongDescription("");
