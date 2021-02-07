@@ -1,6 +1,4 @@
-﻿using EnemyAPI;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using ItemAPI;
 using Gungeon;
 
