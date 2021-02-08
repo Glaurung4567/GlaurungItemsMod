@@ -32,7 +32,7 @@ namespace GlaurungItems
             {
                 GlaurungItems.Strings = new AdvancedStringDB();
                 Tools.Init();
-                Toolbox.Init();
+                //Toolbox.Init();
                 ItemBuilder.Init();
                 Hooks.Init();
                 EnemyAPITools.Init();

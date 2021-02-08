@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GlaurungItems.Items
 {
-	public class CustomRadialSlowItem : AffectEnemiesInRadiusItem
+	public class CustomRadialSlowItem : CustomAffectEnemiesInRadiusItem
 	{
 		public CustomRadialSlowItem()
 		{

@@ -36,7 +36,7 @@ remove player projs at start ok
 
 see if cancel works properly
 
-Prevent companions, coop or orbital intervention
+Prevent companions(CompanionItem), coop or orbital(IounStoneOrbitalItem) intervention
 Prevent enemy spawn mob/proj on death or refreeze
 Prevent inventory modif
 Prevent interactions 
@@ -69,6 +69,7 @@ namespace GlaurungItems.Items
 				startingTurnPosition = user.transform.position;
 
 				user.PostProcessProjectile += User_PostProcessProjectile;
+				user.OnRoomClearEvent += OnRoomClear;
 				
 				//remove goops at start
 				if(user.CurrentRoom != null && user.CurrentRoom.RoomGoops != null && user.CurrentRoom.RoomGoops.Count > 0)
@@ -100,13 +101,6 @@ namespace GlaurungItems.Items
 				gunAngleWhenFired = new List<float>();
 				projsFired = new List<int>();
 				compsCanTargetEnemiesSave = new Dictionary<AIActor, bool>();
-
-				List<AIActor> comps = user.companions;
-				foreach(AIActor comp in comps)
-                {
-					compsCanTargetEnemiesSave.Add(comp, comp.CanTargetEnemies);
-					comp.CanTargetEnemies = false;
-                }
 
 				//for the possibility of dodgerolling at the start
 				actions.Add(actionsToBeRecorded.Moving);
@@ -160,8 +154,6 @@ namespace GlaurungItems.Items
 			}
 			base.DoEffect(user);
 		}
-
-
 
         public override void Update()
 		{
@@ -485,6 +477,7 @@ namespace GlaurungItems.Items
 				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(collisionMask2);
 
 				user.PostProcessProjectile -= User_PostProcessProjectile;
+				user.OnRoomClearEvent -= OnRoomClear;
 				if (!wasFlyingAtTheStart)
 				{
 					user.SetIsFlying(false, "turn");
@@ -498,9 +491,9 @@ namespace GlaurungItems.Items
 				stopLocalTime = false;
 				isRecordTimeActive = false;
 
-				ResetCompanionsCanTargetEnemies(user);
+				ResetCompanions(user);
 
-				this.damageCooldown = 0;
+				this.ClearCooldowns();
 				user.WarpToPoint(startingTurnPosition);
 			}
 
@@ -514,8 +507,9 @@ namespace GlaurungItems.Items
         {
 			Time.timeScale = 1;
 
-			ResetCompanionsCanTargetEnemies(user);
-            
+			ResetCompanions(user);
+			user.OnRoomClearEvent -= OnRoomClear;
+
 			user.inventory.GunLocked.RemoveOverride("turn");
 			user.inventory.DestroyGun(transistorGunInstance);
 			this.transistorGunInstance = null;
@@ -551,17 +545,14 @@ namespace GlaurungItems.Items
 			yield break;
 		}
 
-		private void ResetCompanionsCanTargetEnemies(PlayerController user)
+		private void ResetCompanions(PlayerController user)
         {
-			foreach (AIActor actor in compsCanTargetEnemiesSave.Keys)
-			{
-				if (user.companions.Contains(actor))
-				{
-					bool can = false;
-					compsCanTargetEnemiesSave.TryGetValue(actor, out can);
-					actor.CanTargetEnemies = can;
-				}
-			}
+
+		}
+
+		private void OnRoomClear(PlayerController user)
+		{
+			CancelEarly(user);
 		}
 
 		//from kyle's ileveler app

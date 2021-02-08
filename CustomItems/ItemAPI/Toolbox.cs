@@ -71,6 +71,7 @@ namespace ItemAPI
 			Toolbox.DefaultCheeseGoop = (PickupObjectDatabase.GetById(626) as Gun).DefaultModule.projectiles[0].cheeseEffect.CheeseGoop;
 			Toolbox.DefaultBlobulonGoop = EnemyDatabase.GetOrLoadByGuid("0239c0680f9f467dbe5c4aab7dd1eca6").GetComponent<GoopDoer>().goopDefinition;
 			Toolbox.DefaultPoopulonGoop = EnemyDatabase.GetOrLoadByGuid("116d09c26e624bca8cca09fc69c714b3").GetComponent<GoopDoer>().goopDefinition;
+			/*
 			GameObject gameObject4 = new GameObject("SprenSpunVFX");
 			gameObject4.SetActive(false);
 			ItemAPI.FakePrefab.MarkAsFakePrefab(gameObject4);
@@ -134,6 +135,7 @@ namespace ItemAPI
 			sprenSpunBehaviour.GunChangeMoreAnimation = sprenOrbitalItem.GunChangeMoreAnimation;
 			sprenSpunBehaviour.BackchangeAnimation = sprenOrbitalItem.BackchangeAnimation;
 			Toolbox.SprenSpunPrefab = gameObject4;
+			*/
 		}
 
 		public static void SetProjectileSpriteRight2(this Projectile proj, string name, int pixelWidth, int pixelHeight, int? overrideColliderPixelWidth = null, int? overrideColliderPixelHeight = null)
