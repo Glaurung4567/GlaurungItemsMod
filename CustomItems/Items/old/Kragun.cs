@@ -51,7 +51,7 @@ namespace GlaurungItems.Items
 			}
 			gun.reloadTime = 1f;
 			gun.SetBaseMaxAmmo(100);
-			gun.quality = (PickupObject.ItemQuality)3;
+			gun.quality = PickupObject.ItemQuality.C;
 
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
 			gun.barrelOffset.transform.localPosition = new Vector3(1.37f, 0.37f, 0f);
