@@ -103,7 +103,7 @@ namespace GlaurungItems.Items
 				projsPositions = new List<Vector3>();
 				gunAngleWhenFired = new List<float>();
 				projsFired = new List<int>();
-				compsSaved = new List<CompanionItem>();
+				compsSaved = new List<AIActor>();
 				iounsSaved = new List<IounStoneOrbitalItem>();
 
 				//
@@ -121,8 +121,8 @@ namespace GlaurungItems.Items
 								AIActor comp = compCont.GetComponent<AIActor>();
 								if(comp.healthHaver && comp.healthHaver.IsAlive)
                                 {
-									comp.EraseFromExistence(true);
-									compsSaved.Add(compItem);
+									comp.LocalTimeScale = 0;
+									compsSaved.Add(comp);
 								}
 
 							}
@@ -585,9 +585,9 @@ namespace GlaurungItems.Items
 
 		private void ResetCompanions(PlayerController user)
         {
-			foreach(CompanionItem comp in compsSaved)
+			foreach(AIActor comp in compsSaved)
             {
-				comp.ForceCompanionRegeneration(user, user.CenterPosition);
+				comp.LocalTimeScale = 1;
             }
 		}
 
@@ -658,7 +658,7 @@ namespace GlaurungItems.Items
 
 		private List<actionsToBeRecorded> actions = new List<actionsToBeRecorded>();
 
-		private List<CompanionItem> compsSaved = new List<CompanionItem>();
+		private List<AIActor> compsSaved = new List<AIActor>();
 		private List<IounStoneOrbitalItem> iounsSaved = new List<IounStoneOrbitalItem>();
 
 		private List<Vector2> dodgeRollDirection = new List<Vector2>();
