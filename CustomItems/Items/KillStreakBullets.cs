@@ -212,7 +212,7 @@ namespace GlaurungItems.Items
 		{
 			base.Owner.PostProcessProjectile -= this.PostProcessProjectile;
 			base.Owner.PostProcessBeamTick -= this.PostProcessBeamTick;
-			base.Owner.OnRoomClearEvent += this.OnLeaveCombat;
+			base.Owner.OnRoomClearEvent -= this.OnLeaveCombat;
 
 			base.OnDestroy();
 		}

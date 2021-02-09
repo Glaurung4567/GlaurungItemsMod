@@ -2,6 +2,7 @@
 using ItemAPI;
 using System;
 using System.Timers;
+using UnityEngine;
 
 namespace GlaurungItems.Items
 {
@@ -26,8 +27,8 @@ namespace GlaurungItems.Items
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 1.5f;
             gun.DefaultModule.cooldownTime = 0.2f;
-            gun.DefaultModule.numberOfShotsInClip = 30;
-            gun.SetBaseMaxAmmo(400);
+            gun.DefaultModule.numberOfShotsInClip = 2;
+            gun.SetBaseMaxAmmo(100);
 
             gun.quality = PickupObject.ItemQuality.EXCLUDED;
 
@@ -37,11 +38,15 @@ namespace GlaurungItems.Items
             UnityEngine.Object.DontDestroyOnLoad(projectile);
             gun.DefaultModule.projectiles[0] = projectile;
 
-            projectile.baseData.damage *= 4f;
+            projectile.baseData.damage *= 0f;
             projectile.baseData.speed *= 0.0f;
-            projectile.baseData.force *= 1f;
+            projectile.baseData.force *= 0f;
             projectile.baseData.range *= 3f;
             projectile.transform.parent = gun.barrelOffset;
+
+            PierceProjModifier pierceMod = projectile.gameObject.GetOrAddComponent<PierceProjModifier>();
+            pierceMod.penetratesBreakables = true;
+            pierceMod.penetration = 9999;
             //projectile.SetProjectileSpriteRight("build_projectile", 5, 5);
 
             ETGMod.Databases.Items.Add(gun, null, "ANY");
@@ -49,7 +54,22 @@ namespace GlaurungItems.Items
 
         public override void PostProcessProjectile(Projectile projectile)
         {
-            PortalGunPortalController portal = projectile.gameObject.GetOrAddComponent<PortalGunPortalController>();
+
+
+            GameObject gameObject = SpawnManager.SpawnProjectile(((Gun)ETGMod.Databases.Items[31]).DefaultModule.projectiles[0].gameObject, gun.CurrentOwner.sprite.WorldCenter + new Vector2(2, 2), Quaternion.Euler(0f, 0f, 0f), true);
+            projectile.ForceDestruction();
+            Projectile projectileInst = gameObject.GetComponent<Projectile>();
+            projectileInst.collidesWithPlayer = true;
+            projectileInst.baseData.damage = 0;
+            projectileInst.baseData.speed = 0;
+            projectileInst.collidesWithEnemies = true;
+            projectileInst.collidesWithProjectiles = true;
+            projectileInst.allowSelfShooting = true;
+            //PierceProjModifier pierceMod = projectileInst.gameObject.GetOrAddComponent<PierceProjModifier>();
+            //pierceMod.penetratesBreakables = true;
+            //pierceMod.penetration = 9999;
+            //projectileInst.specRigidbody.OnCollision += coll;
+            PortalGunPortalController portal = projectileInst.gameObject.GetOrAddComponent<PortalGunPortalController>();
             if (nbIt % 2 == 0) {
                 firstPortal = portal;
                 portal.pairedPortal = portal;
@@ -61,6 +81,11 @@ namespace GlaurungItems.Items
             }
 
             nbIt++;
+        }
+
+        private void coll(CollisionData obj)
+        {
+            Tools.Print("test coll player", "ffffff", true);
         }
 
 
