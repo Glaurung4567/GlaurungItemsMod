@@ -80,7 +80,7 @@ namespace GlaurungItems.Items
             ProjectileModule.ChargeProjectile chargeProj3 = new ProjectileModule.ChargeProjectile()
             {
                 Projectile = projectile3,
-                ChargeTime = 2f,
+                ChargeTime = 1.5f,
                 AmmoCost = 3,
             };
             gun.DefaultModule.chargeProjectiles = new List<ProjectileModule.ChargeProjectile>

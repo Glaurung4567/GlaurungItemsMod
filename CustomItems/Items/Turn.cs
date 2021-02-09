@@ -34,10 +34,12 @@ end turn early if ondrop ok
 end turn early if PlayerItem.onitemswitch/PC.CurrentItem ok
 remove player projs at start ok
 end turn early if onleavecombat ok
+Prevent companions(CompanionItem) or orbital(IounStoneOrbitalItem) intervention
+
 
 see if cancel works properly
 
-Prevent companions(CompanionItem), coop or orbital(IounStoneOrbitalItem) intervention
+Prevent coop intervention
 Prevent enemy spawn mob/proj on death or refreeze
 Prevent inventory modif
 Prevent interactions 
@@ -104,7 +106,7 @@ namespace GlaurungItems.Items
 				gunAngleWhenFired = new List<float>();
 				projsFired = new List<int>();
 				compsSaved = new List<AIActor>();
-				iounsSaved = new List<IounStoneOrbitalItem>();
+				iounsSaved = new List<PlayerOrbitalItem>();
 
 				//
 				foreach(PassiveItem passive in user.passiveItems)
@@ -115,7 +117,6 @@ namespace GlaurungItems.Items
                         if (compItem.ExtantCompanion && compItem.ExtantCompanion.GetComponent<CompanionController>())
                         {
 							CompanionController compCont = compItem.ExtantCompanion.GetComponent<CompanionController>();
-							Tools.Print(compCont.GetComponent<AIActor>() == null, "ffffff", true);
 							if(compCont.GetComponent<AIActor>() != null)
                             {
 								AIActor comp = compCont.GetComponent<AIActor>();
@@ -127,16 +128,31 @@ namespace GlaurungItems.Items
 
 							}
 						}
-						//comp.ForceDisconnectCompanion();
                     }
-					if (passive is IounStoneOrbitalItem)
+					/*
+					if (passive is PlayerOrbitalItem)
 					{
-						IounStoneOrbitalItem ioun = (passive as IounStoneOrbitalItem);
-						ioun.OrbitalPrefab.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
-						ioun.OrbitalPrefab.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
+						PlayerOrbitalItem ioun = (passive as PlayerOrbitalItem);
+						//user.orbitals
+						ioun.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
+						ioun.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
+						//ioun.OrbitalPrefab.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
 						iounsSaved.Add(ioun);
-					}
+					}*/
 				}
+
+				if(user.orbitals != null && user.orbitals.Count > 0)
+                {
+					foreach(IPlayerOrbital orb in user.orbitals)
+                    {
+						Tools.Print(orb.GetType(), "ffffff", true);
+						Tools.Print(orb is PlayerOrbital, "ffffff", true);
+						if(orb is PlayerOrbital)
+                        {
+							(orb as PlayerOrbital).specRigidbody.CollideWithOthers = false;
+                        }
+                    }
+                }
 
 				//for the possibility of dodgerolling at the start
 				actions.Add(actionsToBeRecorded.Moving);
@@ -449,7 +465,7 @@ namespace GlaurungItems.Items
 					if((playerPositionsDuringActivation.Count > 1 && playerPositionsDuringActivation[0] != playerPositionsDuringActivation[1]) 
 						|| playerPositionsDuringActivation.Count == 1)
                     {
-						//user.ForceMoveToPoint(playerPositionsDuringActivation[0]);
+						//user.ForceMoveToPoint(playerPositionsDuringActivation[0]);//tp better
 						user.WarpToPoint(playerPositionsDuringActivation[0]);
 					}
 					yield return null;
@@ -470,7 +486,7 @@ namespace GlaurungItems.Items
                     {
 						projectile.CurseSparks = true;
                     }
-					//projectile.transform.parent.position = projsPositions[0];
+					//projectile.transform.parent.position = projsPositions[0]; //bad displace bullet during replay
 					user.DoPostProcessProjectile(projectile);
 					//user.CurrentGun.ForceFireProjectile(user.CurrentGun.DefaultModule.projectiles[0]);
 					//user.forceAimPoint = null;
@@ -549,8 +565,11 @@ namespace GlaurungItems.Items
 			user.OnRoomClearEvent -= OnRoomClear;
 
 			user.inventory.GunLocked.RemoveOverride("turn");
-			user.inventory.DestroyGun(transistorGunInstance);
-			this.transistorGunInstance = null;
+			if(transistorGunInstance != null)
+            {
+				user.inventory.DestroyGun(transistorGunInstance);
+				this.transistorGunInstance = null;
+			}
 			user.CurrentInputState = PlayerInputState.AllInput;
 			user.ClearInputOverride("turn");
 			stopLocalTime = false;
@@ -593,12 +612,17 @@ namespace GlaurungItems.Items
 
 		private void ResetIouns(PlayerController user)
         {
-			foreach(IounStoneOrbitalItem ioun in iounsSaved)
-            {
-				ioun.OrbitalPrefab.specRigidbody.RemoveCollisionLayerOverride(collisionMask);
-				ioun.OrbitalPrefab.specRigidbody.RemoveCollisionLayerOverride(collisionMask2);
-            }
-        }
+			if (user.orbitals != null && user.orbitals.Count > 0)
+			{
+				foreach (IPlayerOrbital orb in user.orbitals)
+				{
+					if (orb is PlayerOrbital)
+					{
+						(orb as PlayerOrbital).specRigidbody.CollideWithOthers = true;
+					}
+				}
+			}
+		}
 
 		private void OnRoomClear(PlayerController user)
 		{
@@ -659,7 +683,7 @@ namespace GlaurungItems.Items
 		private List<actionsToBeRecorded> actions = new List<actionsToBeRecorded>();
 
 		private List<AIActor> compsSaved = new List<AIActor>();
-		private List<IounStoneOrbitalItem> iounsSaved = new List<IounStoneOrbitalItem>();
+		private List<PlayerOrbitalItem> iounsSaved = new List<PlayerOrbitalItem>();
 
 		private List<Vector2> dodgeRollDirection = new List<Vector2>();
 		private List<Vector3> playerPositionsDuringActivation = new List<Vector3>();
