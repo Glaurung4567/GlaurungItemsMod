@@ -4,4 +4,5 @@ This is the source code repository of my items mod for Enter the Gungeon game(ht
 
 Next update : 
 Fixed sapping bullets dragunbugs
-
+Peacemaker carbine need fix
+Turn
