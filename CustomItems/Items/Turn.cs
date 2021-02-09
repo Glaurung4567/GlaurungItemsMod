@@ -35,16 +35,15 @@ end turn early if PlayerItem.onitemswitch/PC.CurrentItem ok
 remove player projs at start ok
 end turn early if onleavecombat ok
 Prevent companions(CompanionItem) or orbital(IounStoneOrbitalItem) intervention
-
+Prevent dodgeroll spam ok
 
 see if cancel works properly
 
-Prevent dodgeroll spam
 Prevent coop intervention
 Prevent enemy spawn mob/proj on death or refreeze
 Prevent inventory modif
 Prevent interactions 
-Check items interactions
+Check items interactions (bloodied scarf/super hot watch ok)
 Prevent blanks
 On load new floor test
 end turn early if onchangedroom, onNoEnemy, onReinforcement
