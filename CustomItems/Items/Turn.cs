@@ -39,12 +39,14 @@ Prevent companions(CompanionItem) or orbital(IounStoneOrbitalItem) intervention
 
 see if cancel works properly
 
+Prevent dodgeroll spam
 Prevent coop intervention
 Prevent enemy spawn mob/proj on death or refreeze
 Prevent inventory modif
 Prevent interactions 
 Check items interactions
 Prevent blanks
+On load new floor test
 end turn early if onchangedroom, onNoEnemy, onReinforcement
 */
 namespace GlaurungItems.Items
@@ -58,7 +60,7 @@ namespace GlaurungItems.Items
 			GameObject gameObject = new GameObject(text);
 			Turn item = gameObject.AddComponent<Turn>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
-			string shortDesc = "In circles";
+			string shortDesc = "It's my Turn() now";
 			string longDesc = "On first use, ";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, turnCooldown);
@@ -210,6 +212,7 @@ namespace GlaurungItems.Items
 			base.DoEffect(user);
 		}
 
+		//------------------
         public override void Update()
 		{
 			base.Update();
@@ -219,14 +222,17 @@ namespace GlaurungItems.Items
 				
 				if (this.CurrentDamageCooldown > 0)
 				{
-
-					user.CurrentInputState = PlayerInputState.AllInput;
+                    if (!dodgeRollCooldown)
+                    {
+						user.CurrentInputState = PlayerInputState.AllInput;
+					}
 
 					if (user.IsDodgeRolling && !isCurrentlyDodgeRolling)
 					{
 						if (playerPositionsDuringActivation.Count > 0)
 						{
 							isCurrentlyDodgeRolling = true;
+							dodgeRollCooldown = true;
 							actions.Add(actionsToBeRecorded.Dodgeroll);
 							dodgeRollDirection.Add(user.transform.position - playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
 							float c = Math.Min(dodgerollCost, CurrentDamageCooldown);
@@ -236,18 +242,24 @@ namespace GlaurungItems.Items
 							}
 							this.CurrentDamageCooldown -= c;
 						}
-
+						user.CurrentInputState = PlayerInputState.NoMovement;
 					}
 
 					else if (user.IsFiring && !user.IsDodgeRolling)
 					{
+                        if (isCurrentlyDodgeRolling)
+                        {
+							GameManager.Instance.StartCoroutine(ReallowMovementAfterDodgeRoll(user));
+						}
 						isCurrentlyDodgeRolling = false;
-
-						//this.CurrentDamageCooldown -= shootCost1;
 					}
 
 					else if (!user.IsDodgeRolling) //for movement recording
 					{
+						if (isCurrentlyDodgeRolling)
+						{
+							GameManager.Instance.StartCoroutine(ReallowMovementAfterDodgeRoll(user));
+						}
 						isCurrentlyDodgeRolling = false;
 
 						int lenPos = playerPositionsDuringActivation.Count;
@@ -390,13 +402,13 @@ namespace GlaurungItems.Items
 		}
 
 
-		//-----------
-		private void User_PostProcessProjectile(Projectile proj, float arg2)
+        //-----------
+        private void User_PostProcessProjectile(Projectile proj, float arg2)
 		{
-			if (!hasFired)
+			if (!hasFiredCooldown)
 			{
 				PlayerController user = this.LastOwner;
-				hasFired = true;
+				hasFiredCooldown = true;
 
 				int projNb = 0;
 				List<string> validProjs = new List<string>{
@@ -591,7 +603,7 @@ namespace GlaurungItems.Items
         private IEnumerator ResetHasFired()
         {
 			yield return null;
-			hasFired = false;
+			hasFiredCooldown = false;
 			yield break;
 		}
 
@@ -627,6 +639,13 @@ namespace GlaurungItems.Items
 		private void OnRoomClear(PlayerController user)
 		{
 			CancelEarly(user);
+		}
+
+		private IEnumerator ReallowMovementAfterDodgeRoll(PlayerController user)
+		{
+			yield return new WaitForSeconds(0.1f);
+			dodgeRollCooldown = false;
+			yield break;
 		}
 
 		//from kyle's ileveler app
@@ -676,8 +695,9 @@ namespace GlaurungItems.Items
 		private Gun transistorGunInstance;
 
 		private bool isCurrentlyDodgeRolling = false;
-		private bool hasFired = false;
+		private bool hasFiredCooldown = false;
 		private bool cancelActionCooldown = false;
+		private bool dodgeRollCooldown = false;
 		private float notFullLastActionCost = -999;
 
 		private List<actionsToBeRecorded> actions = new List<actionsToBeRecorded>();
