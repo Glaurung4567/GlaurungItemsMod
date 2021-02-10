@@ -39,14 +39,14 @@ Prevent dodgeroll spam ok
 
 see if cancel works properly
 
-Prevent coop intervention
 Prevent enemy spawn mob/proj on death or refreeze
 Prevent inventory modif
 Prevent interactions 
-Check items interactions (bloodied scarf/super hot watch ok)
+Check items interactions (bloodied scarf/super hot watch/gunboots ok)
 Prevent blanks
 On load new floor test
 end turn early if onchangedroom, onNoEnemy, onReinforcement
+Prevent coop intervention ?
 */
 namespace GlaurungItems.Items
 {
@@ -130,24 +130,13 @@ namespace GlaurungItems.Items
 							}
 						}
                     }
-					/*
-					if (passive is PlayerOrbitalItem)
-					{
-						PlayerOrbitalItem ioun = (passive as PlayerOrbitalItem);
-						//user.orbitals
-						ioun.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
-						ioun.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
-						//ioun.OrbitalPrefab.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
-						iounsSaved.Add(ioun);
-					}*/
 				}
 
+				//to make guon orbitals not collides with bullets during the record phase
 				if(user.orbitals != null && user.orbitals.Count > 0)
                 {
 					foreach(IPlayerOrbital orb in user.orbitals)
                     {
-						Tools.Print(orb.GetType(), "ffffff", true);
-						Tools.Print(orb is PlayerOrbital, "ffffff", true);
 						if(orb is PlayerOrbital)
                         {
 							(orb as PlayerOrbital).specRigidbody.CollideWithOthers = false;
