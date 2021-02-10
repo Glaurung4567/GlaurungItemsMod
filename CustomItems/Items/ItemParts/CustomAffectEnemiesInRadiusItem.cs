@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Dungeonator;
+using ItemAPI;
 using UnityEngine;
 
 namespace GlaurungItems.Items
@@ -23,7 +24,7 @@ namespace GlaurungItems.Items
 			AffectEffect(user);
 		}
 
-		protected void AffectEffect(PlayerController user)
+		protected void AffectEffect(PlayerController user, bool overrideNormalDoEffect = false)
         {
 			List<AIActor> activeEnemies = StaticReferenceManager.AllEnemies;//user.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
 			if (this.OnUserEffectVFX != null)
@@ -53,8 +54,9 @@ namespace GlaurungItems.Items
 			{
 				AkSoundEngine.PostEvent(this.AudioEvent, base.gameObject);
 			}
-			if (this.EffectTime <= 0f)
+			if (this.EffectTime <= 0f || overrideNormalDoEffect)
 			{
+				Tools.Print("it works ?", "ffffff", true);
 				if (activeEnemies != null)
 				{
 					for (int i = 0; i < activeEnemies.Count; i++)
@@ -350,5 +352,6 @@ namespace GlaurungItems.Items
 
 		// Token: 0x04006EF9 RID: 28409
 		private float m_ambientTimer;
+
 	}
 }

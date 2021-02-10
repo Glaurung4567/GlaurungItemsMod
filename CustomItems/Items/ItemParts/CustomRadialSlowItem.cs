@@ -14,7 +14,6 @@ namespace GlaurungItems.Items
 			this.MaxTimeModifier = 0f;
 		}
 
-		// Token: 0x06007714 RID: 30484 RVA: 0x002E8A24 File Offset: 0x002E6C24
 		protected override void DoEffect(PlayerController user)
 		{
 			//AkSoundEngine.PostEvent("Play_OBJ_time_bell_01", base.gameObject);

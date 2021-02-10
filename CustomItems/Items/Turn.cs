@@ -110,7 +110,9 @@ namespace GlaurungItems.Items
 				compsSaved = new List<AIActor>();
 
 				roomWhereTurnWasActivated = user.CurrentRoom;
-				enemiesInRoom = user.CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All);
+
+				//to check if a new 
+				UpdateEnemiesInRoom(user);		
 
 				//to stop companions
 				foreach (PassiveItem passive in user.passiveItems)
@@ -404,20 +406,15 @@ namespace GlaurungItems.Items
 
 					if (enemiesInRoom.Except(actorsDuringThisFrame).ToList().Any() || actorsDuringThisFrame.Except(enemiesInRoom).ToList().Any())
                     {
-						OutTime = 0f;
-						stopLocalTime = false;
-						AffectEffect(user);
-						stopLocalTime = true;
-						OutTime = normalOutTimeDuration;
-                    }
-
-					enemiesInRoom = actorsDuringThisFrame;
+						AffectEffect(user, true);
+					}
+					UpdateEnemiesInRoom(user);	
+					
 				}
 			}
 
 			
 		}
-
 
         //-----------
         private void User_PostProcessProjectile(Projectile proj, float arg2)
@@ -666,6 +663,20 @@ namespace GlaurungItems.Items
 			yield break;
 		}
 
+		//for the checking of new enemies during turn 
+		private void UpdateEnemiesInRoom(PlayerController user)
+        {
+			if(user && user.CurrentRoom != null)
+            {
+				enemiesInRoom = new List<AIActor>();
+				List<AIActor> actors = user.CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All);
+				foreach(AIActor actor in actors)
+                {
+					enemiesInRoom.Add(actor);
+                }
+			}
+		}
+
 		//from kyle's ileveler app
 		public float KeyTime(GungeonActions.GungeonActionType action)
 		{
@@ -676,6 +687,8 @@ namespace GlaurungItems.Items
 		{
 			return BraveInput.GetInstanceForPlayer(LastOwner.PlayerIDX).ActiveActions.GetActionFromType(action).IsPressed;
 		}
+
+
 
 		//------------------------------
 		private static int collisionMask = CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider, 
