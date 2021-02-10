@@ -20,6 +20,11 @@ namespace GlaurungItems.Items
 		// Token: 0x06006FAE RID: 28590 RVA: 0x002B5FB8 File Offset: 0x002B41B8
 		protected override void DoEffect(PlayerController user)
 		{
+			AffectEffect(user);
+		}
+
+		protected void AffectEffect(PlayerController user)
+        {
 			List<AIActor> activeEnemies = StaticReferenceManager.AllEnemies;//user.CurrentRoom.GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
 			if (this.OnUserEffectVFX != null)
 			{

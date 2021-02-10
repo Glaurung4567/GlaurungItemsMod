@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
 
 /*
@@ -107,10 +108,12 @@ namespace GlaurungItems.Items
 				gunAngleWhenFired = new List<float>();
 				projsFired = new List<int>();
 				compsSaved = new List<AIActor>();
-				iounsSaved = new List<PlayerOrbitalItem>();
 
-				//
-				foreach(PassiveItem passive in user.passiveItems)
+				roomWhereTurnWasActivated = user.CurrentRoom;
+				enemiesInRoom = user.CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All);
+
+				//to stop companions
+				foreach (PassiveItem passive in user.passiveItems)
                 {
 					if(passive is CompanionItem)
                     {
@@ -148,6 +151,7 @@ namespace GlaurungItems.Items
 				actions.Add(actionsToBeRecorded.Moving);
 				playerPositionsDuringActivation.Add(user.transform.position);
 
+				//invulnerability during record time
 				if (user.IsFlying)
                 {
 					wasFlyingAtTheStart = true;
@@ -157,17 +161,18 @@ namespace GlaurungItems.Items
 					user.SetIsFlying(true, "turn");
 					user.AdditionalCanDodgeRollWhileFlying.SetOverride("turn", true);
                 }
-
 				user.healthHaver.IsVulnerable = false;
 				user.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
 				user.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
 
+				//give usb gun
 				transistorGunInstance = user.inventory.AddGunToInventory(usb, true);
 				transistorGunInstance.CanBeDropped = false;
 				transistorGunInstance.CanBeSold = false;
 				user.inventory.GunLocked.SetOverride("turn", true, null);
 
 				isRecordTimeActive = true;
+				this.OutTime = normalOutTimeDuration;
 				stopLocalTime = true;
 				Exploder.DoDistortionWave(user.CenterPosition, 0.4f, 0.15f, this.EffectRadius, .7f);
 			}
@@ -204,189 +209,213 @@ namespace GlaurungItems.Items
         public override void Update()
 		{
 			base.Update();
-			if (base.LastOwner && isRecordTimeActive)
+			if (base.LastOwner)
 			{
 				PlayerController user = base.LastOwner;
-				
-				if (this.CurrentDamageCooldown > 0)
+				if (isRecordTimeActive)
 				{
-                    if (!dodgeRollCooldown)
-                    {
-						user.CurrentInputState = PlayerInputState.AllInput;
-					}
-
-					if (user.IsDodgeRolling && !isCurrentlyDodgeRolling)
+					if (this.CurrentDamageCooldown > 0)
 					{
-						if (playerPositionsDuringActivation.Count > 0)
+						if (!dodgeRollCooldown)
 						{
-							isCurrentlyDodgeRolling = true;
-							dodgeRollCooldown = true;
-							actions.Add(actionsToBeRecorded.Dodgeroll);
-							dodgeRollDirection.Add(user.transform.position - playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
-							float c = Math.Min(dodgerollCost, CurrentDamageCooldown);
-							if(c < dodgerollCost)
-                            {
-								notFullLastActionCost = c;
-							}
-							this.CurrentDamageCooldown -= c;
+							user.CurrentInputState = PlayerInputState.AllInput;
 						}
+
+						if (user.IsDodgeRolling && !isCurrentlyDodgeRolling)
+						{
+							if (playerPositionsDuringActivation.Count > 0)
+							{
+								isCurrentlyDodgeRolling = true;
+								dodgeRollCooldown = true;
+								actions.Add(actionsToBeRecorded.Dodgeroll);
+								dodgeRollDirection.Add(user.transform.position - playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
+								float c = Math.Min(dodgerollCost, CurrentDamageCooldown);
+								if (c < dodgerollCost)
+								{
+									notFullLastActionCost = c;
+								}
+								this.CurrentDamageCooldown -= c;
+							}
+							user.CurrentInputState = PlayerInputState.NoMovement;
+						}
+
+						else if (user.IsFiring && !user.IsDodgeRolling)
+						{
+							if (isCurrentlyDodgeRolling)
+							{
+								GameManager.Instance.StartCoroutine(ReallowMovementAfterDodgeRoll(user));
+							}
+							isCurrentlyDodgeRolling = false;
+						}
+
+						else if (!user.IsDodgeRolling) //for movement recording
+						{
+							if (isCurrentlyDodgeRolling)
+							{
+								GameManager.Instance.StartCoroutine(ReallowMovementAfterDodgeRoll(user));
+							}
+							isCurrentlyDodgeRolling = false;
+
+							int lenPos = playerPositionsDuringActivation.Count;
+							if (lenPos > 1 && playerPositionsDuringActivation[lenPos - 1] != user.transform.position)
+							{
+								actions.Add(actionsToBeRecorded.Moving);
+								playerPositionsDuringActivation.Add(user.transform.position);
+								this.CurrentDamageCooldown -= Math.Min(movementCost, CurrentDamageCooldown);
+							}
+							else if (lenPos <= 1)
+							{
+								actions.Add(actionsToBeRecorded.Moving);
+								playerPositionsDuringActivation.Add(user.transform.position);
+							}
+						}
+					}
+					else
+					{
 						user.CurrentInputState = PlayerInputState.NoMovement;
 					}
 
-					else if (user.IsFiring && !user.IsDodgeRolling)
+					if (Key(GungeonActions.GungeonActionType.Reload) && KeyTime(GungeonActions.GungeonActionType.Reload) > 0.75f && !cancelActionCooldown)
 					{
-                        if (isCurrentlyDodgeRolling)
-                        {
-							GameManager.Instance.StartCoroutine(ReallowMovementAfterDodgeRoll(user));
-						}
-						isCurrentlyDodgeRolling = false;
-					}
-
-					else if (!user.IsDodgeRolling) //for movement recording
-					{
-						if (isCurrentlyDodgeRolling)
+						cancelActionCooldown = true;
+						if (actions.Count > 0)
 						{
-							GameManager.Instance.StartCoroutine(ReallowMovementAfterDodgeRoll(user));
-						}
-						isCurrentlyDodgeRolling = false;
+							int actionsLen = actions.Count;
+							//Tools.Print(actions[actionsLen - 1], "ffffff", true);
 
-						int lenPos = playerPositionsDuringActivation.Count;
-						if (lenPos > 1 && playerPositionsDuringActivation[lenPos - 1] != user.transform.position)
-                        {
-							actions.Add(actionsToBeRecorded.Moving);
-							playerPositionsDuringActivation.Add(user.transform.position);
-							this.CurrentDamageCooldown -= Math.Min(movementCost, CurrentDamageCooldown);
-                        }
-                        else if(lenPos <= 1)
-                        {
-							actions.Add(actionsToBeRecorded.Moving);
-							playerPositionsDuringActivation.Add(user.transform.position);
-						}
-					}
-                }
-                else
-                {
-					user.CurrentInputState = PlayerInputState.NoMovement;
-				}
-
-				if (Key(GungeonActions.GungeonActionType.Reload) && KeyTime(GungeonActions.GungeonActionType.Reload) > 0.75f && !cancelActionCooldown)
-				{
-					cancelActionCooldown = true;
-					if(actions.Count > 0)
-                    {
-						int actionsLen = actions.Count;
-						//Tools.Print(actions[actionsLen - 1], "ffffff", true);
-
-						if (actions[actionsLen - 1] == actionsToBeRecorded.Shooting)
-                        {
-							actions.RemoveAt(actionsLen - 1);
-							aimDirectionWhileFiring.RemoveAt(aimDirectionWhileFiring.Count - 1);
-							gunAngleWhenFired.RemoveAt(gunAngleWhenFired.Count - 1);
-							projsPositions.RemoveAt(projsPositions.Count - 1);
-
-							if (notFullLastActionCost > -999)
+							if (actions[actionsLen - 1] == actionsToBeRecorded.Shooting)
 							{
-								this.CurrentDamageCooldown += notFullLastActionCost;
-								notFullLastActionCost = -999;
+								actions.RemoveAt(actionsLen - 1);
+								aimDirectionWhileFiring.RemoveAt(aimDirectionWhileFiring.Count - 1);
+								gunAngleWhenFired.RemoveAt(gunAngleWhenFired.Count - 1);
+								projsPositions.RemoveAt(projsPositions.Count - 1);
+
+								if (notFullLastActionCost > notFullLastActionCostNormalConst)
+								{
+									this.CurrentDamageCooldown += notFullLastActionCost;
+									notFullLastActionCost = notFullLastActionCostNormalConst;
+								}
+								else
+								{
+									this.CurrentDamageCooldown += shootCosts[projsFired[projsFired.Count - 1]];
+								}
+
+								projsFired.RemoveAt(projsFired.Count - 1);
 							}
-							else
+
+							else if (actionsLen > 2 && actions[actionsLen - 1] == actionsToBeRecorded.Moving && actions[actionsLen - 2] == actionsToBeRecorded.Shooting)
 							{
-								this.CurrentDamageCooldown += shootCosts[projsFired[projsFired.Count - 1]];
-							}
-
-							projsFired.RemoveAt(projsFired.Count - 1);
-						}
-
-						else if (actionsLen > 2 && actions[actionsLen - 1] == actionsToBeRecorded.Moving && actions[actionsLen - 2] == actionsToBeRecorded.Shooting)
-						{
-							actions.RemoveAt(actions.Count - 1);
-							actions.RemoveAt(actions.Count - 1);
-							aimDirectionWhileFiring.RemoveAt(aimDirectionWhileFiring.Count - 1);
-							gunAngleWhenFired.RemoveAt(gunAngleWhenFired.Count - 1);
-							projsPositions.RemoveAt(projsPositions.Count - 1);
-
-							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 2]);
-							playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
-							
-							if (notFullLastActionCost > -999)
-							{
-								this.CurrentDamageCooldown += (notFullLastActionCost + movementCost);
-								notFullLastActionCost = -999;
-							}
-							else
-							{
-								this.CurrentDamageCooldown += (shootCosts[projsFired[projsFired.Count - 1]] + movementCost);
-							}
-
-							projsFired.RemoveAt(projsFired.Count - 1);
-						}
-
-						else if (actions[actionsLen - 1] == actionsToBeRecorded.Dodgeroll)
-                        {
-							actions.RemoveAt(actionsLen - 1);
-							dodgeRollDirection.RemoveAt(dodgeRollDirection.Count - 1);
-							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
-
-							if (notFullLastActionCost > -999)
-							{
-								this.CurrentDamageCooldown += notFullLastActionCost;
-								notFullLastActionCost = -999;
-							}
-							else
-							{
-								this.CurrentDamageCooldown += dodgerollCost;
-							}
-						}
-
-						else if (actionsLen > 2 && actions[actionsLen - 1] == actionsToBeRecorded.Moving && actions[actionsLen - 2] == actionsToBeRecorded.Dodgeroll)
-						{
-							actions.RemoveAt(actions.Count- 1);
-							actions.RemoveAt(actions.Count- 1);
-							dodgeRollDirection.RemoveAt(dodgeRollDirection.Count - 1);
-
-							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 2]);
-							playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
-							
-							if(notFullLastActionCost > -999)
-                            {
-								this.CurrentDamageCooldown += (notFullLastActionCost + movementCost);
-								notFullLastActionCost = -999;
-							}
-                            else
-                            {
-								this.CurrentDamageCooldown += (dodgerollCost + movementCost);
-							}
-						}
-
-						else if (actions[actionsLen - 1] == actionsToBeRecorded.Moving && actionsLen > 1)
-						{
-							int nbOfMovesToRemove = 1;
-							for(int i = actionsLen - 1; i > 1; i--)
-                            {
-								if(actions[i] == actionsToBeRecorded.Moving && actions[i-1] == actionsToBeRecorded.Moving)
-                                {
-									nbOfMovesToRemove++;
-                                }
-                                else
-                                {
-									break;
-                                }
-                            }
-							user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - nbOfMovesToRemove]);
-							while(nbOfMovesToRemove > 0)
-                            {
-								nbOfMovesToRemove--;
 								actions.RemoveAt(actions.Count - 1);
-								playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
-								this.CurrentDamageCooldown += movementCost;
-							}
-						}
+								actions.RemoveAt(actions.Count - 1);
+								aimDirectionWhileFiring.RemoveAt(aimDirectionWhileFiring.Count - 1);
+								gunAngleWhenFired.RemoveAt(gunAngleWhenFired.Count - 1);
+								projsPositions.RemoveAt(projsPositions.Count - 1);
 
+								user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 2]);
+								playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
+
+								if (notFullLastActionCost > notFullLastActionCostNormalConst)
+								{
+									this.CurrentDamageCooldown += (notFullLastActionCost + movementCost);
+									notFullLastActionCost = notFullLastActionCostNormalConst;
+								}
+								else
+								{
+									this.CurrentDamageCooldown += (shootCosts[projsFired[projsFired.Count - 1]] + movementCost);
+								}
+
+								projsFired.RemoveAt(projsFired.Count - 1);
+							}
+
+							else if (actions[actionsLen - 1] == actionsToBeRecorded.Dodgeroll)
+							{
+								actions.RemoveAt(actionsLen - 1);
+								dodgeRollDirection.RemoveAt(dodgeRollDirection.Count - 1);
+								user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
+
+								if (notFullLastActionCost > notFullLastActionCostNormalConst)
+								{
+									this.CurrentDamageCooldown += notFullLastActionCost;
+									notFullLastActionCost = notFullLastActionCostNormalConst;
+								}
+								else
+								{
+									this.CurrentDamageCooldown += dodgerollCost;
+								}
+							}
+
+							else if (actionsLen > 2 && actions[actionsLen - 1] == actionsToBeRecorded.Moving && actions[actionsLen - 2] == actionsToBeRecorded.Dodgeroll)
+							{
+								actions.RemoveAt(actions.Count - 1);
+								actions.RemoveAt(actions.Count - 1);
+								dodgeRollDirection.RemoveAt(dodgeRollDirection.Count - 1);
+
+								user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 2]);
+								playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
+
+								if (notFullLastActionCost > notFullLastActionCostNormalConst)
+								{
+									this.CurrentDamageCooldown += (notFullLastActionCost + movementCost);
+									notFullLastActionCost = notFullLastActionCostNormalConst;
+								}
+								else
+								{
+									this.CurrentDamageCooldown += (dodgerollCost + movementCost);
+								}
+							}
+
+							else if (actions[actionsLen - 1] == actionsToBeRecorded.Moving && actionsLen > 1)
+							{
+								int nbOfMovesToRemove = 1;
+								for (int i = actionsLen - 1; i > 1; i--)
+								{
+									if (actions[i] == actionsToBeRecorded.Moving && actions[i - 1] == actionsToBeRecorded.Moving)
+									{
+										nbOfMovesToRemove++;
+									}
+									else
+									{
+										break;
+									}
+								}
+								user.WarpToPoint(playerPositionsDuringActivation[playerPositionsDuringActivation.Count - nbOfMovesToRemove]);
+								while (nbOfMovesToRemove > 0)
+								{
+									nbOfMovesToRemove--;
+									actions.RemoveAt(actions.Count - 1);
+									playerPositionsDuringActivation.RemoveAt(playerPositionsDuringActivation.Count - 1);
+									this.CurrentDamageCooldown += movementCost;
+								}
+							}
+
+						}
+						GameManager.Instance.StartCoroutine(CancelCooldownCoroutine());
 					}
-					GameManager.Instance.StartCoroutine(CancelCooldownCoroutine());
 				}
 
+				if (isRecordTimeActive || isReplayTimeActive)
+				{
+					if (user.CurrentRoom != roomWhereTurnWasActivated)
+					{
+						CancelEarly(user);
+					}
+					List<AIActor> actorsDuringThisFrame = user.CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All);
+
+
+					if (enemiesInRoom.Except(actorsDuringThisFrame).ToList().Any() || actorsDuringThisFrame.Except(enemiesInRoom).ToList().Any())
+                    {
+						OutTime = 0f;
+						stopLocalTime = false;
+						AffectEffect(user);
+						stopLocalTime = true;
+						OutTime = normalOutTimeDuration;
+                    }
+
+					enemiesInRoom = actorsDuringThisFrame;
+				}
 			}
+
+			
 		}
 
 
@@ -542,6 +571,7 @@ namespace GlaurungItems.Items
 					wasFlyingAtTheStart = false;
 				}
 
+				this.OutTime = 0f;
 				stopLocalTime = false;
 				isRecordTimeActive = false;
 
@@ -642,11 +672,6 @@ namespace GlaurungItems.Items
 			return BraveInput.GetInstanceForPlayer(LastOwner.PlayerIDX).ActiveActions.GetActionFromType(action).PressedDuration;
 		}
 
-		public bool KeyDown(GungeonActions.GungeonActionType action)
-		{
-			return BraveInput.GetInstanceForPlayer(LastOwner.PlayerIDX).ActiveActions.GetActionFromType(action).WasPressed;
-		}
-
 		public bool Key(GungeonActions.GungeonActionType action)
 		{
 			return BraveInput.GetInstanceForPlayer(LastOwner.PlayerIDX).ActiveActions.GetActionFromType(action).IsPressed;
@@ -674,12 +699,15 @@ namespace GlaurungItems.Items
 			500f
 		};
 		private Gun usb = Game.Items["gl:usb_gun"] as Gun;
+		private readonly static int notFullLastActionCostNormalConst = -999;
+		private readonly static float normalOutTimeDuration = 2f;
 
 		private bool isRecordTimeActive = false;
 		private bool isReplayTimeActive = false;
 
 		private bool wasFlyingAtTheStart = false;
 		private Vector3 startingTurnPosition;
+		private Dungeonator.RoomHandler roomWhereTurnWasActivated;
 		private Gun transistorGunInstance;
 
 		private bool isCurrentlyDodgeRolling = false;
@@ -689,9 +717,9 @@ namespace GlaurungItems.Items
 		private float notFullLastActionCost = -999;
 
 		private List<actionsToBeRecorded> actions = new List<actionsToBeRecorded>();
+		private List<AIActor> enemiesInRoom;
 
 		private List<AIActor> compsSaved = new List<AIActor>();
-		private List<PlayerOrbitalItem> iounsSaved = new List<PlayerOrbitalItem>();
 
 		private List<Vector2> dodgeRollDirection = new List<Vector2>();
 		private List<Vector3> playerPositionsDuringActivation = new List<Vector3>();
