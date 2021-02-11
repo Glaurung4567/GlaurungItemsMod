@@ -40,14 +40,15 @@ Prevent dodgeroll spam ok
 end turn early if onchangedroom ok
 end turn early if onNoEnemy, onReinforcement no need
 Freeze enemy on spawn ok
+Prevent blanks ok
 
-Check items interactions (bloodied scarf/super hot watch/gunboots ok)
+Check items interactions (bloodied scarf/super hot watch/gunboots/full metal jacket ok)
 see if cancel works properly
 
-Prevent blanks
-Prevent inventory modif
 Prevent interactions 
+Prevent inventory modif
 On load new floor test
+Cancel enemies effects
 Keep projs moving when enemy killed ?
 Prevent coop intervention ?
 */
@@ -73,6 +74,7 @@ namespace GlaurungItems.Items
 
 		protected override void DoEffect(PlayerController user)
 		{
+
 			if (!isRecordTimeActive)
             {
 				startingTurnPosition = user.transform.position;
@@ -110,6 +112,7 @@ namespace GlaurungItems.Items
 				gunAngleWhenFired = new List<float>();
 				projsFired = new List<int>();
 				compsSaved = new List<AIActor>();
+				savedRoomInteractables = new List<IPlayerInteractable>();
 
 				roomWhereTurnWasActivated = user.CurrentRoom;
 
@@ -154,6 +157,16 @@ namespace GlaurungItems.Items
                         }
                     }
                 }
+
+				if (user.CurrentRoom != null && user.CurrentRoom.GetRoomInteractables() != null)
+				{
+					List<IPlayerInteractable> interactables = user.CurrentRoom.GetRoomInteractables().ToList();
+					foreach(IPlayerInteractable interactable in interactables)
+                    {
+						savedRoomInteractables.Add(interactable);
+						user.CurrentRoom.DeregisterInteractable(interactable);
+					}
+				}
 
 				//for the possibility of dodgerolling at the start
 				actions.Add(actionsToBeRecorded.Moving);
@@ -661,6 +674,20 @@ namespace GlaurungItems.Items
 			}
 		}
 
+		private void ResetInteractables(PlayerController user)
+        {
+			if (user.CurrentRoom != null)
+			{
+				foreach (IPlayerInteractable interactable in savedRoomInteractables)
+				{
+                    if (interactable != null)
+                    {
+						user.CurrentRoom.RegisterInteractable(interactable);
+					}
+				}
+			}
+		}
+
 		private void OnRoomClear(PlayerController user)
 		{
 			CancelEarly(user);
@@ -740,10 +767,11 @@ namespace GlaurungItems.Items
 		private bool dodgeRollCooldown = false;
 		private float notFullLastActionCost = -999;
 
-		private List<actionsToBeRecorded> actions = new List<actionsToBeRecorded>();
-		private List<AIActor> enemiesInRoom;
-
+		private List<AIActor> enemiesInRoom = new List<AIActor>();
+		private List<IPlayerInteractable> savedRoomInteractables = new List<IPlayerInteractable>();
 		private List<AIActor> compsSaved = new List<AIActor>();
+
+		private List<actionsToBeRecorded> actions = new List<actionsToBeRecorded>();
 
 		private List<Vector2> dodgeRollDirection = new List<Vector2>();
 		private List<Vector3> playerPositionsDuringActivation = new List<Vector3>();
