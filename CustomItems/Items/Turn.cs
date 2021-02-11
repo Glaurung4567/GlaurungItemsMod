@@ -401,12 +401,13 @@ namespace GlaurungItems.Items
 					{
 						CancelEarly(user);
 					}
+
+					//to freeze newcomers
 					List<AIActor> actorsDuringThisFrame = user.CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All);
-
-
+					//from https://stackoverflow.com/questions/12795882/quickest-way-to-compare-two-generic-lists-for-differences
 					if (enemiesInRoom.Except(actorsDuringThisFrame).ToList().Any() || actorsDuringThisFrame.Except(enemiesInRoom).ToList().Any())
                     {
-						AffectEffect(user, true);
+						AffectEnemiesInRadiusEffect(user, true);
 					}
 					UpdateEnemiesInRoom(user);	
 					
