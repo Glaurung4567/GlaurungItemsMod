@@ -204,6 +204,7 @@ namespace GlaurungItems.Items
 
 				ResetCompanions(user);
 				ResetIouns(user);
+				ResetInteractables(user);
 
 				user.Blanks = nbConsumableBlanksAtStart;
 
@@ -476,6 +477,7 @@ namespace GlaurungItems.Items
 					projectileInst.Owner = user;
 					projectileInst.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
 					projectileInst.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
+					projectileInst.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMaskProj);
 					projectileInst.transform.parent = user.CurrentGun.barrelOffset;
 					if (projNb == 2)
 					{
@@ -597,6 +599,7 @@ namespace GlaurungItems.Items
 
 				ResetCompanions(user);
 				ResetIouns(user);
+				ResetInteractables(user);
 
 				this.ClearCooldowns();
 				user.WarpToPoint(startingTurnPosition);
@@ -733,6 +736,7 @@ namespace GlaurungItems.Items
 			CollisionLayer.BeamBlocker);
 		private static int collisionMask2 = CollisionMask.LayerToMask(CollisionLayer.BulletBlocker, CollisionLayer.BulletBreakable,
 			CollisionLayer.PlayerBlocker, CollisionLayer.PlayerCollider);
+		private static int collisionMaskProj = CollisionMask.LayerToMask(CollisionLayer.LowObstacle, CollisionLayer.HighObstacle);
 		private enum actionsToBeRecorded
 		{
 			Dodgeroll,
