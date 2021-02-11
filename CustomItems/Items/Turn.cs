@@ -44,9 +44,9 @@ Freeze enemy on spawn ok
 Check items interactions (bloodied scarf/super hot watch/gunboots ok)
 see if cancel works properly
 
+Prevent blanks
 Prevent inventory modif
 Prevent interactions 
-Prevent blanks
 On load new floor test
 Keep projs moving when enemy killed ?
 Prevent coop intervention ?

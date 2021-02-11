@@ -10,7 +10,7 @@ namespace GlaurungItems.Items
 		{
 			this.HoldTime = 5f;
 			this.OutTime = 2f;
-			this.EffectRadius = 30f;
+			this.EffectRadius = 60f;
 			this.MaxTimeModifier = 0f;
 		}
 
