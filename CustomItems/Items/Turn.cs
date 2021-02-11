@@ -66,7 +66,7 @@ namespace GlaurungItems.Items
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
 			string shortDesc = "It's my Turn() now !";
 			string longDesc = "On first use, gives the USB Gun, stop enemies, companions and projectiles and records three types of actions (moving/shooting/dodgerolling), " +
-				"refilling the cooldown bar for a certain amount until it's fully charged. Keeping the reload pressed cancel the most recent actions." +
+				"refilling the cooldown bar for a certain amounBt until it's fully charged. Keeping the reload pressed cancel the most recent actions. " +
 				"On second use, replay all the actions recorded. Beware, you don't collide with enemies or projectiles nor fall during the record phase " +
 				"but you will collide/fall and take damage during the replay phase.";
 			item.SetupItem(shortDesc, longDesc, "gl");
