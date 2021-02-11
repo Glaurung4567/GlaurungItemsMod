@@ -11,8 +11,9 @@ namespace GlaurungItems.Items
             Gun gun = ETGMod.Databases.Items.NewGun("USB Gun", "transistorgun");
             Game.Items.Rename("outdated_gun_mods:usb_gun", "gl:usb_gun");
             gun.gameObject.AddComponent<Transistor>();
-            gun.SetShortDescription("");
-            gun.SetLongDescription("");
+            gun.SetShortDescription("Transistor");
+            gun.SetLongDescription("Three shots, the first one is a rapid, medium range low damage projectile, the second is a long range piercing shot and the third is a low range high damage/high knockback shot." +
+                "Each cost more during the turn() than the previous one.");
             gun.SetupSprite(null, "transistorgun_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
