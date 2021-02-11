@@ -56,7 +56,6 @@ namespace GlaurungItems.Items
 			}
 			if (this.EffectTime <= 0f || overrideNormalDoEffect)
 			{
-				Tools.Print("it works ?", "ffffff", true);
 				if (activeEnemies != null)
 				{
 					for (int i = 0; i < activeEnemies.Count; i++)
@@ -65,7 +64,7 @@ namespace GlaurungItems.Items
 						if (aiactor.IsNormalEnemy)
 						{
 							float num = Vector2.Distance(user.CenterPosition, aiactor.CenterPosition);
-							if (num <= this.EffectRadius)
+							if (num <= this.EffectRadius && aiactor.isActiveAndEnabled)
 							{
 								this.AffectEnemy(aiactor);
 								if (this.OnTargetEffectVFX != null)
