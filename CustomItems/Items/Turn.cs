@@ -37,16 +37,18 @@ remove player projs at start ok
 end turn early if onleavecombat ok
 Prevent companions(CompanionItem) or orbital(IounStoneOrbitalItem) intervention
 Prevent dodgeroll spam ok
+end turn early if onchangedroom ok
+end turn early if onNoEnemy, onReinforcement no need
+Freeze enemy on spawn ok
 
+Check items interactions (bloodied scarf/super hot watch/gunboots ok)
 see if cancel works properly
 
-Prevent enemy spawn mob/proj on death or refreeze
 Prevent inventory modif
 Prevent interactions 
-Check items interactions (bloodied scarf/super hot watch/gunboots ok)
 Prevent blanks
 On load new floor test
-end turn early if onchangedroom, onNoEnemy, onReinforcement
+Keep projs moving when enemy killed ?
 Prevent coop intervention ?
 */
 namespace GlaurungItems.Items
@@ -111,7 +113,11 @@ namespace GlaurungItems.Items
 
 				roomWhereTurnWasActivated = user.CurrentRoom;
 
-				//to check if a new 
+				//prevent blanks during record
+				nbConsumableBlanksAtStart = user.Blanks;
+				user.Blanks = 0;
+
+				//for the check if a new enemy spawned in update
 				UpdateEnemiesInRoom(user);		
 
 				//to stop companions
@@ -185,6 +191,8 @@ namespace GlaurungItems.Items
 
 				ResetCompanions(user);
 				ResetIouns(user);
+
+				user.Blanks = nbConsumableBlanksAtStart;
 
 				user.healthHaver.IsVulnerable = true;
 				user.specRigidbody.RemoveCollisionLayerIgnoreOverride(collisionMask);
@@ -452,6 +460,7 @@ namespace GlaurungItems.Items
 					Projectile projCopy = usb.DefaultModule.chargeProjectiles[projNb].Projectile;
 					GameObject gameObject = SpawnManager.SpawnProjectile(projCopy.gameObject, user.CurrentGun.barrelOffset.position, Quaternion.Euler(0f, 0f, user.CurrentGun.CurrentAngle), true);
 					Projectile projectileInst = gameObject.GetComponent<Projectile>();
+					projectileInst.Owner = user;
 					projectileInst.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask);
 					projectileInst.specRigidbody.AddCollisionLayerIgnoreOverride(collisionMask2);
 					projectileInst.transform.parent = user.CurrentGun.barrelOffset;
@@ -722,6 +731,7 @@ namespace GlaurungItems.Items
 		private bool wasFlyingAtTheStart = false;
 		private Vector3 startingTurnPosition;
 		private Dungeonator.RoomHandler roomWhereTurnWasActivated;
+		private int nbConsumableBlanksAtStart;
 		private Gun transistorGunInstance;
 
 		private bool isCurrentlyDodgeRolling = false;
