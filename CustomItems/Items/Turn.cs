@@ -42,15 +42,16 @@ end turn early if onNoEnemy, onReinforcement no need
 Freeze enemy on spawn ok
 Prevent blanks ok
 Prevent interactions ok
+Prevent passives drop ok
+SetGunLock in update ok
 
 Check items interactions (bloodied scarf/super hot watch/gunboots/full metal jacket ok)
 see if cancel works properly
 Check coolness
-Prevent inventory modif
 
 On load new floor test
 Cancel enemies effects
-SetGunLock in update
+Prevent item pickup ?
 Keep projs moving when enemy killed ?
 Prevent coop intervention ?
 */
@@ -437,6 +438,9 @@ namespace GlaurungItems.Items
 					{
 						CancelEarly(user);
 					}
+
+					user.inventory.GunLocked.SetOverride("turn", true, null);
+
 
 					//to freeze newcomers
 					List<AIActor> actorsDuringThisFrame = user.CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All);

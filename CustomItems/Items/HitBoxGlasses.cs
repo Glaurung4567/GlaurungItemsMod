@@ -77,6 +77,7 @@ namespace GlaurungItems.Items
         private void OnEnterCombat()
         {
             Tools.Print("OnEnteredCombat", "FFFFFF", true);
+            RoomHandler.DrawRandomCellLines = true;
             BraveUtility.DrawDebugSquare(base.Owner.CurrentRoom.area.basePosition.ToVector2(), base.Owner.CurrentRoom.area.basePosition.ToVector2() + base.Owner.CurrentRoom.area.dimensions.ToVector2(), Color.cyan, 1000f);
         }
 
