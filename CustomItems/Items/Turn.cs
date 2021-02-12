@@ -118,7 +118,9 @@ namespace GlaurungItems.Items
 				projsFired = new List<int>();
 				compsSaved = new List<AIActor>();
 				savedRoomInteractables = new List<IPlayerInteractable>();
+				savePassivesCanBeDropped = new Dictionary<PassiveItem, bool>();
 
+				//for the check of room change during combat
 				roomWhereTurnWasActivated = user.CurrentRoom;
 
 				//prevent blanks during record
@@ -129,27 +131,31 @@ namespace GlaurungItems.Items
 				UpdateEnemiesInRoom(user);		
 
 				//to stop companions
-				foreach (PassiveItem passive in user.passiveItems)
+				if(user.passiveItems != null)
                 {
-					if(passive is CompanionItem)
-                    {
-						CompanionItem compItem = (passive as CompanionItem);
-                        if (compItem.ExtantCompanion && compItem.ExtantCompanion.GetComponent<CompanionController>())
-                        {
-							CompanionController compCont = compItem.ExtantCompanion.GetComponent<CompanionController>();
-							if(compCont.GetComponent<AIActor>() != null)
-                            {
-								AIActor comp = compCont.GetComponent<AIActor>();
-								if(comp.healthHaver && comp.healthHaver.IsAlive)
-                                {
-									comp.LocalTimeScale = 0;
-									compsSaved.Add(comp);
-								}
+					foreach (PassiveItem passive in user.passiveItems)
+					{
+						if (passive is CompanionItem)
+						{
+							CompanionItem compItem = (passive as CompanionItem);
+							if (compItem.ExtantCompanion && compItem.ExtantCompanion.GetComponent<CompanionController>())
+							{
+								CompanionController compCont = compItem.ExtantCompanion.GetComponent<CompanionController>();
+								if (compCont.GetComponent<AIActor>() != null)
+								{
+									AIActor comp = compCont.GetComponent<AIActor>();
+									if (comp.healthHaver && comp.healthHaver.IsAlive)
+									{
+										comp.LocalTimeScale = 0;
+										compsSaved.Add(comp);
+									}
 
+								}
 							}
 						}
-                    }
+					}
 				}
+
 
 				//to make guon orbitals not collides with bullets during the record phase
 				if(user.orbitals != null && user.orbitals.Count > 0)
@@ -779,6 +785,7 @@ namespace GlaurungItems.Items
 		private List<AIActor> enemiesInRoom = new List<AIActor>();
 		private List<IPlayerInteractable> savedRoomInteractables = new List<IPlayerInteractable>();
 		private List<AIActor> compsSaved = new List<AIActor>();
+		private Dictionary<PassiveItem, bool> savePassivesCanBeDropped = new Dictionary<PassiveItem, bool>(); 
 
 		private List<ActionsToBeRecorded> actions = new List<ActionsToBeRecorded>();
 
