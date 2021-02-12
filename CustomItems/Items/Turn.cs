@@ -46,8 +46,8 @@ Prevent interactions ok
 Check items interactions (bloodied scarf/super hot watch/gunboots/full metal jacket ok)
 see if cancel works properly
 Check coolness
-
 Prevent inventory modif
+
 On load new floor test
 Cancel enemies effects
 SetGunLock in update
@@ -153,6 +153,8 @@ namespace GlaurungItems.Items
 								}
 							}
 						}
+						savePassivesCanBeDropped.Add(passive, passive.CanBeDropped);
+						passive.CanBeDropped = false;
 					}
 				}
 
@@ -216,6 +218,7 @@ namespace GlaurungItems.Items
 				ResetCompanions(user);
 				ResetIouns(user);
 				ResetInteractables(user);
+				ResetPassivesCanBeDropped(user);
 
 				user.Blanks = nbConsumableBlanksAtStart;
 
@@ -611,6 +614,7 @@ namespace GlaurungItems.Items
 				ResetCompanions(user);
 				ResetIouns(user);
 				ResetInteractables(user);
+				ResetPassivesCanBeDropped(user);
 
 				this.ClearCooldowns();
 				user.WarpToPoint(startingTurnPosition);
@@ -701,6 +705,18 @@ namespace GlaurungItems.Items
 				}
 			}
 		}
+
+		private void ResetPassivesCanBeDropped(PlayerController user)
+        {
+			if(savePassivesCanBeDropped != null)
+            {
+				foreach(PassiveItem passive in savePassivesCanBeDropped.Keys)
+                {
+					passive.CanBeDropped = savePassivesCanBeDropped[passive];
+                }
+            }
+        }
+
 
 		private void OnRoomClear(PlayerController user)
 		{
