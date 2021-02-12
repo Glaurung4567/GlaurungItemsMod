@@ -41,7 +41,7 @@ end turn early if onchangedroom ok
 end turn early if onNoEnemy, onReinforcement no need
 Freeze enemy on spawn ok
 Prevent blanks ok
-Prevent interactions 
+Prevent interactions ok
 
 Check items interactions (bloodied scarf/super hot watch/gunboots/full metal jacket ok)
 see if cancel works properly
@@ -50,6 +50,7 @@ Check coolness
 Prevent inventory modif
 On load new floor test
 Cancel enemies effects
+SetGunLock in update
 Keep projs moving when enemy killed ?
 Prevent coop intervention ?
 */
