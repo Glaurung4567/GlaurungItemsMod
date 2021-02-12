@@ -109,7 +109,7 @@ namespace GlaurungItems.Items
 					}
 				}
 
-				actions = new List<actionsToBeRecorded>();
+				actions = new List<ActionsToBeRecorded>();
 				dodgeRollDirection = new List<Vector2>();
 				playerPositionsDuringActivation = new List<Vector3>();
 				aimDirectionWhileFiring = new List<Vector3>();
@@ -174,7 +174,7 @@ namespace GlaurungItems.Items
 				}
 
 				//for the possibility of dodgerolling at the start
-				actions.Add(actionsToBeRecorded.Moving);
+				actions.Add(ActionsToBeRecorded.Moving);
 				playerPositionsDuringActivation.Add(user.transform.position);
 
 				//invulnerability during record time
@@ -256,7 +256,7 @@ namespace GlaurungItems.Items
 							{
 								isCurrentlyDodgeRolling = true;
 								dodgeRollCooldown = true;
-								actions.Add(actionsToBeRecorded.Dodgeroll);
+								actions.Add(ActionsToBeRecorded.Dodgeroll);
 								dodgeRollDirection.Add(user.transform.position - playerPositionsDuringActivation[playerPositionsDuringActivation.Count - 1]);
 								float c = Math.Min(dodgerollCost, CurrentDamageCooldown);
 								if (c < dodgerollCost)
@@ -288,13 +288,13 @@ namespace GlaurungItems.Items
 							int lenPos = playerPositionsDuringActivation.Count;
 							if (lenPos > 1 && playerPositionsDuringActivation[lenPos - 1] != user.transform.position)
 							{
-								actions.Add(actionsToBeRecorded.Moving);
+								actions.Add(ActionsToBeRecorded.Moving);
 								playerPositionsDuringActivation.Add(user.transform.position);
 								this.CurrentDamageCooldown -= Math.Min(movementCost, CurrentDamageCooldown);
 							}
 							else if (lenPos <= 1)
 							{
-								actions.Add(actionsToBeRecorded.Moving);
+								actions.Add(ActionsToBeRecorded.Moving);
 								playerPositionsDuringActivation.Add(user.transform.position);
 							}
 						}
@@ -312,7 +312,7 @@ namespace GlaurungItems.Items
 							int actionsLen = actions.Count;
 							//Tools.Print(actions[actionsLen - 1], "ffffff", true);
 
-							if (actions[actionsLen - 1] == actionsToBeRecorded.Shooting)
+							if (actions[actionsLen - 1] == ActionsToBeRecorded.Shooting)
 							{
 								actions.RemoveAt(actionsLen - 1);
 								aimDirectionWhileFiring.RemoveAt(aimDirectionWhileFiring.Count - 1);
@@ -332,7 +332,7 @@ namespace GlaurungItems.Items
 								projsFired.RemoveAt(projsFired.Count - 1);
 							}
 
-							else if (actionsLen > 2 && actions[actionsLen - 1] == actionsToBeRecorded.Moving && actions[actionsLen - 2] == actionsToBeRecorded.Shooting)
+							else if (actionsLen > 2 && actions[actionsLen - 1] == ActionsToBeRecorded.Moving && actions[actionsLen - 2] == ActionsToBeRecorded.Shooting)
 							{
 								actions.RemoveAt(actions.Count - 1);
 								actions.RemoveAt(actions.Count - 1);
@@ -356,7 +356,7 @@ namespace GlaurungItems.Items
 								projsFired.RemoveAt(projsFired.Count - 1);
 							}
 
-							else if (actions[actionsLen - 1] == actionsToBeRecorded.Dodgeroll)
+							else if (actions[actionsLen - 1] == ActionsToBeRecorded.Dodgeroll)
 							{
 								actions.RemoveAt(actionsLen - 1);
 								dodgeRollDirection.RemoveAt(dodgeRollDirection.Count - 1);
@@ -373,7 +373,7 @@ namespace GlaurungItems.Items
 								}
 							}
 
-							else if (actionsLen > 2 && actions[actionsLen - 1] == actionsToBeRecorded.Moving && actions[actionsLen - 2] == actionsToBeRecorded.Dodgeroll)
+							else if (actionsLen > 2 && actions[actionsLen - 1] == ActionsToBeRecorded.Moving && actions[actionsLen - 2] == ActionsToBeRecorded.Dodgeroll)
 							{
 								actions.RemoveAt(actions.Count - 1);
 								actions.RemoveAt(actions.Count - 1);
@@ -393,12 +393,12 @@ namespace GlaurungItems.Items
 								}
 							}
 
-							else if (actions[actionsLen - 1] == actionsToBeRecorded.Moving && actionsLen > 1)
+							else if (actions[actionsLen - 1] == ActionsToBeRecorded.Moving && actionsLen > 1)
 							{
 								int nbOfMovesToRemove = 1;
 								for (int i = actionsLen - 1; i > 1; i--)
 								{
-									if (actions[i] == actionsToBeRecorded.Moving && actions[i - 1] == actionsToBeRecorded.Moving)
+									if (actions[i] == ActionsToBeRecorded.Moving && actions[i - 1] == ActionsToBeRecorded.Moving)
 									{
 										nbOfMovesToRemove++;
 									}
@@ -463,7 +463,7 @@ namespace GlaurungItems.Items
 					projNb = validProjs.IndexOf(proj.name);
 
 					projsFired.Add(projNb);
-					actions.Add(actionsToBeRecorded.Shooting);
+					actions.Add(ActionsToBeRecorded.Shooting);
 					Vector3 aim = (user.unadjustedAimPoint);// - user.CenterPosition);
 					aimDirectionWhileFiring.Add(aim);
 					gunAngleWhenFired.Add(user.CurrentGun.CurrentAngle);
@@ -503,20 +503,20 @@ namespace GlaurungItems.Items
 			user.SetInputOverride("turn");
 			user.CurrentInputState = PlayerInputState.NoInput;
 			Time.timeScale = 1.6f;
-			foreach (actionsToBeRecorded act in actions)
+			foreach (ActionsToBeRecorded act in actions)
 			{
                 if (!isReplayTimeActive)
                 {
 					break;
                 }
-				if (act == actionsToBeRecorded.Dodgeroll)
+				if (act == ActionsToBeRecorded.Dodgeroll)
 				{
 					user.ForceStartDodgeRoll(dodgeRollDirection[0]);
 					dodgeRollDirection.RemoveAt(0);
 					yield return new WaitForSeconds(1f);
 				}
 
-				if (act == actionsToBeRecorded.Moving)
+				if (act == ActionsToBeRecorded.Moving)
 				{
 					if((playerPositionsDuringActivation.Count > 1 && playerPositionsDuringActivation[0] != playerPositionsDuringActivation[1]) 
 						|| playerPositionsDuringActivation.Count == 1)
@@ -528,7 +528,7 @@ namespace GlaurungItems.Items
 					playerPositionsDuringActivation.RemoveAt(0);
 				}
 
-				if(act == actionsToBeRecorded.Shooting)
+				if(act == ActionsToBeRecorded.Shooting)
                 {
 					yield return null;
                     //user.unadjustedaimpoint = aimdirectionwhilefiring[0];
@@ -736,13 +736,13 @@ namespace GlaurungItems.Items
 
 
 		//------------------------------
-		private static int collisionMask = CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider, 
+		private readonly static int collisionMask = CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox, CollisionLayer.EnemyCollider, 
 			CollisionLayer.EnemyBulletBlocker, CollisionLayer.EnemyBlocker, CollisionLayer.Projectile, CollisionLayer.Pickup, 
 			CollisionLayer.BeamBlocker);
-		private static int collisionMask2 = CollisionMask.LayerToMask(CollisionLayer.BulletBlocker, CollisionLayer.BulletBreakable,
+		private readonly static int collisionMask2 = CollisionMask.LayerToMask(CollisionLayer.BulletBlocker, CollisionLayer.BulletBreakable,
 			CollisionLayer.PlayerBlocker, CollisionLayer.PlayerCollider);
-		private static int collisionMaskProj = CollisionMask.LayerToMask(CollisionLayer.LowObstacle, CollisionLayer.HighObstacle);
-		private enum actionsToBeRecorded
+		private readonly static int collisionMaskProj = CollisionMask.LayerToMask(CollisionLayer.LowObstacle, CollisionLayer.HighObstacle);
+        private enum ActionsToBeRecorded
 		{
 			Dodgeroll,
 			Shooting,
@@ -780,7 +780,7 @@ namespace GlaurungItems.Items
 		private List<IPlayerInteractable> savedRoomInteractables = new List<IPlayerInteractable>();
 		private List<AIActor> compsSaved = new List<AIActor>();
 
-		private List<actionsToBeRecorded> actions = new List<actionsToBeRecorded>();
+		private List<ActionsToBeRecorded> actions = new List<ActionsToBeRecorded>();
 
 		private List<Vector2> dodgeRollDirection = new List<Vector2>();
 		private List<Vector3> playerPositionsDuringActivation = new List<Vector3>();
