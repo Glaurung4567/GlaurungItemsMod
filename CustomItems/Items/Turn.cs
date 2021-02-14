@@ -46,7 +46,7 @@ Prevent passives drop ok
 SetGunLock in update ok
 
 Check items interactions (bloodied scarf/super hot watch/gunboots/full metal jacket ok)
-see if cancel works properly
+see if cancel works properly => dunno what cause it
 Check coolness
 
 On load new floor test
@@ -317,7 +317,7 @@ namespace GlaurungItems.Items
 					if (Key(GungeonActions.GungeonActionType.Reload) && KeyTime(GungeonActions.GungeonActionType.Reload) > 0.75f && !cancelActionCooldown)
 					{
 						cancelActionCooldown = true;
-						if (actions.Count > 0)
+						if (actions.Count > 1)
 						{
 							int actionsLen = actions.Count;
 							//Tools.Print(actions[actionsLen - 1], "ffffff", true);
@@ -448,6 +448,24 @@ namespace GlaurungItems.Items
 					if (enemiesInRoom.Except(actorsDuringThisFrame).ToList().Any() || actorsDuringThisFrame.Except(enemiesInRoom).ToList().Any())
                     {
 						AffectEnemiesInRadiusEffect(user, true);
+                        if (enemiesInRoom.Except(actorsDuringThisFrame).ToList().Any())
+                        {
+							List<AIActor> ded = enemiesInRoom.Except(actorsDuringThisFrame).ToList();
+							ReadOnlyCollection<Projectile> allProjectiles = StaticReferenceManager.AllProjectiles;
+							for (int l = allProjectiles.Count - 1; l >= 0; l--)
+							{
+								Projectile projectile = allProjectiles[l];
+								if (
+									projectile.Owner == null 
+									|| (projectile.Owner is AIActor && ded.Contains(projectile.Owner as AIActor))
+									|| (projectile.Owner is AIActor && (projectile.Owner as AIActor).healthHaver && (projectile.Owner as AIActor).healthHaver.IsDead)
+								)
+								{
+									Tools.Print("destroy ded proj", "ffffff", true);
+									projectile.ForceDestruction();
+								}
+							}
+						}
 					}
 					UpdateEnemiesInRoom(user);	
 					
@@ -515,7 +533,7 @@ namespace GlaurungItems.Items
         {
 			user.SetInputOverride("turn");
 			user.CurrentInputState = PlayerInputState.NoInput;
-			Time.timeScale = 1.6f;
+			Time.timeScale = accelerateTimeFactor;
 			foreach (ActionsToBeRecorded act in actions)
 			{
                 if (!isReplayTimeActive)
@@ -777,7 +795,7 @@ namespace GlaurungItems.Items
 
 		private readonly static float turnCooldown = 1000f;
 		private readonly static float dodgerollCost = 100f;
-		private readonly static float movementCost = .5f;
+		private readonly static float movementCost = .75f;
 		private readonly static float[] shootCosts = {
 			40f,
 			200f,
@@ -786,6 +804,7 @@ namespace GlaurungItems.Items
 		private Gun usb = Game.Items["gl:usb_gun"] as Gun;
 		private readonly static int notFullLastActionCostNormalConst = -999;
 		private readonly static float normalOutTimeDuration = 2f;
+		private readonly static float accelerateTimeFactor = 2.5f;
 
 		private bool isRecordTimeActive = false;
 		private bool isReplayTimeActive = false;
