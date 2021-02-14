@@ -44,6 +44,7 @@ Prevent blanks ok
 Prevent interactions ok
 Prevent passives drop ok
 SetGunLock in update ok
+Keep projs moving when enemy killed ? destroy dem ok
 
 Check items interactions (bloodied scarf/super hot watch/gunboots/full metal jacket ok)
 see if cancel works properly => dunno what cause it
@@ -52,7 +53,6 @@ Check coolness
 On load new floor test
 Cancel enemies effects
 Prevent item pickup ?
-Keep projs moving when enemy killed ?
 Prevent coop intervention ?
 */
 namespace GlaurungItems.Items
