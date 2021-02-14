@@ -461,7 +461,6 @@ namespace GlaurungItems.Items
 									|| (projectile.Owner is AIActor && (projectile.Owner as AIActor).healthHaver && (projectile.Owner as AIActor).healthHaver.IsDead)
 								)
 								{
-									Tools.Print("destroy ded proj", "ffffff", true);
 									projectile.ForceDestruction();
 								}
 							}
