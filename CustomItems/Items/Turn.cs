@@ -52,6 +52,7 @@ Check coolness
 
 On load new floor test
 Cancel enemies effects
+Make enemies invulnerable during record ?
 Prevent item pickup ?
 Prevent coop intervention ?
 */
@@ -406,7 +407,7 @@ namespace GlaurungItems.Items
 							else if (actions[actionsLen - 1] == ActionsToBeRecorded.Moving && actionsLen > 1)
 							{
 								int nbOfMovesToRemove = 1;
-								for (int i = actionsLen - 1; i > 1; i--)
+								for (int i = actionsLen - 1; i > 0; i--)
 								{
 									if (actions[i] == ActionsToBeRecorded.Moving && actions[i - 1] == ActionsToBeRecorded.Moving)
 									{
