@@ -166,7 +166,12 @@ namespace GlaurungItems.Items
                 {
 					saveEnemiesAreInvulnerable.Add(actor, actor.ImmuneToAllEffects);
 					actor.ImmuneToAllEffects = true;
-                }
+					if (actor.healthHaver != null)
+					{
+						saveEnemiesHaveHealthHaverInvunerability.Add(actor, actor.healthHaver.PreventAllDamage);
+						actor.healthHaver.PreventAllDamage = true;
+					}
+				}
 
 				//to make guon orbitals not collides with bullets during the record phase
 				if (user.orbitals != null && user.orbitals.Count > 0)
@@ -772,6 +777,13 @@ namespace GlaurungItems.Items
 					actor.ImmuneToAllEffects = saveEnemiesAreInvulnerable[actor];
 				}
 			}
+			if(saveEnemiesHaveHealthHaverInvunerability != null)
+            {
+				foreach (AIActor actor in saveEnemiesHaveHealthHaverInvunerability.Keys)
+				{
+					actor.healthHaver.PreventAllDamage = saveEnemiesHaveHealthHaverInvunerability[actor];
+				}
+			}
 		}
 
 
@@ -861,6 +873,7 @@ namespace GlaurungItems.Items
 		private List<AIActor> compsSaved = new List<AIActor>();
 		private Dictionary<PassiveItem, bool> savePassivesCanBeDropped = new Dictionary<PassiveItem, bool>(); 
 		private Dictionary<AIActor, bool> saveEnemiesAreInvulnerable = new Dictionary<AIActor, bool>(); 
+		private Dictionary<AIActor, bool> saveEnemiesHaveHealthHaverInvunerability = new Dictionary<AIActor, bool>(); 
 
 		private List<ActionsToBeRecorded> actions = new List<ActionsToBeRecorded>();
 
