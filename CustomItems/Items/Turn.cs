@@ -450,6 +450,21 @@ namespace GlaurungItems.Items
 
 					user.inventory.GunLocked.SetOverride("turn", true, null);
 
+					ReadOnlyCollection<Projectile> allProjectiles = StaticReferenceManager.AllProjectiles;
+					if(allProjectiles != null)
+                    {
+						for (int l = allProjectiles.Count - 1; l >= 0; l--)
+						{
+							Projectile projectile = allProjectiles[l];
+							if (
+								projectile.Owner == null
+								|| (projectile.Owner is AIActor && (projectile.Owner as AIActor).healthHaver && (projectile.Owner as AIActor).healthHaver.IsDead)
+							)
+							{
+								projectile.ForceDestruction();
+							}
+						}
+					}
 
 					//to freeze newcomers
 					List<AIActor> actorsDuringThisFrame = user.CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All);
@@ -457,7 +472,7 @@ namespace GlaurungItems.Items
 					if (enemiesInRoom.Except(actorsDuringThisFrame).ToList().Any() || actorsDuringThisFrame.Except(enemiesInRoom).ToList().Any())
                     {
 						AffectEnemiesInRadiusEffect(user, true);
-                        if (enemiesInRoom.Except(actorsDuringThisFrame).ToList().Any())
+                        /*if (enemiesInRoom.Except(actorsDuringThisFrame).ToList().Any())
                         {
 							List<AIActor> ded = enemiesInRoom.Except(actorsDuringThisFrame).ToList();
 							ReadOnlyCollection<Projectile> allProjectiles = StaticReferenceManager.AllProjectiles;
@@ -473,7 +488,7 @@ namespace GlaurungItems.Items
 									projectile.ForceDestruction();
 								}
 							}
-						}
+						}*/
 					}
 					UpdateEnemiesInRoom(user);	
 					
