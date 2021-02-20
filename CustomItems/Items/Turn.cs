@@ -45,14 +45,15 @@ Prevent interactions ok
 Prevent passives drop ok
 SetGunLock in update ok
 Keep projs moving when enemy killed ? destroy dem ok
+Make enemies invulnerable during record ? ok
+Cancel enemies effects no need
 
 Check items interactions (bloodied scarf/super hot watch/gunboots/full metal jacket ok)
-see if cancel works properly => dunno what cause it
+see if cancel works properly => dunno what cause it, dmg during record ?
 Check coolness
 
 On load new floor test
-Cancel enemies effects
-Make enemies invulnerable during record ?
+improve blank prevention during record (pickup)
 Prevent item pickup ?
 Prevent coop intervention ?
 */
@@ -842,7 +843,7 @@ namespace GlaurungItems.Items
 
 		private readonly static float turnCooldown = 1000f;
 		private readonly static float dodgerollCost = 100f;
-		private readonly static float movementCost = .75f;
+		private readonly static float movementCost = .6f;
 		private readonly static float[] shootCosts = {
 			40f,
 			200f,
