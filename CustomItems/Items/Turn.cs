@@ -121,6 +121,7 @@ namespace GlaurungItems.Items
 				compsSaved = new List<AIActor>();
 				savedRoomInteractables = new List<IPlayerInteractable>();
 				savePassivesCanBeDropped = new Dictionary<PassiveItem, bool>();
+				saveEnemiesAreInvulnerable = new Dictionary<AIActor, bool>();
 
 				//for the check of room change during combat
 				roomWhereTurnWasActivated = user.CurrentRoom;
@@ -160,9 +161,15 @@ namespace GlaurungItems.Items
 					}
 				}
 
+				List<AIActor> actorsAtStart = user.CurrentRoom.GetActiveEnemies(Dungeonator.RoomHandler.ActiveEnemyType.All);
+				foreach(AIActor actor in actorsAtStart)
+                {
+					saveEnemiesAreInvulnerable.Add(actor, actor.ImmuneToAllEffects);
+					actor.ImmuneToAllEffects = true;
+                }
 
 				//to make guon orbitals not collides with bullets during the record phase
-				if(user.orbitals != null && user.orbitals.Count > 0)
+				if (user.orbitals != null && user.orbitals.Count > 0)
                 {
 					foreach(IPlayerOrbital orb in user.orbitals)
                     {
@@ -221,6 +228,7 @@ namespace GlaurungItems.Items
 				ResetIouns(user);
 				ResetInteractables(user);
 				ResetPassivesCanBeDropped(user);
+				ResetEnemiesAreInvulnerable(user);
 
 				user.Blanks = nbConsumableBlanksAtStart;
 
@@ -637,6 +645,7 @@ namespace GlaurungItems.Items
 				ResetIouns(user);
 				ResetInteractables(user);
 				ResetPassivesCanBeDropped(user);
+				ResetEnemiesAreInvulnerable(user);
 
 				this.ClearCooldowns();
 				user.WarpToPoint(startingTurnPosition);
@@ -739,6 +748,17 @@ namespace GlaurungItems.Items
             }
         }
 
+		private void ResetEnemiesAreInvulnerable(PlayerController user)
+		{
+			if (saveEnemiesAreInvulnerable != null)
+			{
+				foreach (AIActor actor in saveEnemiesAreInvulnerable.Keys)
+				{
+					actor.ImmuneToAllEffects = saveEnemiesAreInvulnerable[actor];
+				}
+			}
+		}
+
 
 		private void OnRoomClear(PlayerController user)
 		{
@@ -825,6 +845,7 @@ namespace GlaurungItems.Items
 		private List<IPlayerInteractable> savedRoomInteractables = new List<IPlayerInteractable>();
 		private List<AIActor> compsSaved = new List<AIActor>();
 		private Dictionary<PassiveItem, bool> savePassivesCanBeDropped = new Dictionary<PassiveItem, bool>(); 
+		private Dictionary<AIActor, bool> saveEnemiesAreInvulnerable = new Dictionary<AIActor, bool>(); 
 
 		private List<ActionsToBeRecorded> actions = new List<ActionsToBeRecorded>();
 
