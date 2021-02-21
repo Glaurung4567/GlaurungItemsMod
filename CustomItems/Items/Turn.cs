@@ -52,6 +52,7 @@ Check items interactions (bloodied scarf/super hot watch/gunboots/full metal jac
 see if cancel works properly => dunno what cause it, dmg during record ?
 Check coolness
 
+Add sound and screen effects
 On load new floor test
 improve blank prevention during record (pickup)
 Prevent item pickup ?
