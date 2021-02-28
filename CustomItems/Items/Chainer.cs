@@ -224,7 +224,6 @@ namespace GlaurungItems.Items
 			//proj.AdjustPlayerProjectileTint(Color.grey, 0);
 
 			proj.Owner = this.gun.CurrentOwner; //to allow the projectile damage modif, otherwise it stays at 10 for some reasons
-
 			proj.baseData.damage = 1;
 			proj.collidesWithPlayer = false;
 			proj.collidesWithEnemies = true;
