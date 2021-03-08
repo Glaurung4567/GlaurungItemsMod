@@ -132,11 +132,12 @@ namespace GlaurungItems.Items
         {
             public ChamberHiddenSynergy()
             {
-                this.NameKey = "Parry the Secrets of Otters Chamber";
+                this.NameKey = "Secrets of the Otter's Parry";
                 this.MandatoryItemIDs = new List<int>
                 {
                     647,
-                    490
+                    490,
+                    112
                 };
                 this.IgnoreLichEyeBullets = true;
                 this.statModifiers = new List<StatModifier>(0);
