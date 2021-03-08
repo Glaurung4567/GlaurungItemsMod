@@ -127,5 +127,21 @@ namespace GlaurungItems.Items
                 this.bonusSynergies = new List<CustomSynergyType>();
             }
         }
+
+        public class ChamberHiddenSynergy : AdvancedSynergyEntry
+        {
+            public ChamberHiddenSynergy()
+            {
+                this.NameKey = "Parry the Secrets of Otters Chamber";
+                this.MandatoryItemIDs = new List<int>
+                {
+                    647,
+                    490
+                };
+                this.IgnoreLichEyeBullets = true;
+                this.statModifiers = new List<StatModifier>(0);
+                this.bonusSynergies = new List<CustomSynergyType>();
+            }
+        }
     }
 }

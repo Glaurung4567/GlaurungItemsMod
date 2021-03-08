@@ -73,7 +73,7 @@ namespace GlaurungItems
                 TurtlezBeam.Add();
                 PeacemakerCarbine.Add();
                 SwissArmyRifle.Add();
-                
+
                 PrismaticField.Init();
                 TurncoatRounds.Init();
                 Linc.Add();
@@ -135,6 +135,14 @@ namespace GlaurungItems
                 synergyProcessor.SynergyGunId = 747;
                 synergyProcessor.SynergyToCheck = "Big Exploding Pew Pew !";
 
+
+                GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
+                {
+                    new SynergyHub.ChamberHiddenSynergy()
+                }).ToArray<AdvancedSynergyEntry>();
+
+                CustomChamberGunFormeSynergyProcessor formTest = (PickupObjectDatabase.GetById(647) as Gun).gameObject.GetOrAddComponent<CustomChamberGunFormeSynergyProcessor>();
+
                 setup = true;
             }
             catch (Exception e)
@@ -144,8 +152,7 @@ namespace GlaurungItems
             ETGModConsole.Log($"Glaurung Items Pack {version} Initialized");
         }
 
-        // Token: 0x060001F5 RID: 501 RVA: 0x000140F4 File Offset: 0x000122F4
-        
+
 
         public override void Exit()
         {
