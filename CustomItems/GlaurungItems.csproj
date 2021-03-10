@@ -69,6 +69,7 @@
     <Reference Include="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ItemAPI\CustomGunFormeSynergyProcessor.cs" />
     <Compile Include="Items\AmmoletOfWonder.cs" />
     <Compile Include="ItemAPI\EasyGoopDefinition.cs" />
     <Compile Include="ItemAPI\AdvancedStringDB.cs" />

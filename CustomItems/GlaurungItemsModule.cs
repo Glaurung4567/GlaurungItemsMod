@@ -140,7 +140,6 @@ namespace GlaurungItems
                 {
                     new SynergyHub.ChamberHiddenSynergy()
                 }).ToArray<AdvancedSynergyEntry>();
-                CustomChamberGunFormeSynergyProcessor formTest = (PickupObjectDatabase.GetById(647) as Gun).gameObject.GetOrAddComponent<CustomChamberGunFormeSynergyProcessor>();
 
                 setup = true;
             }
