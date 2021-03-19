@@ -125,7 +125,7 @@ namespace GlaurungItems.Items
         public override void Update()
         {
             base.Update();
-            if (this.LastOwner && barrelSpawned && barrel.GetComponentInChildren<MinorBreakable>() && barrel.GetComponentInChildren<MinorBreakable>().IsBroken)
+            if (this.LastOwner && barrelSpawned && ((barrel.GetComponentInChildren<MinorBreakable>() && barrel.GetComponentInChildren<MinorBreakable>().IsBroken) || barrel == null))
             {
 				barrelSpawned = false;
 				this.ForceApplyCooldown(this.LastOwner);

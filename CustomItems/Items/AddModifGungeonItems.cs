@@ -1,7 +1,4 @@
 ﻿using ItemAPI;
-using System;
-using UnityEngine;
-using EnemyAPI;
 
 namespace GlaurungItems.Items
 {
@@ -11,6 +8,7 @@ namespace GlaurungItems.Items
         {
             BuffGuns();
             AddItemsToLootPool();
+            (PickupObjectDatabase.GetById(647) as Gun).gameObject.GetOrAddComponent<CustomChamberGunFormeSynergyProcessor>();
         }
         public static void BuffGuns()
         {
@@ -40,7 +38,6 @@ namespace GlaurungItems.Items
             PickupObject item1 = PickupObjectDatabase.GetById(473); // hidden compartment
             item1.quality = PickupObject.ItemQuality.C;
 
-            (PickupObjectDatabase.GetById(647) as Gun).gameObject.GetOrAddComponent<CustomChamberGunFormeSynergyProcessor>();
 
             //PlayerItem item2 = PickupObjectDatabase.GetById(168) as PlayerItem; // double vision
             //item2.OnPickedUp = (Action<PlayerController>)Delegate.Combine(item2.OnPickedUp, new Action<PlayerController>(AddModifGungeonItems.Pickup));
@@ -137,7 +134,7 @@ namespace GlaurungItems.Items
             form9.RequiredSynergy = synergyName;
             form9.FormeID = 763;//hell
 
-            this.Formes = new CustomGunFormeData[] { form0, form1, form2, form3, form4, form5, form6, form7, form8, form9 };
+            this.Formes = new CustomGunFormeData[] { form0, form1, form2, form3, form4, form5, form6, form7, form8 };
         }
     }
 }
