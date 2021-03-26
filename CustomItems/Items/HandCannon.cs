@@ -46,9 +46,9 @@ namespace GlaurungItems.Items
             gun.DefaultModule.projectiles[0] = projectile;
 
             projectile.baseData.damage = 1;
-            projectile.baseData.damage *= 20;
+            projectile.baseData.damage *= 50;
             projectile.baseData.speed *= 50f;
-            projectile.baseData.force *= 5f;
+            projectile.baseData.force *= 10f;
             projectile.baseData.range *= 30f;
             projectile.PenetratesInternalWalls = true;
             projectile.pierceMinorBreakables = true;
