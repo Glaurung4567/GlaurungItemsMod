@@ -12,11 +12,11 @@ namespace GlaurungItems.Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("Hand Cannon", "handcannon");
-            Game.Items.Rename("outdated_gun_mods:hand_cannon", "gl:hand_cannon");
+            Gun gun = ETGMod.Databases.Items.NewGun("Panda's Hand Cannon", "handcannon");
+            Game.Items.Rename("outdated_gun_mods:panda's_hand_cannon", "gl:panda's_hand_cannon");
             gun.gameObject.AddComponent<HandCannon>();
             gun.SetShortDescription("Bang Bang");
-            gun.SetLongDescription("This regular-looking foam sport hand is in fact one of the strongest weapon in the universe as it uses the power of the user's imagination to kill enemies.");
+            gun.SetLongDescription("This regular-looking foam sport hand is in fact one of the strongest weapon in the universe, as it uses the power of the user's imagination to kill enemies.");
             gun.SetupSprite(null, "linc_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
@@ -33,8 +33,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.burstCooldownTime = 0.3f;
             gun.DefaultModule.numberOfShotsInClip = 10;
             //gun.usesContinuousFireAnimation = true;
-            gun.SetBaseMaxAmmo(400);
-            gun.gunClass = GunClass.FULLAUTO;
+            gun.SetBaseMaxAmmo(50);
             gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
 
             gun.quality = PickupObject.ItemQuality.S;
@@ -52,6 +51,7 @@ namespace GlaurungItems.Items
             projectile.baseData.range *= 30f;
             projectile.PenetratesInternalWalls = true;
             projectile.pierceMinorBreakables = true;
+            projectile.ignoreDamageCaps = true;
             projectile.AdditionalScaleMultiplier = 3;
             projectile.sprite.renderer.enabled = false;
             projectile.transform.parent = gun.barrelOffset;

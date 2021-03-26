@@ -19,7 +19,7 @@ namespace GlaurungItems.Items
 			InfiltratorRounds item = gameObject.AddComponent<InfiltratorRounds>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
 			string shortDesc = "Misuse turned Feature";
-			string longDesc = "";
+			string longDesc = "These rounds infiltrate the enemy ammo supply, but it has little to no effects most of the time.";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 100f);
 			item.quality = ItemQuality.D;
