@@ -176,6 +176,8 @@
     <Compile Include="SaveAPI\SaveTools.cs" />
     <Compile Include="SaveAPI\SpecialAIActor.cs" />
     <Compile Include="SaveAPI\SpecialPickupObject.cs" />
+    <Compile Include="SoundStuff\AudioResourceLoader.cs" />
+    <Compile Include="SoundStuff\resourceLoaderSoundbanks.cs" />
     <Compile Include="Tools.cs" />
   </ItemGroup>
   <ItemGroup>

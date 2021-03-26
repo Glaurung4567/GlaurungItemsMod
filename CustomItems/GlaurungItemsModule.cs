@@ -39,6 +39,10 @@ namespace GlaurungItems
                 SpecialBlankModificationItem.InitHooks();
                 EasyGoopDefinitions.DefineDefaultGoops();
 
+                ZipFilePath = this.Metadata.Archive;
+                FilePath = this.Metadata.Directory;
+                AudioResourceLoader.InitAudio();
+
 
                 GlaurungItems.Strings.Enemies.Set("#LOW_PRIEST", "Low Priest");
 
@@ -162,6 +166,9 @@ namespace GlaurungItems
             self.VersionLabel.Text = self.VersionLabel.Text + " | " + Version;
         }
 
-        public static string Version = "v0.0";
+        public static string Version = "v0.7";
+
+        public static string ZipFilePath;
+        public static string FilePath;
     }
 }
