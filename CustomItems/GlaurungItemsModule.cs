@@ -86,6 +86,7 @@ namespace GlaurungItems
 
                 Transistor.Add();
                 Turn.Init();
+                HandCannon.Add();
                 //PortalGunnyTest.Add();
                 //InfiltratorRounds.Init();
                 //GunDeadArmyStronghold.Init();

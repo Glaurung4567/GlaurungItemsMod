@@ -33,7 +33,7 @@ namespace GlaurungItems.Items
             UnityEngine.Object.DontDestroyOnLoad(projectile);
             gun.DefaultModule.projectiles[0] = projectile;
 
-            projectile.baseData.damage *= 4f;
+            projectile.baseData.damage *= 3f;
             projectile.baseData.force *= 2f;
             projectile.baseData.speed *= 2.5f;
             projectile.baseData.range *= 2.25f;

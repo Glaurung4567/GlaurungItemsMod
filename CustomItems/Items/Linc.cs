@@ -150,8 +150,8 @@ namespace GlaurungItems.Items
             //This determines what sound you want to play when you fire a gun.
             //Sounds names are based on the Gungeon sound dump, which can be found at EnterTheGungeon/Etg_Data/StreamingAssets/Audio/GeneratedSoundBanks/Windows/sfx.txt
             gun.PreventNormalFireAudio = true;
-            //AkSoundEngine.PostEvent("Play_WPN_beretta_shot_01", gameObject);
-            AkSoundEngine.PostEvent("Play_pewpew", gameObject);
+            AkSoundEngine.PostEvent("Play_WPN_beretta_shot_01", gameObject);
+            //AkSoundEngine.PostEvent("Play_pewpew", gameObject);
         }
 
         protected override void Update()
