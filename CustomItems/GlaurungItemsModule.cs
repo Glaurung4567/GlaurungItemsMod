@@ -90,6 +90,8 @@ namespace GlaurungItems
                 HandCannon.Add();
                 InfiltratorRounds.Init();
 
+                ShokkGun.Add();
+
                 //PortalGunnyTest.Add();
                 //GunDeadArmyStronghold.Init();
 

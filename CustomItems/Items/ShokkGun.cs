@@ -38,7 +38,7 @@ namespace GlaurungItems.Items
             gun.SetBaseMaxAmmo(500);
             gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
 
-            gun.quality = PickupObject.ItemQuality.S;
+            gun.quality = PickupObject.ItemQuality.B;
 
             Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
             projectile.gameObject.SetActive(false);
@@ -66,6 +66,19 @@ namespace GlaurungItems.Items
         public override void PostProcessProjectile(Projectile projectile)
         {
             base.PostProcessProjectile(projectile);
+            if(this.gun.CurrentOwner && (this.gun.CurrentOwner is PlayerController))
+            {
+                PlayerController user = this.gun.CurrentOwner as PlayerController;
+                float nearestEnemyPosition;
+                AIActor nomTarget = user.CurrentRoom.GetNearestEnemy(user.CenterPosition, out nearestEnemyPosition, true, true);
+                if (nearestEnemyPosition < 4f && nomTarget.healthHaver
+                    && !nomTarget.healthHaver.IsBoss && nomTarget.healthHaver.IsAlive &&
+                    nomTarget.healthHaver.GetMaxHealth() <= (20 * AIActor.BaseLevelHealthModifier))
+                {
+                    DEVOUR(nomTarget);
+                }
+            }
+
         }
 
         private void DEVOUR(AIActor target)
