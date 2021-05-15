@@ -14,7 +14,7 @@ namespace GlaurungItems.Items
             try
             {
 			string text = "Infiltrator Rounds";
-			string resourcePath = "GlaurungItems/Resources/acme_crate";
+			string resourcePath = "GlaurungItems/Resources/infiltrator_rounds";
 			GameObject gameObject = new GameObject(text);
 			InfiltratorRounds item = gameObject.AddComponent<InfiltratorRounds>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);

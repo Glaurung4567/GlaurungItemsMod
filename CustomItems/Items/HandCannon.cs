@@ -4,7 +4,6 @@ using UnityEngine;
 using ItemAPI;
 using Gungeon;
 using System.Collections;
-using System;
 
 namespace GlaurungItems.Items
 {
@@ -12,12 +11,12 @@ namespace GlaurungItems.Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("Panda's Hand Cannon", "handcannon");
+            Gun gun = ETGMod.Databases.Items.NewGun("Panda's Hand Cannon", "pewhand");
             Game.Items.Rename("outdated_gun_mods:panda's_hand_cannon", "gl:panda's_hand_cannon");
             gun.gameObject.AddComponent<HandCannon>();
             gun.SetShortDescription("Bang Bang");
             gun.SetLongDescription("This regular-looking foam sport hand is in fact one of the strongest weapon in the universe, as it uses the power of the user's imagination to kill enemies.");
-            gun.SetupSprite(null, "linc_idle_001", 8);
+            gun.SetupSprite(null, "pewhand_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
             //gun.SetAnimationFPS(gun.idleAnimation, 8);
@@ -25,6 +24,7 @@ namespace GlaurungItems.Items
 
             gun.DefaultModule.ammoCost = 1;
             gun.DefaultModule.angleVariance = 1f;
+            gun.gunHandedness = GunHandedness.HiddenOneHanded;
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Burst;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 2f;

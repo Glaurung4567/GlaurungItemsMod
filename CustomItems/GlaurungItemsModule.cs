@@ -12,7 +12,7 @@ namespace GlaurungItems
     public class GlaurungItems : ETGModule
     {
         public bool setup;
-        private static string version = "1.5.0";
+        private static string version = "1.8.0";
         public static AdvancedStringDB Strings;
 
         public override void Init()
@@ -162,14 +162,6 @@ namespace GlaurungItems
         public override void Exit()
         {
         }
-
-        public static void MainMenuAwakeHook(Action<MainMenuFoyerController> orig, MainMenuFoyerController self)
-        {
-            orig(self);
-            self.VersionLabel.Text = self.VersionLabel.Text + " | " + Version;
-        }
-
-        public static string Version = "v0.7";
 
         public static string ZipFilePath;
         public static string FilePath;

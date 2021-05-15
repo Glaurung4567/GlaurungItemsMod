@@ -249,5 +249,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\turn.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\infiltrator_rounds.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

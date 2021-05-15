@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Ionic.Zip;
+using ItemAPI;
 using UnityEngine;
 
 
@@ -36,7 +37,7 @@ namespace GlaurungItems
 						if (flag6) { text2 = text2.Substring(1); }
 						text2 = prefix + ":" + text2;
                        
-                           ETGModConsole.Log(string.Format("{0}: Soundbank found, attempting to autoload: name='{1}' resource='{2}'", typeof(ResourceLoaderSoundbanks), text2, text));
+                           //ETGModConsole.Log(string.Format("{0}: Soundbank found, attempting to autoload: name='{1}' resource='{2}'", typeof(ResourceLoaderSoundbanks), text2, text));
                         				
 						using (Stream manifestResourceStream = assembly.GetManifestResourceStream(text)) {
 							LoadSoundbankFromStream(manifestResourceStream, text2);
@@ -49,10 +50,11 @@ namespace GlaurungItems
         public void AutoloadFromModZIPOrModFolder(string path)
         {
             int FilesLoaded = 0;
-            if (File.Exists(path + ".zip"))
+            if (File.Exists(path))
             {
+                //Tools.Print("path found", "ffffff", true);
                 Debug.Log("Zip Found");
-                ZipFile ModZIP = ZipFile.Read(path + ".zip");
+                ZipFile ModZIP = ZipFile.Read(path);
                 if (ModZIP != null && ModZIP.Entries.Count > 0)
                 {
                     foreach (ZipEntry entry in ModZIP.Entries)

@@ -5,14 +5,15 @@ using System.Text;
 using System.IO;
 using UnityEngine;
 using System.Reflection;
+using ItemAPI;
 
 namespace GlaurungItems
 {
     public class AudioResourceLoader
     {
-        public static readonly string ResourcesDirectoryName = "GlaurungItemsMod";
-        public static readonly string AutoprocessDirectoryName = "Mods/GlaurungItemsMod";
-        public static readonly string AutoprocessModPathName = "Mods/GlaurungItemsMod";
+        public static readonly string ResourcesDirectoryName = "GlaurungItemsMod";//"29406_Glaurung Items Mod (Sprites by Some Bunny)_1.8";
+        public static readonly string AutoprocessDirectoryName = "Mods/" + ResourcesDirectoryName;
+        public static readonly string AutoprocessModPathName = "Mods/" + ResourcesDirectoryName;
         public static readonly string ResourcesAutoprocessDirectoryName = AutoprocessDirectoryName;
 
         public static readonly string pathzip = GlaurungItems.ZipFilePath;
@@ -21,7 +22,8 @@ namespace GlaurungItems
 
         public static void InitAudio()
         {
-                LoadAllAutoloadResourcesFromModPath(pathzip);
+            //Tools.Print(pathzip, "ffffff", true);
+            LoadAllAutoloadResourcesFromModPath(pathzip);
             // LoadAllAutoloadResourcesFromAssembly(Assembly.GetExecutingAssembly(), "ExpandTheGungeon");
 
             // LoadAllAutoloadResourcesFromPath(FullPathAutoprocess, "ExpandTheGungeon");
