@@ -199,6 +199,8 @@ namespace GlaurungItems.Items
             Dungeonator.RoomHandler userRoom = player.CurrentRoom;
             Vector2 firePos = player.CenterPosition;
             Vector2 fireDirection = (Vector2)(Quaternion.Euler(0, 0,player.CurrentGun.CurrentAngle) * Vector2.right);
+            Tools.Print(player.CurrentGun.CurrentAngle, "ffffff", true);
+            Tools.Print(fireDirection, "ffffff", true);
 
             for (int i = 0; i < absorbedCount; i++)
             {
