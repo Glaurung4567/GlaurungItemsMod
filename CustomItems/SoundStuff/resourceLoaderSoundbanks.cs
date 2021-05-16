@@ -53,7 +53,7 @@ namespace GlaurungItems
             if (File.Exists(path))
             {
                 //Tools.Print("path found", "ffffff", true);
-                Debug.Log("Zip Found");
+                //Debug.Log("Zip Found");
                 ZipFile ModZIP = ZipFile.Read(path);
                 if (ModZIP != null && ModZIP.Entries.Count > 0)
                 {
@@ -105,7 +105,7 @@ namespace GlaurungItems
                     bool flag5 = text2.IndexOf(Path.DirectorySeparatorChar) == 0;
                     if (flag5) { text2 = text2.Substring(1); }
                     text2 = prefix + ":" + text2;
-                    ETGModConsole.Log(string.Format("{0}: Soundbank found, attempting to autoload: name='{1}' file='{2}'", typeof(ResourceLoaderSoundbanks), text2, text));
+                    //ETGModConsole.Log(string.Format("{0}: Soundbank found, attempting to autoload: name='{1}' file='{2}'", typeof(ResourceLoaderSoundbanks), text2, text));
 
                     using (FileStream fileStream = File.OpenRead(text)) { LoadSoundbankFromStream(fileStream, text2); }
                 }

@@ -14,11 +14,12 @@ namespace GlaurungItems.Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("Shokk Attack Gun", "shokk");
-            Game.Items.Rename("outdated_gun_mods:shokk_attack_gun", "gl:shokk_attack_gun");
+            Gun gun = ETGMod.Databases.Items.NewGun("Shokk", "shokk");
+            Game.Items.Rename("outdated_gun_mods:shokk", "gl:shokk");
             gun.gameObject.AddComponent<ShokkGun>();
             gun.SetShortDescription("WAAAGH !");
-            gun.SetLongDescription("");
+            gun.SetLongDescription("This gun was inspired by the famous Shokk Attack Gun of the Orks, but as the creator didn't find any race which could serve as ammo, " +
+                "he decided to fire weaker living targets instead. \n \nFiring this gun swallows weak enemies nearby and reloading it make them reappear into our reality within an explosion of energy.");
             gun.SetupSprite(null, "pewhand_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
@@ -31,13 +32,11 @@ namespace GlaurungItems.Items
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Automatic;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 1.5f;
-            gun.DefaultModule.cooldownTime = 0.25f;
-            gun.DefaultModule.burstShotCount = 2;
-            gun.DefaultModule.burstCooldownTime = 0.3f;
-            gun.DefaultModule.numberOfShotsInClip = 50;
+            gun.DefaultModule.cooldownTime = 0.15f;
+            gun.DefaultModule.numberOfShotsInClip = 100;
             //gun.usesContinuousFireAnimation = true;
             gun.SetBaseMaxAmmo(500);
-            gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
+            gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(597) as Gun).muzzleFlashEffects;
 
             gun.quality = PickupObject.ItemQuality.B;
 
@@ -188,7 +187,8 @@ namespace GlaurungItems.Items
             ExplosiveModifier boomer = new ExplosiveModifier();
             boomer.explosionData = explo.explosionData.CopyExplosionData();
             boomer.explosionData.damageToPlayer = 0f;
-            boomer.explosionData.damage = 10f;
+            boomer.explosionData.damage = 20f;
+            boomer.explosionData.damageRadius = 5f;
             boomer.explosionData.pushRadius = 4f;
             boomer.explosionData.force = 5f;
             boomer.explosionData.doForce = true;
@@ -225,8 +225,16 @@ namespace GlaurungItems.Items
 
                 Vector2 rndPoint = firePos + (new Vector2(x, y) * Random.Range(1f, 4f));
 
+                Transform copySprite = this.CreateEmptySprite(EnemyDatabase.GetOrLoadByGuid(absorbedEnemyUuids[i]));
+                copySprite.position = rndPoint;
+
                 Exploder.Explode(rndPoint, boomer.explosionData, Vector2.zero, null, false, 0, false);
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.2f);
+
+                if (copySprite)
+                {
+                    UnityEngine.Object.Destroy(copySprite.gameObject);
+                }
             }
             absorbedEnemyUuids = new List<string>();
             yield break;
