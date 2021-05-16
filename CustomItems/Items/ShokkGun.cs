@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace GlaurungItems.Items
 {
@@ -30,7 +31,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.Automatic;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 1.5f;
-            gun.DefaultModule.cooldownTime = 0.5f;
+            gun.DefaultModule.cooldownTime = 0.25f;
             gun.DefaultModule.burstShotCount = 2;
             gun.DefaultModule.burstCooldownTime = 0.3f;
             gun.DefaultModule.numberOfShotsInClip = 50;
@@ -68,13 +69,15 @@ namespace GlaurungItems.Items
             base.PostProcessProjectile(projectile);
             if(this.gun.CurrentOwner && (this.gun.CurrentOwner is PlayerController))
             {
+                projectile.DieInAir();
                 PlayerController user = this.gun.CurrentOwner as PlayerController;
                 float nearestEnemyPosition;
                 AIActor nomTarget = user.CurrentRoom.GetNearestEnemy(user.CenterPosition, out nearestEnemyPosition, true, true);
-                if (nearestEnemyPosition < 4f && nomTarget.healthHaver
+                if (nearestEnemyPosition < 5f && nomTarget.healthHaver
                     && !nomTarget.healthHaver.IsBoss && nomTarget.healthHaver.IsAlive &&
                     nomTarget.healthHaver.GetMaxHealth() <= (20 * AIActor.BaseLevelHealthModifier))
                 {
+                    absorbedEnemyUuids.Add(nomTarget.EnemyGuid);
                     DEVOUR(nomTarget);
                 }
             }
@@ -144,9 +147,8 @@ namespace GlaurungItems.Items
             //This determines what sound you want to play when you fire a gun.
             //Sounds names are based on the Gungeon sound dump, which can be found at EnterTheGungeon/Etg_Data/StreamingAssets/Audio/GeneratedSoundBanks/Windows/sfx.txt
             gun.PreventNormalFireAudio = true;
-            AkSoundEngine.PostEvent("Play_pewpew", gameObject);
+            AkSoundEngine.PostEvent("Play_WPN_smileyrevolver_shot_01", gameObject);
         }
-
 
         protected override void Update()
         {
@@ -171,10 +173,69 @@ namespace GlaurungItems.Items
                 HasReloaded = false;
                 AkSoundEngine.PostEvent("Stop_WPN_All", base.gameObject);
                 base.OnReloadPressed(player, gun, bSOMETHING);
-                AkSoundEngine.PostEvent("Play_pewpew_reload", base.gameObject);
+                AkSoundEngine.PostEvent("Play_WPN_SAA_reload_01", base.gameObject);
+                if(player && player.CurrentRoom != null && absorbedEnemyUuids != null && absorbedEnemyUuids.Count > 0)
+                {
+                    GameManager.Instance.StartCoroutine(KaboomsTeleports(player));
+                }
             }
         }
 
+        private IEnumerator KaboomsTeleports(PlayerController player)
+        {
+            Projectile Boomprojectile = ((Gun)ETGMod.Databases.Items[593]).DefaultModule.projectiles[0];
+            ExplosiveModifier explo = Boomprojectile.gameObject.GetComponent<ExplosiveModifier>();
+            ExplosiveModifier boomer = new ExplosiveModifier();
+            boomer.explosionData = explo.explosionData.CopyExplosionData();
+            boomer.explosionData.damageToPlayer = 0f;
+            boomer.explosionData.damage = 10f;
+            boomer.explosionData.pushRadius = 4f;
+            boomer.explosionData.force = 5f;
+            boomer.explosionData.doForce = true;
+            boomer.explosionData.doDestroyProjectiles = true;
+            boomer.explosionData.preventPlayerForce = true;
+
+            int absorbedCount = absorbedEnemyUuids.Count;
+            Dungeonator.RoomHandler userRoom = player.CurrentRoom;
+            Vector2 firePos = player.CenterPosition;
+            Vector2 fireDirection = (Vector2)(Quaternion.Euler(0, 0,player.CurrentGun.CurrentAngle) * Vector2.right);
+            Tools.Print(firePos, "ffffff", true);
+            Tools.Print(fireDirection, "ffffff", true);
+            for (int i = 0; i < 10; i++)
+            {
+                float x;
+                float y;
+
+                if(fireDirection.x >= 0)
+                {
+                    x = Random.Range(-1f, 5f);
+                }
+                else
+                {
+                    x = Random.Range(-5f, 1f);
+                }
+
+                if (fireDirection.y >= 0)
+                {
+                    y = Random.Range(-1f, 5f);
+                }
+                else
+                {
+                    y = Random.Range(-5f, 1f);
+                }
+
+                Vector2 rndPoint = firePos + (new Vector2(x, y) * Random.Range(1f, 4f));
+
+                Exploder.Explode(rndPoint, boomer.explosionData, Vector2.zero, null, false, 0, false);
+                yield return new WaitForSeconds(0.1f);
+            }
+            absorbedEnemyUuids = new List<string>();
+            yield break;
+        }
+
         private bool HasReloaded;
+
+        [SerializeField]
+        private List<String> absorbedEnemyUuids = new List<string>();
     }
 }
