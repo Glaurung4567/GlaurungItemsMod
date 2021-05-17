@@ -36,7 +36,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.numberOfShotsInClip = 100;
             //gun.usesContinuousFireAnimation = true;
             gun.SetBaseMaxAmmo(500);
-            gun.muzzleFlashEffects = null;//(PickupObjectDatabase.GetById(597) as Gun).muzzleFlashEffects;
+            gun.muzzleFlashEffects = new VFXPool { type = VFXPoolType.None, effects = new VFXComplex[0] }; ;//(PickupObjectDatabase.GetById(597) as Gun).muzzleFlashEffects;
 
             gun.quality = PickupObject.ItemQuality.B;
 
@@ -56,6 +56,7 @@ namespace GlaurungItems.Items
             projectile.ignoreDamageCaps = true;
             projectile.AdditionalScaleMultiplier = 3;
             projectile.sprite.renderer.enabled = false;
+            
             projectile.transform.parent = gun.barrelOffset;
 
             //projectile.SetProjectileSpriteRight("build_projectile", 5, 5);
@@ -66,9 +67,9 @@ namespace GlaurungItems.Items
         public override void PostProcessProjectile(Projectile projectile)
         {
             base.PostProcessProjectile(projectile);
-            if(this.gun.CurrentOwner && (this.gun.CurrentOwner is PlayerController))
+            projectile.DieInAir(true);
+            if (this.gun.CurrentOwner && (this.gun.CurrentOwner is PlayerController))
             {
-                projectile.DieInAir();
                 PlayerController user = this.gun.CurrentOwner as PlayerController;
                 float nearestEnemyPosition;
                 AIActor nomTarget = user.CurrentRoom.GetNearestEnemy(user.CenterPosition, out nearestEnemyPosition, true, true);
