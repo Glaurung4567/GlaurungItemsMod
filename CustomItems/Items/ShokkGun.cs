@@ -14,15 +14,15 @@ namespace GlaurungItems.Items
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("Shokk", "shokk");
+            Gun gun = ETGMod.Databases.Items.NewGun("Shokk", "shokkgun");
             Game.Items.Rename("outdated_gun_mods:shokk", "gl:shokk");
             gun.gameObject.AddComponent<ShokkGun>();
             gun.SetShortDescription("WAAAGH !");
             gun.SetLongDescription("This gun was inspired by the famous Shokk Attack Gun of the Orks, but as the creator didn't find any race which could serve as ammo, " +
                 "he decided to fire weaker living targets instead. \n \nFiring this gun swallows weak enemies nearby and reloading it make them reappear into our reality within an explosion of energy.");
-            gun.SetupSprite(null, "pewhand_idle_001", 8);
+            gun.SetupSprite(null, "shokkgun_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
-            gun.SetAnimationFPS(gun.reloadAnimation, 12);
+            gun.SetAnimationFPS(gun.reloadAnimation, 24);
             //gun.SetAnimationFPS(gun.idleAnimation, 8);
             gun.AddProjectileModuleFrom("klobb", true, false);
 
@@ -36,7 +36,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.numberOfShotsInClip = 100;
             //gun.usesContinuousFireAnimation = true;
             gun.SetBaseMaxAmmo(500);
-            gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(597) as Gun).muzzleFlashEffects;
+            gun.muzzleFlashEffects = null;//(PickupObjectDatabase.GetById(597) as Gun).muzzleFlashEffects;
 
             gun.quality = PickupObject.ItemQuality.B;
 
@@ -146,7 +146,7 @@ namespace GlaurungItems.Items
             //This determines what sound you want to play when you fire a gun.
             //Sounds names are based on the Gungeon sound dump, which can be found at EnterTheGungeon/Etg_Data/StreamingAssets/Audio/GeneratedSoundBanks/Windows/sfx.txt
             gun.PreventNormalFireAudio = true;
-            AkSoundEngine.PostEvent("Play_WPN_smileyrevolver_shot_01", gameObject);
+            //AkSoundEngine.PostEvent("Play_WPN_smileyrevolver_shot_01", gameObject);
         }
 
         protected override void Update()
@@ -198,34 +198,59 @@ namespace GlaurungItems.Items
             int absorbedCount = absorbedEnemyUuids.Count;
             Dungeonator.RoomHandler userRoom = player.CurrentRoom;
             Vector2 firePos = player.CenterPosition;
-            Vector2 fireDirection = (Vector2)(Quaternion.Euler(0, 0,player.CurrentGun.CurrentAngle) * Vector2.right);
+            float fireDirectionAngle = player.CurrentGun.CurrentAngle;
+
             Tools.Print(player.CurrentGun.CurrentAngle, "ffffff", true);
-            Tools.Print(fireDirection, "ffffff", true);
 
             for (int i = 0; i < absorbedCount; i++)
             {
-                float x;
-                float y;
 
-                if(fireDirection.x >= 0)
+
+                float randomishAngle;
+                if (fireDirectionAngle >= -22.5f && fireDirectionAngle < 22.5f)
                 {
-                    x = Random.Range(-1f, 5f);
+                    randomishAngle = Random.Range(-22.5f, 22.5f);
+                }
+                else if (fireDirectionAngle >= 22.5f && fireDirectionAngle < 67.5f)
+                {
+                    randomishAngle = Random.Range(22.5f, 67.5f);
+                }
+                else if (fireDirectionAngle >= 67.5f && fireDirectionAngle < 112.5f)
+                {
+                    randomishAngle = Random.Range(67.5f, 112.5f);
+                }
+                else if (fireDirectionAngle >= 112.5f && fireDirectionAngle < 157.5f)
+                {
+                    randomishAngle = Random.Range(112.5f, 157.5f);
+                }
+                else if (fireDirectionAngle >= -67.5f && fireDirectionAngle < -22.5f)
+                {
+                    randomishAngle = Random.Range(-67.5f, -22.5f);
+                }
+                else if (fireDirectionAngle >= -112.5f && fireDirectionAngle < -67.5f)
+                {
+                    randomishAngle = Random.Range(-112.5f, -67.5f);
+                }
+                else if (fireDirectionAngle >= -157.5f && fireDirectionAngle < -112.5f)
+                {
+                    randomishAngle = Random.Range(-157.5f, -112.5f);
                 }
                 else
                 {
-                    x = Random.Range(-5f, 1f);
+                    if (Random.Range(0, 2) == 0)
+                    {
+                        randomishAngle = Random.Range(-179.9f, -157.5f);
+                    }
+                    else
+                    {
+                        randomishAngle = Random.Range(157f, 179.9f);
+                    }
                 }
 
-                if (fireDirection.y >= 0)
-                {
-                    y = Random.Range(-1f, 5f);
-                }
-                else
-                {
-                    y = Random.Range(-5f, 1f);
-                }
+                Vector2 fireDirection = (Vector2)(Quaternion.Euler(0, 0, player.CurrentGun.CurrentAngle) * Vector2.right);
 
-                Vector2 rndPoint = firePos + (new Vector2(x, y) * Random.Range(1f, 4f));
+                Vector2 rndPoint = firePos + (fireDirection * Random.Range(1f, 4f));
+
 
                 Transform copySprite = this.CreateEmptySprite(EnemyDatabase.GetOrLoadByGuid(absorbedEnemyUuids[i]));
                 copySprite.position = rndPoint;
