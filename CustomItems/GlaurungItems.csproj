@@ -91,6 +91,7 @@
     <Compile Include="Items\GunzerkingPotion.cs" />
     <Compile Include="Items\InfiltratorRounds.cs" />
     <Compile Include="Items\ItemParts\CustomMechaRatTailScript.cs" />
+    <Compile Include="Items\MindBlown.cs" />
     <Compile Include="Items\old\OverkillBullets.cs" />
     <Compile Include="Items\old\PortalGunnyTest.cs" />
     <Compile Include="Items\Poyo.cs" />

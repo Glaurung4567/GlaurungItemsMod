@@ -91,6 +91,7 @@ namespace GlaurungItems
                 InfiltratorRounds.Init();
 
                 ShokkGun.Add();
+                MindBlown.Init();
 
                 //PortalGunnyTest.Add();
                 //GunDeadArmyStronghold.Init();
