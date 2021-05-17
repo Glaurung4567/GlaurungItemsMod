@@ -172,7 +172,7 @@ namespace GlaurungItems.Items
                 HasReloaded = false;
                 AkSoundEngine.PostEvent("Stop_WPN_All", base.gameObject);
                 base.OnReloadPressed(player, gun, bSOMETHING);
-                AkSoundEngine.PostEvent("Play_WPN_SAA_reload_01", base.gameObject);
+                AkSoundEngine.PostEvent("Play_WPN_bsg_shot_01", base.gameObject);
                 if(player && player.CurrentRoom != null && absorbedEnemyUuids != null && absorbedEnemyUuids.Count > 0)
                 {
                     GameManager.Instance.StartCoroutine(KaboomsTeleports(player));
@@ -249,7 +249,7 @@ namespace GlaurungItems.Items
 
                 Vector2 fireDirection = (Vector2)(Quaternion.Euler(0, 0, player.CurrentGun.CurrentAngle) * Vector2.right);
 
-                Vector2 rndPoint = firePos + (fireDirection * Random.Range(1f, 4f));
+                Vector2 rndPoint = firePos + (fireDirection * Random.Range(1f, 10f));
 
 
                 Transform copySprite = this.CreateEmptySprite(EnemyDatabase.GetOrLoadByGuid(absorbedEnemyUuids[i]));
