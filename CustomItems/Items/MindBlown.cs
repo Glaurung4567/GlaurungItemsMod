@@ -1,5 +1,6 @@
 ﻿using ItemAPI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,7 @@ namespace GlaurungItems.Items
 			MindBlown item = gameObject.AddComponent<MindBlown>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);
 			string shortDesc = "Nani ?";
-			string longDesc = "";
+			string longDesc = "Also known as epiphany blank.";
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Damage, 1000);
 			item.quality = ItemQuality.A;
@@ -35,8 +36,16 @@ namespace GlaurungItems.Items
 			GameObject gameObjectBlankVFX = (GameObject)ResourceCache.Acquire("Global VFX/BlankVFX");
 			GameObject gameObjectBlank = new GameObject("silencer");
 			SilencerInstance silencerInstance = gameObjectBlank.AddComponent<SilencerInstance>();
-			silencerInstance.TriggerSilencer(centerPoint, 15f, 35f, gameObjectBlankVFX, 1f, 0.5f, 50f, 10f, 140f, 15f, 1f, user, true, false);
+			silencerInstance.ForceNoDamage = true;
+			silencerInstance.TriggerSilencer(centerPoint, 1.5f, 5f, gameObjectBlankVFX, 1.2f, 0.5f, 50f, 10f, 140f, 15f, 0.5f, user, true, false);
+			GameManager.Instance.StartCoroutine(FrozenEureka(user));
 		}
 
+        private IEnumerator FrozenEureka(PlayerController user)
+        {
+			user.CurrentInputState = PlayerInputState.NoInput;
+			yield return new WaitForSeconds(2f);
+			user.CurrentInputState = PlayerInputState.AllInput;
+		}
 	}
 }

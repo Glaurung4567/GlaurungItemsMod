@@ -201,8 +201,6 @@ namespace GlaurungItems.Items
             Vector2 firePos = player.CenterPosition;
             float fireDirectionAngle = player.CurrentGun.CurrentAngle;
 
-            Tools.Print(player.CurrentGun.CurrentAngle, "ffffff", true);
-
             for (int i = 0; i < absorbedCount; i++)
             {
 
