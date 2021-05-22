@@ -92,6 +92,7 @@ namespace GlaurungItems
 
                 ShokkGun.Add();
                 MindBlown.Init();
+                GravDartGun.Add();
 
                 //PortalGunnyTest.Add();
                 //GunDeadArmyStronghold.Init();

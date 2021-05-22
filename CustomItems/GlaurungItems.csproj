@@ -84,6 +84,7 @@
     <Compile Include="ItemAPI\FakePrefab\FakePrefabHooks.cs" />
     <Compile Include="ItemAPI\SpecialBlankModificationItem.cs" />
     <Compile Include="Items\AddModifGungeonItems.cs" />
+    <Compile Include="Items\GravDartGun.cs" />
     <Compile Include="Items\HandCannon.cs" />
     <Compile Include="Items\ItemParts\CustomAffectEnemiesInRadiusItem.cs" />
     <Compile Include="Items\ItemParts\CustomRadialSlowItem.cs" />
