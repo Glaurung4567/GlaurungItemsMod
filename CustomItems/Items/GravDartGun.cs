@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace GlaurungItems.Items
 {
@@ -81,19 +82,47 @@ namespace GlaurungItems.Items
             base.PostProcessProjectile(projectile);
             if(projectile.name == this.gun.DefaultModule.projectiles[0].name + "(Clone)")
             {
-                Tools.Print("dart", "ffffff", true);
-                //projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.HandleHitEnemy));
+                projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.HandleHitEnemy));
             }
             else if (projectile.name == this.gun.DefaultModule.finalProjectile.name + "(Clone)")
             {
-                Tools.Print("tracer", "ffffff", true);
+                if (projectile.GetComponent<PierceProjModifier>())
+                {
+                    UnityEngine.GameObject.Destroy(projectile.GetComponent<PierceProjModifier>());
+                }
+                if (projectile.GetComponent<BounceProjModifier>())
+                {
+                    UnityEngine.GameObject.Destroy(projectile.GetComponent<BounceProjModifier>());
+                }
+                projectile.OnDestruction += Projectile_Tracer_OnDestruction;
             }
-            //if(projectile.fin)
         }
 
-        private void HandleHitEnemy(Projectile arg1, SpeculativeRigidbody arg2, bool arg3)
+        private void Projectile_Tracer_OnDestruction(Projectile proj)
         {
-            throw new NotImplementedException();
+            Vector3 pos = proj.LastPosition;
+            if (dartedEnemies != null)
+            {
+                int nbDarted = dartedEnemies.Count;
+                for(int i = 0; i < nbDarted; i++)
+                {
+                    if (dartedEnemies[i] && dartedEnemies[i].healthHaver && dartedEnemies[i].healthHaver.IsAlive)
+                    {
+                        AIActor actor = dartedEnemies[i];
+                        
+                    }
+                }
+            }
+
+            dartedEnemies = new List<AIActor>();
+        }
+
+        private void HandleHitEnemy(Projectile proj, SpeculativeRigidbody sr, bool fatal)
+        {
+            if (sr.aiActor && !fatal && !dartedEnemies.Contains(sr.aiActor) && sr.aiActor.healthHaver && sr.aiActor.healthHaver.IsAlive)
+            {
+                dartedEnemies.Add(sr.aiActor);
+            }
         }
 
         // boilerplate stuff
@@ -134,5 +163,8 @@ namespace GlaurungItems.Items
         }
 
         private bool HasReloaded;
+
+        [SerializeField]
+        private List<AIActor> dartedEnemies = new List<AIActor>();
     }
 }
