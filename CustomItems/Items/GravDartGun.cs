@@ -68,9 +68,16 @@ namespace GlaurungItems.Items
 
             Gun gunFinalProj = (PickupObjectDatabase.GetById(47) as Gun);
 
+            Projectile finalProj = UnityEngine.Object.Instantiate<Projectile>(gunFinalProj.DefaultModule.projectiles[0]);
+            finalProj.gameObject.SetActive(false);
+            FakePrefab.MarkAsFakePrefab(finalProj.gameObject);
+            UnityEngine.Object.DontDestroyOnLoad(finalProj);
+
+            finalProj.baseData.damage = 0;
+
             gun.DefaultModule.usesOptionalFinalProjectile = true;
             gun.DefaultModule.numberOfFinalProjectiles = 1;
-            gun.DefaultModule.finalProjectile = gunFinalProj.DefaultModule.projectiles[0];
+            gun.DefaultModule.finalProjectile = finalProj;
             gun.DefaultModule.finalCustomAmmoType = gunFinalProj.DefaultModule.customAmmoType;
             gun.DefaultModule.finalAmmoType = gunFinalProj.DefaultModule.ammoType;
 
@@ -98,6 +105,16 @@ namespace GlaurungItems.Items
             }
         }
 
+        private void HandleHitEnemy(Projectile proj, SpeculativeRigidbody sr, bool fatal)
+        {
+            if (sr.aiActor && !fatal && !dartedEnemies.Contains(sr.aiActor) && sr.aiActor.healthHaver && sr.aiActor.healthHaver.IsAlive)
+            {
+                dartedEnemies.Add(sr.aiActor);
+                Tools.Print(sr.aiActor.healthHaver.IsBoss, "ffffff", true);
+                Tools.Print(sr.aiActor.knockbackDoer == null, "ffffff", true);
+            }
+        }
+
         private void Projectile_Tracer_OnDestruction(Projectile proj)
         {
             Vector2 pos = proj.LastPosition;
@@ -122,6 +139,9 @@ namespace GlaurungItems.Items
                         if(dartArray != null && dartArray.Count() > 0)
                         {
                             int nbDarts = dartArray.Count();
+                            aiActor.specRigidbody.AddCollisionLayerOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox));
+                            aiActor.specRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Combine(aiActor.specRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandleHitEnemyHitEnemy));
+
                             aiActor.knockbackDoer.ApplyKnockback(direction, 800 * nbDarts);
 
                             for(int j = 0; j < nbDarts; j++)
@@ -139,13 +159,23 @@ namespace GlaurungItems.Items
             dartedEnemies = new List<AIActor>();
         }
 
-        private void HandleHitEnemy(Projectile proj, SpeculativeRigidbody sr, bool fatal)
+        private void HandleHitEnemyHitEnemy(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, SpeculativeRigidbody otherRigidbody, PixelCollider otherPixelCollider)
         {
-            if (sr.aiActor && !fatal && !dartedEnemies.Contains(sr.aiActor) && sr.aiActor.healthHaver && sr.aiActor.healthHaver.IsAlive)
+
+            if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
             {
-                dartedEnemies.Add(sr.aiActor);
+                Tools.Print(myRigidbody.aiActor.MovementSpeed, "ffffff", true);
+                Tools.Print(myRigidbody.Velocity, "ffffff", true);
+                Tools.Print(myRigidbody.Velocity.magnitude, "ffffff", true);
+                Tools.Print(myRigidbody.aiActor.KnockbackVelocity, "ffffff", true);
+                Tools.Print(myRigidbody.aiActor.KnockbackVelocity.magnitude, "ffffff", true);
+                
             }
+
+            myRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Remove(myRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandleHitEnemyHitEnemy));
         }
+
+
 
         // boilerplate stuff
         //This block of code allows us to change the reload sounds.
