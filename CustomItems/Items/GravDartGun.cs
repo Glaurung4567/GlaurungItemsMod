@@ -110,8 +110,13 @@ namespace GlaurungItems.Items
             if (sr.aiActor && !fatal && !dartedEnemies.Contains(sr.aiActor) && sr.aiActor.healthHaver && sr.aiActor.healthHaver.IsAlive)
             {
                 dartedEnemies.Add(sr.aiActor);
+
                 Tools.Print(sr.aiActor.healthHaver.IsBoss, "ffffff", true);
                 Tools.Print(sr.aiActor.knockbackDoer == null, "ffffff", true);
+                Tools.Print(sr.aiActor.knockbackDoer.weight, "ffffff", true);
+                Tools.Print(sr.aiActor.knockbackDoer.knockbackMultiplier, "ffffff", true);
+                Tools.Print(sr.aiActor.knockbackDoer.timeScalar, "ffffff", true);
+
             }
         }
 
@@ -142,7 +147,9 @@ namespace GlaurungItems.Items
                             aiActor.specRigidbody.AddCollisionLayerOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox));
                             aiActor.specRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Combine(aiActor.specRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandleHitEnemyHitEnemy));
 
-                            aiActor.knockbackDoer.ApplyKnockback(direction, 800 * nbDarts);
+                            aiActor.knockbackDoer.SetImmobile(false, "Like-a-boss");
+
+                            aiActor.knockbackDoer.ApplyKnockback(direction, 800 * nbDarts, true);
 
                             for(int j = 0; j < nbDarts; j++)
                             {
