@@ -74,6 +74,7 @@ namespace GlaurungItems.Items
             UnityEngine.Object.DontDestroyOnLoad(finalProj);
 
             finalProj.baseData.damage = 0;
+            finalProj.baseData.force = 0;
 
             gun.DefaultModule.usesOptionalFinalProjectile = true;
             gun.DefaultModule.numberOfFinalProjectiles = 1;
@@ -110,13 +111,6 @@ namespace GlaurungItems.Items
             if (sr.aiActor && !fatal && !dartedEnemies.Contains(sr.aiActor) && sr.aiActor.healthHaver && sr.aiActor.healthHaver.IsAlive)
             {
                 dartedEnemies.Add(sr.aiActor);
-
-                Tools.Print(sr.aiActor.healthHaver.IsBoss, "ffffff", true);
-                Tools.Print(sr.aiActor.knockbackDoer == null, "ffffff", true);
-                Tools.Print(sr.aiActor.knockbackDoer.weight, "ffffff", true);
-                Tools.Print(sr.aiActor.knockbackDoer.knockbackMultiplier, "ffffff", true);
-                Tools.Print(sr.aiActor.knockbackDoer.timeScalar, "ffffff", true);
-
             }
         }
 
