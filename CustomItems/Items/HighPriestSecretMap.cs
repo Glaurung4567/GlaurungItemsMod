@@ -301,6 +301,7 @@ namespace GlaurungItems.Items
                             break;
                         default:
                             break;// reverse fire speed, reverse dodge roll speed
+                            //GameUIRoot.Instance.ForceHideGunPanel = !GameUIRoot.Instance.ForceHideGunPanel;
                     }
                     this.LastOwner.stats.RecalculateStats(LastOwner, true);
                 }

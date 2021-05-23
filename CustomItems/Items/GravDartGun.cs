@@ -106,10 +106,16 @@ namespace GlaurungItems.Items
                 int nbDarted = dartedEnemies.Count;
                 for(int i = 0; i < nbDarted; i++)
                 {
-                    if (dartedEnemies[i] && dartedEnemies[i].healthHaver && dartedEnemies[i].healthHaver.IsAlive)
+                    if (dartedEnemies[i] && 
+                        dartedEnemies[i].healthHaver && dartedEnemies[i].healthHaver.IsAlive
+                        && dartedEnemies[i].specRigidbody)
                     {
-                        AIActor actor = dartedEnemies[i];
-                        
+                        AIActor aiActor = dartedEnemies[i];
+                        if (aiActor.GetComponent<ExplodeOnDeath>())
+                        {
+                            UnityEngine.Object.Destroy(aiActor.GetComponent<ExplodeOnDeath>());
+                        }
+                        //knockbackDoer
                     }
                 }
             }
