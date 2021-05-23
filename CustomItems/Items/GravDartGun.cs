@@ -31,7 +31,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 2f;
             gun.DefaultModule.cooldownTime = 0.2f;
-            gun.DefaultModule.numberOfShotsInClip = 30;
+            gun.DefaultModule.numberOfShotsInClip = 15;
             gun.SetBaseMaxAmmo(360);
             gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
 
@@ -100,22 +100,38 @@ namespace GlaurungItems.Items
 
         private void Projectile_Tracer_OnDestruction(Projectile proj)
         {
-            Vector3 pos = proj.LastPosition;
-            if (dartedEnemies != null)
+            Vector2 pos = proj.LastPosition;
+            if (dartedEnemies != null && pos != null)
             {
                 int nbDarted = dartedEnemies.Count;
                 for(int i = 0; i < nbDarted; i++)
                 {
                     if (dartedEnemies[i] && 
                         dartedEnemies[i].healthHaver && dartedEnemies[i].healthHaver.IsAlive
-                        && dartedEnemies[i].specRigidbody)
+                        && dartedEnemies[i].specRigidbody
+                        && dartedEnemies[i].knockbackDoer)
                     {
                         AIActor aiActor = dartedEnemies[i];
                         if (aiActor.GetComponent<ExplodeOnDeath>())
                         {
                             UnityEngine.Object.Destroy(aiActor.GetComponent<ExplodeOnDeath>());
                         }
-                        //knockbackDoer
+
+                        Vector2 direction = pos - aiActor.CenterPosition;
+                        DelayedExplosiveBuff[] dartArray = aiActor.gameObject.GetComponents<DelayedExplosiveBuff>();
+                        if(dartArray != null && dartArray.Count() > 0)
+                        {
+                            int nbDarts = dartArray.Count();
+                            aiActor.knockbackDoer.ApplyKnockback(direction, 800 * nbDarts);
+
+                            for(int j = 0; j < nbDarts; j++)
+                            {
+                                if(dartArray[j])
+                                {
+                                    UnityEngine.GameObject.Destroy(dartArray[j]);
+                                }
+                            }
+                        }
                     }
                 }
             }
