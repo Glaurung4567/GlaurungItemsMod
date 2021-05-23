@@ -120,6 +120,7 @@ namespace GlaurungItems.Items
             if (dartedEnemies != null && pos != null)
             {
                 int nbDarted = dartedEnemies.Count;
+
                 for(int i = 0; i < nbDarted; i++)
                 {
                     if (dartedEnemies[i] && 
@@ -143,15 +144,7 @@ namespace GlaurungItems.Items
 
                             aiActor.knockbackDoer.SetImmobile(false, "Like-a-boss");
 
-                            aiActor.knockbackDoer.ApplyKnockback(direction, 800 * nbDarts, true);
-
-                            for(int j = 0; j < nbDarts; j++)
-                            {
-                                if(dartArray[j])
-                                {
-                                    UnityEngine.GameObject.Destroy(dartArray[j]);
-                                }
-                            }
+                            aiActor.knockbackDoer.ApplyKnockback(direction, pushForce * nbDarts, true);
                         }
                     }
                 }
@@ -165,12 +158,33 @@ namespace GlaurungItems.Items
 
             if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
             {
-                Tools.Print(myRigidbody.aiActor.MovementSpeed, "ffffff", true);
-                Tools.Print(myRigidbody.Velocity, "ffffff", true);
-                Tools.Print(myRigidbody.Velocity.magnitude, "ffffff", true);
-                Tools.Print(myRigidbody.aiActor.KnockbackVelocity, "ffffff", true);
-                Tools.Print(myRigidbody.aiActor.KnockbackVelocity.magnitude, "ffffff", true);
-                
+                DelayedExplosiveBuff[] dartArray = myRigidbody.aiActor.gameObject.GetComponents<DelayedExplosiveBuff>();
+
+                int nbDarts = 1;
+                if(dartArray != null)
+                {
+                    nbDarts = dartArray.Count();
+                }
+
+                if(otherRigidbody && otherRigidbody.aiActor && otherRigidbody.aiActor.healthHaver && otherRigidbody.aiActor.healthHaver.IsAlive)
+                {
+                    otherRigidbody.aiActor.healthHaver.ApplyDamage(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
+                }
+
+                //myRigidbody.aiActor.KnockbackVelocity.magnitude
+
+                for (int j = 0; j < nbDarts; j++)
+                {
+                    if (dartArray[j])
+                    {
+                        UnityEngine.GameObject.Destroy(dartArray[j]);
+                    }
+                }
+
+                if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
+                {
+                    myRigidbody.aiActor.healthHaver.ApplyDamage(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
+                }
             }
 
             myRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Remove(myRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandleHitEnemyHitEnemy));
@@ -216,6 +230,8 @@ namespace GlaurungItems.Items
         }
 
         private bool HasReloaded;
+        private static readonly float pushForce = 800f;
+        private static readonly float baseDmg = 2f;
 
         [SerializeField]
         private List<AIActor> dartedEnemies = new List<AIActor>();
