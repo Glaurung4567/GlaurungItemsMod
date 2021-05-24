@@ -9,8 +9,8 @@ using UnityEngine;
 
 /*
  to do
-coroutine remove pre collision after 5 sec
 remove setImmobile for teleport and other one
+add max dmg cap
  */
 namespace GlaurungItems.Items
 {
