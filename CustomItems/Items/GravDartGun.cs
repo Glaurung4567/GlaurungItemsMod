@@ -1,11 +1,17 @@
 ﻿using Gungeon;
 using ItemAPI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
+/*
+ to do
+coroutine remove pre collision after 5 sec
+remove setImmobile for teleport and other one
+ */
 namespace GlaurungItems.Items
 {
     class GravDartGun : AdvancedGunBehavior
@@ -94,36 +100,49 @@ namespace GlaurungItems.Items
             }
             else if (projectile.name == this.gun.DefaultModule.finalProjectile.name + "(Clone)")
             {
-                if (projectile.GetComponent<PierceProjModifier>())
-                {
-                    UnityEngine.GameObject.Destroy(projectile.GetComponent<PierceProjModifier>());
-                }
-                if (projectile.GetComponent<BounceProjModifier>())
-                {
-                    UnityEngine.GameObject.Destroy(projectile.GetComponent<BounceProjModifier>());
-                }
+                GameManager.Instance.StartCoroutine(this.RemoveAnnoyingProjModifiers(projectile));
+
                 projectile.OnDestruction += Projectile_Tracer_OnDestruction;
+            }
+        }
+
+        private IEnumerator RemoveAnnoyingProjModifiers(Projectile projectile)
+        {
+            yield return new WaitForSeconds(0.1f);
+            if (projectile.GetComponent<PierceProjModifier>())
+            {
+                UnityEngine.GameObject.Destroy(projectile.GetComponent<PierceProjModifier>());
+            }
+            if (projectile.GetComponent<BounceProjModifier>())
+            {
+                UnityEngine.GameObject.Destroy(projectile.GetComponent<BounceProjModifier>());
             }
         }
 
         private void HandleHitEnemy(Projectile proj, SpeculativeRigidbody sr, bool fatal)
         {
-            if (sr.aiActor && !fatal && !dartedEnemies.Contains(sr.aiActor) && sr.aiActor.healthHaver && sr.aiActor.healthHaver.IsAlive)
+            if (sr.aiActor && !fatal && !dartedEnemies.Contains(sr.aiActor) && sr.aiActor.healthHaver && sr.aiActor.healthHaver.IsAlive && sr.aiActor.knockbackDoer)
             {
                 dartedEnemies.Add(sr.aiActor);
+                Tools.Print(sr.aiActor.knockbackDoer.weight, "ffffff", true);
             }
         }
 
         private void Projectile_Tracer_OnDestruction(Projectile proj)
+        {
+            GameManager.Instance.StartCoroutine(this.OnProjDestructionCoroutine(proj)); 
+        }
+
+        private IEnumerator OnProjDestructionCoroutine(Projectile proj)
         {
             Vector2 pos = proj.LastPosition;
             if (dartedEnemies != null && pos != null)
             {
                 int nbDarted = dartedEnemies.Count;
 
-                for(int i = 0; i < nbDarted; i++)
+                for (int i = 0; i < nbDarted; i++)
                 {
-                    if (dartedEnemies[i] && 
+                    if (dartedEnemies[i] &&
                         dartedEnemies[i].healthHaver && dartedEnemies[i].healthHaver.IsAlive
                         && dartedEnemies[i].specRigidbody
                         && dartedEnemies[i].knockbackDoer)
@@ -136,25 +155,40 @@ namespace GlaurungItems.Items
 
                         Vector2 direction = pos - aiActor.CenterPosition;
                         DelayedExplosiveBuff[] dartArray = aiActor.gameObject.GetComponents<DelayedExplosiveBuff>();
-                        if(dartArray != null && dartArray.Count() > 0)
+                        if (dartArray != null && dartArray.Count() > 0)
                         {
                             int nbDarts = dartArray.Count();
-                            aiActor.specRigidbody.AddCollisionLayerOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox));
+                            aiActor.specRigidbody.AddCollisionLayerOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyCollider));
                             aiActor.specRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Combine(aiActor.specRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandleEnemyHitRigidBody));
                             aiActor.specRigidbody.OnPreTileCollision = (SpeculativeRigidbody.OnPreTileCollisionDelegate)Delegate.Combine(aiActor.specRigidbody.OnPreTileCollision, new SpeculativeRigidbody.OnPreTileCollisionDelegate(this.HandleEnemyHitTile));
 
                             aiActor.knockbackDoer.SetImmobile(false, "Like-a-boss");
 
                             aiActor.knockbackDoer.ApplyKnockback(direction, pushForce * nbDarts, true);
+                            GameManager.Instance.StartCoroutine(this.CancelCollisionsCoroutine(aiActor.specRigidbody));
                         }
                     }
                 }
             }
 
-            dartedEnemies = new List<AIActor>();
+            dartedEnemies = new List<AIActor>(); 
+            yield break;
+        }
+
+        private IEnumerator CancelCollisionsCoroutine(SpeculativeRigidbody myRigidbody)
+        {
+            yield return new WaitForSeconds(4f);
+            RemoveCollisions(myRigidbody);
+
+            yield break;
         }
 
         private void HandleEnemyHitTile(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, PhysicsEngine.Tile tile, PixelCollider tilePixelCollider)
+        {
+            GameManager.Instance.StartCoroutine(this.HandleEnemyHitTileCoroutine(myRigidbody));  
+        }
+
+        private IEnumerator HandleEnemyHitTileCoroutine(SpeculativeRigidbody myRigidbody)
         {
             if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
             {
@@ -182,26 +216,29 @@ namespace GlaurungItems.Items
                 }
             }
 
+            RemoveCollisions(myRigidbody);
 
-            myRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Remove(myRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandleEnemyHitRigidBody));
-            myRigidbody.OnPreTileCollision = (SpeculativeRigidbody.OnPreTileCollisionDelegate)Delegate.Remove(myRigidbody.OnPreTileCollision, new SpeculativeRigidbody.OnPreTileCollisionDelegate(this.HandleEnemyHitTile));
-
+            yield break;
         }
 
         private void HandleEnemyHitRigidBody(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, SpeculativeRigidbody otherRigidbody, PixelCollider otherPixelCollider)
         {
+            GameManager.Instance.StartCoroutine(this.HandleEnemyHitRigidBodyCoroutine(myRigidbody, otherRigidbody));
+        }
 
+        private IEnumerator HandleEnemyHitRigidBodyCoroutine(SpeculativeRigidbody myRigidbody, SpeculativeRigidbody otherRigidbody)
+        {
             if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
             {
                 DelayedExplosiveBuff[] dartArray = myRigidbody.aiActor.gameObject.GetComponents<DelayedExplosiveBuff>();
 
                 int nbDarts = 1;
-                if(dartArray != null)
+                if (dartArray != null)
                 {
                     nbDarts = dartArray.Count();
                 }
 
-                if(otherRigidbody && otherRigidbody.aiActor && otherRigidbody.aiActor.healthHaver && otherRigidbody.aiActor.healthHaver.IsAlive)
+                if (otherRigidbody && otherRigidbody.aiActor && otherRigidbody.aiActor.healthHaver && otherRigidbody.aiActor.healthHaver.IsAlive)
                 {
                     otherRigidbody.aiActor.healthHaver.ApplyDamage(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
                 }
@@ -222,6 +259,13 @@ namespace GlaurungItems.Items
                 }
             }
 
+            RemoveCollisions(myRigidbody);
+            yield break;
+        }
+
+        private void RemoveCollisions(SpeculativeRigidbody myRigidbody)
+        {
+            myRigidbody.aiActor.specRigidbody.AddCollisionLayerOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyCollider));
             myRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Remove(myRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandleEnemyHitRigidBody));
             myRigidbody.OnPreTileCollision = (SpeculativeRigidbody.OnPreTileCollisionDelegate)Delegate.Remove(myRigidbody.OnPreTileCollision, new SpeculativeRigidbody.OnPreTileCollisionDelegate(this.HandleEnemyHitTile));
         }
@@ -266,7 +310,7 @@ namespace GlaurungItems.Items
         }
 
         private bool HasReloaded;
-        private static readonly float pushForce = 800f;
+        private static readonly float pushForce = 30f;
         private static readonly float baseDmg = 2f;
 
         [SerializeField]
