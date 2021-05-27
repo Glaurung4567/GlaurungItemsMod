@@ -167,14 +167,6 @@ namespace GlaurungItems.Items
                             aiActor.knockbackDoer.SetImmobile(false, "Like-a-boss");
 
                             this.SetKnockbackImmobileOff(aiActor);
-                            /*
-                            BuffEnemiesBehavior
-                            ConsumeTargetBehavior
-                            DeflectBulletsBehavior
-                            DestroyBulletsBehavior
-                            DisplaceBehavior (misfire beast)
-                            KaliberController
-                            */
 
                             aiActor.knockbackDoer.ApplyKnockback(direction, pushForce * nbDarts, true);
                             GameManager.Instance.StartCoroutine(this.CancelCollisionsCoroutine(aiActor.specRigidbody));
@@ -199,14 +191,54 @@ namespace GlaurungItems.Items
                         {
                             if (item.Behavior is ShootBehavior)
                             {
-
+                                aiActor.knockbackDoer.SetImmobile(false, "ShootBulletScript");
                             }
                             else if (item.Behavior is BuffEnemiesBehavior)
                             {
-
+                                aiActor.knockbackDoer.SetImmobile(false, "BuffEnemiesBehavior");
+                            }
+                            else if (item.Behavior is ConsumeTargetBehavior)
+                            {
+                                aiActor.knockbackDoer.SetImmobile(false, "ConsumeTargetBehavior");
+                            }
+                            else if (item.Behavior is DeflectBulletsBehavior)
+                            {
+                                aiActor.knockbackDoer.SetImmobile(false, "DeflectBulletsBehavior");
+                            }
+                            else if (item.Behavior is DestroyBulletsBehavior)
+                            {
+                                aiActor.knockbackDoer.SetImmobile(true, "DestroyBulletsBehavior");
+                            }
+                            else if (item.Behavior is DisplaceBehavior)
+                            {
+                                aiActor.knockbackDoer.SetImmobile(false, "DisplaceBehavior");
+                            }
+                            else if (item.Behavior is MirrorImageBehavior)
+                            {
+                                aiActor.knockbackDoer.SetImmobile(false, "MirrorImageBehavior");
+                            }
+                            else if (item.Behavior is RemoteShootBehavior)
+                            {
+                                aiActor.knockbackDoer.SetImmobile(false, "SummonEnemyBehavior");
+                            }
+                            else if (item.Behavior is SummonEnemyBehavior)
+                            {
+                                aiActor.knockbackDoer.SetImmobile(false, "SummonEnemyBehavior");
+                            }
+                            else if (item.Behavior is TeleportBehavior)
+                            {
+                                aiActor.knockbackDoer.SetImmobile(false, "teleport");
+                            }
+                            else if (item.Behavior is WizardSpinShootBehavior)
+                            {
+                                aiActor.knockbackDoer.SetImmobile(false, "WizardSpinShootBehavior");
                             }
                         }
                     }
+                }
+                else if (attackBehav is ShootBehavior)
+                {
+                    aiActor.knockbackDoer.SetImmobile(false, "ShootBulletScript");
                 }
                 else if (attackBehav is BuffEnemiesBehavior)
                 {
@@ -216,9 +248,37 @@ namespace GlaurungItems.Items
                 {
                     aiActor.knockbackDoer.SetImmobile(false, "ConsumeTargetBehavior");
                 }
-                else if (attackBehav is DashBehavior) // for sharks
+                else if (attackBehav is DeflectBulletsBehavior) 
                 {
-
+                    aiActor.knockbackDoer.SetImmobile(false, "DeflectBulletsBehavior");
+                }
+                else if (attackBehav is DestroyBulletsBehavior) 
+                {
+                    aiActor.knockbackDoer.SetImmobile(true, "DestroyBulletsBehavior");
+                }
+                else if (attackBehav is DisplaceBehavior) 
+                {
+                    aiActor.knockbackDoer.SetImmobile(false, "DisplaceBehavior");
+                }
+                else if (attackBehav is MirrorImageBehavior) 
+                {
+                    aiActor.knockbackDoer.SetImmobile(false, "MirrorImageBehavior");
+                }
+                else if (attackBehav is RemoteShootBehavior) 
+                {
+                    aiActor.knockbackDoer.SetImmobile(false, "SummonEnemyBehavior");
+                }
+                else if (attackBehav is SummonEnemyBehavior) 
+                {
+                    aiActor.knockbackDoer.SetImmobile(false, "SummonEnemyBehavior");
+                }
+                else if (attackBehav is TeleportBehavior) 
+                {
+                    aiActor.knockbackDoer.SetImmobile(false, "teleport");
+                }
+                else if (attackBehav is WizardSpinShootBehavior) 
+                {
+                    aiActor.knockbackDoer.SetImmobile(false, "WizardSpinShootBehavior");
                 }
             }
         }
