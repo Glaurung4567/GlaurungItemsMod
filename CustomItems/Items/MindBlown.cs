@@ -14,7 +14,7 @@ namespace GlaurungItems.Items
 		public static void Init()
 		{
 			string text = "Mind Blown";
-			string resourcePath = "GlaurungItems/Resources/blinkback_device";
+			string resourcePath = "GlaurungItems/Resources/mind_blown";
 			GameObject gameObject = new GameObject(text);
 			MindBlown item = gameObject.AddComponent<MindBlown>();
 			ItemBuilder.AddSpriteToObject(text, resourcePath, gameObject);

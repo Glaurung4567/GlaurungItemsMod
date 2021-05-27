@@ -28,7 +28,7 @@ namespace GlaurungItems.Items
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
             gun.AddProjectileModuleFrom((PickupObjectDatabase.GetById(357) as Gun), true, false);
 
-            gun.quality = PickupObject.ItemQuality.S;
+            gun.quality = PickupObject.ItemQuality.A;
 
             gun.DefaultModule.ammoCost = 1;
             gun.DefaultModule.angleVariance = 1f;
@@ -72,7 +72,7 @@ namespace GlaurungItems.Items
                 delayedExplosiveBuff.explosionData = explosion;
             }
 
-            Gun gunFinalProj = (PickupObjectDatabase.GetById(47) as Gun);
+            Gun gunFinalProj = (PickupObjectDatabase.GetById(57) as Gun);
 
             Projectile finalProj = UnityEngine.Object.Instantiate<Projectile>(gunFinalProj.DefaultModule.projectiles[0]);
             finalProj.gameObject.SetActive(false);
@@ -128,6 +128,8 @@ namespace GlaurungItems.Items
             }
         }
 
+
+
         private void Projectile_Tracer_OnDestruction(Projectile proj)
         {
             GameManager.Instance.StartCoroutine(this.OnProjDestructionCoroutine(proj)); 
@@ -164,6 +166,16 @@ namespace GlaurungItems.Items
 
                             aiActor.knockbackDoer.SetImmobile(false, "Like-a-boss");
 
+                            this.SetKnockbackImmobileOff(aiActor);
+                            /*
+                            BuffEnemiesBehavior
+                            ConsumeTargetBehavior
+                            DeflectBulletsBehavior
+                            DestroyBulletsBehavior
+                            DisplaceBehavior (misfire beast)
+                            KaliberController
+                            */
+
                             aiActor.knockbackDoer.ApplyKnockback(direction, pushForce * nbDarts, true);
                             GameManager.Instance.StartCoroutine(this.CancelCollisionsCoroutine(aiActor.specRigidbody));
                         }
@@ -173,6 +185,42 @@ namespace GlaurungItems.Items
 
             dartedEnemies = new List<AIActor>(); 
             yield break;
+        }
+
+        private void SetKnockbackImmobileOff(AIActor aiActor)
+        {
+            foreach (AttackBehaviorBase attackBehav in aiActor.behaviorSpeculator.AttackBehaviors)
+            {
+                if (attackBehav is AttackBehaviorGroup)
+                {
+                    foreach (AttackBehaviorGroup.AttackGroupItem item in (attackBehav as AttackBehaviorGroup).AttackBehaviors)
+                    {
+                        if (item != null && item.Behavior != null)
+                        {
+                            if (item.Behavior is ShootBehavior)
+                            {
+
+                            }
+                            else if (item.Behavior is BuffEnemiesBehavior)
+                            {
+
+                            }
+                        }
+                    }
+                }
+                else if (attackBehav is BuffEnemiesBehavior)
+                {
+                    aiActor.knockbackDoer.SetImmobile(false, "BuffEnemiesBehavior");
+                }
+                else if (attackBehav is ConsumeTargetBehavior)
+                {
+                    aiActor.knockbackDoer.SetImmobile(false, "ConsumeTargetBehavior");
+                }
+                else if (attackBehav is DashBehavior) // for sharks
+                {
+
+                }
+            }
         }
 
         private IEnumerator CancelCollisionsCoroutine(SpeculativeRigidbody myRigidbody)
@@ -212,7 +260,7 @@ namespace GlaurungItems.Items
 
                 if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
                 {
-                    myRigidbody.aiActor.healthHaver.ApplyDamage(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
+                    myRigidbody.aiActor.healthHaver.ApplyDamage(Math.Min(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, maxDmg), myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
                 }
             }
 
@@ -312,6 +360,7 @@ namespace GlaurungItems.Items
         private bool HasReloaded;
         private static readonly float pushForce = 30f;
         private static readonly float baseDmg = 2f;
+        private static readonly float maxDmg = 200f;
 
         [SerializeField]
         private List<AIActor> dartedEnemies = new List<AIActor>();
