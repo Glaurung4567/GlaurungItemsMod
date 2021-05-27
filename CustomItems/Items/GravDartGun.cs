@@ -21,12 +21,13 @@ namespace GlaurungItems.Items
             Gun gun = ETGMod.Databases.Items.NewGun("Grav Dart Launcher", "gravd");
             Game.Items.Rename("outdated_gun_mods:grav_dart_launcher", "gl:grav_dart_launcher");
             gun.gameObject.AddComponent<GravDartGun>();
-            gun.SetShortDescription("");
-            gun.SetLongDescription("");
+            gun.SetShortDescription("Yeet !");
+            gun.SetLongDescription("One of the oddest weapons found by the last Ranger in the Arks. \n \nTag targets with non damaging grav darts. When the last shot in the clip is destroyed after being shot, " +
+                "project violently all tagged targets toward it's last position. Targets take damage if they collide with something.");
             gun.SetupSprite(null, "pewhand_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
-            gun.AddProjectileModuleFrom((PickupObjectDatabase.GetById(357) as Gun), true, false);
+            gun.AddProjectileModuleFrom((PickupObjectDatabase.GetById(124) as Gun), true, false);
 
             gun.quality = PickupObject.ItemQuality.A;
 
@@ -42,7 +43,7 @@ namespace GlaurungItems.Items
             gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
 
 
-            Projectile projectile = UnityEngine.Object.Instantiate<Projectile>(gun.DefaultModule.projectiles[0]);
+            Projectile projectile = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(357) as Gun).DefaultModule.projectiles[0]);
             projectile.gameObject.SetActive(false);
             FakePrefab.MarkAsFakePrefab(projectile.gameObject);
             UnityEngine.Object.DontDestroyOnLoad(projectile);
@@ -124,11 +125,9 @@ namespace GlaurungItems.Items
             if (sr.aiActor && !fatal && !dartedEnemies.Contains(sr.aiActor) && sr.aiActor.healthHaver && sr.aiActor.healthHaver.IsAlive && sr.aiActor.knockbackDoer)
             {
                 dartedEnemies.Add(sr.aiActor);
-                Tools.Print(sr.aiActor.knockbackDoer.weight, "ffffff", true);
+                //Tools.Print(sr.aiActor.knockbackDoer.weight, "ffffff", true);
             }
         }
-
-
 
         private void Projectile_Tracer_OnDestruction(Projectile proj)
         {
@@ -387,7 +386,7 @@ namespace GlaurungItems.Items
             //This determines what sound you want to play when you fire a gun.
             //Sounds names are based on the Gungeon sound dump, which can be found at EnterTheGungeon/Etg_Data/StreamingAssets/Audio/GeneratedSoundBanks/Windows/sfx.txt
             gun.PreventNormalFireAudio = true;
-            AkSoundEngine.PostEvent("Play_pewpew", gameObject);
+            AkSoundEngine.PostEvent("Play_WPN_claw_blast_01", gameObject);
         }
 
         protected override void Update()
@@ -413,7 +412,7 @@ namespace GlaurungItems.Items
                 HasReloaded = false;
                 AkSoundEngine.PostEvent("Stop_WPN_All", base.gameObject);
                 base.OnReloadPressed(player, gun, bSOMETHING);
-                AkSoundEngine.PostEvent("Play_pewpew_reload", base.gameObject);
+                AkSoundEngine.PostEvent("Play_WPN_SAA_reload_01", base.gameObject);
             }
         }
 
