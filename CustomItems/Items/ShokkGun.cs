@@ -19,7 +19,7 @@ namespace GlaurungItems.Items
             gun.gameObject.AddComponent<ShokkGun>();
             gun.SetShortDescription("WAAAGH !");
             gun.SetLongDescription("This gun was inspired by the famous Shokk Attack Gun of the Orks, but as the creator didn't find any race which could serve as ammo, " +
-                "he decided to fire weaker living targets instead. \n \nFiring this gun swallows weak enemies nearby and reloading it make them reappear into our reality within an explosion of energy.");
+                "he decided to fire weaker living targets instead. \n \nFiring this gun swallows weak enemies nearby and reloading it make them re-appear into our reality within an explosion of energy.");
             gun.SetupSprite(null, "shokkgun_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 24);

@@ -1,0 +1,194 @@
+{
+  "metadata": {
+    "name": "Glaurung Items Mod",
+    "version": "",
+    "url": "https://modworkshop.net/mod/29406"
+  },
+  "items": {
+    "gl:shambles": {
+      "name": "Shambles",
+      "notes": "Shoots projectiles that, if the user isn't near a wall, have a chance to switch the locations of the player and the target, triggering a mini-blank effect at the origin and arrival locations. Gives contact damage immunity while held."
+    },
+	"gl:overhealer": {
+      "name": "Overhealer",
+      "notes": "Heals the target. If it's health is lower than 75%, applies a green glow and slays the enemy when its health is full. If the target is a boss, healing it to full health does 100 damage instead."
+    },
+	"gl:loose_cannon": {
+      "name": "Loose Cannon",
+      "notes": "Has 4 levels of damage depending on how long the gun was charged. The first 3 stages fire a grenade projectile which explode upon impact. If fully charged, the weapon only creates an explosion centered around the player and hurts them."
+    },
+	"gl:chainer": {
+      "name": "Chainer",
+      "notes": "Fires a chain of bullets. Reloading causes the chains fired from the clip to shake. The bullets are destroyed when an enemy hits them, the player triggers a blank effect or when the player reloads."
+    },
+	"gl:gunjuring_encyclopedia": {
+      "name": "Gunjuring Encyclopedia",
+      "notes": "Fires random attack patterns from different enemies."
+    },
+	"gl:the_indecisive": {
+      "name": "The Indecisive",
+      "notes": "Each time the gun is reloaded,its firing mode cycles between 4 modes. Semi-auto fires bouncing and piercing projectiles. Auto fires projectiles chained by lightning. Burst fires 3 projectiles. Charged mode fires a Mass Shotgun projectile. "
+    },
+	"gl:turtlez_beam": {
+      "name": "Turtlez Beam",
+      "notes": "Fires a huge, piercing beam that deals high damage."
+    },
+	"gl:peacemaker_carbine": {
+      "name": "Peacemaker Carbine",
+      "notes": "Reloading this automatic rifle on a full clip causes it ammunition to switch to a piercing projectile for the cost of 20 ammo."
+    },
+	"gl:swiss_army_rifle": {
+      "name": "Swiss Army Rifle",
+      "notes": "Fires a close range beam alongside fast low damage projectiles. Can be tap shooted to fire delayed exploding projectiles or fired long enough to charge a piercing beam."
+    },
+	"gl:linc": {
+      "name": "Linc",
+      "notes": "Reloading on a full clip causes its ammunition to change to a non-damaging projectile that marks all nearby enemies when destroyed. Normal projectiles will home in on marked targets, one at a time."
+    },
+	"gl:panda's_hand_cannon": {
+      "name": "Panda's Hand Cannon",
+      "notes": "High damage, 2-shot burst weapon."
+    },
+	"gl:shokk": {
+      "name": "Shokk",
+      "notes": "Firing this gun swallows weak enemies nearby and reloading it make them re-appear into our reality within an explosion of energy."
+    },
+	"gl:grav_dart_launcher": {
+      "name": "Grav Dart Launcher",
+      "notes": "Tag targets with non damaging grav darts. When the last shot in the clip is destroyed after being shot, project violently all tagged targets toward it's last position. Targets take damage if they collide with something."
+    },
+	"gl:berserker's_roar": {
+      "name": "Berserker's Roar",
+      "notes": "Makes all enemies in the room attack the player or other enemies alternatively."
+    },
+	"gl:howl_of_the_jammed": {
+      "name": "Howl of the Jammed",
+      "notes": "Makes all the enemies in the room jammed."
+    },
+	"gl:raise_dead": {
+      "name": "Raise Dead",
+      "notes": "One use, summons friendly companion Spents. Summoned Spents die on room clear or when they take enough damage."
+    },
+	"gl:neuralyzer": {
+      "name": "Neuralyzer",
+      "notes": "On use, stops enemies from attacking the player for 5 seconds. Also affects bosses."
+    },
+	"gl:joseph's_last_resort": {
+      "name": "Joseph's Last Resort",
+      "notes": "On use, opens the doors of the room during combat and gives a speed boost for 7 seconds."
+    },
+	"gl:yoink": {
+      "name": "Yoink",
+      "notes": "On use, allows the user to steal from shops for 5 seconds, take the contents from chests and breaking locks, or steal a gun from an enemy, giving the player their attack pattern. Stealing from enemies, shops or rainbow chest during rainbow runs give curse."
+    },
+	"gl:high_priest's_secret_map": {
+      "name": "High Priest's Secret Map",
+      "notes": "+1 active item slot. Can't be used in combat. On first use, teleports the player to a boss fight with the Low Priest. If the players defeats him, can be used again to return the player to their initial position."
+    },
+	"gl:blinkback_device": {
+      "name": "Blinkback Device",
+      "notes": "On first use, creates after images behind the player. On second use, teleports the player to their previous position approximately 2 seconds ago, resetting their armor and health from that instant."
+    },
+	"gl:mine_crafter": {
+      "name": "Mine Crafter",
+      "notes": "On use, spawns a rolling TNT barrel next to the player. On second use, if the barrel is not destroyed, detonate it. The explosion does not harm the user."
+    },
+	"gl:create_trap": {
+      "name": "Create Trap",
+      "notes": "Spawns a spike trap near the user which is triggered by both flying and non-flying enemies. The trap does not affect the player."
+    },
+	"gl:poyo": {
+      "name": "Poyo",
+      "notes": "On use, devours an enemy near the user and gives a temporary passive item based on the eaten target (does not work on weak enemies like Bullats or Bullet Kin). The passive is destroyed if the user takes damage, eats another enemy, or drops Poyo. "
+    },
+	"gl:prismatic_field": {
+      "name": "Prismatic Field",
+      "notes": "On use, creates an aura around the player which lasts 10 seconds that damages enemies. The aura changes color every 2 seconds and also applies a different harmful effect for every color on nearby targets (Fire, Poison, Charm, Freeze, Petrify, Stun, High Damage and Teleport)."
+    },
+	"gl:gunzerking_potion": {
+      "name": "Gunzerking Potion",
+      "notes": "The user can dual-wield 2 guns temporarily. Ends prematurely if the user switches guns."
+    },
+	"gl:turn()": {
+      "name": "Turn()",
+      "notes": "On first use, gives the USB Gun, stops enemies and records the actions of the user, which fills the item's cooldown until full. Enemies and the player are invulnerable during the recording phase. On second use, replays the recorded actions."
+    },
+	"gl:infiltrator_rounds": {
+      "name": "Infiltrator Rounds",
+      "notes": "Spawn a slow enemy projectile which doesn't collide with the player and is affected by bullet modifiers."
+    },
+	"gl:mind_blown": {
+      "name": "Mind Blown",
+      "notes": "Spawn a slow blank effect. Make the user immobile for 2 seconds."
+    },
+	"gl:roomteller": {
+      "name": "Room Teller",
+      "notes": "For modders. On use, shows the name of the room the user is currently in and refills cooldown for all active items."
+    },
+	"gl:box_glasses": {
+      "name": "Box Glasses",
+      "notes": "Shows enemy hitbox when they are hit."
+    },
+	"gl:kill_streak_bullets": {
+      "name": "Kill Streak Bullets",
+      "notes": "Shows the number of kills the player got in the last 5 seconds, and gives various temporary boosts when the counter gets high enough. Works with beam weapons."
+    },
+	"gl:banishing_bullets": {
+      "name": "Banishing Bullets",
+      "notes": "Adds a small chance for the player's bullets to create a portal under the target's feet, which slays them instantly. Does not work on bosses. If the player is in Bullet Hell, give 33% damage increase instead."
+    },
+	"gl:ozzie_helm": {
+      "name": "Ozzie Helm",
+      "notes": "15% chance to prevent damage, but gives -2 coolness, decreases accuracy by 30% and decreases dodgeroll effectiveness."
+    },
+	"gl:ammolet_of_wonder": {
+      "name": "Ammolet of Wonder",
+      "notes": "Triggers a random effect when a blank effect is used, ranging from changing the color of enemies, to teleporting the player to a previous room, or setting all enemies on fire, etc. "
+    },
+	"gl:sapping_bullets": {
+      "name": "Sapping Bullets",
+      "notes": "Player projectiles remove enemy's status effect immunities. Also makes flying enemies affected by goops and pits. Bosses still ignore pits and stun."
+    },
+	"gl:matriochk_ammolet": {
+      "name": "Matriochk Ammolet",
+      "notes": "Gives 1 more blank per floor. Has a chance to trigger an extra mini-blank effect when a blank effect is used. This item does not trigger itself."
+    },
+	"gl:nu_arcana": {
+      "name": "Nu Arcana",
+      "notes": "Adds a small chance for the player's bullets to reduce the target's health to 1. Does not work on bosses."
+    },
+	"gl:turncoat_rounds": {
+      "name": "Turncoat Rounds",
+      "notes": "After the user has hit the enemy with their gun, the projectiles fired by that enemy have a small chance to turn in their face and deal damage to them."
+    },
+	"el_tigre": {
+	  "name": "El Tigre",
+	  "notes": "Fires a homing, non-damaging projectile that damages a single enemy after a brief period of time."
+	},
+	"super_space_turtles_gun": {
+	  "name": "Super Space Turtles Gun",
+	  "notes": "Fires projectiles similar to bullets shot by the Super Space Turtle"
+	},
+	"wristbow": {
+	  "name": "Wristbow",
+	  "notes": "Fires bolts. Does not need to be reloaded."
+	}
+  },
+  "synergies": {
+    "Landing Hate": {
+      "notes": "Balloon Gun and Shambles are dual-wielded."
+    },
+	"Who's da Boss now ?": {
+      "notes": "Gunjuring Encyclopedia also fires attack patterns from different bosses."
+    },
+	"Big Exploding Pew Pew !": {
+	  "notes": "Super Space Turtles Gun fires piercing shots with higher damage."
+	},
+	"Not so hidden anymore": {
+	  "notes": "Upon a successful active reload, Cog of Battle multiplies Klobbe's damage and knockback by 10 and removes all spread for a random portion of its current magazine. All of this is in addition to Cog of Battle's standard bonuses."
+	},
+	"Secrets of the Otter's Parry": {
+	  "notes": "Reloading the Chamber Gun at full clip cycles it between ALL of its possible forms (including secret floors), except its Bullet Hell form."
+	}
+  }
+}
