@@ -4,32 +4,27 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 
-/*
- to do
-remove setImmobile for teleport and other one
-add max dmg cap
- */
+
 namespace GlaurungItems.Items
 {
     class GravDartGun : AdvancedGunBehavior
     {
         public static void Add()
         {
-            Gun gun = ETGMod.Databases.Items.NewGun("Grav Dart Launcher", "gravd");
+            Gun gun = ETGMod.Databases.Items.NewGun("Grav Dart Launcher", "gravdart");
             Game.Items.Rename("outdated_gun_mods:grav_dart_launcher", "gl:grav_dart_launcher");
             gun.gameObject.AddComponent<GravDartGun>();
             gun.SetShortDescription("Yeet !");
             gun.SetLongDescription("One of the oddest weapons found by the last Ranger in the Arks. \n \nTag targets with non damaging grav darts. When the last shot in the clip is destroyed after being shot, " +
                 "project violently all tagged targets toward it's last position. Targets take damage if they collide with something.");
-            gun.SetupSprite(null, "pewhand_idle_001", 8);
+            gun.SetupSprite(null, "gravdart_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
             gun.AddProjectileModuleFrom((PickupObjectDatabase.GetById(124) as Gun), true, false);
 
-            gun.quality = PickupObject.ItemQuality.A;
+            gun.quality = PickupObject.ItemQuality.B;
 
             gun.DefaultModule.ammoCost = 1;
             gun.DefaultModule.angleVariance = 1f;
@@ -319,6 +314,7 @@ namespace GlaurungItems.Items
 
                 if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
                 {
+                    SpawnImpactProj(myRigidbody.aiActor);
                     myRigidbody.aiActor.healthHaver.ApplyDamage(Math.Min(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, maxDmg), myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
                 }
             }
@@ -362,12 +358,31 @@ namespace GlaurungItems.Items
 
                 if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
                 {
+                    SpawnImpactProj(myRigidbody.aiActor);
                     myRigidbody.aiActor.healthHaver.ApplyDamage(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
                 }
             }
 
             RemoveCollisions(myRigidbody);
             yield break;
+        }
+
+        private void SpawnImpactProj(AIActor actor)
+        {
+            PlayerController man = base.gun.CurrentOwner as PlayerController;
+            Projectile projectile2 = ((Gun)global::ETGMod.Databases.Items[541]).DefaultModule.chargeProjectiles[0].Projectile;
+            GameObject gameObject = SpawnManager.SpawnProjectile(projectile2.gameObject, actor.CenterPosition, Quaternion.Euler(0f, 0f, 0f), true);
+            Projectile component = gameObject.GetComponent<Projectile>();
+            bool flag8 = component != null;
+            if (flag8)
+            {
+                component.AdditionalScaleMultiplier = 1.25f;
+                component.baseData.damage =0;
+                component.baseData.force = 0f;
+                component.baseData.speed = 0f;
+                component.Owner = man;
+                component.Shooter = man.specRigidbody;
+            }
         }
 
         private void RemoveCollisions(SpeculativeRigidbody myRigidbody)
@@ -417,7 +432,7 @@ namespace GlaurungItems.Items
         }
 
         private bool HasReloaded;
-        private static readonly float pushForce = 30f;
+        private static readonly float pushForce = 80f;
         private static readonly float baseDmg = 2f;
         private static readonly float maxDmg = 200f;
 
