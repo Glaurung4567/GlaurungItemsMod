@@ -62,7 +62,6 @@ namespace GlaurungItems.Items
         
         public class RaiseDeadSkusketSynergy : AdvancedSynergyEntry
         {
-            // Token: 0x0600022C RID: 556 RVA: 0x00015230 File Offset: 0x00013430
             public RaiseDeadSkusketSynergy()
             {
                 this.NameKey = "Skull Bros";
@@ -123,6 +122,22 @@ namespace GlaurungItems.Items
                     490
                 };
                 this.IgnoreLichEyeBullets = true;
+                this.statModifiers = new List<StatModifier>(0);
+                this.bonusSynergies = new List<CustomSynergyType>();
+            }
+        }
+
+        public class ShokkSynergy : AdvancedSynergyEntry
+        {
+            public ShokkSynergy()
+            {
+                this.NameKey = "Nom Nom Nom";
+                this.MandatoryItemIDs = new List<int>
+                {
+                    Game.Items["gl:shokk"].PickupObjectId,
+                    Game.Items["gl:poyo"].PickupObjectId
+                };
+                this.IgnoreLichEyeBullets = false;
                 this.statModifiers = new List<StatModifier>(0);
                 this.bonusSynergies = new List<CustomSynergyType>();
             }

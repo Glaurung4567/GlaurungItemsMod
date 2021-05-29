@@ -72,10 +72,16 @@ namespace GlaurungItems.Items
             {
                 PlayerController user = this.gun.CurrentOwner as PlayerController;
                 float nearestEnemyPosition;
+                float maxHealth = (20 * AIActor.BaseLevelHealthModifier);
+                if(user.PlayerHasActiveSynergy("Nom Nom Nom"))
+                {
+                    maxHealth = (25 * AIActor.BaseLevelHealthModifier);
+                }
+
                 AIActor nomTarget = user.CurrentRoom.GetNearestEnemy(user.CenterPosition, out nearestEnemyPosition, true, true);
                 if (nearestEnemyPosition < 5f && nomTarget.healthHaver
                     && !nomTarget.healthHaver.IsBoss && nomTarget.healthHaver.IsAlive &&
-                    nomTarget.healthHaver.GetMaxHealth() <= (20 * AIActor.BaseLevelHealthModifier))
+                    nomTarget.healthHaver.GetMaxHealth() <= maxHealth)
                 {
                     absorbedEnemyUuids.Add(nomTarget.EnemyGuid);
                     DEVOUR(nomTarget);

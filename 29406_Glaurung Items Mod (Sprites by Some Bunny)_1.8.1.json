@@ -189,6 +189,9 @@
 	},
 	"Secrets of the Otter's Parry": {
 	  "notes": "Reloading the Chamber Gun at full clip cycles it between ALL of its possible forms (including secret floors), except its Bullet Hell form."
+	},
+	"Nom Nom Nom": {
+	  "notes": "Increase the max health of possible targets to 25."
 	}
   }
 }

@@ -124,6 +124,10 @@ namespace GlaurungItems
                 {
                     new SynergyHub.BulletScriptGunSynergy1()
                 }).ToArray<AdvancedSynergyEntry>();
+                GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
+                {
+                    new SynergyHub.ShokkSynergy()
+                }).ToArray<AdvancedSynergyEntry>();
                 /*GameManager.Instance.SynergyManager.synergies = GameManager.Instance.SynergyManager.synergies.Concat(new AdvancedSynergyEntry[]
                 {
                     new SynergyHub.TurncoatRoundsSynergy()
