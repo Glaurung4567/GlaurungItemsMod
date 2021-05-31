@@ -32,10 +32,11 @@ namespace GlaurungItems.Items
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
             gun.reloadTime = 2f;
-            gun.DefaultModule.cooldownTime = 0.2f;
+            gun.DefaultModule.cooldownTime = 0.3f;
             gun.DefaultModule.numberOfShotsInClip = 15;
             gun.SetBaseMaxAmmo(360);
-            gun.muzzleFlashEffects = (PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
+            gun.barrelOffset.transform.localPosition = new Vector3(1.7f, 0.5f, 0f);
+            gun.muzzleFlashEffects.type = VFXPoolType.None;//(PickupObjectDatabase.GetById(81) as Gun).muzzleFlashEffects;
 
 
             Projectile projectile = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(357) as Gun).DefaultModule.projectiles[0]);
