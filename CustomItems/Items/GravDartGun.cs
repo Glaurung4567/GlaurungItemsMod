@@ -22,7 +22,7 @@ namespace GlaurungItems.Items
             gun.SetupSprite(null, "gravdart_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
-            gun.AddProjectileModuleFrom((PickupObjectDatabase.GetById(124) as Gun), true, false);
+            gun.AddProjectileModuleFrom((PickupObjectDatabase.GetById(126) as Gun), true, false);
 
             gun.quality = PickupObject.ItemQuality.B;
 
@@ -68,7 +68,7 @@ namespace GlaurungItems.Items
                 delayedExplosiveBuff.explosionData = explosion;
             }
 
-            Gun gunFinalProj = (PickupObjectDatabase.GetById(57) as Gun);
+            Gun gunFinalProj = (PickupObjectDatabase.GetById(41) as Gun);
 
             Projectile finalProj = UnityEngine.Object.Instantiate<Projectile>(gunFinalProj.DefaultModule.projectiles[0]);
             finalProj.gameObject.SetActive(false);
@@ -227,6 +227,10 @@ namespace GlaurungItems.Items
                             {
                                 aiActor.knockbackDoer.SetImmobile(false, "WizardSpinShootBehavior");
                             }
+                            else if (item.Behavior is GiantPowderSkullMergoBehavior)
+                            {
+                                aiActor.knockbackDoer.SetImmobile(false, "CrosshairBehavior");
+                            }
                         }
                     }
                 }
@@ -273,6 +277,10 @@ namespace GlaurungItems.Items
                 else if (attackBehav is WizardSpinShootBehavior) 
                 {
                     aiActor.knockbackDoer.SetImmobile(false, "WizardSpinShootBehavior");
+                }
+                else if (attackBehav is GiantPowderSkullMergoBehavior)
+                {
+                    aiActor.knockbackDoer.SetImmobile(false, "CrosshairBehavior");
                 }
             }
         }
@@ -343,7 +351,7 @@ namespace GlaurungItems.Items
 
                 if (otherRigidbody && otherRigidbody.aiActor && otherRigidbody.aiActor.healthHaver && otherRigidbody.aiActor.healthHaver.IsAlive)
                 {
-                    otherRigidbody.aiActor.healthHaver.ApplyDamage(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
+                    otherRigidbody.aiActor.healthHaver.ApplyDamage(Math.Min(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, maxDmg), myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
                 }
 
                 //myRigidbody.aiActor.KnockbackVelocity.magnitude
@@ -359,7 +367,7 @@ namespace GlaurungItems.Items
                 if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
                 {
                     SpawnImpactProj(myRigidbody.aiActor);
-                    myRigidbody.aiActor.healthHaver.ApplyDamage(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
+                    myRigidbody.aiActor.healthHaver.ApplyDamage(Math.Min(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, maxDmg), myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
                 }
             }
 

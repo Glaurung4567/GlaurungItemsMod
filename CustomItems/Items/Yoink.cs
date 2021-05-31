@@ -152,7 +152,7 @@ namespace GlaurungItems.Items
 			{
 				float nearestEnemyPosition;
 				AIActor yoinkTarget = user.CurrentRoom.GetNearestEnemy(user.CenterPosition, out nearestEnemyPosition, true, true);
-				if (yoinkTarget != null && nearestEnemyPosition < 3.5f && !yoinkedTargets.Contains(yoinkTarget)) return true;
+				if (yoinkTarget != null && nearestEnemyPosition < 4.5f && !yoinkedTargets.Contains(yoinkTarget)) return true;
 				else return false;
 			}
 			else if (user.CurrentRoom != null && user.CurrentRoom.IsShop)
