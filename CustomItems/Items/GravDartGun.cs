@@ -77,6 +77,7 @@ namespace GlaurungItems.Items
 
             finalProj.baseData.damage = 0;
             finalProj.baseData.force = 0;
+            finalProj.baseData.range *= 3;
 
             gun.DefaultModule.usesOptionalFinalProjectile = true;
             gun.DefaultModule.numberOfFinalProjectiles = 1;
