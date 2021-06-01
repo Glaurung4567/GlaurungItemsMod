@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-
+/*
+ remove collisions pb
+ */
 namespace GlaurungItems.Items
 {
     class GravDartGun : AdvancedGunBehavior
@@ -31,7 +33,7 @@ namespace GlaurungItems.Items
             gun.gunHandedness = GunHandedness.TwoHanded;
             gun.DefaultModule.shootStyle = ProjectileModule.ShootStyle.SemiAutomatic;
             gun.DefaultModule.sequenceStyle = ProjectileModule.ProjectileSequenceStyle.Random;
-            gun.reloadTime = 2f;
+            gun.reloadTime = 1.5f;
             gun.DefaultModule.cooldownTime = 0.3f;
             gun.DefaultModule.numberOfShotsInClip = 15;
             gun.SetBaseMaxAmmo(360);
@@ -71,7 +73,7 @@ namespace GlaurungItems.Items
 
             Gun gunFinalProj = (PickupObjectDatabase.GetById(41) as Gun);
 
-            Projectile finalProj = UnityEngine.Object.Instantiate<Projectile>(gunFinalProj.DefaultModule.projectiles[0]);
+            Projectile finalProj = UnityEngine.Object.Instantiate<Projectile>(gunFinalProj.DefaultModule.chargeProjectiles[0].Projectile);
             finalProj.gameObject.SetActive(false);
             FakePrefab.MarkAsFakePrefab(finalProj.gameObject);
             UnityEngine.Object.DontDestroyOnLoad(finalProj);
@@ -289,7 +291,7 @@ namespace GlaurungItems.Items
 
         private IEnumerator CancelCollisionsCoroutine(SpeculativeRigidbody myRigidbody)
         {
-            yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(1.5f);
             RemoveCollisions(myRigidbody);
 
             yield break;
@@ -322,9 +324,9 @@ namespace GlaurungItems.Items
                     }
                 }
 
-                if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
+                if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive && myRigidbody.Velocity.magnitude > 0)
                 {
-                    SpawnImpactProj(myRigidbody.aiActor);
+                    if (myRigidbody.Velocity.magnitude > 15) SpawnImpactProj(myRigidbody.aiActor);
                     myRigidbody.aiActor.healthHaver.ApplyDamage(Math.Min(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, maxDmg), myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
                 }
             }
@@ -368,7 +370,7 @@ namespace GlaurungItems.Items
 
                 if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
                 {
-                    SpawnImpactProj(myRigidbody.aiActor);
+                    if(myRigidbody.Velocity.magnitude > 15) SpawnImpactProj(myRigidbody.aiActor);
                     myRigidbody.aiActor.healthHaver.ApplyDamage(Math.Min(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, maxDmg), myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
                 }
             }
@@ -387,7 +389,7 @@ namespace GlaurungItems.Items
             if (flag8)
             {
                 component.AdditionalScaleMultiplier = 1.25f;
-                component.baseData.damage =0;
+                component.baseData.damage = 0;
                 component.baseData.force = 0f;
                 component.baseData.speed = 0f;
                 component.Owner = man;
@@ -397,6 +399,7 @@ namespace GlaurungItems.Items
 
         private void RemoveCollisions(SpeculativeRigidbody myRigidbody)
         {
+            //Tools.Print("remove collissions", "ffffff", true);
             myRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox));
             myRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Remove(myRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandleEnemyHitRigidBody));
             myRigidbody.OnPreTileCollision = (SpeculativeRigidbody.OnPreTileCollisionDelegate)Delegate.Remove(myRigidbody.OnPreTileCollision, new SpeculativeRigidbody.OnPreTileCollisionDelegate(this.HandleEnemyHitTile));
