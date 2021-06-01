@@ -299,6 +299,7 @@ namespace GlaurungItems.Items
 
         private void HandleEnemyHitTile(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, PhysicsEngine.Tile tile, PixelCollider tilePixelCollider)
         {
+            RemoveCollisions(myRigidbody);
             GameManager.Instance.StartCoroutine(this.HandleEnemyHitTileCoroutine(myRigidbody));  
         }
 
@@ -331,13 +332,12 @@ namespace GlaurungItems.Items
                 }
             }
 
-            RemoveCollisions(myRigidbody);
-
             yield break;
         }
 
         private void HandleEnemyHitRigidBody(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, SpeculativeRigidbody otherRigidbody, PixelCollider otherPixelCollider)
         {
+            RemoveCollisions(myRigidbody);
             GameManager.Instance.StartCoroutine(this.HandleEnemyHitRigidBodyCoroutine(myRigidbody, otherRigidbody));
         }
 
@@ -375,7 +375,6 @@ namespace GlaurungItems.Items
                 }
             }
 
-            RemoveCollisions(myRigidbody);
             yield break;
         }
 
@@ -394,6 +393,16 @@ namespace GlaurungItems.Items
                 component.baseData.speed = 0f;
                 component.Owner = man;
                 component.Shooter = man.specRigidbody;
+                GameManager.Instance.StartCoroutine(DelProj(component));
+            }
+        }
+
+        private IEnumerator DelProj(Projectile component)
+        {
+            yield return new WaitForSeconds(0.5f);
+            if (component)
+            {
+                component.DieInAir(true);
             }
         }
 
@@ -437,6 +446,21 @@ namespace GlaurungItems.Items
         {
             if (gun.IsReloading && this.HasReloaded)
             {
+                if(gun.CurrentAmmo > 0 && gun.ClipShotsRemaining > 0)
+                {
+                    Projectile projectile2 = gun.DefaultModule.finalProjectile;
+                    GameObject gameObject = SpawnManager.SpawnProjectile(projectile2.gameObject, player.CenterPosition, Quaternion.Euler(0f, 0f, player.CurrentGun ? player.CurrentGun.CurrentAngle : 0f), true);
+                    Projectile component = gameObject.GetComponent<Projectile>();
+                    bool flag8 = component != null;
+                    if (flag8)
+                    {
+                        component.Owner = player;
+                        component.Shooter = player.specRigidbody;
+                        player.DoPostProcessProjectile(component);
+                        PostProcessProjectile(component);
+                    }
+                    gun.CurrentAmmo -= 1;
+                }
                 HasReloaded = false;
                 AkSoundEngine.PostEvent("Stop_WPN_All", base.gameObject);
                 base.OnReloadPressed(player, gun, bSOMETHING);
