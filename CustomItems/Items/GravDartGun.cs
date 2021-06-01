@@ -20,7 +20,7 @@ namespace GlaurungItems.Items
             gun.gameObject.AddComponent<GravDartGun>();
             gun.SetShortDescription("Yeet !");
             gun.SetLongDescription("One of the oddest weapons found by the last Ranger in the Arks. \n \nTag targets with non damaging grav darts. When the last shot in the clip is destroyed after being shot, " +
-                "project violently all tagged targets toward it's last position. Targets take damage if they collide with something.");
+                "project violently all tagged targets toward it's last position. Targets take damage if they collide with something. Reloading the gun when the clip isn't empty also fire the final projectile.");
             gun.SetupSprite(null, "gravdart_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
