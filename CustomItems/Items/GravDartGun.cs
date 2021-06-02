@@ -430,13 +430,10 @@ namespace GlaurungItems.Items
 
         private void RemoveCollisions(SpeculativeRigidbody myRigidbody)
         {
-            //Tools.Print("remove collissions", "ffffff", true);
             myRigidbody.AddCollisionLayerIgnoreOverride(CollisionMask.LayerToMask(CollisionLayer.EnemyHitBox));
             myRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Remove(myRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandleEnemyHitRigidBody));
             myRigidbody.OnPreTileCollision = (SpeculativeRigidbody.OnPreTileCollisionDelegate)Delegate.Remove(myRigidbody.OnPreTileCollision, new SpeculativeRigidbody.OnPreTileCollisionDelegate(this.HandleEnemyHitTile));
         }
-
-
 
         // boilerplate stuff
         //This block of code allows us to change the reload sounds.
