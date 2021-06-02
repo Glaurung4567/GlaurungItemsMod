@@ -73,7 +73,7 @@ namespace GlaurungItems.Items
 
             Gun gunFinalProj = (PickupObjectDatabase.GetById(41) as Gun);
 
-            Projectile finalProj = UnityEngine.Object.Instantiate<Projectile>(gunFinalProj.DefaultModule.chargeProjectiles[0].Projectile);
+            Projectile finalProj = UnityEngine.Object.Instantiate<Projectile>((PickupObjectDatabase.GetById(41) as Gun).DefaultModule.chargeProjectiles[0].Projectile);
             finalProj.gameObject.SetActive(false);
             FakePrefab.MarkAsFakePrefab(finalProj.gameObject);
             UnityEngine.Object.DontDestroyOnLoad(finalProj);
@@ -83,7 +83,7 @@ namespace GlaurungItems.Items
             finalProj.baseData.range *= 3;
 
             gun.DefaultModule.usesOptionalFinalProjectile = true;
-            gun.DefaultModule.numberOfFinalProjectiles = 1;
+            gun.DefaultModule.numberOfFinalProjectiles = 0;
             gun.DefaultModule.finalProjectile = finalProj;
             gun.DefaultModule.finalCustomAmmoType = gunFinalProj.DefaultModule.customAmmoType;
             gun.DefaultModule.finalAmmoType = gunFinalProj.DefaultModule.ammoType;
@@ -148,10 +148,12 @@ namespace GlaurungItems.Items
                         && dartedEnemies[i].knockbackDoer)
                     {
                         AIActor aiActor = dartedEnemies[i];
+                        /*
                         if (aiActor.GetComponent<ExplodeOnDeath>())
                         {
                             UnityEngine.Object.Destroy(aiActor.GetComponent<ExplodeOnDeath>());
                         }
+                        */
 
                         Vector2 direction = pos - aiActor.CenterPosition;
                         DelayedExplosiveBuff[] dartArray = aiActor.gameObject.GetComponents<DelayedExplosiveBuff>();
@@ -162,11 +164,17 @@ namespace GlaurungItems.Items
                             aiActor.specRigidbody.OnPreRigidbodyCollision = (SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate)Delegate.Combine(aiActor.specRigidbody.OnPreRigidbodyCollision, new SpeculativeRigidbody.OnPreRigidbodyCollisionDelegate(this.HandleEnemyHitRigidBody));
                             aiActor.specRigidbody.OnPreTileCollision = (SpeculativeRigidbody.OnPreTileCollisionDelegate)Delegate.Combine(aiActor.specRigidbody.OnPreTileCollision, new SpeculativeRigidbody.OnPreTileCollisionDelegate(this.HandleEnemyHitTile));
 
-                            aiActor.knockbackDoer.SetImmobile(false, "Like-a-boss");
-
                             this.SetKnockbackImmobileOff(aiActor);
 
-                            aiActor.knockbackDoer.ApplyKnockback(direction, pushForce * nbDarts, true);
+                            float bossWeightMultiplier = 1;
+                            if (aiActor.healthHaver.IsBoss)
+                            {
+                                bossWeightMultiplier = aiActor.knockbackDoer.weight / 100;
+                            }
+
+                            aiActor.knockbackDoer.timeScalar = 0.75f;
+
+                            aiActor.knockbackDoer.ApplyKnockback(direction, pushForce * nbDarts * bossWeightMultiplier, true);
                             GameManager.Instance.StartCoroutine(this.CancelCollisionsCoroutine(aiActor.specRigidbody));
                         }
                     }
@@ -177,8 +185,127 @@ namespace GlaurungItems.Items
             yield break;
         }
 
+        private IEnumerator CancelCollisionsCoroutine(SpeculativeRigidbody myRigidbody)
+        {
+            yield return new WaitForSeconds(1.5f);
+            RemoveCollisions(myRigidbody);
+
+            yield break;
+        }
+
+        private void HandleEnemyHitTile(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, PhysicsEngine.Tile tile, PixelCollider tilePixelCollider)
+        {
+            RemoveCollisions(myRigidbody);
+            GameManager.Instance.StartCoroutine(this.HandleEnemyHitTileCoroutine(myRigidbody));  
+        }
+
+        private IEnumerator HandleEnemyHitTileCoroutine(SpeculativeRigidbody myRigidbody)
+        {
+            if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
+            {
+                DelayedExplosiveBuff[] dartArray = myRigidbody.aiActor.gameObject.GetComponents<DelayedExplosiveBuff>();
+
+                int nbDarts = 1;
+                if (dartArray != null)
+                {
+                    nbDarts = dartArray.Count();
+                }
+
+                //myRigidbody.aiActor.KnockbackVelocity.magnitude
+
+                for (int j = 0; j < nbDarts; j++)
+                {
+                    if (dartArray[j])
+                    {
+                        UnityEngine.GameObject.Destroy(dartArray[j]);
+                    }
+                }
+
+                if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive && myRigidbody.Velocity.magnitude > 0)
+                {
+                    if (myRigidbody.Velocity.magnitude > 5) SpawnImpactProj(myRigidbody.aiActor);
+                    myRigidbody.aiActor.healthHaver.ApplyDamage(Math.Min(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, maxDmg), myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
+                }
+            }
+
+            yield break;
+        }
+
+        private void HandleEnemyHitRigidBody(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, SpeculativeRigidbody otherRigidbody, PixelCollider otherPixelCollider)
+        {
+            RemoveCollisions(myRigidbody);
+            GameManager.Instance.StartCoroutine(this.HandleEnemyHitRigidBodyCoroutine(myRigidbody, otherRigidbody));
+        }
+
+        private IEnumerator HandleEnemyHitRigidBodyCoroutine(SpeculativeRigidbody myRigidbody, SpeculativeRigidbody otherRigidbody)
+        {
+            if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
+            {
+                DelayedExplosiveBuff[] dartArray = myRigidbody.aiActor.gameObject.GetComponents<DelayedExplosiveBuff>();
+
+                int nbDarts = 1;
+                if (dartArray != null)
+                {
+                    nbDarts = dartArray.Count();
+                }
+
+                if (otherRigidbody && otherRigidbody.aiActor && otherRigidbody.aiActor.healthHaver && otherRigidbody.aiActor.healthHaver.IsAlive)
+                {
+                    otherRigidbody.aiActor.healthHaver.ApplyDamage(Math.Min(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, maxDmg), myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
+                }
+
+                //myRigidbody.aiActor.KnockbackVelocity.magnitude
+
+                for (int j = 0; j < nbDarts; j++)
+                {
+                    if (dartArray[j])
+                    {
+                        UnityEngine.GameObject.Destroy(dartArray[j]);
+                    }
+                }
+
+                if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
+                {
+                    if(myRigidbody.Velocity.magnitude > 5) SpawnImpactProj(myRigidbody.aiActor);
+                    myRigidbody.aiActor.healthHaver.ApplyDamage(Math.Min(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, maxDmg), myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
+                }
+            }
+
+            yield break;
+        }
+
+        private void SpawnImpactProj(AIActor actor)
+        {
+            PlayerController man = base.gun.CurrentOwner as PlayerController;
+            Projectile projectile2 = ((Gun)global::ETGMod.Databases.Items[541]).DefaultModule.chargeProjectiles[0].Projectile;
+            GameObject gameObject = SpawnManager.SpawnProjectile(projectile2.gameObject, actor.CenterPosition, Quaternion.Euler(0f, 0f, 0f), true);
+            Projectile component = gameObject.GetComponent<Projectile>();
+            bool flag8 = component != null;
+            if (flag8)
+            {
+                component.AdditionalScaleMultiplier = 1.25f;
+                component.baseData.damage = 0;
+                component.baseData.force = 0f;
+                component.baseData.speed = 0f;
+                component.Owner = man;
+                component.Shooter = man.specRigidbody;
+                GameManager.Instance.StartCoroutine(DelProj(component));
+            }
+        }
+
+        private IEnumerator DelProj(Projectile component)
+        {
+            yield return new WaitForSeconds(0.5f);
+            if (component)
+            {
+                component.DieInAir(true);
+            }
+        }
+
         private void SetKnockbackImmobileOff(AIActor aiActor)
         {
+            aiActor.knockbackDoer.SetImmobile(false, "Like-a-boss");
+
             foreach (AttackBehaviorBase attackBehav in aiActor.behaviorSpeculator.AttackBehaviors)
             {
                 if (attackBehav is AttackBehaviorGroup)
@@ -250,35 +377,35 @@ namespace GlaurungItems.Items
                 {
                     aiActor.knockbackDoer.SetImmobile(false, "ConsumeTargetBehavior");
                 }
-                else if (attackBehav is DeflectBulletsBehavior) 
+                else if (attackBehav is DeflectBulletsBehavior)
                 {
                     aiActor.knockbackDoer.SetImmobile(false, "DeflectBulletsBehavior");
                 }
-                else if (attackBehav is DestroyBulletsBehavior) 
+                else if (attackBehav is DestroyBulletsBehavior)
                 {
                     aiActor.knockbackDoer.SetImmobile(true, "DestroyBulletsBehavior");
                 }
-                else if (attackBehav is DisplaceBehavior) 
+                else if (attackBehav is DisplaceBehavior)
                 {
                     aiActor.knockbackDoer.SetImmobile(false, "DisplaceBehavior");
                 }
-                else if (attackBehav is MirrorImageBehavior) 
+                else if (attackBehav is MirrorImageBehavior)
                 {
                     aiActor.knockbackDoer.SetImmobile(false, "MirrorImageBehavior");
                 }
-                else if (attackBehav is RemoteShootBehavior) 
+                else if (attackBehav is RemoteShootBehavior)
                 {
                     aiActor.knockbackDoer.SetImmobile(false, "SummonEnemyBehavior");
                 }
-                else if (attackBehav is SummonEnemyBehavior) 
+                else if (attackBehav is SummonEnemyBehavior)
                 {
                     aiActor.knockbackDoer.SetImmobile(false, "SummonEnemyBehavior");
                 }
-                else if (attackBehav is TeleportBehavior) 
+                else if (attackBehav is TeleportBehavior)
                 {
                     aiActor.knockbackDoer.SetImmobile(false, "teleport");
                 }
-                else if (attackBehav is WizardSpinShootBehavior) 
+                else if (attackBehav is WizardSpinShootBehavior)
                 {
                     aiActor.knockbackDoer.SetImmobile(false, "WizardSpinShootBehavior");
                 }
@@ -287,123 +414,18 @@ namespace GlaurungItems.Items
                     aiActor.knockbackDoer.SetImmobile(false, "CrosshairBehavior");
                 }
             }
-        }
-
-        private IEnumerator CancelCollisionsCoroutine(SpeculativeRigidbody myRigidbody)
-        {
-            yield return new WaitForSeconds(1.5f);
-            RemoveCollisions(myRigidbody);
-
-            yield break;
-        }
-
-        private void HandleEnemyHitTile(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, PhysicsEngine.Tile tile, PixelCollider tilePixelCollider)
-        {
-            RemoveCollisions(myRigidbody);
-            GameManager.Instance.StartCoroutine(this.HandleEnemyHitTileCoroutine(myRigidbody));  
-        }
-
-        private IEnumerator HandleEnemyHitTileCoroutine(SpeculativeRigidbody myRigidbody)
-        {
-            if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
+            foreach (MovementBehaviorBase movementBehav in aiActor.behaviorSpeculator.MovementBehaviors)
             {
-                DelayedExplosiveBuff[] dartArray = myRigidbody.aiActor.gameObject.GetComponents<DelayedExplosiveBuff>();
-
-                int nbDarts = 1;
-                if (dartArray != null)
+                if(movementBehav is KeybulletFleeBehavior)
                 {
-                    nbDarts = dartArray.Count();
+                    aiActor.knockbackDoer.SetImmobile(false, "My people need me");
                 }
-
-                //myRigidbody.aiActor.KnockbackVelocity.magnitude
-
-                for (int j = 0; j < nbDarts; j++)
+                if(movementBehav is TetherBehavior)
                 {
-                    if (dartArray[j])
-                    {
-                        UnityEngine.GameObject.Destroy(dartArray[j]);
-                    }
-                }
-
-                if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive && myRigidbody.Velocity.magnitude > 0)
-                {
-                    if (myRigidbody.Velocity.magnitude > 15) SpawnImpactProj(myRigidbody.aiActor);
-                    myRigidbody.aiActor.healthHaver.ApplyDamage(Math.Min(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, maxDmg), myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
+                    aiActor.knockbackDoer.SetImmobile(false, "TetherBehavior");
                 }
             }
 
-            yield break;
-        }
-
-        private void HandleEnemyHitRigidBody(SpeculativeRigidbody myRigidbody, PixelCollider myPixelCollider, SpeculativeRigidbody otherRigidbody, PixelCollider otherPixelCollider)
-        {
-            RemoveCollisions(myRigidbody);
-            GameManager.Instance.StartCoroutine(this.HandleEnemyHitRigidBodyCoroutine(myRigidbody, otherRigidbody));
-        }
-
-        private IEnumerator HandleEnemyHitRigidBodyCoroutine(SpeculativeRigidbody myRigidbody, SpeculativeRigidbody otherRigidbody)
-        {
-            if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
-            {
-                DelayedExplosiveBuff[] dartArray = myRigidbody.aiActor.gameObject.GetComponents<DelayedExplosiveBuff>();
-
-                int nbDarts = 1;
-                if (dartArray != null)
-                {
-                    nbDarts = dartArray.Count();
-                }
-
-                if (otherRigidbody && otherRigidbody.aiActor && otherRigidbody.aiActor.healthHaver && otherRigidbody.aiActor.healthHaver.IsAlive)
-                {
-                    otherRigidbody.aiActor.healthHaver.ApplyDamage(Math.Min(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, maxDmg), myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
-                }
-
-                //myRigidbody.aiActor.KnockbackVelocity.magnitude
-
-                for (int j = 0; j < nbDarts; j++)
-                {
-                    if (dartArray[j])
-                    {
-                        UnityEngine.GameObject.Destroy(dartArray[j]);
-                    }
-                }
-
-                if (myRigidbody && myRigidbody.aiActor && myRigidbody.aiActor.healthHaver && myRigidbody.aiActor.healthHaver.IsAlive)
-                {
-                    if(myRigidbody.Velocity.magnitude > 15) SpawnImpactProj(myRigidbody.aiActor);
-                    myRigidbody.aiActor.healthHaver.ApplyDamage(Math.Min(baseDmg * nbDarts * myRigidbody.Velocity.magnitude, maxDmg), myRigidbody.Velocity, "GravDart", CoreDamageTypes.None, DamageCategory.Normal, false, null, false);
-                }
-            }
-
-            yield break;
-        }
-
-        private void SpawnImpactProj(AIActor actor)
-        {
-            PlayerController man = base.gun.CurrentOwner as PlayerController;
-            Projectile projectile2 = ((Gun)global::ETGMod.Databases.Items[541]).DefaultModule.chargeProjectiles[0].Projectile;
-            GameObject gameObject = SpawnManager.SpawnProjectile(projectile2.gameObject, actor.CenterPosition, Quaternion.Euler(0f, 0f, 0f), true);
-            Projectile component = gameObject.GetComponent<Projectile>();
-            bool flag8 = component != null;
-            if (flag8)
-            {
-                component.AdditionalScaleMultiplier = 1.25f;
-                component.baseData.damage = 0;
-                component.baseData.force = 0f;
-                component.baseData.speed = 0f;
-                component.Owner = man;
-                component.Shooter = man.specRigidbody;
-                GameManager.Instance.StartCoroutine(DelProj(component));
-            }
-        }
-
-        private IEnumerator DelProj(Projectile component)
-        {
-            yield return new WaitForSeconds(0.5f);
-            if (component)
-            {
-                component.DieInAir(true);
-            }
         }
 
         private void RemoveCollisions(SpeculativeRigidbody myRigidbody)
@@ -446,7 +468,7 @@ namespace GlaurungItems.Items
         {
             if (gun.IsReloading && this.HasReloaded)
             {
-                if(gun.CurrentAmmo > 0 && gun.ClipShotsRemaining > 0)
+                if(gun.CurrentAmmo > 0)// && gun.ClipShotsRemaining > 0)
                 {
                     Projectile projectile2 = gun.DefaultModule.finalProjectile;
                     GameObject gameObject = SpawnManager.SpawnProjectile(projectile2.gameObject, player.CenterPosition, Quaternion.Euler(0f, 0f, player.CurrentGun ? player.CurrentGun.CurrentAngle : 0f), true);
@@ -469,7 +491,7 @@ namespace GlaurungItems.Items
         }
 
         private bool HasReloaded;
-        private static readonly float pushForce = 80f;
+        private static readonly float pushForce = 40f;
         private static readonly float baseDmg = 2f;
         private static readonly float maxDmg = 200f;
 
