@@ -353,7 +353,7 @@ namespace GlaurungItems.Items
             actor.ActorName = "Low Priest";
             actor.MovementSpeed *= 0.9f;
 
-            healthHaver.SetHealthMaximum(healthHaver.GetMaxHealth() * 1.2f);
+            healthHaver.SetHealthMaximum(450f);
             
             AttackBehaviorGroup attackBehaviorGroup = (behaviorSpec.AttackBehaviors[0] as AttackBehaviorGroup);
             ShootBehavior shootBehavior = (attackBehaviorGroup.AttackBehaviors[0].Behavior as ShootBehavior);

@@ -55,7 +55,7 @@
     },
 	"gl:grav_dart_launcher": {
       "name": "Grav Dart Launcher",
-      "notes": "Tag targets with non damaging grav darts. When the last shot in the clip is destroyed after being shot, project violently all tagged targets toward it's last position. Targets take damage if they collide with something."
+      "notes": "Tag targets with non damaging grav darts. When the gun is reloaded, it fires another projectile. When this projectile is destroyed after being shot, all tagged targets are pushed violently toward it's last position. Targets take damage if they collide with something. Some enemies might not be affected."
     },
 	"gl:berserker's_roar": {
       "name": "Berserker's Roar",

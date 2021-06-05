@@ -19,14 +19,14 @@ namespace GlaurungItems.Items
             Game.Items.Rename("outdated_gun_mods:grav_dart_launcher", "gl:grav_dart_launcher");
             gun.gameObject.AddComponent<GravDartGun>();
             gun.SetShortDescription("Yeet !");
-            gun.SetLongDescription("One of the oddest weapons found by the last Ranger in the Arks. \n \nTag targets with non damaging grav darts. When the last shot in the clip is destroyed after being shot, " +
-                "project violently all tagged targets toward it's last position. Targets take damage if they collide with something. Reloading the gun when the clip isn't empty also fire the final projectile.");
+            gun.SetLongDescription("One of the oddest weapons found by the last Ranger in the Arks. \n \nTag targets with non damaging grav darts. When the gun is reloaded, it fires another projectile. When this projectile is destroyed after being shot, " +
+                "all tagged targets are pushed violently toward it's last position. Targets take damage if they collide with something.");
             gun.SetupSprite(null, "gravdart_idle_001", 8);
             gun.SetAnimationFPS(gun.shootAnimation, 24);
             gun.SetAnimationFPS(gun.reloadAnimation, 12);
             gun.AddProjectileModuleFrom((PickupObjectDatabase.GetById(126) as Gun), true, false);
 
-            gun.quality = PickupObject.ItemQuality.B;
+            gun.quality = PickupObject.ItemQuality.A;
 
             gun.DefaultModule.ammoCost = 1;
             gun.DefaultModule.angleVariance = 1f;
@@ -48,7 +48,7 @@ namespace GlaurungItems.Items
             gun.DefaultModule.projectiles[0] = projectile;
 
             projectile.baseData.damage = 1;
-            projectile.baseData.damage *= 0;
+            //projectile.baseData.damage *= 0;
             projectile.baseData.speed *= 1f;
             projectile.baseData.force *= 0f;
             projectile.baseData.range *= 30f;
@@ -82,7 +82,7 @@ namespace GlaurungItems.Items
             finalProj.baseData.force = 0;
             finalProj.baseData.range *= 3;
 
-            gun.DefaultModule.usesOptionalFinalProjectile = true;
+            gun.DefaultModule.usesOptionalFinalProjectile = false;
             gun.DefaultModule.numberOfFinalProjectiles = 0;
             gun.DefaultModule.finalProjectile = finalProj;
             gun.DefaultModule.finalCustomAmmoType = gunFinalProj.DefaultModule.customAmmoType;
@@ -166,15 +166,15 @@ namespace GlaurungItems.Items
 
                             this.SetKnockbackImmobileOff(aiActor);
 
-                            float bossWeightMultiplier = 1;
-                            if (aiActor.healthHaver.IsBoss)
+                            float fatWeightMultiplier = 1;
+                            if (aiActor.knockbackDoer.weight > 200)
                             {
-                                bossWeightMultiplier = aiActor.knockbackDoer.weight / 100;
+                                fatWeightMultiplier = aiActor.knockbackDoer.weight / 100;
                             }
 
-                            aiActor.knockbackDoer.timeScalar = 0.75f;
+                            aiActor.knockbackDoer.timeScalar = 0.5f;
 
-                            aiActor.knockbackDoer.ApplyKnockback(direction, pushForce * nbDarts * bossWeightMultiplier, true);
+                            aiActor.knockbackDoer.ApplyKnockback(direction, pushForce * nbDarts * fatWeightMultiplier, true);
                             GameManager.Instance.StartCoroutine(this.CancelCollisionsCoroutine(aiActor.specRigidbody));
                         }
                     }
@@ -305,6 +305,7 @@ namespace GlaurungItems.Items
         private void SetKnockbackImmobileOff(AIActor aiActor)
         {
             aiActor.knockbackDoer.SetImmobile(false, "Like-a-boss");
+            aiActor.knockbackDoer.SetImmobile(false, "HandleKnockbackInvulnerabilityPeriod");
 
             foreach (AttackBehaviorBase attackBehav in aiActor.behaviorSpeculator.AttackBehaviors)
             {
@@ -362,6 +363,10 @@ namespace GlaurungItems.Items
                             {
                                 aiActor.knockbackDoer.SetImmobile(false, "CrosshairBehavior");
                             }
+                            else if (item.Behavior is HighPriestMergoBehavior)
+                            {
+                                aiActor.knockbackDoer.SetImmobile(false, "CrosshairBehavior");
+                            }
                         }
                     }
                 }
@@ -413,7 +418,12 @@ namespace GlaurungItems.Items
                 {
                     aiActor.knockbackDoer.SetImmobile(false, "CrosshairBehavior");
                 }
+                else if (attackBehav is HighPriestMergoBehavior)
+                {
+                    aiActor.knockbackDoer.SetImmobile(false, "CrosshairBehavior");
+                }
             }
+
             foreach (MovementBehaviorBase movementBehav in aiActor.behaviorSpeculator.MovementBehaviors)
             {
                 if(movementBehav is KeybulletFleeBehavior)
