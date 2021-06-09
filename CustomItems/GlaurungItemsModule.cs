@@ -94,6 +94,8 @@ namespace GlaurungItems
                 MindBlown.Init();
                 GravDartGun.Add();
 
+                TopsyTurvyBomb.Init();
+
                 //PortalGunnyTest.Add();
                 //GunDeadArmyStronghold.Init();
 

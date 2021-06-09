@@ -33,23 +33,6 @@ namespace GlaurungItems.Items
 			this.Notify(header, text);
 
 			GameManager.Instance.StartCoroutine(SpawnActiveRecharger(user));
-
-			List<AIActor> activeEnemies = GameManager.Instance.Dungeon.data.GetAbsoluteRoomFromPosition(user.CenterPosition.ToIntVector2(VectorConversions.Round)).GetActiveEnemies(RoomHandler.ActiveEnemyType.All);
-
-			for (int j = 0; j < activeEnemies.Count; j++)
-			{
-				AIActor actor = activeEnemies[j];
-				if (actor)
-				{
-					actor.sprite.HeightOffGround = 100;
-                    if (actor.ShadowObject)
-                    {
-						actor.ShadowObject.transform.position = actor.ShadowObject.transform.position + new Vector3(0f, -0.3f, 0f);
-					}
-					//actor.sprite.UpdateZDepth();
-					Tools.Print(actor.sprite.HeightOffGround, "ffffff", true);
-				}
-			}
 		}
 
         private IEnumerator SpawnActiveRecharger(PlayerController user)
