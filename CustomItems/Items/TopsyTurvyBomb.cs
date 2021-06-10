@@ -44,28 +44,31 @@ namespace GlaurungItems.Items
 
         private IEnumerator HandleUpAndSlam(AIActor actor)
         {
-			for(int i = 0; i < 50; i++)
+			GameManager.Instance.MainCameraController.Camera.transform.Rotate(0f, 0f, 180f);
+			for (int i = 0; i < nbOfSteps; i++)
             {
-				actor.sprite.HeightOffGround += 1.02f;
-				actor.transform.position = actor.transform.position + new Vector3(0f, 0.02f, 0f);
+				actor.sprite.HeightOffGround += heightByStep;
+				actor.transform.position = actor.transform.position + new Vector3(0f, yByStep, 0f);
 				if (actor.ShadowObject)
 				{
-					actor.ShadowObject.transform.position = actor.ShadowObject.transform.position + new Vector3(0f, -0.02f, 0f);
+					actor.ShadowObject.transform.position = actor.ShadowObject.transform.position + new Vector3(0f, -yByStep, 0f);
 				}
 				actor.sprite.UpdateZDepth();
-				yield return new WaitForSeconds(0.1f);
+				yield return new WaitForSeconds(waitBtEachStep);
 			}
 
-			for (int i = 0; i < 50; i++)
+			GameManager.Instance.MainCameraController.Camera.transform.Rotate(0f, 0f, -180f);
+
+			for (int i = 0; i < nbOfSteps; i++)
 			{
-				actor.sprite.HeightOffGround -= 1.02f;
-				actor.transform.position = actor.transform.position + new Vector3(0f, -0.02f, 0f);
+				actor.sprite.HeightOffGround -= .2f;
+				actor.transform.position = actor.transform.position + new Vector3(0f, -yByStep, 0f);
 				if (actor.ShadowObject)
 				{
-					actor.ShadowObject.transform.position = actor.ShadowObject.transform.position + new Vector3(0f, 0.02f, 0f);
+					actor.ShadowObject.transform.position = actor.ShadowObject.transform.position + new Vector3(0f, yByStep, 0f);
 				}
 				actor.sprite.UpdateZDepth();
-				yield return new WaitForSeconds(0.1f);
+				yield return new WaitForSeconds(waitBtEachStep);
 			}
 
 			yield break;
@@ -75,5 +78,10 @@ namespace GlaurungItems.Items
 		{
 			return user.CurrentRoom != null;
 		}
+
+		private const float nbOfSteps = 20; 
+		private const float yByStep = 0.15f; 
+		private const float heightByStep = 0.2f; 
+		private const float waitBtEachStep = 0.005f; 
 	}
 }
