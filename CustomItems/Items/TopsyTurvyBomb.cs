@@ -23,7 +23,7 @@ namespace GlaurungItems.Items
 			item.SetupItem(shortDesc, longDesc, "gl");
 			item.SetCooldownType(ItemBuilder.CooldownType.Timed, 1f);
 			ItemBuilder.AddPassiveStatModifier(item, PlayerStats.StatType.AdditionalItemCapacity, 1, StatModifier.ModifyMethod.ADDITIVE);
-			item.quality = ItemQuality.EXCLUDED;
+			item.quality = ItemQuality.C;
 		}
 
 		protected override void DoEffect(PlayerController user)
@@ -35,41 +35,57 @@ namespace GlaurungItems.Items
 				AIActor actor = activeEnemies[j];
 				if (actor)
 				{
-					GameManager.Instance.StartCoroutine(HandleUpAndSlam(actor));
+					GameManager.Instance.StartCoroutine(HandleUpAndSlam(actor, user));
 
 					//actor.sprite.UpdateZDepth();
 				}
 			}
 		}
 
-        private IEnumerator HandleUpAndSlam(AIActor actor)
+        private IEnumerator HandleUpAndSlam(AIActor actor, PlayerController user)
         {
-			GameManager.Instance.MainCameraController.Camera.transform.Rotate(0f, 0f, 180f);
+            if (!reverseBool)
+            {
+				GameManager.Instance.MainCameraController.Camera.transform.Rotate(0f, 0f, 180f);
+				Pixelator.Instance.DoOcclusionLayer = false;
+				user.transform.transform.Rotate(0f, 0f, 180f);
+				reverseBool = true;
+			}
+
 			for (int i = 0; i < nbOfSteps; i++)
             {
-				actor.sprite.HeightOffGround += heightByStep;
+				//actor.sprite.HeightOffGround += heightByStep;
 				actor.transform.position = actor.transform.position + new Vector3(0f, yByStep, 0f);
 				if (actor.ShadowObject)
 				{
 					actor.ShadowObject.transform.position = actor.ShadowObject.transform.position + new Vector3(0f, -yByStep, 0f);
 				}
 				actor.sprite.UpdateZDepth();
-				yield return new WaitForSeconds(waitBtEachStep);
+				yield return new WaitForSeconds(waitBetweenEachStepUp);
 			}
 
-			GameManager.Instance.MainCameraController.Camera.transform.Rotate(0f, 0f, -180f);
+            if (!unreverseBool)
+            {
+				GameManager.Instance.MainCameraController.Camera.transform.Rotate(0f, 0f, -180f);
+				Pixelator.Instance.DoOcclusionLayer = true;
+				user.transform.transform.Rotate(0f, 0f, -180f);
+				unreverseBool = true;
+			}
 
 			for (int i = 0; i < nbOfSteps; i++)
 			{
-				actor.sprite.HeightOffGround -= .2f;
+				//actor.sprite.HeightOffGround -= .2f;
 				actor.transform.position = actor.transform.position + new Vector3(0f, -yByStep, 0f);
 				if (actor.ShadowObject)
 				{
 					actor.ShadowObject.transform.position = actor.ShadowObject.transform.position + new Vector3(0f, yByStep, 0f);
 				}
 				actor.sprite.UpdateZDepth();
-				yield return new WaitForSeconds(waitBtEachStep);
+				yield return new WaitForSeconds(waitBetweenEachStepDown);
 			}
+
+			reverseBool = false;
+			unreverseBool = false;
 
 			yield break;
 		}
@@ -79,9 +95,12 @@ namespace GlaurungItems.Items
 			return user.CurrentRoom != null;
 		}
 
-		private const float nbOfSteps = 20; 
+		private const float nbOfSteps = 25; 
 		private const float yByStep = 0.15f; 
-		private const float heightByStep = 0.2f; 
-		private const float waitBtEachStep = 0.005f; 
+		private const float heightByStep = 0.33f; 
+		private const float waitBetweenEachStepUp = 0.025f;
+		private const float waitBetweenEachStepDown = 0.001f;
+		private bool reverseBool = false;
+		private bool unreverseBool = false;
 	}
 }
