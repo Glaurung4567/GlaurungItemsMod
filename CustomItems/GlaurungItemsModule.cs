@@ -95,6 +95,10 @@ namespace GlaurungItems
                 GravDartGun.Add();
 
                 TopsyTurvyBomb.Init();
+                NonBossSoul.Init();
+                BossSoul.Init();
+                SoulEaterEvolution.Add();
+                SoulEater.Add();
 
                 //PortalGunnyTest.Add();
                 //GunDeadArmyStronghold.Init();

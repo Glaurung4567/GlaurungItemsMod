@@ -70,6 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ItemAPI\CustomGunFormeSynergyProcessor.cs" />
+    <Compile Include="ItemAPI\VFXLibrary.cs" />
     <Compile Include="Items\AmmoletOfWonder.cs" />
     <Compile Include="ItemAPI\EasyGoopDefinition.cs" />
     <Compile Include="ItemAPI\AdvancedStringDB.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Items\old\PortalGunnyTest.cs" />
     <Compile Include="Items\Poyo.cs" />
     <Compile Include="Items\ShokkGun.cs" />
+    <Compile Include="Items\SoulEater.cs" />
     <Compile Include="Items\SwissArmyRifle.cs" />
     <Compile Include="Items\TopsyTurvyBomb.cs" />
     <Compile Include="Items\Transistor.cs" />
@@ -258,6 +260,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\mind_blown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\BossSoul.png" />
+    <EmbeddedResource Include="Resources\NonBossSoul.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
