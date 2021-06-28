@@ -265,5 +265,8 @@
     <EmbeddedResource Include="Resources\BossSoul.png" />
     <EmbeddedResource Include="Resources\NonBossSoul.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\corkscrewgun.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

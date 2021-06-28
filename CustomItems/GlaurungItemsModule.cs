@@ -94,6 +94,7 @@ namespace GlaurungItems
                 MindBlown.Init();
                 GravDartGun.Add();
 
+                TopsyGun.Add();
                 TopsyTurvyBomb.Init();
                 NonBossSoul.Init();
                 BossSoul.Init();

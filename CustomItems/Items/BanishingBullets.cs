@@ -59,7 +59,7 @@ namespace GlaurungItems.Items
 		private void PostProcessProjectile(Projectile projectile, float Chance)
 		{
 			PlayerController owner = base.Owner;
-			projectile.OnHitEnemy = (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.OnProjectileHitEnemy));
+			projectile.OnHitEnemy += OnProjectileHitEnemy;// (Action<Projectile, SpeculativeRigidbody, bool>)Delegate.Combine(projectile.OnHitEnemy, new Action<Projectile, SpeculativeRigidbody, bool>(this.OnProjectileHitEnemy));
 
 		}
 
