@@ -732,6 +732,7 @@ namespace ItemAPI
 			tk2dSpriteCollectionData itemCollection = ETGMod.Databases.Items.ProjectileCollection;//PickupObjectDatabase.GetByEncounterName("singularity").sprite.Collection;
 			int spriteID = SpriteBuilder.AddSpriteToCollection("GlaurungItems/Resources/billiard_cue", itemCollection);
 			tk2dTiledSprite tiledSprite = projectile.gameObject.AddComponent<tk2dTiledSprite>();
+			projectile.sprite = tiledSprite;
 			tiledSprite.SetSprite(itemCollection, spriteID);
 			tiledSprite.spriteAnimator = projectile.gameObject.AddComponent<tk2dSpriteAnimator>();
 			Object.Destroy(projectile.GetComponentInChildren<tk2dSprite>());

@@ -154,17 +154,6 @@ namespace GlaurungItems.Items
 			gun.Volley.projectiles[3].projectiles[0] = projectile1;
 
 
-			/*projectile.gameObject.AddComponent<MeshRenderer>();
-			projectile.gameObject.AddComponent<MeshFilter>();
-			tk2dSpriteCollectionData itemCollection = ETGMod.Databases.Items.ProjectileCollection;//PickupObjectDatabase.GetByEncounterName("singularity").sprite.Collection;
-			int spriteID = SpriteBuilder.AddSpriteToCollection("GlaurungItems/Resources/billiard_cue", itemCollection);
-			tk2dTiledSprite tiledSprite = projectile.gameObject.AddComponent<tk2dTiledSprite>();
-			tiledSprite.SetSprite(itemCollection, spriteID);
-			tiledSprite.spriteAnimator = projectile.gameObject.AddComponent<tk2dSpriteAnimator>();
-			Destroy(projectile.GetComponentInChildren<tk2dSprite>());*/
-			//BasicBeamController beam = Toolbox.GenerateBeamPrefab(projectile, "GlaurungItems/Resources/billiard_cue");
-
-
 
 
 			ETGMod.Databases.Items.Add(gun, null, "ANY");
